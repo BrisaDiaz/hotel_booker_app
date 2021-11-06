@@ -6,18 +6,41 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
+    "@apollo/client": "^3.4.16",
+    "@emotion/cache": "^11.5.0",
+    "@emotion/react": "^11.5.0",
+    "@emotion/server": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.0-rc.1",
+    "@mui/material": "^5.0.0-rc.1",
+    "@prisma/client": "^3.3.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.5.5",
+    "apollo-server-micro": "^3.4.0",
+    "bcryptjs": "^2.4.3",
+    "graphql": "^15.7.2",
+    "jsonwebtoken": "^8.5.1",
     "next": "12.0.1",
+    "nexus": "^1.1.0",
+    "prop-types": "^15.7.2",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-hook-form": "^7.18.0",
+    "react-material-ui-carousel": "^3.0.2"
   },
   "devDependencies": {
     "@types/node": "16.11.6",
     "@types/react": "17.0.33",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1",
+    "prisma": "^3.3.0",
     "typescript": "4.4.4"
   }
 }

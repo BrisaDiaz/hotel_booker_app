@@ -1,0 +1,262 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+
+}
+
+model Administrator {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  Hotel     Hotel[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  userId    Int
+  hotelId   Int
+  hotel     Hotel    @relation(fields: [hotelId], references: [id])
+}
+
+model Hotel {
+  id               Int           @id @default(autoincrement())
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  name             String
+  brand            String
+  category         String
+  administratorId  Int
+  administrator    Administrator @relation(fields: [administratorId], references: [id])
+  email            String
+  telephone        String
+  description      String?
+  lowestPrice      Float
+  checkInHour      String
+  checkOutHour     String
+  PoliciesAndRules String
+  frameImage       String
+  interiorImage    String
+  languages        Language[]
+  facilities       Facility[]
+  services         Service[]
+  activities       Activity[]
+  rooms            Room[]
+  comments         Comment[]
+  roomModels       RoomModel[]
+}
+
+model Facility {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  name      String   @unique
+  hotels    Hotel[]
+}
+
+model Address {
+  id                 Int      @id @default(autoincrement())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  hotelId            Int      @unique
+  holeAddress        String
+  country            String
+  administrativeArea String
+  postalCode         String
+  city               String
+  street             String
+
+}
+
+model Room {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  number      Int
+  hotelId     Int
+  roomModelId Int
+  status      RoomStatus
+  bookings    Booking[]
+  Hotel       Hotel      @relation(fields: [hotelId], references: [id])
+  RoomModel   RoomModel  @relation(fields: [roomModelId], references: [id])
+  Service     Service?   @relation(fields: [serviceId], references: [id])
+  serviceId   Int?
+}
+
+model RoomCategory {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  roomModels RoomModel[]
+}
+
+model RoomModel {
+  id              Int          @id @default(autoincrement())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  hotel           Hotel        @relation(fields: [hotelId], references: [id])
+  hotelId         Int
+  mts2            Int
+  roomCategory    RoomCategory @relation(fields: [category], references: [name])
+  category        String
+  lowestPrice     Float
+  freeCancelation Boolean
+  mainImage       String
+  description     String?
+  MaximunStay     Int
+  MinimunStay     Int
+  maximunGuest    Int
+  amenties        Amenity[]
+  services        Service[]
+  rooms           Room[]
+  public          Boolean
+
+}
+
+model Features {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  hotelId         Int
+  cancelationFree Boolean  @default(false)
+  accessible      Boolean  @default(false)
+  petFriendly     Boolean  @default(false)
+  familyFriendly  Boolean  @default(false)
+  ecoFriendly     Boolean  @default(false)
+  smokerFriendly  Boolean  @default(false)
+
+}
+
+model Image {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  src         String
+  hotelId     Int
+  roomModelId Int?
+}
+
+model Amenity {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  name        String     @unique
+  roomModel   RoomModel? @relation(fields: [roomModelId], references: [id])
+  roomModelId Int
+}
+
+enum RoomStatus {
+  OCCUPIED
+  VACANT
+}
+
+model Service {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  name        String     @unique
+  roomModels  Room[]
+  hotels      Hotel[]
+  RoomModel   RoomModel? @relation(fields: [roomModelId], references: [id])
+  roomModelId Int?
+}
+
+model Client {
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  name            String
+  lastName        String
+  email           String    @unique
+  cellularNumber  String
+  homePhoneNumber String
+  bookings        Booking[]
+}
+
+model Booking {
+  id              Int           @id @default(autoincrement())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  clientId        Int
+  hotelId         Int
+  roomId          Int
+  administratorId Int
+  childrens       Int
+  adults          Int
+  nights          Int
+  checkInDate     DateTime
+  checkOutDate    DateTime
+  specifications  String
+  paymetMethod    PaymetMethod
+  status          BookingStatus
+  Room            Room          @relation(fields: [roomId], references: [id])
+  Client          Client        @relation(fields: [clientId], references: [id])
+}
+
+enum PaymetMethod {
+  CREDIT_CARD
+  BILL_TO_ACCOUNT
+  CASH
+  DEBIT_CARD
+  TRAVELER_CHECK
+}
+
+enum BookingStatus {
+  ACTIVE
+  CANCELED
+  REYECTED
+
+}
+
+model RoomBed {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  bed         BedType? @relation(fields: [type], references: [name])
+  type        String
+  quantity    Int      @default(1)
+  roomModelId Int
+}
+
+model Language {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  hotels Hotel[]
+}
+
+model Activity {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  hotels Hotel[]
+}
+
+model HotelCategory {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+}
+
+model BedType {
+  id      Int       @id @default(autoincrement())
+  name    String    @unique
+  roomBed RoomBed[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
