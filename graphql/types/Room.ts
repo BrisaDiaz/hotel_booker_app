@@ -4,20 +4,19 @@ import {
   idArg,
   list,
   intArg,
-  inputObjectType,
   stringArg,
   nonNull,
   booleanArg,
+  floatArg,
 } from 'nexus';
-
+import { verifyIsHotelAdmin } from '../utils';
 import { prisma } from '../../lib/prisma';
-
-export const Equipament = objectType({
-  name: 'Equipament',
+import type { NextApiRequest } from 'next';
+export const Amenity = objectType({
+  name: 'Amenity',
   definition(t) {
     t.id('id');
     t.string('name');
-    t.int('roomId');
   },
 });
 
@@ -30,8 +29,8 @@ export const RoomBed = objectType({
   },
 });
 
-export const Room = objectType({
-  name: 'Room',
+export const RoomModel = objectType({
+  name: 'RoomModel',
   definition(t) {
     t.id('id');
     t.int('hotelId');
@@ -41,15 +40,15 @@ export const Room = objectType({
     t.float('lowestPrice');
     t.string('description');
     t.string('mainImage');
-    t.int('maximunGuest');
-    t.int('minimunNights');
-    t.int('maximunNights');
+    t.int('maximunGuests');
+    t.int('maximunStay');
+    t.int('minimunStay');
     t.list.field('beds', {
       type: 'RoomBed',
       resolve: (root) => {
-        return prisma.roonBed.findMany({
+        return prisma.roomBed.findMany({
           where: {
-            roomId: root.id,
+            roomModelId: root.id,
           },
         });
       },
@@ -59,17 +58,44 @@ export const Room = objectType({
       resolve: (root) => {
         return prisma.image.findMany({
           where: {
-            roomId: root.id,
+            roomModelId: root.id,
           },
         });
       },
     });
     t.list.field('services', { type: 'Service' });
-    t.list.field('equipament', { type: 'Equipament' });
-    t.list.field('consults', {
-      type: 'Consult',
+    t.list.field('amenities', { type: 'Amenity' });
+    t.list.field('rooms', {
+      type: list('Room'),
       resolve: (root) => {
-        return prisma.consult.findMany({
+        return prisma.room.findMany({
+          where: {
+            roomModelId: root.id,
+          },
+        });
+      },
+    });
+  },
+});
+export const Room = objectType({
+  name: 'Room',
+  definition(t) {
+    t.id('id');
+    t.int('roomModelId');
+    t.field('roomModel', {
+      type: 'RoomModel',
+      resolve: (root) => {
+        return prisma.roomModel.findUnique({
+          where: {
+            id: root.roomModelId,
+          },
+        });
+      },
+    });
+    t.list.field('bookings', {
+      type: 'Booking',
+      resolve: (root) => {
+        return prisma.booking.findMany({
           where: {
             roomId: root.id,
           },
@@ -78,22 +104,21 @@ export const Room = objectType({
     });
   },
 });
-
-export const RoomById = extendType({
+export const Query = extendType({
   type: 'Query',
   definition(t) {
-    t.field('roomById', {
-      type: 'Room',
+    t.field('roomModelById', {
+      type: 'RoomModel',
       args: {
         id: nonNull(idArg()),
       },
       resolve(root, args, ctx) {
-        return prisma.room.findUnique({
+        return prisma.roomModel.findUnique({
           where: {
             id: args.id * 1,
           },
           include: {
-            equipament: true,
+            amenities: true,
             services: true,
           },
         });
@@ -105,81 +130,145 @@ export const RoomById = extendType({
 export const Mutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.field('creatHotelRoom', {
-      type: 'Room',
+    t.field('creatHotelRoomModel', {
+      type: 'RoomModel',
       args: {
-        hotelId: nonNull(idArg()),
+        hotelId: nonNull(intArg()),
         lowestPrice: nonNull(intArg()),
+        quantityInHotel: nonNull(intArg()),
         mts2: nonNull(intArg()),
         category: nonNull(stringArg()),
         description: nonNull(stringArg()),
-        maximunNights: intArg(),
-        minimunNights: nonNull(intArg()),
-        maximunGuest: nonNull(intArg()),
+        minimunStay: nonNull(intArg()),
+        maximunStay: nonNull(intArg()),
+        maximunGuests: nonNull(intArg()),
         mainImage: nonNull(stringArg()),
         services: nonNull(list(stringArg())),
-        equipament: nonNull(list(stringArg())),
-        public: booleanArg(),
+        amenities: nonNull(list(stringArg())),
       },
       resolve(root, args, ctx) {
-        return prisma.room.create({
-          data: {
-            hotelId: args.hotelId,
-            mts2: args.mts2,
-            category: args.category,
-            lowestPrice: args.lowestPrice,
-            description: args.description,
-            maximunNights: args.maximunNights,
-            minimunNights: args.minimunNights,
-            maximunGuest: args.maximunGuest,
-            mainImage: args.mainImage,
-            public: args.public,
-            services: {
-              connect: args.services.map((service: string) => ({
-                name: service,
-              })),
+        type RoomModel = {
+          hotelId: number;
+          mts2: number;
+          category: string;
+          lowestPrice: number;
+          description: string;
+          maximunStay: number;
+          minimunStay: number;
+          maximunGuests: number;
+          mainImage: string;
+          services: string[];
+          amenities: string[];
+        };
+        const createHotelRoomModel = async (
+          req: NextApiRequest,
+          args: RoomModel
+        ) => {
+          await verifyIsHotelAdmin(req, args.hotelId);
+          return await prisma.roomModel.create({
+            data: {
+              hotelId: args.hotelId,
+              mts2: args.mts2,
+              category: args.category,
+              lowestPrice: args.lowestPrice,
+              description: args.description,
+              maximunStay: args.maximunStay,
+              minimunStay: args.maximunStay,
+              maximunGuests: args.maximunGuests,
+              mainImage: args.mainImage,
+              services: {
+                connect: args?.services?.map((service: string) => ({
+                  name: service,
+                })),
+              },
+              amenities: {
+                connect: args?.amenities?.map((item: string) => ({
+                  name: item,
+                })),
+              },
             },
-            equipament: {
-              connect: args.equipament.map((item: string) => ({
-                name: item,
-              })),
-            },
-          },
-        });
+          });
+        };
+        return createHotelRoomModel(ctx.req, args);
       },
     });
-
-    t.field('ocultRooms', {
-      type: 'Room',
+    t.field('editRoomModelVicibility', {
+      type: 'RoomModel',
       args: {
         id: nonNull(idArg()),
+        hotelId: nonNull(intArg()),
+        public: nonNull(booleanArg()),
       },
       resolve(root, args, ctx) {
-        return prisma.room.update({
-          where: {
-            id: args.id,
-          },
-          data: {
-            public: false,
-          },
-        });
+        const editRoomModelVicibility = async (
+          req: NextApiRequest,
+          args: any
+        ) => {
+          await verifyIsHotelAdmin(req, args.hotelId);
+          return await prisma.roomModel.update({
+            where: {
+              id: args.id,
+            },
+            data: {
+              public: args.public,
+            },
+          });
+        };
+        return editRoomModelVicibility(ctx.req, args.hotelId);
       },
     });
-    t.field('updateRoomLowestPrice', {
-      type: 'Room',
+    t.field('updateRoomModelPrice', {
+      type: 'RoomModel',
       args: {
         id: nonNull(idArg()),
-        lowestPrice: nonNull(intArg()),
+        hotelId: nonNull(intArg()),
+        lowestPrice: nonNull(floatArg()),
       },
       resolve(root, args, ctx) {
-        return prisma.room.update({
-          where: {
-            id: args.id,
-          },
-          data: {
-            price: args.lowestPrice,
-          },
-        });
+        const updateRoomModelPrice = async (req: NextApiRequest, args: any) => {
+          await verifyIsHotelAdmin(req, args.hotelId);
+          return await prisma.roomModel.update({
+            where: {
+              id: args.id,
+            },
+            data: {
+              lowestPrice: args.lowestPrice,
+            },
+          });
+        };
+        return updateRoomModelPrice(ctx.req, args);
+      },
+    });
+    t.field('addRoomToHotel', {
+      type: 'Room',
+      args: {
+        hotelId: nonNull(idArg()),
+        roomModelId: nonNull(intArg()),
+        number: nonNull(intArg()),
+      },
+      resolve: (root, args, ctx) => {
+        const addNewRoom = async (args: {
+          hotelId: number;
+          roomModelId: number;
+          number: number;
+        }) => {
+          await prisma.roomModel.update({
+            where: {
+              id: args.roomModelId,
+            },
+            data: {
+              quantityInHotel: { increment: 1 },
+            },
+          });
+          return await prisma.room.create({
+            data: {
+              hotelId: args.hotelId,
+              roomModelId: args.roomModelId,
+              number: args.number,
+            },
+          });
+        };
+        return addNewRoom(args);
       },
     });
   },

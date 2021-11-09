@@ -1,4 +1,4 @@
-import room from './room';
+import roomModel from './roomModel';
 const hotel = {
   id: 5,
   name: 'Four Seasons Hotel Buenos Aires',
@@ -49,9 +49,9 @@ const hotel = {
     smokerFriendly: false,
     ecoFriendly: false,
   },
-  rooms: new Array(6).fill(0).map((el, index) => {
-    room.id = index + 1;
-    return room;
+  roomModels: new Array(6).fill(0).map((el, index) => {
+    roomModel.id = index + 1;
+    return roomModel;
   }),
   public: true,
 };

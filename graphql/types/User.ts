@@ -1,6 +1,6 @@
 import { objectType, enumType, extendType, stringArg } from 'nexus';
 import type { NextApiRequest } from 'next';
-import { AuthenticationError } from 'apollo-server-micro';
+
 import { getUser, hashPassword } from '../utils';
 
 export const User = objectType({
@@ -18,12 +18,12 @@ export const Query = extendType({
   type: 'Query',
   definition(t) {
     t.field('me', {
-      type: User,
+      type: 'User',
       resolve(root, args, ctx) {
         async function getMyProfile(req: NextApiRequest) {
           const user: { id: number } = await getUser(req);
-          if (!user) throw new AuthenticationError('Unauthorized');
-          return prisma.user.findUnique({
+
+          return await prisma.user.findUnique({
             where: {
               id: user.id,
             },
@@ -53,11 +53,11 @@ export const Mutation = extendType({
           password?: string;
         }) {
           const user = await getUser(ctx.req);
-          if (user) throw new AuthenticationError('Unauthorize');
+
           const encryptedPasswod = args.password
             ? await hashPassword(args.password)
             : null;
-          return prisma.user.update({
+          return await prisma.user.update({
             where: {
               id: user.id,
             },
@@ -74,7 +74,7 @@ export const Mutation = extendType({
     });
   },
 });
-const Role = enumType({
+export const Role = enumType({
   name: 'Role',
   members: ['USER', 'ADMIN'],
 });

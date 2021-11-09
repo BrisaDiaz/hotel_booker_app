@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
@@ -24,78 +24,9 @@ import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 
-const CREATE_HOTEL = gql`
-  mutation createHotel(
-    $name: String!
-    $brand: String!
-    $category: String!
-    $telephone: String!
-    $email: String!
-    $lowestPrice: Float!
-    $checkInHour: String!
-    $checkOutHour: String!
-    $postalCode: String!
-    $policiesAndRules: String!
-    $description: String!
-    $frameImage: String!
-    $interiorImage: String!
-    $activities: [String]
-    $facilities: [String]!
-    $services: [String]!
-    $languages: [String]!
-    $holeAddress: String!
-    $country: String!
-    $administrativeArea: String!
-    $city: String!
-    $street: String!
-    $accesible: Boolean!
-    $cancelationFree: Boolean!
-    $familyFriendly: Boolean!
-    $petFriendly: Boolean!
-    $smokerFriendly: Boolean!
-    $ecoFriendly: Boolean!
-  ) {
-    createHotel(
-      name: $name
-      telephone: $telephone
-      email: $email
-      brand: $brand
-      category: $category
-      lowestPrice: $lowestPrice
-      checkInHour: $checkInHour
-      checkOutHour: $checkOutHour
-      policiesAndRules: $policiesAndRules
-      description: $description
-      frameImage: $frameImage
-      interiorImage: $interiorImage
-      activities: $activities
-      facilities: $facilities
-      services: $services
-      languages: $languages
-    ) {
-      addHotelAddress(
-        holeAddress: $holeAddress
-        country: $country
-        postalCode: $postalCode
-        administrativeArea: $administrativeArea
-        city: $city
-        street: $street
-      )
-      addHotelFeatures(
-        accesible: $accesible
-        cancelationFree: $cancelationFree
-        familyFriendly: $familyFriendly
-        petFriendly: $petFriendly
-        smokerFriendly: $smokerFriendly
-        ecoFriendly: $ecoFriendly
-      )
-    }
-  }
-`;
-
 const styles = {
   root: {
-    maxWidth: '800px',
+    maxWidth: '900px',
     width: '100%',
     margin: '0 auto',
     py: 4,
@@ -112,12 +43,13 @@ const styles = {
     fontWeight: 600,
     color: '#484848',
     background: '#fff',
-    mt: '-20px',
+    mt: '-25px',
     px: '10px',
     width: 'max-content',
   },
   fieldset: {
     my: 4,
+    pt: 1.5,
     borderRadious: '5px',
   },
   formBottons: {
@@ -152,9 +84,8 @@ export default function MultilineTextFields(props: {
   facilities: Feature[];
   languages: Feature[];
   hotelCategories: Feature[];
+  submitHandler: Function;
 }) {
-  // const [createHotel, {data,error,loading}] = useMutation(CREATE_HOTEL);
-
   const { services, activities, facilities, languages, hotelCategories } =
     props;
 
@@ -200,7 +131,7 @@ export default function MultilineTextFields(props: {
   const handleCategoryField = (event: SelectChangeEvent) => {
     setCategorieSelected(event.target.value as string);
   };
-  const onSubmit = async (data: any, e: any) => {
+  const submitMiddleware = async (data: any, e: any) => {
     e.preventDefault();
 
     const hotelVariables = {
@@ -219,11 +150,6 @@ export default function MultilineTextFields(props: {
       activities: activitiesSelected,
       languages: languagesSelected,
       category: categorySelected,
-      county: data.country,
-      city: data.city,
-      postalCode: data.postalCode,
-      administrativeArea: data.administrativeArea,
-      street: data.street,
       smokerFriendly: data.smokerFriendly,
       familyFriendly: data.familyFriendly,
       petFriendly: data.petFriendly,
@@ -231,10 +157,14 @@ export default function MultilineTextFields(props: {
       cancelationFree: data.cancelationFree,
       accesible: data.accesible,
     };
-    console.log(hotelVariables);
-    // await createHotel({
-    //   variables: hotelVariables,
-    // });
+    const addressVariables = {
+      county: data.country,
+      city: data.city,
+      postalCode: data.postalCode,
+      administrativeArea: data.administrativeArea,
+      street: data.street,
+    };
+    props.submitHandler(hotelVariables, addressVariables);
   };
 
   return (
@@ -243,13 +173,13 @@ export default function MultilineTextFields(props: {
       sx={styles.root}
       noValidate
       autoComplete="off"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(submitMiddleware)}
     >
-      <Typography component="h1" variant="h3" align="center" sx={styles.title}>
+      <Typography component="h1" variant="h5" align="center" sx={styles.title}>
         Add a new hotel
       </Typography>
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
           About
         </Typography>
         <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">
@@ -353,7 +283,7 @@ export default function MultilineTextFields(props: {
       </Grid>
 
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
           Contact
         </Typography>
         <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">
@@ -393,7 +323,7 @@ export default function MultilineTextFields(props: {
               id="email"
               variant="outlined"
               label={errors['email'] ? errors['email'].message : 'Email'}
-              error={errors['email'] ? true : false}
+              error={errors['email'] && true}
               type="email"
               {...register('email', {
                 required: 'The email is required',
@@ -415,7 +345,7 @@ export default function MultilineTextFields(props: {
         </Grid>
       </Grid>
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
           Address
         </Typography>
         <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">
@@ -536,7 +466,7 @@ export default function MultilineTextFields(props: {
       </Grid>
 
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
           Features
         </Typography>
 
@@ -607,7 +537,7 @@ export default function MultilineTextFields(props: {
         </Grid>
       </Grid>
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
           Policies and Rules
         </Typography>
 
@@ -666,7 +596,7 @@ export default function MultilineTextFields(props: {
         />
       </Grid>
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
           Aspect
         </Typography>
         <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">

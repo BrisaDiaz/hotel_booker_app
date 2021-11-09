@@ -1,45 +1,14 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { GetStaticProps } from 'next';
-import { gql } from '@apollo/client';
-import { client } from '../../../lib/apollo';
 import HotelForm from '../../../components/HotelForm';
-
-const GET_ALL_SERVICES = gql`
-  query allServices {
-    allServices {
-      name
-    }
-  }
-`;
-const GET_ALL_RESTRICTIONS = gql`
-  query allRestrictions {
-    allRestrictions {
-      name
-    }
-  }
-`;
-const GET_ALL_FACILITIES = gql`
-  query allFacilities {
-    allFacilities {
-      name
-    }
-  }
-`;
-const GET_ALL_ACTIVITIES = gql`
-  query allActivities {
-    allActivities {
-      name
-    }
-  }
-`;
-const GET_ALL_LANGUAGES = gql`
-  query allLanguages {
-    allLanguages {
-      name
-    }
-  }
-`;
+import { useMutation } from '@apollo/client';
+import {
+  CREATE_HOTEL,
+  ADD_HOTEL_FEATURES,
+  ADD_HOTEL_ADDRESS,
+} from '@/queries/index';
+import type { Address, Features, Hotel } from '@/interfaces/';
 type Option = {
   id: number;
   name: string;
@@ -57,6 +26,28 @@ const Home = ({
   languages: Option[];
   hotelCategories: Option[];
 }): JSX.Element => {
+  const [createHotel] = useMutation(CREATE_HOTEL);
+  const [addHotelAddress] = useMutation(ADD_HOTEL_FEATURES);
+  const [addHotelFeatures] = useMutation(ADD_HOTEL_ADDRESS);
+
+  const onSubmit = async (
+    hotelVariables: Hotel,
+    featuresVariables: Features,
+    addressVariables: Address
+  ) => {
+    await createHotel({
+      variables: hotelVariables,
+      onCompleted: (data) => {
+        addHotelAddress({
+          variables: { ...addressVariables, hotelId: data.id },
+        });
+        addHotelFeatures({
+          variables: { ...featuresVariables, hotelId: data.id },
+        });
+      },
+    });
+  };
+
   return (
     <div>
       <Head>
@@ -72,6 +63,7 @@ const Home = ({
           services={services}
           languages={languages}
           hotelCategories={hotelCategories}
+          submitHandler={onSubmit}
         />
       </main>
     </div>

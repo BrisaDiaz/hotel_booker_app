@@ -1,4 +1,4 @@
-const room = {
+const roomModel = {
   id: 4,
   category: 'double room',
   mainImage:
@@ -9,9 +9,10 @@ const room = {
     { type: 'full', quantity: 1, id: 1 },
     { type: 'twin', quantity: 2, id: 2 },
   ],
+  hotelId: 5,
   description:
     'There are many variations of passages of Lorem Ipsum available,combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc,combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc,combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc./combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc/combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc',
-  amenties: new Array(12).fill(0).map((el, index) => ({
+  amenities: new Array(12).fill(0).map((el, index) => ({
     name: 'sewing kit',
     id: index + 1,
   })),
@@ -19,13 +20,13 @@ const room = {
     name: 'cooking service',
     id: index + 1,
   })),
-  maximunGuest: 4,
-  stayMinimun: 3,
-  stayMaximun: 15,
+  maximunGuests: 4,
+  minimunStays: 3,
+  maximunStays: 15,
   hotel: {
     id: 5,
     name: 'Four Seasons Hotel Buenos Aires',
   },
   public: true,
 };
-export default room;
+export default roomModel;

@@ -10,7 +10,9 @@ import {
   booleanArg,
 } from 'nexus';
 import { prisma } from '../../lib/prisma';
+import type { NextApiRequest } from 'next';
 
+import { getAdminInfo, verifyIsHotelAdmin } from '../utils';
 export const Address = objectType({
   name: 'Address',
   definition(t) {
@@ -24,7 +26,33 @@ export const Address = objectType({
     t.string('street');
   },
 });
-
+export const Administrator = objectType({
+  name: 'Administrator',
+  definition(t) {
+    t.id('id');
+    t.int('userId');
+    t.field('user', {
+      type: 'User',
+      resolve: (root) => {
+        return prisma.user.findUnique({
+          where: {
+            id: root.userId,
+          },
+        });
+      },
+    });
+    t.field('hotels', {
+      type: list('Hotel'),
+      resolve: (root) => {
+        return prisma.hotel.findMany({
+          where: {
+            administratorId: root.id,
+          },
+        });
+      },
+    });
+  },
+});
 export const Activity = objectType({
   name: 'Activity',
   definition(t) {
@@ -43,6 +71,17 @@ export const Hotel = objectType({
   name: 'Hotel',
   definition(t) {
     t.nonNull.id('id');
+    t.int('administratorId');
+    t.field('adminstrator', {
+      type: 'Administrator',
+      resolve: (root) => {
+        return prisma.administrator.findUnique({
+          where: {
+            id: root.administratorId,
+          },
+        });
+      },
+    });
     t.string('name');
     t.string('brand');
     t.string('category');
@@ -62,12 +101,16 @@ export const Hotel = objectType({
     t.list.field('services', { type: 'Service' });
     t.list.field('activities', { type: 'Activity' });
     t.list.field('languages', { type: 'Langueage' });
-    t.list.field('rooms', {
-      type: 'Room',
+    t.list.field('roomModels', {
+      type: 'RoomModel',
       resolve: (root) => {
-        return prisma.room.findMany({
+        return prisma.roomModel.findMany({
           where: {
             hotelId: root.id,
+          },
+          include: {
+            amenities: true,
+            services: true,
           },
         });
       },
@@ -126,30 +169,11 @@ export const Query = extendType({
           },
           include: {
             facilities: true,
-            globalServices: true,
+            services: true,
+            activities: true,
+            languages: true,
           },
         });
-      },
-    });
-
-    t.list.field('hotelImages', {
-      type: 'Image',
-      args: {
-        hotelId: intArg(),
-      },
-      resolve(root, args, ctx) {
-        const images = prisma.image.findMany({
-          where: {
-            hotelId: args.hotelId,
-          },
-        });
-        return { images };
-      },
-    });
-    t.list.field('allFacilities', {
-      type: 'Facility',
-      resolve(root, _args, ctx) {
-        return prisma.facility.findMany();
       },
     });
   },
@@ -177,52 +201,56 @@ export const Mutation = extendType({
         services: nonNull(list(stringArg())),
         activities: nonNull(list(stringArg())),
         languages: nonNull(list(stringArg())),
-        public: booleanArg(),
       },
-      resolve(_, args) {
-        return prisma.hotel.create({
-          data: {
-            name: args.name,
-            category: args.category,
-            brand: args.brand,
-            email: args.email,
-            telephone: args.telephone,
-            lowestPrice: args.lowestPrice,
-            frameImage: args.mainImage,
-            InteriorImage: args.secondaryImage,
-            description: args.description,
-            checkInHour: args.checkInHour,
-            checkOutHour: args.checkOutHour,
-            policiesAndRules: args.policies,
-            public: args.public,
-            facilities: {
-              connect: args.facilities.map((facility: string) => ({
-                name: facility,
-              })),
+      resolve(_, args, ctx) {
+        const createHotel = async (req: NextApiRequest, args: any) => {
+          const admin = await getAdminInfo(req);
+          return await prisma.hotel.create({
+            data: {
+              administratorId: admin.id,
+              name: args.name,
+              category: args.category,
+              brand: args.brand,
+              email: args.email,
+              telephone: args.telephone,
+              lowestPrice: args.lowestPrice,
+              frameImage: args.mainImage,
+              interiorImage: args.interiorImage,
+              description: args.description,
+              checkInHour: args.checkInHour,
+              checkOutHour: args.checkOutHour,
+              policiesAndRules: args.policiesAndRules,
+
+              facilities: {
+                connect: args.facilities.map((facility: string) => ({
+                  name: facility,
+                })),
+              },
+              services: {
+                connect: args.services.map((service: string) => ({
+                  name: service,
+                })),
+              },
+              activities: {
+                connect: args.activities.map((activity: string) => ({
+                  name: activity,
+                })),
+              },
+              languages: {
+                connect: args.languages.map((language: string) => ({
+                  name: language,
+                })),
+              },
             },
-            services: {
-              connect: args.services.map((service: string) => ({
-                name: service,
-              })),
-            },
-            activities: {
-              connect: args.activities.map((activity: string) => ({
-                name: activity,
-              })),
-            },
-            languages: {
-              connect: args.languages.map((language: string) => ({
-                name: language,
-              })),
-            },
-          },
-        });
+          });
+        };
+        return createHotel(ctx.req, args);
       },
     });
-
     t.field('addHotelAddress', {
       type: 'Address',
       args: {
+        hotelId: nonNull(idArg()),
         holeAddress: nonNull(stringArg()),
         country: nonNull(stringArg()),
         postalCode: nonNull(stringArg()),
@@ -230,34 +258,39 @@ export const Mutation = extendType({
         city: stringArg(),
         street: stringArg(),
       },
-      resolve(root, args) {
-        return prisma.address.upgrade({
-          where: {
-            hotelId: root.id,
-          },
-          create: {
-            hotelId: args.root.id,
-            holeAddress: args.holeAddress,
-            country: args.country,
-            postalCode: args.postalCode,
-            administrativeArea: args.administrativeArea,
-            city: args.city,
-            street: args.street,
-          },
-          update: {
-            country: args.country,
-            holeAddress: args.holeAddress,
-            stateOrRegion: args.stateOrRegion,
-            city: args.city,
-            street1: args.street1,
-            street2: args.street2,
-          },
-        });
+      resolve(root, args, ctx) {
+        const addHotelAddress = async (req: NextApiRequest, args: any) => {
+          await verifyIsHotelAdmin(req, args.hotelId);
+          return await prisma.address.upgrade({
+            where: {
+              hotelId: args.hotelId,
+            },
+            create: {
+              hotelId: args.root.id,
+              holeAddress: args.holeAddress,
+              country: args.country,
+              postalCode: args.postalCode,
+              administrativeArea: args.administrativeArea,
+              city: args.city,
+              street: args.street,
+            },
+            update: {
+              country: args.country,
+              holeAddress: args.holeAddress,
+              stateOrRegion: args.stateOrRegion,
+              city: args.city,
+              street1: args.street1,
+              street2: args.street2,
+            },
+          });
+        };
+        return addHotelAddress(ctx.req, args);
       },
     });
     t.field('addHotelFeatures', {
       type: 'Features',
       args: {
+        hotelId: nonNull(idArg()),
         cancelationFree: nonNull(booleanArg()),
         accesible: nonNull(booleanArg()),
         familyFriendly: nonNull(booleanArg()),
@@ -265,63 +298,55 @@ export const Mutation = extendType({
         smokerFriendly: nonNull(booleanArg()),
         ecoFriendly: nonNull(booleanArg()),
       },
-      resolve(root, args) {
-        return prisma.feature.upgrate({
-          where: {
-            hotelId: root.id,
-          },
-          create: {
-            hotelId: root.id,
-            cancelationFree: args.cancelationFree,
-            accesible: args.accesible,
-            familyFriendly: args.familyFriendly,
-            petFriendly: args.petFriendly,
-            smokerFriendly: args.smokerFriendly,
-            ecoFriendly: args.ecoFriendly,
-          },
-          update: {
-            cancelationFree: args.cancelationFree,
-            accesible: args.accesible,
-            familyFriendly: args.familyFriendly,
-            petFriendly: args.petFriendly,
-            smokerFriendly: args.smokerFriendly,
-            ecoFriendly: args.ecoFriendly,
-          },
-        });
-      },
-    });
-    t.field('ocultHotel', {
-      type: 'Hotel',
-      args: {
-        id: nonNull(idArg()),
-      },
-      resolve(_, args) {
-        return prisma.hotel.update({
-          where: {
-            id: args.id * 1,
-          },
-          data: {
-            public: false,
-          },
-        });
+      resolve(root, args, ctx) {
+        const addHotelFeatures = async (req: NextApiRequest, args: any) => {
+          await verifyIsHotelAdmin(req, args.hotelId);
+          return await prisma.features.upgrade({
+            where: {
+              hotelId: args.hotelId,
+            },
+            create: {
+              hotelId: root.id,
+              cancelationFree: args.cancelationFree,
+              accesible: args.accesible,
+              familyFriendly: args.familyFriendly,
+              petFriendly: args.petFriendly,
+              smokerFriendly: args.smokerFriendly,
+              ecoFriendly: args.ecoFriendly,
+            },
+            update: {
+              cancelationFree: args.cancelationFree,
+              accesible: args.accesible,
+              familyFriendly: args.familyFriendly,
+              petFriendly: args.petFriendly,
+              smokerFriendly: args.smokerFriendly,
+              ecoFriendly: args.ecoFriendly,
+            },
+          });
+        };
+        return addHotelFeatures(ctx.req, args);
       },
     });
 
     t.field('updateHotelLowestPrice', {
       type: 'Hotel',
       args: {
-        id: nonNull(idArg()),
-        lowestPrice: nonNull(intArg()),
+        hotelId: nonNull(idArg()),
+        lowestPrice: nonNull(floatArg()),
       },
-      resolve(_, args) {
-        return prisma.hotel.update({
-          where: {
-            id: args.id,
-          },
-          data: {
-            lowestPrice: args.lowestPrice,
-          },
-        });
+      resolve(_, args, ctx) {
+        const changeHotelPrice = async (req: NextApiRequest, args: any) => {
+          await verifyIsHotelAdmin(req, args.hotelId);
+          return await prisma.hotel.update({
+            where: {
+              id: args.hotelId,
+            },
+            data: {
+              lowestPrice: args.lowestPrice,
+            },
+          });
+        };
+        return changeHotelPrice(ctx.req, args);
       },
     });
   },

@@ -30,8 +30,8 @@ export type Room = {
   mainImage: string;
   lowestPrice: number;
   maximunGuests?: number;
-  maximunNights?: number;
-  minimunNights?: number;
+  maximunStays?: number;
+  minimunStays?: number;
   description?: string;
   freeCancelation?: Boolean;
   amenties?: Option[];
@@ -41,7 +41,7 @@ export type Room = {
 };
 
 export type Hotel = {
-  id: number;
+  id?: number;
   name: string;
   brand?: string;
   category?: string;

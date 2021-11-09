@@ -2,19 +2,32 @@ import { verify, sign } from 'jsonwebtoken';
 import { compare, hash, genSalt } from 'bcryptjs';
 import type { NextApiRequest } from 'next';
 import getConfig from 'next/config';
+import {
+  AuthenticationError,
+  ForbiddenError,
+  ApolloError,
+} from 'apollo-server-micro';
+import { prisma } from '../lib/prisma';
 
 const { publicRuntimeConfig } = getConfig();
 
-const APP_SECRET = process.env.APP_SECRET || publicRuntimeConfig.APP_SECRET;
-export interface tokenPayload {
-  userId: Number;
-}
+const APP_SECRET = publicRuntimeConfig.APP_SECRET || process.env.APP_SECRET
 
-export async function getUser(req: NextApiRequest) {
-  const token = await verifyToken(req);
-  return token.user || null;
+export interface User {
+  id: Number;
+  role: Role;
 }
-export async function hashPassword(password: string) {
+enum Role {
+  ADMIN,
+  USER,
+}
+export async function getUser(
+  req: NextApiRequest
+): Promise<User | ApolloError> {
+  const token = await verifyToken(req);
+  return token.user;
+}
+export async function hashPassword(password: string): Promise<string> {
   const saltRounds = 10;
   const salt = await genSalt(saltRounds);
   const hashPassword = await hash(password, salt);
@@ -27,16 +40,113 @@ export async function compirePassword(
   const match = await compare(inputPassword, storePassword);
   return match;
 }
-async function verifyToken(req: NextApiRequest) {
+type Token = {
+  user: User;
+};
+async function verifyToken(req: NextApiRequest): Promise<Token | ApolloError> {
   const Authorization = req.headers.authorization;
+  if (!Authorization) throw new AuthenticationError('Unauthenticated');
+  const token = Authorization.replace('Bearer ', '');
+  const verifiedToken: any = await verify(token, APP_SECRET);
+  if (!verifiedToken || !verifiedToken?.user)
+    throw new ForbiddenError('Forbidden');
+  return verifiedToken;
+}
+type HotelId = {
+  id: number;
+};
+type AdminPayload = {
+  id: number;
+  hotels: HotelId[];
+};
+export async function getAdminInfo(
+  req: NextApiRequest
+): Promise<AdminPayload | ApolloError> {
+  const user = await getUser(req);
+  if (!user || user?.role !== 'ADMIN') throw new ForbiddenError('Forbiden');
+  const admin = await prisma.administrator.findUnique({
+    where: {
+      userId: user.id,
+    },
+    select: {
+      id: true,
+      hotels: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+  if (!admin) throw new ForbiddenError('Forbiden');
+  return admin;
+}
+export async function verifyIsHotelAdmin(req: NextApiRequest, hotelId: number) {
+  const admin = await getAdminInfo(req);
+  const isHotelAdmin = admin.hotels.includes({
+    id: hotelId,
+  });
+  if (!isHotelAdmin) throw new ForbiddenError('Forbiden');
+  return admin;
+}
+export async function checkIfClientExist(clientEmail: string) {
+  return await prisma.client.findUnique({
+    where: {
+      email: clientEmail,
+    },
+  });
+}
 
-  if (Authorization) {
-    const token = Authorization.replace('Bearer ', '');
-    const verifiedToken: any = await verify(token, APP_SECRET);
+export async function checkRoomsAvailable({
+  roomModelId,
+  checkInDate,
+  checkOutDate,
+  roomsRequired,
+}: {
+  roomModelId: number;
+  checkInDate: string;
+  checkOutDate: string;
+  roomsRequired: number;
+}) {
+  const requiredDates = inBetweenDates([checkInDate, checkOutDate]);
 
-    return verifiedToken || null;
-  }
-  return null;
+  const roomOfTheType = await prisma.room.findMany({
+    where: {
+      roomModelId: roomModelId,
+    },
+    include: {
+      bookings: true,
+    },
+  });
+  /// filter rooms who's dates required are already reserved
+
+  const roomsWithRequiredDatesAvailables = roomOfTheType.filter((room) =>
+    room.bookings.some((booking) =>
+      requiredDates.includes(
+        new Date(booking.checkInDate) ||
+          requiredDates.includes(new Date(booking.checkOutDate))
+      )
+    )
+  );
+  /// check if there is the number of rooms required
+  if (roomsWithRequiredDatesAvailables.length < roomsRequired) return false;
+
+  return true;
+}
+
+function inBetweenDates(range: string[]): Date[] {
+  const [startDate, endDate] = range;
+  const startDateInMiliseconds = new Date(startDate).getTime();
+  const endDateInMiliseconds = new Date(endDate).getTime();
+  const inBetweenPeriod = endDateInMiliseconds - startDateInMiliseconds;
+  const aDayInMiliseconds = 24 * 60 * 60 * 1000;
+  const InbetweenNumberOfDays = inBetweenPeriod / aDayInMiliseconds;
+
+  const dates = new Array(InbetweenNumberOfDays)
+    .fill(0)
+    .map(
+      (_, index) => new Date(startDateInMiliseconds + index * aDayInMiliseconds)
+    );
+  return dates;
 }
 
 export async function signToken(id: number, role: string) {

@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import room from '@/mocks/room';
+import room from '@/mocks/roomModel';
 import Box from '@mui/material/Box';
 import DoneIcon from '@mui/icons-material/Done';
 import Typography from '@mui/material/Typography';
@@ -81,14 +81,14 @@ const Room: NextPage = () => {
             <TodayIcon color="primary" />
             <Typography>
               <span> minimun stays:</span>
-              {`  ${room.stayMinimun} nights`}
+              {`  ${room.minimunStays} nights`}
             </Typography>
           </div>
           <div className="list-item">
             <TodayIcon color="primary" />
             <Typography>
               <span>maximun stays:</span>
-              {`  ${room.stayMaximun} nights`}
+              {`  ${room.maximunStays} nights`}
             </Typography>
           </div>
         </div>
@@ -168,11 +168,11 @@ const Room: NextPage = () => {
                   textTransform: 'capitalize',
                 }}
               >
-                Equipament
+                Amenities
               </Typography>
             </Box>
             <div className="list">
-              {room.amenties.map((item) => (
+              {room.amenities.map((item) => (
                 <div key={item.id} className="list-item">
                   <DoneIcon fontSize="small" color="secondary" />
                   <Typography>{item.name}</Typography>

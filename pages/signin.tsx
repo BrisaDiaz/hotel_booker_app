@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { useMutation } from '@apollo/client';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import { useForm } from 'react-hook-form';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -12,7 +12,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import validations from '@/utils/formValidations';
+import { SIGN_IN } from '@/queries/index';
 function Copyright(props: any) {
   return (
     <Typography
@@ -34,13 +35,20 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [signIn, { data, error, loading }] = useMutation(SIGN_IN);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ mode: 'onBlur' });
+
+  const onSubmit = async (data: any, event: any) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+
+    signIn({
+      variables: { ...data },
+      onCompleted: (response): void =>
+        localStorage.setItem('token', response.token),
     });
   };
 
@@ -65,7 +73,7 @@ export default function SignIn() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
@@ -74,8 +82,9 @@ export default function SignIn() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
-                  name="email"
+                  label={errors['email'] ? errors['email'] : 'Email Address'}
+                  {...register('email', { ...validations.email })}
+                  error={errors['email'] && true}
                   autoComplete="email"
                 />
               </Grid>
@@ -83,8 +92,9 @@ export default function SignIn() {
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
+                  {...register('password', { ...validations.password })}
+                  error={errors['password'] && true}
+                  label={errors['password'] ? errors['password'] : 'Password'}
                   type="password"
                   id="password"
                   autoComplete="new-password"

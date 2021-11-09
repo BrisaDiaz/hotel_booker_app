@@ -8,12 +8,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  email      String   @unique
+  firstName  String
+  secondName String
+  password   String
+  role       Role     @default(USER)
 
 }
 
@@ -21,8 +23,8 @@ model Administrator {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  userId    Int
-  Hotel     Hotel[]
+  userId    Int      @unique
+  hotels    Hotel[]
 }
 
 model Comment {
@@ -50,7 +52,7 @@ model Hotel {
   lowestPrice      Float
   checkInHour      String
   checkOutHour     String
-  PoliciesAndRules String
+  policiesAndRules String
   frameImage       String
   interiorImage    String
   languages        Language[]
@@ -60,6 +62,7 @@ model Hotel {
   rooms            Room[]
   comments         Comment[]
   roomModels       RoomModel[]
+
 }
 
 model Facility {
@@ -89,13 +92,10 @@ model Room {
   updatedAt   DateTime   @updatedAt
   number      Int
   hotelId     Int
-  roomModelId Int
-  status      RoomStatus
   bookings    Booking[]
-  Hotel       Hotel      @relation(fields: [hotelId], references: [id])
-  RoomModel   RoomModel  @relation(fields: [roomModelId], references: [id])
-  Service     Service?   @relation(fields: [serviceId], references: [id])
-  serviceId   Int?
+  hotel       Hotel      @relation(fields: [hotelId], references: [id])
+  roomModel   RoomModel? @relation(fields: [roomModelId], references: [id])
+  roomModelId Int?
 }
 
 model RoomCategory {
@@ -111,19 +111,20 @@ model RoomModel {
   hotel           Hotel        @relation(fields: [hotelId], references: [id])
   hotelId         Int
   mts2            Int
+  quantityInHotel Int          @default(0)
   roomCategory    RoomCategory @relation(fields: [category], references: [name])
   category        String
   lowestPrice     Float
   freeCancelation Boolean
   mainImage       String
   description     String?
-  MaximunStay     Int
-  MinimunStay     Int
-  maximunGuest    Int
-  amenties        Amenity[]
+  maximunStay     Int          @default(0)
+  minimunStay     Int          @default(1)
+  maximunGuests   Int
+  amenities       Amenity[]
   services        Service[]
   rooms           Room[]
-  public          Boolean
+  public          Boolean      @default(true)
 
 }
 
@@ -151,35 +152,28 @@ model Image {
 }
 
 model Amenity {
-  id          Int        @id @default(autoincrement())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  name        String     @unique
-  roomModel   RoomModel? @relation(fields: [roomModelId], references: [id])
-  roomModelId Int
-}
+  id         Int         @id @default(autoincrement())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  name       String      @unique
+  roomModels RoomModel[]
 
-enum RoomStatus {
-  OCCUPIED
-  VACANT
 }
 
 model Service {
-  id          Int        @id @default(autoincrement())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  name        String     @unique
-  roomModels  Room[]
-  hotels      Hotel[]
-  RoomModel   RoomModel? @relation(fields: [roomModelId], references: [id])
-  roomModelId Int?
+  id         Int         @id @default(autoincrement())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  name       String      @unique
+  roomModels RoomModel[]
+  hotels     Hotel[]
 }
 
 model Client {
   id              Int       @id @default(autoincrement())
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
-  name            String
+  firstName       String
   lastName        String
   email           String    @unique
   cellularNumber  String
@@ -193,7 +187,7 @@ model Booking {
   updatedAt       DateTime      @updatedAt
   clientId        Int
   hotelId         Int
-  roomId          Int
+  roomModelId     Int
   administratorId Int
   childrens       Int
   adults          Int
@@ -201,13 +195,14 @@ model Booking {
   checkInDate     DateTime
   checkOutDate    DateTime
   specifications  String
-  paymetMethod    PaymetMethod
-  status          BookingStatus
-  Room            Room          @relation(fields: [roomId], references: [id])
-  Client          Client        @relation(fields: [clientId], references: [id])
+  paymentMethod   PaymentMethod @default(CASH)
+  status          BookingStatus @default(ACTIVE)
+  client          Client        @relation(fields: [clientId], references: [id])
+  Room            Room?         @relation(fields: [roomId], references: [id])
+  roomId          Int?
 }
 
-enum PaymetMethod {
+enum PaymentMethod {
   CREDIT_CARD
   BILL_TO_ACCOUNT
   CASH

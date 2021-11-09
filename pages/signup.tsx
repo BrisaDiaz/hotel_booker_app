@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { useMutation } from '@apollo/client';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -11,8 +11,24 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { useForm } from 'react-hook-form';
+import {
+SIGN_UP
+} from '@/queries/index';
+import validations from '@/utils/formValidations';
 function Copyright(props: any) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ mode: 'onBlur' });
+  const [signUp,{error,data,loading}] =useMutation(SIGN_UP)
+  const onSubmit = async (data: any, event: any) => {
+    event.preventDefault();
+    console.log(data);
+    // eslint-disable-next-line no-console
+  };
+
   return (
     <Typography
       variant="body2"
@@ -33,14 +49,16 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ mode: 'onBlur' });
+
+  const onSubmit = async (data: any, event: any) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    console.log(data);
     // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
   };
 
   return (
@@ -64,18 +82,21 @@ export default function SignUp() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
                   required
+                  {...register('firstName', { ...validations.name })}
+                  error={errors['firstName'] && true}
+                  label={
+                    errors['firstName'] ? errors['lastName'] : 'First Name'
+                  }
                   fullWidth
                   id="firstName"
-                  label="First Name"
                   autoFocus
                 />
               </Grid>
@@ -84,8 +105,9 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="lastName"
-                  label="Last Name"
-                  name="lastName"
+                  {...register('lastName', { ...validations.lastname })}
+                  error={errors['lastName'] && true}
+                  label={errors['lastName'] ? errors['lastName'] : 'Last Name'}
                   autoComplete="family-name"
                 />
               </Grid>
@@ -94,8 +116,9 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
-                  name="email"
+                  label={errors['email'] ? errors['email'] : 'Email Address'}
+                  {...register('email', { ...validations.email })}
+                  error={errors['email'] && true}
                   autoComplete="email"
                 />
               </Grid>
@@ -103,8 +126,9 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
+                  {...register('password', { ...validations.password })}
+                  error={errors['password'] && true}
+                  label={errors['password'] ? errors['password'] : 'Password'}
                   type="password"
                   id="password"
                   autoComplete="new-password"

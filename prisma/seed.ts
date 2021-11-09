@@ -1,5 +1,6 @@
-import { prisma } from '../lib/prisma';
-import { hashPassword } from '../graphql/utils';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+import { hash, genSalt } from 'bcryptjs';
 
 import {
   services,
@@ -50,13 +51,21 @@ async function seed() {
         name: type,
       })),
     });
-    const encryptedPasswod = await hashPassword(adminUser.password);
-    await prisma.user.create({
+    const saltRounds = 10;
+    const salt = await genSalt(saltRounds);
+    const encryptedPasswod = await hash(adminUser.password, salt);
+
+    const admin = await prisma.user.create({
       data: {
         firstName: adminUser.firstName,
         secondName: adminUser.secondName,
         email: adminUser.email,
         password: encryptedPasswod,
+      },
+    });
+    await prisma.administrator.create({
+      data: {
+        userId: admin.id,
       },
     });
     console.log('Database has been successfully seed');

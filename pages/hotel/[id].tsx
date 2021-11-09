@@ -49,8 +49,9 @@ const Hotel: NextPage = () => {
     },
   ];
   const includedFeatures = Object.keys(hotel.features).filter(
-    (featureName) => hotel.features[featureName] === true
+    (featureName) => hotel.features[featureName] !== true
   );
+
   const formattedAdditonalFeatures = includedFeatures.map((featureName) =>
     featureName
       .split(/(?=[A-Z])/)
@@ -240,7 +241,7 @@ const Hotel: NextPage = () => {
         </Typography>
         <Box sx={{ margin: '20px auto' }}>
           <Grid container spacing={3}>
-            {hotel.rooms.map((room) => (
+            {hotel.roomModels.map((room) => (
               <Grid item xs={12} sm={6}>
                 <RoomCard room={room} />
               </Grid>
