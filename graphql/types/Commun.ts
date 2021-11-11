@@ -1,5 +1,6 @@
 import { extendType, objectType, list } from 'nexus';
 import { prisma } from '../../lib/prisma';
+import { Activity } from './Hotel';
 export const Service = objectType({
   name: 'Service',
   definition(t) {
@@ -37,37 +38,41 @@ export const Image = objectType({
   },
 });
 
-export const Mutation = extendType({
-  type: 'Mutation',
+export const Query = extendType({
+  type: 'Query',
   definition(t) {
-    t.field('allServices', {
+    t.field('servicesList', {
       type: list('Service'),
       resolve: () => {
         return prisma.service.findMany({});
       },
     });
-    t.field('allActivities', {
+    t.field('activitiesList', {
       type: list('Activity'),
-      resolve: () => {
-        return prisma.activity.findMany({});
-      },
+      resolve: () => prisma.activity.findMany({}),
     });
-    t.field('allLanguages', {
-      type: list('Language'),
+    t.list.field('languagesList', {
+      type: 'Language',
       resolve: () => {
         return prisma.language.findMany({});
       },
     });
-    t.field('allFacilities', {
+    t.field('facilitiesList', {
       type: list('Facility'),
       resolve: () => {
         return prisma.facility.findMany({});
       },
     });
-    t.field('allAmenities', {
+    t.field('amenitiesList', {
       type: list('Amenity'),
       resolve: () => {
-        return prisma.amenty.findMany({});
+        return prisma.amenity.findMany({});
+      },
+    });
+    t.field('hotelCategoriesList', {
+      type: list('HotelCategory'),
+      resolve: () => {
+        return prisma.hotelCategory.findMany({});
       },
     });
   },

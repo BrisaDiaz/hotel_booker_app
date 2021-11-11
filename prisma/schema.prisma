@@ -43,7 +43,6 @@ model Hotel {
   updatedAt        DateTime      @updatedAt
   name             String
   brand            String
-  category         String
   administratorId  Int
   administrator    Administrator @relation(fields: [administratorId], references: [id])
   email            String
@@ -63,6 +62,8 @@ model Hotel {
   comments         Comment[]
   roomModels       RoomModel[]
 
+  HotelCategory HotelCategory? @relation(fields: [category], references: [name])
+  category      String
 }
 
 model Facility {
@@ -240,9 +241,9 @@ model Activity {
 }
 
 model HotelCategory {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  hotels Hotel[]
 }
 
 model BedType {

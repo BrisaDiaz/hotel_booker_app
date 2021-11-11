@@ -1,7 +1,7 @@
-import { makeSchema } from 'nexus'
-import path from 'path'
+import { makeSchema } from 'nexus';
+import path from 'path';
 
-import * as types from './types'
+import * as types from './types';
 export const schema = makeSchema({
   types,
   shouldGenerateArtifacts: process.env.NODE_ENV === 'development',
@@ -10,10 +10,10 @@ export const schema = makeSchema({
     schema: path.join(process.cwd(), 'generated/schema.gen.graphql'),
     typegen: path.join(process.cwd(), 'generated/nexusTypes.gen.ts'),
   },
-    contextType: {
-    export: "Context",
-      alias: 'ctx',
-    module:path.join(process.cwd(), "graphql", "context.ts"),
+  playground: true,
+  contextType: {
+    export: 'Context',
+    alias: 'ctx',
+    module: path.join(process.cwd(), 'graphql', 'context.ts'),
   },
-
-})
+});

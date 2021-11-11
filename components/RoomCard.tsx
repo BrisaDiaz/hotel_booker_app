@@ -8,6 +8,17 @@ import SingleBedIcon from '@mui/icons-material/SingleBed';
 import Box from '@mui/material/Box';
 import type { Room } from '../interfaces';
 
+import KingBedIcon from '@mui/icons-material/KingBed';
+
+const DinamicBedIcone = (bedType: string) => {
+  return bedType === 'californian king' ? (
+    <KingBedIcon fontSize="small" color="secondary" />
+  ) : bedType === 'full' || bedType === 'queen' ? (
+    <KingBedIcon fontSize="small" color="secondary" />
+  ) : (
+    <SingleBedIcon fontSize="small" color="secondary" />
+  );
+};
 export default function RoomCard({ room }: { room: Room }) {
   const router = useRouter();
   const handleRedirectToRoomPage = (roomId: number) => {
@@ -17,8 +28,10 @@ export default function RoomCard({ room }: { room: Room }) {
     <div key={room.id} onClick={() => handleRedirectToRoomPage(room.id)}>
       <Card
         sx={{
-          maxWidth: '480px',
+          maxWidth: '400px',
           minWidth: '310px',
+          p: '5px',
+          pb: '10px',
         }}
       >
         <CardActionArea
@@ -27,16 +40,17 @@ export default function RoomCard({ room }: { room: Room }) {
             textTransform: 'capitalize',
           }}
         >
-          <Box sx={{ display: 'flex' }}>
+          <Box>
             <CardMedia
               component="img"
-              height="100px"
+              height="160px"
               sx={{
                 borderRadius: '8px',
-                width: '35%',
+                width: '100%',
+                mb: 1,
               }}
               image={room.mainImage}
-              alt={room.type}
+              alt={room.category}
             />
             <CardContent
               sx={{
@@ -48,31 +62,25 @@ export default function RoomCard({ room }: { room: Room }) {
             >
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography
+                  variant="h6"
+                  sx={{ fontWeight: '600', marginBottom: '5px' }}
+                >
+                  {room.category}
+                </Typography>
+                <Typography
                   variant="body2"
                   sx={{
                     fontWeight: '500',
                     opacity: '0.9',
+                    marginLeft: 'Auto',
+                    minWidth: 'max-content',
+                    pl: 1,
                     textTransform: 'lowercase',
                   }}
                 >
                   {room.mts2} mts2
                 </Typography>
-
-                <Typography
-                  color="primary"
-                  sx={{ fontWeight: '400', textDecoration: 'underline' }}
-                  variant="body1"
-                  component="a"
-                >
-                  more
-                </Typography>
               </Box>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: '600', marginBottom: '5px' }}
-              >
-                {room.category}
-              </Typography>
               <Box sx={{ display: 'flex', columnGap: '8px' }}>
                 <Box
                   sx={{
@@ -81,16 +89,16 @@ export default function RoomCard({ room }: { room: Room }) {
                     width: '100%',
                   }}
                 >
-                  <SingleBedIcon fontSize="small" color="secondary" />
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      columnGap: '3px',
-                    }}
-                  >
-                    {room.beds.map((bed, index) => (
-                      <div key={bed.type}>
+                  {room.beds.map((bed, index) => (
+                    <div key={bed.type}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          columnGap: '3px',
+                        }}
+                      >
+                        {DinamicBedIcone(bed.type)}
                         <Typography
                           variant="body2"
                           sx={{ minWidth: 'max-content' }}
@@ -100,9 +108,9 @@ export default function RoomCard({ room }: { room: Room }) {
                           {room.beds.length > 1 &&
                             index < room.beds.length - 1 && <b>{'  '}+</b>}
                         </Typography>
-                      </div>
-                    ))}
-                  </Box>
+                      </Box>
+                    </div>
+                  ))}
                 </Box>
               </Box>
             </CardContent>
@@ -111,7 +119,7 @@ export default function RoomCard({ room }: { room: Room }) {
             variant="h5"
             sx={{ fontWeight: '600', float: 'right', marginTop: '-10px' }}
           >
-            ${room.lowestPrice} USDw
+            ${room.lowestPrice} USD
           </Typography>
         </CardActionArea>
       </Card>

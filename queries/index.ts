@@ -109,42 +109,70 @@ export const ADD_HOTEL_ADDRESS = gql`
   }
 `;
 export const GET_ALL_SERVICES = gql`
-  query allServices {
-    allServices {
+  query servicesList {
+    servicesList {
       id
       name
     }
   }
 `;
 export const GET_ALL_AMENETIES = gql`
-  query allAmeneties {
-    allAmeneties {
+  query amenitiesList {
+    amenitiesList {
       id
       name
     }
   }
 `;
 export const GET_ALL_FACILITIES = gql`
-  query allFacilities {
-    allFacilities {
+  query facilitiesList {
+    facilitiesList {
       id
       name
     }
   }
 `;
+
 export const GET_ALL_ACTIVITIES = gql`
-  query allActivities {
-    allActivities {
+  query activitiesList {
+    activitiesList {
       id
       name
     }
   }
 `;
 export const GET_ALL_LANGUAGES = gql`
-  query allLanguages {
-    allLanguages {
+  query languagesList {
+    languagesList {
       id
       name
     }
   }
 `;
+export const GET_ALL_HOTEL_CATEGORIES = gql`
+  query hotelCategoriesList {
+    hotelCategoriesList {
+      id
+      name
+    }
+  }
+`;
+
+export const MAKE_ROOM_CONSULT = gql`
+mutation checkRoomAvailability($roomModelId:ID!,$checkInDate:String!,$checkOutDate:String!,$rooms:[RoomSpecification!]!){
+  checkRoomAvailability(
+    roomModelId:$roomModelId
+checkInDate:$checkInDate
+checkOutDate:$checkOutDate
+rooms:$rooms
+  ){
+  isAvailable
+  message
+  }
+
+}
+ extend type RoomSpecification {
+  $childrens:!Number
+  $adults:!Number
+}
+// `;

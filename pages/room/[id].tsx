@@ -13,7 +13,29 @@ import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import BedIcon from '@mui/icons-material/Bed';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import Modal from '../../components/AbailableRoomModal';
+import { useRouter } from 'next/router';
+import { useMutation } from '@apollo/client';
+import { MAKE_ROOM_CONSULT } from '@/queries/index';
 const Room: NextPage = () => {
+  const router = useRouter();
+  const handleRedirectToHotel = (id: number) => {
+    router.push(`/hotel/${id}`);
+  };
+  const [makeRoomConsult, { data, loading, error }] =
+    useMutation(MAKE_ROOM_CONSULT);
+  type Room = {
+    childrens: number;
+    adults: number;
+  };
+  type Data = {
+    checkInDate: string;
+    checkOutDate: string;
+    rooms: Room[];
+  };
+  const handleConsutlSubmit = (data: Data) => {
+    console.log(data);
+    makeRoomConsult({ variables: { ...data, roomModelId: room.id } });
+  };
   return (
     <div>
       <Head>
@@ -26,12 +48,19 @@ const Room: NextPage = () => {
         <Typography
           variant="h3"
           component="h1"
+          onClick={() => handleRedirectToHotel(room.hotelId)}
           sx={{
             fontWeight: 700,
             margin: '0 16px',
             width: 'fit-content',
             textTransform: 'capitalize',
             padding: '10px 0 0',
+            cursor: 'pointer',
+            '&:hover': {
+              color: 'rgb(0 0 0 / 70%)',
+              textDecoration: 'underline',
+              textUnderlineOffset: '5px',
+            },
           }}
         >
           {room.hotel.name}
@@ -103,7 +132,7 @@ const Room: NextPage = () => {
                 display: 'flex',
                 gap: '10px',
                 alignItems: 'center',
-                marginBottom: '15px',
+                my: 3,
               }}
             >
               <BedIcon color="primary" />
@@ -156,7 +185,7 @@ const Room: NextPage = () => {
                 display: 'flex',
                 gap: '10px',
                 alignItems: 'center',
-                marginBottom: '15px',
+                my: 3,
               }}
             >
               <RoomPreferencesIcon color="primary" />
@@ -184,7 +213,7 @@ const Room: NextPage = () => {
                 display: 'flex',
                 gap: '10px',
                 alignItems: 'center',
-                my: 2,
+                my: 3,
               }}
             >
               <RoomServiceIcon color="primary" />
@@ -208,12 +237,11 @@ const Room: NextPage = () => {
               ))}
             </div>
           </Box>
-          <Modal roomId={room.id}>
+          <Modal onSubmit={handleConsutlSubmit}>
             <Button
               sx={{ padding: '10px 20px' }}
               color="secondary"
               variant="contained"
-              href="#"
             >
               Check Diponibility
             </Button>
@@ -250,8 +278,10 @@ const Room: NextPage = () => {
           }
           .list {
             display: flex;
-            gap: 20px;
+            row-gap: 20px;
+            column-gap: 150px;
             flex-wrap: wrap;
+
             padding: 0 10px;
             text-transform: capitalize;
             font-weight: 400;

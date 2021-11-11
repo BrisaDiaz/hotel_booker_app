@@ -99,12 +99,27 @@ export const ConsultMutation = extendType({
                 'The number of rooms availables dose not match with the required',
             };
         };
+        return makeConsult(args);
       },
     });
   },
 });
+export const BookingStatus = enumType({
+  name: 'BookingStatus',
+  members: ['ACTIVE', 'REJECTED', 'CANCELED'],
+});
+export const PaymentMethod = enumType({
+  name: 'PaymentMethod',
+  members: [
+    'CREDIT_CARD',
+    'BILL_TO_ACCOUNT',
+    'CASH',
+    'DEBIT_CARD',
+    'TRAVELER_CHECK',
+  ],
+});
 export const Booking = objectType({
-  name: 'bookings',
+  name: 'Booking',
   definition(t) {
     t.id('id');
     t.int('hotelId');
@@ -161,44 +176,30 @@ export const Booking = objectType({
     t.field('paymentMethod', { type: 'PaymentMethod' });
   },
 });
-export const BookingStatus = enumType({
-  name: 'BookingStatus',
-  members: ['ACTIVE', 'REJECTED', 'CANCELED'],
-});
-export const PaymentMethod = enumType({
-  name: 'BookingStatus',
-  members: [
-    'CREDIT_CARD',
-    'BILL_TO_ACCOUNT',
-    'CASH',
-    'DEBIT_CARD',
-    'TRAVELER_CHECK',
-  ],
-});
 
 export const Query = extendType({
   type: 'Query',
   definition(t) {
-    t.field('getOrderById', {
-      type: 'Order',
+    t.field('getBookingById', {
+      type: 'Booking',
       args: {
         id: nonNull(idArg()),
       },
       resolve(root, args, ctx) {
-        const getOrder = async (req: NextApiRequest, bookingId: number) => {
+        const getBooking = async (req: NextApiRequest, bookingId: number) => {
           const booking = await prisma.booking.findUnique({
             where: {
               id: bookingId,
             },
           });
-          if (!booking) throw new ValidationError('Invalid order Id');
+          if (!booking) throw new ValidationError('Invalid Booking Id');
           const admin = await getAdminInfo(req);
 
           if (!admin.hotels.includes(booking.hotelId))
             throw new ForbiddenError('Forbidden');
           return booking;
         };
-        return getOrder(ctx.req, args.id);
+        return getBooking(ctx.req, args.id);
       },
     });
   },

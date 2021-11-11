@@ -1,14 +1,15 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { GetStaticProps } from 'next';
-import HotelForm from '../../../components/HotelForm';
+import HotelForm from '@/components/HotelForm';
+import Backdrop from '@/components/Backdrop';
 import { useMutation } from '@apollo/client';
 import {
   CREATE_HOTEL,
   ADD_HOTEL_FEATURES,
   ADD_HOTEL_ADDRESS,
 } from '@/queries/index';
-import type { Address, Features, Hotel } from '@/interfaces/';
+import type { Address, Features, Hotel } from '@/interfaces/index';
 type Option = {
   id: number;
   name: string;

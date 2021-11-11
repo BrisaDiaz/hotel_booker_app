@@ -18,12 +18,12 @@ import LanguageIcon from '@mui/icons-material/Language';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import PetsIcon from '@mui/icons-material/Pets';
 import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
-import SmokeFreeIcon from '@mui/icons-material/SmokeFree';
+import SmokingRoomsIcon from '@mui/icons-material/SmokingRooms';
 import PaidIcon from '@mui/icons-material/Paid';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import RoomCard from '../../components/RoomCard';
 import hotel from '@/mocks/hotel';
-import { RestoreFromTrashOutlined } from '@mui/icons-material';
+
 const Hotel: NextPage = () => {
   const images = [
     { title: 'Hotel frame', image: hotel.frameImage },
@@ -215,7 +215,7 @@ const Hotel: NextPage = () => {
                       ) : featureName === 'pet friendly' ? (
                         <PetsIcon color="primary" />
                       ) : featureName === 'smoker friendly' ? (
-                        <SmokeFreeIcon color="primary" />
+                        <SmokingRoomsIcon color="primary" />
                       ) : featureName === 'accessible' ? (
                         <AccessibleForwardIcon color="primary" />
                       ) : featureName === 'cancelation free' ? (
@@ -240,9 +240,9 @@ const Hotel: NextPage = () => {
           Rooms
         </Typography>
         <Box sx={{ margin: '20px auto' }}>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} justifyContent="center">
             {hotel.roomModels.map((room) => (
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <RoomCard room={room} />
               </Grid>
             ))}

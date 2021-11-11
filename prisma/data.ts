@@ -152,7 +152,6 @@ export const bedTypes = [
   'king',
   'californian king',
   'bunk',
-  'triple bunk',
 ];
 
 export const hotelCategories = [
@@ -183,7 +182,6 @@ export const activities = [
   'indoor cycling',
   'bowling',
   'mountain climbing',
-  'paintball',
   'target shooting practice',
   'in-line skating',
   'tandem skydives',

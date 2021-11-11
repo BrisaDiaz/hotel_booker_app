@@ -1,11 +1,40 @@
 import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
+import { GetStaticProps } from 'next';
+import { client } from '../lib/apollo';
+import { useMutation } from '@apollo/client';
 import Head from 'next/head';
 import HotelsGrid from '../components/HotelsGrid';
 import FilterMenu from '../components/FilterMenu';
 import hotel from '@/mocks/hotel';
 import Box from '@mui/material/Box';
-const Search: NextPage = () => {
+
+import {
+  GET_ALL_SERVICES,
+  GET_ALL_FACILITIES,
+  GET_ALL_ACTIVITIES,
+  GET_ALL_LANGUAGES,
+  GET_ALL_HOTEL_CATEGORIES,
+} from '@/queries/index';
+
+type Data = {
+  id: number;
+  name: string;
+  __typename: string;
+};
+type Props = {
+  facilitiesList: Data[];
+  activitiesList: Data[];
+  languagesList: Data[];
+  servicesList: Data[];
+  hotelCategoriesList: Data[];
+};
+const Search = ({
+  facilitiesList,
+  activitiesList,
+  languagesList,
+  servicesList,
+  hotelCategoriesList,
+}: Props) => {
   const hotelsArray = new Array(6).fill(0).map((el, index) => ({
     ...hotel,
     id: index + 1,
@@ -20,7 +49,13 @@ const Search: NextPage = () => {
       </Head>
 
       <main>
-        <FilterMenu>
+        <FilterMenu
+          facilities={facilitiesList}
+          activities={activitiesList}
+          languages={languagesList}
+          services={servicesList}
+          hotelCategories={hotelCategoriesList}
+        >
           <Box
             sx={{
               display: 'flex',
@@ -37,3 +72,42 @@ const Search: NextPage = () => {
 };
 
 export default Search;
+export const getStaticProps: GetStaticProps = async (context) => {
+  const activitiesRequest = await client.query({
+    query: GET_ALL_ACTIVITIES,
+  });
+  const servicesRequest = await client.query({
+    query: GET_ALL_SERVICES,
+  });
+  const facilitiesRequest = await client.query({
+    query: GET_ALL_FACILITIES,
+  });
+  const categoriesRequest = await client.query({
+    query: GET_ALL_HOTEL_CATEGORIES,
+  });
+  const languagesRequest = await client.query({
+    query: GET_ALL_LANGUAGES,
+  });
+
+  const response = await Promise.all([
+    activitiesRequest,
+    servicesRequest,
+    facilitiesRequest,
+    categoriesRequest,
+    languagesRequest,
+  ]);
+
+  const props = {
+    ...facilitiesRequest.data,
+    ...activitiesRequest.data,
+    ...languagesRequest.data,
+    ...servicesRequest.data,
+    ...categoriesRequest.data,
+  };
+
+  return {
+    props: {
+      ...props,
+    },
+  };
+};

@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 import { hash, genSalt } from 'bcryptjs';
 
 import {
+  activities,
   services,
   facilities,
   amenities,
@@ -15,6 +16,11 @@ import {
 
 async function seed() {
   try {
+    await prisma.activity.createMany({
+      data: activities.map((activity) => ({
+        name: activity,
+      })),
+    });
     await prisma.service.createMany({
       data: services.map((service) => ({
         name: service,

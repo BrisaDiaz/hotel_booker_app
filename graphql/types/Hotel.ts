@@ -67,6 +67,13 @@ export const Language = objectType({
     t.string('name');
   },
 });
+export const HotelCategory = objectType({
+  name: 'HotelCategory',
+  definition(t) {
+    t.id('id');
+    t.string('name');
+  },
+});
 export const Hotel = objectType({
   name: 'Hotel',
   definition(t) {
@@ -100,7 +107,7 @@ export const Hotel = objectType({
     });
     t.list.field('services', { type: 'Service' });
     t.list.field('activities', { type: 'Activity' });
-    t.list.field('languages', { type: 'Langueage' });
+    t.list.field('languages', { type: 'Language' });
     t.list.field('roomModels', {
       type: 'RoomModel',
       resolve: (root) => {
@@ -125,16 +132,7 @@ export const Hotel = objectType({
         });
       },
     });
-    t.list.field('comments', {
-      type: 'Comment',
-      resolve: (root) => {
-        return prisma.comment.findMany({
-          where: {
-            hotelId: root.id,
-          },
-        });
-      },
-    });
+
     t.field('address', {
       type: 'Address',
       resolve(root, args, ctx) {

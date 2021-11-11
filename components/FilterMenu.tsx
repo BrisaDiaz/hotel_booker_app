@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { alpha, useTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
@@ -18,14 +19,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import CheckboxGroup from './CheckboxGroup';
 import Accordion from './Acconrdion';
-import {
-  facilities,
-  features,
-  hotelCategories,
-  services,
-  activities,
-  languages,
-} from '../prisma/data';
+
 const drawerWidth = 240;
 
 const Search = styled('div')(({ theme }) => ({
@@ -149,10 +143,25 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+type Data = {
+  id: number;
+  name: string;
+  __typename: string;
+};
 export default function PersistentDrawerLeft({
   children,
+  facilities,
+  activities,
+  languages,
+  services,
+  hotelCategories,
 }: {
   children: React.ReactNode;
+  facilities: Data[];
+  activities: Data[];
+  languages: Data[];
+  services: Data[];
+  hotelCategories: Data[];
 }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -164,6 +173,14 @@ export default function PersistentDrawerLeft({
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const features = [
+    { id: 1, name: 'free cancelation' },
+    { id: 2, name: 'accessible' },
+    { id: 3, name: 'family friendly' },
+    { id: 4, name: 'pet friendly' },
+    { id: 5, name: 'eco friendly ' },
+    { id: 6, name: 'smoker friendly' },
+  ];
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -177,7 +194,9 @@ export default function PersistentDrawerLeft({
             edge="start"
             sx={{ mr: 2, ...(open && { display: 'none' }) }}
           >
-            <ManageSearchIcon fontSize="large" />
+            <Tooltip disableFocusListener title="Filter">
+              <ManageSearchIcon fontSize="large" />
+            </Tooltip>
           </IconButton>
           <Typography
             variant="h6"

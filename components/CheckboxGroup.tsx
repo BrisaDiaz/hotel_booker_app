@@ -2,16 +2,20 @@ import * as React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-
-export default function CheckboxLabels({ items }: { items: string[] }) {
+type Data = {
+  id: number;
+  name: string;
+  __typename?: string;
+};
+export default function CheckboxLabels({ items }: { items: Data[] }) {
   return (
     <FormGroup>
-      {items.map((itemName) => (
+      {items.map((item) => (
         <FormControlLabel
           sx={{ textTransform: 'capitalize', fontSize: '14px' }}
-          key={itemName}
+          key={`${item.name}-${item.id}`}
           control={<Checkbox />}
-          label={itemName}
+          label={item.name}
         />
       ))}
     </FormGroup>
