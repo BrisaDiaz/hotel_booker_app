@@ -1,6 +1,7 @@
 import { verify, sign } from 'jsonwebtoken';
+import Cookies from 'cookies';
 import { compare, hash, genSalt } from 'bcryptjs';
-import type { NextApiRequest } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import getConfig from 'next/config';
 import {
   AuthenticationError,
@@ -11,7 +12,7 @@ import { prisma } from '../lib/prisma';
 
 const { publicRuntimeConfig } = getConfig();
 
-const APP_SECRET = publicRuntimeConfig.APP_SECRET || process.env.APP_SECRET
+const APP_SECRET = publicRuntimeConfig.APP_SECRET || process.env.APP_SECRET;
 
 export interface User {
   id: Number;
@@ -22,31 +23,39 @@ enum Role {
   USER,
 }
 export async function getUser(
-  req: NextApiRequest
+  req: NextApiRequest,
+  res: NextApiResponse
 ): Promise<User | ApolloError> {
-  const token = await verifyToken(req);
+  const token = await verifyToken(req, res);
   return token.user;
 }
-export async function hashPassword(password: string): Promise<string> {
-  const saltRounds = 10;
-  const salt = await genSalt(saltRounds);
-  const hashPassword = await hash(password, salt);
-  return hashPassword;
-}
-export async function compirePassword(
-  storePassword: string,
-  inputPassword: string
-) {
-  const match = await compare(inputPassword, storePassword);
-  return match;
-}
+
 type Token = {
   user: User;
 };
-async function verifyToken(req: NextApiRequest): Promise<Token | ApolloError> {
-  const Authorization = req.headers.authorization;
-  if (!Authorization) throw new AuthenticationError('Unauthenticated');
-  const token = Authorization.replace('Bearer ', '');
+export function setCookie(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  token: string
+) {
+  const cookies = new Cookies(req, res);
+  cookies.set('bookingApp-token', token, {
+    httpOnly: true, // true by default
+  });
+}
+export function getCookie(req: NextApiRequest, res: NextApiResponse) {
+  const cookies = new Cookies(req, res);
+  return cookies.get('bookingApp-token');
+}
+export function deleteCookie(req: NextApiRequest, res: NextApiResponse) {
+  const cookies = new Cookies(req, res);
+  cookies.set('bookingApp-token');
+}
+async function verifyToken(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<Token | ApolloError> {
+  const token = getCookie(req, res);
   const verifiedToken: any = await verify(token, APP_SECRET);
   if (!verifiedToken || !verifiedToken?.user)
     throw new ForbiddenError('Forbidden');
@@ -60,9 +69,10 @@ type AdminPayload = {
   hotels: HotelId[];
 };
 export async function getAdminInfo(
-  req: NextApiRequest
+  req: NextApiRequest,
+  res: NextApiResponse
 ): Promise<AdminPayload | ApolloError> {
-  const user = await getUser(req);
+  const user = await getUser(req, res);
   if (!user || user?.role !== 'ADMIN') throw new ForbiddenError('Forbiden');
   const admin = await prisma.administrator.findUnique({
     where: {
@@ -80,8 +90,12 @@ export async function getAdminInfo(
   if (!admin) throw new ForbiddenError('Forbiden');
   return admin;
 }
-export async function verifyIsHotelAdmin(req: NextApiRequest, hotelId: number) {
-  const admin = await getAdminInfo(req);
+export async function verifyIsHotelAdmin(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  hotelId: number
+) {
+  const admin = await getAdminInfo(req, res);
   const isHotelAdmin = admin.hotels.includes({
     id: hotelId,
   });
@@ -148,7 +162,22 @@ function inBetweenDates(range: string[]): Date[] {
     );
   return dates;
 }
-
+export async function hashPassword(password: string): Promise<string> {
+  const saltRounds = 10;
+  const salt = await genSalt(saltRounds);
+  const hashPassword = await hash(password, salt);
+  return hashPassword;
+}
+export async function compirePassword({
+  hash,
+  plain,
+}: {
+  hash: string;
+  plain: string;
+}) {
+  const match = await compare(plain, hash);
+  return match;
+}
 export async function signToken(id: number, role: string) {
   const token = await sign({ user: { id: id, role: role } }, APP_SECRET);
 

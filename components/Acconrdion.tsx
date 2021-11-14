@@ -10,25 +10,8 @@ import HikingIcon from '@mui/icons-material/Hiking';
 import LanguageIcon from '@mui/icons-material/Language';
 import HotelIcon from '@mui/icons-material/Hotel';
 import RuleIcon from '@mui/icons-material/Rule';
-
+import DinamicFieldIcone from '@/components/DinamicFieldIcone';
 import Box from '@mui/material/Box';
-
-const DinamicIcons = (subject: string) => {
-  const subjectName = subject.toLowerCase().trim();
-  return subjectName == 'facilities' ? (
-    <ApartmentIcon />
-  ) : subjectName == 'services' ? (
-    <RoomServiceIcon />
-  ) : subjectName == 'activities' ? (
-    <HikingIcon />
-  ) : subjectName == 'languages' ? (
-    <LanguageIcon />
-  ) : subjectName == 'category' ? (
-    <HotelIcon />
-  ) : subjectName == 'other features' ? (
-    <RuleIcon />
-  ) : null;
-};
 
 export default function SimpleAccordion({
   title,
@@ -47,7 +30,7 @@ export default function SimpleAccordion({
           id={`${title}-panel`}
         >
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {DinamicIcons(title)}
+            {DinamicFieldIcone(title)}
             <Typography
               variant="subtitle1"
               sx={{

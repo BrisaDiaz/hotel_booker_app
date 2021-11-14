@@ -8,15 +8,16 @@ import TodayIcon from '@mui/icons-material/Today';
 import Button from '@mui/material/Button';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageList from '@mui/material/ImageList';
-import AddIcon from '@mui/icons-material/Add';
+
 import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import BedIcon from '@mui/icons-material/Bed';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import Modal from '../../components/AbailableRoomModal';
+import RoomBedsUI from '@/components/RoomBedsUI';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
 import { MAKE_ROOM_CONSULT } from '@/queries/index';
-const Room: NextPage = () => {
+const RoomPage: NextPage = () => {
   const router = useRouter();
   const handleRedirectToHotel = (id: number) => {
     router.push(`/hotel/${id}`);
@@ -36,6 +37,7 @@ const Room: NextPage = () => {
     console.log(data);
     makeRoomConsult({ variables: { ...data, roomModelId: room.id } });
   };
+
   return (
     <div>
       <Head>
@@ -101,7 +103,7 @@ const Room: NextPage = () => {
         </ImageList>
 
         <h4 className="price">
-          <span> ${room.lowestPrice} USD</span>/Night
+          <span> USD${room.lowestPrice}</span>/Night
         </h4>
 
         <Typography sx={{ margin: '20px 10px' }}>{room.description}</Typography>
@@ -156,28 +158,7 @@ const Room: NextPage = () => {
                 margin: '15px',
               }}
             >
-              <DoneIcon
-                fontSize="small"
-                color="secondary"
-                sx={{
-                  marginRight: '8px',
-                }}
-              />
-              {room.beds.map((bed, index) => (
-                <div key={bed.type}>
-                  <Typography>
-                    {bed.quantity} {bed.type}{' '}
-                    {bed.quantity > 1 ? 'beds' : 'bed'}
-                    {room.beds.length > 1 && index < room.beds.length - 1 && (
-                      <AddIcon
-                        fontSize="small"
-                        color="secondary"
-                        sx={{ margin: '0 5px -3px' }}
-                      />
-                    )}
-                  </Typography>
-                </div>
-              ))}
+              {RoomBedsUI(room.beds, 'medium')}
             </Box>
 
             <Box
@@ -306,4 +287,4 @@ const Room: NextPage = () => {
   );
 };
 
-export default Room;
+export default RoomPage;

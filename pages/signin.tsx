@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -14,6 +15,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import validations from '@/utils/formValidations';
 import { SIGN_IN } from '@/queries/index';
+import Backdrop from '@/components/Backdrop';
+import Alerts from '@/components/Alerts';
 function Copyright(props: any) {
   return (
     <Typography
@@ -41,19 +44,31 @@ export default function SignIn() {
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: 'onBlur' });
-
+  const router = useRouter();
+  const redirectToSignup = () => {
+    router.push('/signup');
+  };
   const onSubmit = async (data: any, event: any) => {
     event.preventDefault();
-
-    signIn({
-      variables: { ...data },
-      onCompleted: (response): void =>
-        localStorage.setItem('token', response.token),
-    });
+    try {
+      await signIn({
+        variables: { ...data },
+      });
+    } catch (error) {}
   };
-
+  if (data?.signin?.user && !loading) {
+    router.push('/search');
+  }
   return (
-    <ThemeProvider theme={theme}>
+    <Box
+      sx={{
+        maxWidth: '1200px',
+        m: '0 auto',
+      }}
+    >
+      {!loading && error && (
+        <Alerts type="error" alerts={error.graphQLErrors} />
+      )}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -65,7 +80,7 @@ export default function SignIn() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-            <LockOutlinedIcon />
+            <LockOutlinedIcon sx={{ color: '#fff' }} />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign In
@@ -81,8 +96,11 @@ export default function SignIn() {
                 <TextField
                   required
                   fullWidth
+                  type="email"
                   id="email"
-                  label={errors['email'] ? errors['email'] : 'Email Address'}
+                  label={
+                    errors['email'] ? errors['email'].message : 'Email Address'
+                  }
                   {...register('email', { ...validations.email })}
                   error={errors['email'] && true}
                   autoComplete="email"
@@ -92,9 +110,12 @@ export default function SignIn() {
                 <TextField
                   required
                   fullWidth
+                  type="password"
                   {...register('password', { ...validations.password })}
                   error={errors['password'] && true}
-                  label={errors['password'] ? errors['password'] : 'Password'}
+                  label={
+                    errors['password'] ? errors['password'].message : 'Password'
+                  }
                   type="password"
                   id="password"
                   autoComplete="new-password"
@@ -116,7 +137,11 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link
+                  href="#"
+                  variant="body2"
+                  onClick={() => redirectToSignup()}
+                >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -124,7 +149,8 @@ export default function SignIn() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Backdrop loading={loading} />
       </Container>
-    </ThemeProvider>
+    </Box>
   );
 }

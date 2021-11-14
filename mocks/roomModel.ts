@@ -1,6 +1,7 @@
 const roomModel = {
   id: 4,
   category: 'double room',
+  name: 'King Room with City View',
   mainImage:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Hotel-room-renaissance-columbus-ohio.jpg/1024px-Hotel-room-renaissance-columbus-ohio.jpg',
   mts2: 25,

@@ -23,6 +23,7 @@
     "@types/jsonwebtoken": "^8.5.5",
     "apollo-server-micro": "^3.4.0",
     "bcryptjs": "^2.4.3",
+    "cookies": "^0.8.0",
     "graphql": "^15.7.2",
     "jsonwebtoken": "^8.5.1",
     "micro": "^9.3.4",

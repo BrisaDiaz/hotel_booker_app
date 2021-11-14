@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  email      String   @unique
-  firstName  String
-  secondName String
-  password   String
-  role       Role     @default(USER)
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  firstName String
+  lastName  String
+  password  String
+  role      Role     @default(USER)
 
 }
 
@@ -38,14 +38,16 @@ model Comment {
 }
 
 model Hotel {
-  id               Int           @id @default(autoincrement())
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  id               Int            @id @default(autoincrement())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
   name             String
   brand            String
   administratorId  Int
-  administrator    Administrator @relation(fields: [administratorId], references: [id])
+  administrator    Administrator  @relation(fields: [administratorId], references: [id])
   email            String
+  hotelCategory    HotelCategory? @relation(fields: [category], references: [name])
+  category         String
   telephone        String
   description      String?
   lowestPrice      Float
@@ -62,8 +64,7 @@ model Hotel {
   comments         Comment[]
   roomModels       RoomModel[]
 
-  HotelCategory HotelCategory? @relation(fields: [category], references: [name])
-  category      String
+
 }
 
 model Facility {
@@ -110,6 +111,7 @@ model RoomModel {
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
   hotel           Hotel        @relation(fields: [hotelId], references: [id])
+  name            String
   hotelId         Int
   mts2            Int
   quantityInHotel Int          @default(0)
@@ -190,7 +192,7 @@ model Booking {
   hotelId         Int
   roomModelId     Int
   administratorId Int
-  childrens       Int
+  children        Int
   adults          Int
   nights          Int
   checkInDate     DateTime

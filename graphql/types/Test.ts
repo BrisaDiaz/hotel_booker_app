@@ -16,7 +16,7 @@ export const Mutation = extendType({
 
       resolve() {
         return [
-          { id: 1, message: 'message number 1' },
+          { id: 1, mwessage: 'message number 1' },
           { id: 2, message: 'message number 2' },
         ];
       },

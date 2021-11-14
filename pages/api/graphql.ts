@@ -1,13 +1,13 @@
 import { ApolloServer } from 'apollo-server-micro';
 import { schema } from '../../graphql/schema';
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { createContext } from '../../graphql/context';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const server = new ApolloServer({ schema, context: createContext(req, res) });
+  const server = new ApolloServer({ schema, context: createContext });
 
   await server.start();
 

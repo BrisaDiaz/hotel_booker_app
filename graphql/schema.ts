@@ -10,10 +10,4 @@ export const schema = makeSchema({
     schema: path.join(process.cwd(), 'generated/schema.gen.graphql'),
     typegen: path.join(process.cwd(), 'generated/nexusTypes.gen.ts'),
   },
-  playground: true,
-  contextType: {
-    export: 'Context',
-    alias: 'ctx',
-    module: path.join(process.cwd(), 'graphql', 'context.ts'),
-  },
 });

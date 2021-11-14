@@ -11,7 +11,7 @@ import {
 } from 'nexus';
 import { verifyIsHotelAdmin } from '../utils';
 import { prisma } from '../../lib/prisma';
-import type { NextApiRequest } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 export const Amenity = objectType({
   name: 'Amenity',
   definition(t) {
@@ -28,12 +28,19 @@ export const RoomBed = objectType({
     t.int('quantity');
   },
 });
-
+export const RoomCategory = objectType({
+  name: 'RoomCategory',
+  definition(t) {
+    t.id('id');
+    t.string('name');
+  },
+});
 export const RoomModel = objectType({
   name: 'RoomModel',
   definition(t) {
     t.id('id');
     t.int('hotelId');
+    t.string('name');
     t.int('mts2');
     t.string('category');
     t.boolean('canselationFree');
@@ -135,7 +142,7 @@ export const Mutation = extendType({
       args: {
         hotelId: nonNull(intArg()),
         lowestPrice: nonNull(intArg()),
-        quantityInHotel: nonNull(intArg()),
+        name: nonNull(stringArg()),
         mts2: nonNull(intArg()),
         category: nonNull(stringArg()),
         description: nonNull(stringArg()),
@@ -147,27 +154,16 @@ export const Mutation = extendType({
         amenities: nonNull(list(stringArg())),
       },
       resolve(root, args, ctx) {
-        type RoomModel = {
-          hotelId: number;
-          mts2: number;
-          category: string;
-          lowestPrice: number;
-          description: string;
-          maximunStay: number;
-          minimunStay: number;
-          maximunGuests: number;
-          mainImage: string;
-          services: string[];
-          amenities: string[];
-        };
         const createHotelRoomModel = async (
           req: NextApiRequest,
+          res: NextApiResponse,
           args: RoomModel
         ) => {
-          await verifyIsHotelAdmin(req, args.hotelId);
+          await verifyIsHotelAdmin(req, res, args.hotelId);
           return await prisma.roomModel.create({
             data: {
               hotelId: args.hotelId,
+              name: args.name,
               mts2: args.mts2,
               category: args.category,
               lowestPrice: args.lowestPrice,
@@ -189,7 +185,7 @@ export const Mutation = extendType({
             },
           });
         };
-        return createHotelRoomModel(ctx.req, args);
+        return createHotelRoomModel(ctx.req, ctx.res, args);
       },
     });
     t.field('editRoomModelVicibility', {
@@ -202,9 +198,10 @@ export const Mutation = extendType({
       resolve(root, args, ctx) {
         const editRoomModelVicibility = async (
           req: NextApiRequest,
+          res: NextApiResponse,
           args: any
         ) => {
-          await verifyIsHotelAdmin(req, args.hotelId);
+          await verifyIsHotelAdmin(req, res, args.hotelId);
           return await prisma.roomModel.update({
             where: {
               id: args.id,
@@ -214,7 +211,7 @@ export const Mutation = extendType({
             },
           });
         };
-        return editRoomModelVicibility(ctx.req, args.hotelId);
+        return editRoomModelVicibility(ctx.req, ctx.res, args.hotelId);
       },
     });
     t.field('updateRoomModelPrice', {
@@ -225,8 +222,12 @@ export const Mutation = extendType({
         lowestPrice: nonNull(floatArg()),
       },
       resolve(root, args, ctx) {
-        const updateRoomModelPrice = async (req: NextApiRequest, args: any) => {
-          await verifyIsHotelAdmin(req, args.hotelId);
+        const updateRoomModelPrice = async (
+          req: NextApiRequest,
+          res: NextApiResponse,
+          args: any
+        ) => {
+          await verifyIsHotelAdmin(req, res, args.hotelId);
           return await prisma.roomModel.update({
             where: {
               id: args.id,
@@ -236,7 +237,7 @@ export const Mutation = extendType({
             },
           });
         };
-        return updateRoomModelPrice(ctx.req, args);
+        return updateRoomModelPrice(ctx.req, ctx.res, args);
       },
     });
     t.field('addRoomToHotel', {
@@ -247,11 +248,12 @@ export const Mutation = extendType({
         number: nonNull(intArg()),
       },
       resolve: (root, args, ctx) => {
-        const addNewRoom = async (args: {
-          hotelId: number;
-          roomModelId: number;
-          number: number;
-        }) => {
+        const addNewRoom = async (
+          req: NextApiRequest,
+          res: NextApiResponse,
+          args
+        ) => {
+          await verifyIsHotelAdmin(req, res, args.hotelId);
           await prisma.roomModel.update({
             where: {
               id: args.roomModelId,
@@ -268,7 +270,7 @@ export const Mutation = extendType({
             },
           });
         };
-        return addNewRoom(args);
+        return addNewRoom(ctx.req, ctx.res, args);
       },
     });
   },

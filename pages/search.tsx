@@ -14,6 +14,7 @@ import {
   GET_ALL_ACTIVITIES,
   GET_ALL_LANGUAGES,
   GET_ALL_HOTEL_CATEGORIES,
+  GET_HOTELS,
 } from '@/queries/index';
 
 type Data = {
@@ -21,12 +22,22 @@ type Data = {
   name: string;
   __typename: string;
 };
+interface hotel {
+  name: string;
+  lowestPrice: number;
+  address: {
+    holeAddress: string;
+  };
+  description: string;
+  frameImage: string;
+}
 type Props = {
   facilitiesList: Data[];
   activitiesList: Data[];
   languagesList: Data[];
   servicesList: Data[];
   hotelCategoriesList: Data[];
+  hotels: hotel[];
 };
 const Search = ({
   facilitiesList,
@@ -34,12 +45,8 @@ const Search = ({
   languagesList,
   servicesList,
   hotelCategoriesList,
+  hotels,
 }: Props) => {
-  const hotelsArray = new Array(6).fill(0).map((el, index) => ({
-    ...hotel,
-    id: index + 1,
-  }));
-
   return (
     <div>
       <Head>
@@ -63,7 +70,7 @@ const Search = ({
               padding: '30px 0',
             }}
           >
-            <HotelsGrid hotels={hotelsArray} />
+            <HotelsGrid hotels={hotels} />
           </Box>
         </FilterMenu>
       </main>
@@ -88,13 +95,16 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const languagesRequest = await client.query({
     query: GET_ALL_LANGUAGES,
   });
-
+  const hotelsRequest = await client.query({
+    query: GET_HOTELS,
+  });
   const response = await Promise.all([
     activitiesRequest,
     servicesRequest,
     facilitiesRequest,
     categoriesRequest,
     languagesRequest,
+    hotelsRequest,
   ]);
 
   const props = {
@@ -103,6 +113,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     ...languagesRequest.data,
     ...servicesRequest.data,
     ...categoriesRequest.data,
+    ...hotelsRequest.data,
   };
 
   return {

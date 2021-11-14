@@ -22,10 +22,11 @@ export type WithQuantityItem = {
   type: string;
   quantity: number;
 };
-export type Room = {
+export type RoomModel = {
   id: number;
   hotelId: number;
   category: string;
+  name: string;
   mts2: number;
   mainImage: string;
   lowestPrice: number;
@@ -57,6 +58,6 @@ export type Hotel = {
   facilities?: Option[];
   services?: Option[];
   languages?: Option[];
-  rooms?: Room[];
+  roomsModels?: RoomModel[];
   public: boolean;
 };

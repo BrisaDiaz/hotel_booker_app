@@ -16,7 +16,7 @@ import {
   checkIfClientExist,
   getAdminInfo,
 } from '../utils';
-import type { NextApiRequest } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   ForbiddenError,
   UserInputError,
@@ -45,7 +45,7 @@ export const RoomConsult = objectType({
 export const roomSpecifications = inputObjectType({
   name: 'roomSpecifications',
   definition(t) {
-    t.int('adults'), t.int('childrens');
+    t.int('adults'), t.int('children');
   },
 });
 export const ConsultMutation = extendType({
@@ -166,7 +166,7 @@ export const Booking = objectType({
         });
       },
     });
-    t.int('childrens');
+    t.int('children');
     t.int('adults');
     t.int('rooms');
     t.int('checkInDate');
@@ -186,20 +186,24 @@ export const Query = extendType({
         id: nonNull(idArg()),
       },
       resolve(root, args, ctx) {
-        const getBooking = async (req: NextApiRequest, bookingId: number) => {
+        const getBooking = async (
+          req: NextApiRequest,
+          res: NextApiResponse,
+          bookingId: number
+        ) => {
           const booking = await prisma.booking.findUnique({
             where: {
               id: bookingId,
             },
           });
           if (!booking) throw new ValidationError('Invalid Booking Id');
-          const admin = await getAdminInfo(req);
+          const admin = await getAdminInfo(req, res);
 
           if (!admin.hotels.includes(booking.hotelId))
             throw new ForbiddenError('Forbidden');
           return booking;
         };
-        return getBooking(ctx.req, args.id);
+        return getBooking(ctx.req, ctx.res, args.id);
       },
     });
   },
@@ -215,7 +219,7 @@ export const Mutation = extendType({
         roomId: nonNull(idArg()),
         rooModelId: nonNull(idArg()),
         clientId: nonNull(idArg()),
-        childrens: nonNull(intArg()),
+        children: nonNull(intArg()),
         adults: nonNull(intArg()),
         nights: nonNull(intArg()),
         rooms: nonNull(intArg()),
@@ -224,8 +228,12 @@ export const Mutation = extendType({
         paymentMethod: stringArg(),
       },
       resolve(root, args, ctx) {
-        const makeBooking = async (req: NextApiRequest, args: any) => {
-          const admin = await verifyIsHotelAdmin(req, args.hotelId);
+        const makeBooking = async (
+          req: NextApiRequest,
+          res: NextApiResponse,
+          args: any
+        ) => {
+          const admin = await verifyIsHotelAdmin(req, res, args.hotelId);
           return await prisma.booking.create({
             data: {
               clientId: args.clientId,
@@ -234,7 +242,7 @@ export const Mutation = extendType({
               roomModelId: args.roomModelId,
               administratorId: admin.id,
               specifications: args.specifications,
-              childrens: args.childrens,
+              children: args.children,
               adults: args.adults,
               nights: args.nights,
               checkInDate: new Date(args.checkInDate),
@@ -244,7 +252,7 @@ export const Mutation = extendType({
             },
           });
         };
-        return makeBooking(ctx.req, args);
+        return makeBooking(ctx.req, ctx.res, args);
       },
     });
     t.field('createNewClient', {
@@ -257,8 +265,12 @@ export const Mutation = extendType({
         homePhoneNumber: nonNull(stringArg()),
       },
       resolve: (root, args, ctx) => {
-        const createNewClient = async (req: NextApiRequest, args: any) => {
-          await verifyIsHotelAdmin(req, args.hotelId);
+        const createNewClient = async (
+          req: NextApiRequest,
+          res: NextApiResponse,
+          args: any
+        ) => {
+          await verifyIsHotelAdmin(req, res, args.hotelId);
 
           const foundClient = await checkIfClientExist(args.email);
           if (foundClient)
@@ -276,7 +288,7 @@ export const Mutation = extendType({
             },
           });
         };
-        return createNewClient(ctx.req, args);
+        return createNewClient(ctx.req, ctx.res, args);
       },
     });
   },

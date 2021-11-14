@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 import Avatar from '@mui/material/Avatar';
+import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
+import Alerts from '@/components/Alerts';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
@@ -10,25 +11,10 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
-import {
-SIGN_UP
-} from '@/queries/index';
+import { SIGN_UP, SIGN_OUT } from '@/queries/index';
 import validations from '@/utils/formValidations';
 function Copyright(props: any) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ mode: 'onBlur' });
-  const [signUp,{error,data,loading}] =useMutation(SIGN_UP)
-  const onSubmit = async (data: any, event: any) => {
-    event.preventDefault();
-    console.log(data);
-    // eslint-disable-next-line no-console
-  };
-
   return (
     <Typography
       variant="body2"
@@ -46,25 +32,53 @@ function Copyright(props: any) {
   );
 }
 
-const theme = createTheme();
-
 export default function SignUp() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: 'onBlur' });
-
-  const onSubmit = async (data: any, event: any) => {
-    event.preventDefault();
-    console.log(data);
-    // eslint-disable-next-line no-console
+  const router = useRouter();
+  const redirectToSignin = () => {
+    router.push('/signin');
   };
+  const [signUp, { error, data, loading }] = useMutation(SIGN_UP);
 
+  const onSubmit = async (formData: any, event: any) => {
+    try {
+      await signUp({ variables: formData });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  if (data?.signup?.name && !loading) {
+    redirectToSignin();
+  }
+
+  const [signOut] = useMutation(SIGN_OUT);
+  const handdleSignOut = async () => {
+    try {
+      await signOut({
+        variables: { date: new Date(Date.now()).toISOString() },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
-    <ThemeProvider theme={theme}>
+    <Box
+      sx={{
+        maxWidth: '1200px',
+        m: '0 auto',
+      }}
+    >
+      {!loading && error && (
+        <Alerts type="error" alerts={error.graphQLErrors} />
+      )}
+      <Button sx={{ ml: 'auto' }} onClick={() => handdleSignOut()}>
+        Sign Out
+      </Button>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
@@ -74,7 +88,7 @@ export default function SignUp() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-            <LockOutlinedIcon />
+            <LockOutlinedIcon sx={{ color: '#fff' }} />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
@@ -93,7 +107,9 @@ export default function SignUp() {
                   {...register('firstName', { ...validations.name })}
                   error={errors['firstName'] && true}
                   label={
-                    errors['firstName'] ? errors['lastName'] : 'First Name'
+                    errors['firstName']
+                      ? errors['firstName'].message
+                      : 'First Name'
                   }
                   fullWidth
                   id="firstName"
@@ -107,7 +123,9 @@ export default function SignUp() {
                   id="lastName"
                   {...register('lastName', { ...validations.lastname })}
                   error={errors['lastName'] && true}
-                  label={errors['lastName'] ? errors['lastName'] : 'Last Name'}
+                  label={
+                    errors['lastName'] ? errors['lastName'].message : 'lastName'
+                  }
                   autoComplete="family-name"
                 />
               </Grid>
@@ -115,8 +133,11 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
+                  type="email"
                   id="email"
-                  label={errors['email'] ? errors['email'] : 'Email Address'}
+                  label={
+                    errors['email'] ? errors['email'].message : 'Email Address'
+                  }
                   {...register('email', { ...validations.email })}
                   error={errors['email'] && true}
                   autoComplete="email"
@@ -126,9 +147,12 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
+                  type="password"
                   {...register('password', { ...validations.password })}
                   error={errors['password'] && true}
-                  label={errors['password'] ? errors['password'] : 'Password'}
+                  label={
+                    errors['password'] ? errors['password'].message : 'Password'
+                  }
                   type="password"
                   id="password"
                   autoComplete="new-password"
@@ -145,7 +169,11 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link
+                  href="#"
+                  variant="body2"
+                  onClick={() => redirectToSignin()}
+                >
                   Already have an account? Sign in
                 </Link>
               </Grid>
@@ -154,6 +182,6 @@ export default function SignUp() {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
-    </ThemeProvider>
+    </Box>
   );
 }

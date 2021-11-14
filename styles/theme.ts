@@ -7,6 +7,10 @@ let theme = createTheme({
     background: {
       default: '#efefef00',
     },
+    common: {
+      white: '#fff',
+      black: '#000',
+    },
     primary: {
       main: '#3f51b5',
     },

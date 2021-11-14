@@ -29,12 +29,15 @@ export default function CheckboxesTags({
       onChange={(event, newInputValue) => onChange(newInputValue)}
       id="checkboxes-tags-demo"
       options={options}
+      key={label}
       disableCloseOnSelect
+      sx={{ textTransform: 'capitalize' }}
       getOptionLabel={(option) => option.name}
       renderOption={(props, option, { selected }) => (
         <li {...props} key={option.id}>
           <Checkbox
             icon={icon}
+            sx={{ textTransform: 'capitalize' }}
             checkedIcon={checkedIcon}
             style={{ marginRight: 8 }}
             checked={selected}
@@ -47,7 +50,7 @@ export default function CheckboxesTags({
           {...params}
           label={label}
           placeholder={label}
-          sx={{ width: '100%', my: 1 }}
+          sx={{ width: '100%', my: 1, textTransform: 'capitalize' }}
         />
       )}
     />

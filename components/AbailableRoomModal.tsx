@@ -54,7 +54,7 @@ const roomsContainer = {
 };
 
 type Room = {
-  childrens: number;
+  children: number;
   adults: number;
   id: string;
 };
@@ -94,9 +94,9 @@ function RoomField({
           />
           <TextField
             type="number"
-            label="Childrens"
-            error={errors[`childrens${index}`] && true}
-            {...register(`childrens${index}`, {
+            label="Children"
+            error={errors[`children${index}`] && true}
+            {...register(`children${index}`, {
               require: true,
               min: {
                 value: 0,
@@ -141,11 +141,11 @@ export default function TransitionsModal({
   const handleClose = () => setOpen(false);
 
   const [rooms, setRooms] = React.useState<Room[]>([
-    { adults: 1, childrens: 0, id: uuidv4() },
+    { adults: 1, children: 0, id: uuidv4() },
   ]);
 
   const handdleAddRoom = () => {
-    setRooms([...rooms, { adults: 0, childrens: 0, id: uuidv4() }]);
+    setRooms([...rooms, { adults: 0, children: 0, id: uuidv4() }]);
   };
 
   const handleDeleteRoom = (id: string) => {
@@ -179,11 +179,11 @@ export default function TransitionsModal({
 
     /// extract the data of each room
     let roomsWithData = new Array(roomsQuantity)
-      .fill({ adults: 0, childrens: 0 })
+      .fill({ adults: 0, children: 0 })
       .reduce((array, current, index) => {
         let roomData = {
           adults: data[`adults${index}`],
-          childrens: data[`childrens${index}`],
+          children: data[`children${index}`],
         };
         return [...array, roomData];
       }, []);
@@ -266,6 +266,9 @@ export default function TransitionsModal({
                   component="h3"
                 >
                   Guests/Room
+                </Typography>
+                <Typography variant="caption" component="span">
+                  {'(children  0-12 years)'}
                 </Typography>
               </Box>
 

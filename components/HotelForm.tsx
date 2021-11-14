@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/client';
+
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Autocomplete from '@mui/material/Autocomplete';
 import AutocompleteCheckbox from './AutocompleteCheckbox';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -34,13 +33,14 @@ const styles = {
   },
   title: {
     mt: 0,
-    mb: 3,
+    mb: 4,
+    fontWeight: 500,
   },
   card: {
     maxWidth: 400,
   },
   groupTitle: {
-    fontWeight: 600,
+    fontWeight: 500,
     color: '#484848',
     background: '#fff',
     mt: '-25px',
@@ -88,7 +88,8 @@ export default function MultilineTextFields(props: {
 }) {
   const { services, activities, facilities, languages, hotelCategories } =
     props;
-
+  const dafaultImage =
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU';
   const matchesSize = useMediaQuery('(min-width:600px)');
   const {
     register,
@@ -103,12 +104,8 @@ export default function MultilineTextFields(props: {
   const [categorySelected, setCategorieSelected] = useState<string>(
     hotelCategories[0].name
   );
-  const [frameImage, setFrameImage] = useState(
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU'
-  );
-  const [interiorImage, setInteriorImage] = useState(
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU'
-  );
+  const [frameImage, setFrameImage] = useState<string>(dafaultImage);
+  const [interiorImage, setInteriorImage] = useState<string>(dafaultImage);
 
   type autocompliteData = { name: string };
 
@@ -138,13 +135,14 @@ export default function MultilineTextFields(props: {
       name: data.name,
       telephone: data.telephone,
       email: data.email,
+      brand: data.brand,
       checkInHour: data.checkInHour,
       checkOutHour: data.checkOutHour,
       lowestPrice: data.lowestPrice * 1,
       description: data.description,
       policiesAndRules: data.policiesAndRules,
-      frameImage: frameImage,
-      interiorImage: interiorImage,
+      frameImage: data.frameImage,
+      interiorImage: data.interiorImage,
       facilities: facilitiesSelected,
       services: servicesSelected,
       activities: activitiesSelected,
@@ -155,18 +153,25 @@ export default function MultilineTextFields(props: {
       petFriendly: data.petFriendly,
       ecoFriendly: data.ecoFriendly,
       cancelationFree: data.cancelationFree,
-      accesible: data.accesible,
-    };
-    const addressVariables = {
-      county: data.country,
+      accessible: data.accessible,
+      holeAddress: data.holeAddress,
+      country: data.country,
       city: data.city,
       postalCode: data.postalCode,
       administrativeArea: data.administrativeArea,
       street: data.street,
     };
-    props.submitHandler(hotelVariables, addressVariables);
-  };
 
+    props.submitHandler(hotelVariables);
+  };
+  const handleReset = () => {
+    setFrameImage(dafaultImage);
+    setInteriorImage(dafaultImage);
+    handleFacilitiesField([]);
+    handleServicesField([]);
+    handleActivitiesField([]);
+    handleLanguagesField([]);
+  };
   return (
     <Box
       component="form"
@@ -175,11 +180,11 @@ export default function MultilineTextFields(props: {
       autoComplete="off"
       onSubmit={handleSubmit(submitMiddleware)}
     >
-      <Typography component="h1" variant="h5" align="center" sx={styles.title}>
+      <Typography component="h1" variant="h4" align="center" sx={styles.title}>
         Add a new hotel
       </Typography>
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           About
         </Typography>
         <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">
@@ -254,9 +259,14 @@ export default function MultilineTextFields(props: {
                 label="Category"
                 value={categorySelected}
                 onChange={handleCategoryField}
+                sx={{ textTransform: 'capitalize' }}
               >
                 {hotelCategories.map((type: { name: string; id: number }) => (
-                  <MenuItem key={type.id} value={type.name}>
+                  <MenuItem
+                    key={type.id}
+                    value={type.name}
+                    sx={{ textTransform: 'capitalize' }}
+                  >
                     {type.name}
                   </MenuItem>
                 ))}
@@ -270,7 +280,7 @@ export default function MultilineTextFields(props: {
           {...register('description', {
             required: 'A description is require',
           })}
-          rows={6}
+          rows={8}
           label={
             errors['description']
               ? errors['description'].message
@@ -283,17 +293,17 @@ export default function MultilineTextFields(props: {
       </Grid>
 
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Contact
         </Typography>
         <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">
           <Grid item xs={12} sm={6}>
             <TextField
               id="telephone"
+              type="tel"
               label={
                 errors['telephone'] ? errors['telephone'].message : 'Telephone'
               }
-              type="text"
               {...register('telephone', {
                 required: 'The telephone number is required',
                 minLength: {
@@ -321,12 +331,11 @@ export default function MultilineTextFields(props: {
             <TextField
               sx={styles.textField}
               id="email"
+              type="email"
               variant="outlined"
               label={errors['email'] ? errors['email'].message : 'Email'}
               error={errors['email'] && true}
-              type="email"
               {...register('email', {
-                required: 'The email is required',
                 pattern: {
                   value:
                     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
@@ -345,17 +354,18 @@ export default function MultilineTextFields(props: {
         </Grid>
       </Grid>
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Address
         </Typography>
         <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">
           <Grid item xs={12} sm={6}>
             <TextField
               id="hole-address"
+              type="text"
               {...register('holeAddress', {
                 required: 'The hole address is required',
                 maxLength: {
-                  value: 50,
+                  value: 100,
                   message: 'The address must not exced the 50 character',
                 },
               })}
@@ -371,13 +381,13 @@ export default function MultilineTextFields(props: {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              type="text"
               id="country"
               label={errors['country'] ? errors['country'].message : 'Country'}
               error={errors['country'] ? true : false}
               {...register('country', {
-                required: 'The hole address is required',
                 maxLength: {
-                  value: 20,
+                  value: 25,
                   message: 'The address must not exced the 20 character',
                 },
               })}
@@ -390,13 +400,14 @@ export default function MultilineTextFields(props: {
           <Grid item xs={12} sm={6}>
             <TextField
               sx={styles.textField}
-              id="administrativeArea"
+              id="postalCode"
+              type="text"
               label={
-                errors['administrativeArea']
-                  ? errors['administrativeArea'].message
+                errors['postalCode']
+                  ? errors['postalCode'].message
                   : 'Zip/Postal code'
               }
-              error={errors['administrativeArea'] ? true : false}
+              error={errors['postalCode'] ? true : false}
               {...register('postalCode', {
                 required: 'The Postal code is required',
                 maxLength: {
@@ -420,11 +431,12 @@ export default function MultilineTextFields(props: {
               {...register('administrativeArea', {
                 required: 'The field is required',
                 maxLength: {
-                  value: 10,
+                  value: 25,
                   message:
                     'The administrative Area  must not exced the 10 character',
                 },
               })}
+              type="text"
               variant="outlined"
             />
           </Grid>
@@ -438,11 +450,12 @@ export default function MultilineTextFields(props: {
               error={errors['city'] ? true : false}
               {...register('city', {
                 maxLength: {
-                  value: 10,
+                  value: 25,
                   message: 'The city name must not exced the 10 character',
                 },
               })}
               variant="outlined"
+              type="text"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -466,7 +479,7 @@ export default function MultilineTextFields(props: {
       </Grid>
 
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Features
         </Typography>
 
@@ -505,15 +518,15 @@ export default function MultilineTextFields(props: {
           <Grid item xs={12} sm={6}>
             <FormGroup sx={{ px: 1 }}>
               <FormControlLabel
-                control={<Checkbox {...register('FreeCancelation')} />}
+                control={<Checkbox {...register('cancelationFree')} />}
                 label="Free Cancelation"
               />
               <FormControlLabel
-                control={<Checkbox {...register('accesible')} />}
-                label="Accesible"
+                control={<Checkbox {...register('accessible')} />}
+                label="Accessible"
               />
               <FormControlLabel
-                control={<Checkbox {...register('FamilyFriendly')} />}
+                control={<Checkbox {...register('familyFriendly')} />}
                 label="Family Friendly"
               />
             </FormGroup>
@@ -537,7 +550,7 @@ export default function MultilineTextFields(props: {
         </Grid>
       </Grid>
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Policies and Rules
         </Typography>
 
@@ -585,18 +598,18 @@ export default function MultilineTextFields(props: {
           })}
           label={
             errors['policiesAndRules']
-              ? errors['policiesAndRules']
+              ? errors['policiesAndRules'].message
               : 'Policies and Rules'
           }
           error={errors['policiesAndRules'] && true}
           multiline
-          rows={6}
+          rows={8}
           variant="outlined"
           sx={styles.textField}
         />
       </Grid>
       <Grid component="fieldset" sx={styles.fieldset}>
-        <Typography component="h3" variant="h5" sx={styles.groupTitle}>
+        <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Aspect
         </Typography>
         <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">
@@ -610,7 +623,7 @@ export default function MultilineTextFields(props: {
                   : 'Frame image url'
               }
               type="text"
-              error={errors['name'] ? true : false}
+              error={errors['frameImage'] ? true : false}
               {...register('frameImage', {
                 required: 'The frame image is required',
               })}
@@ -658,13 +671,9 @@ export default function MultilineTextFields(props: {
               <CardMedia
                 component="img"
                 alt="frame image"
-                height="200"
+                height="250"
                 image={frameImage}
-                onError={() =>
-                  setFrameImage(
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU'
-                  )
-                }
+                onError={() => setFrameImage(dafaultImage)}
                 title="frame image"
               />
             </Card>
@@ -674,13 +683,9 @@ export default function MultilineTextFields(props: {
               <CardMedia
                 component="img"
                 alt="Interior image"
-                height="200"
+                height="250"
                 image={interiorImage}
-                onError={() =>
-                  setInteriorImage(
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU'
-                  )
-                }
+                onError={() => setInteriorImage(dafaultImage)}
                 title="interior image"
               />
             </Card>
@@ -704,9 +709,10 @@ export default function MultilineTextFields(props: {
           variant="outlined"
           color="primary"
           type="reset"
+          onClick={handleReset}
           size={matchesSize ? 'large' : 'medium'}
         >
-          Cancel
+          Reset
         </Button>
       </Box>
     </Box>

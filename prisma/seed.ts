@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma';
 import { hash, genSalt } from 'bcryptjs';
 
 import {
@@ -64,9 +64,10 @@ async function seed() {
     const admin = await prisma.user.create({
       data: {
         firstName: adminUser.firstName,
-        secondName: adminUser.secondName,
+        lastName: adminUser.lastName,
         email: adminUser.email,
         password: encryptedPasswod,
+        role: 'ADMIN',
       },
     });
     await prisma.administrator.create({

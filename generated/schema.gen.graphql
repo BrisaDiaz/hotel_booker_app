@@ -39,7 +39,7 @@ type Booking {
   adults: Int
   checkInDate: Int
   checkOutDate: Int
-  childrens: Int
+  children: Int
   client: Client
   clientId: Int
   hotel: Hotel
@@ -130,23 +130,23 @@ type Language {
 }
 
 type Mutation {
-  addHotelAddress(administrativeArea: String!, city: String, country: String!, holeAddress: String!, hotelId: ID!, postalCode: String!, street: String): Address
-  addHotelFeatures(accesible: Boolean!, cancelationFree: Boolean!, ecoFriendly: Boolean!, familyFriendly: Boolean!, hotelId: ID!, petFriendly: Boolean!, smokerFriendly: Boolean!): Features
   addRoomToHotel(hotelId: ID!, number: Int!, roomModelId: Int!): Room
   checkRoomAvailability(checkInDate: String, checkOutDate: String, roomModelId: String, rooms: [roomSpecifications]): RoomConsultResponse
-  creatHotelRoomModel(amenities: [String]!, category: String!, description: String!, hotelId: Int!, lowestPrice: Int!, mainImage: String!, maximunGuests: Int!, maximunStay: Int!, minimunStay: Int!, mts2: Int!, quantityInHotel: Int!, services: [String]!): RoomModel
-  createHotel(InteriorImage: String!, activities: [String]!, brand: String, category: String, checkInHour: String!, checkOutHour: String!, description: String!, email: String, facilities: [String]!, frameImage: String!, languages: [String]!, lowestPrice: Float!, name: String!, policiesAndRules: String!, services: [String]!, telephone: String!): Hotel
+  creatHotelRoomModel(amenities: [String]!, category: String!, description: String!, hotelId: Int!, lowestPrice: Int!, mainImage: String!, maximunGuests: Int!, maximunStay: Int!, minimunStay: Int!, mts2: Int!, name: String!, services: [String]!): RoomModel
+  createHotel(accessible: Boolean!, activities: [String]!, administrativeArea: String!, brand: String, cancelationFree: Boolean!, category: String, checkInHour: String!, checkOutHour: String!, city: String, country: String, description: String!, ecoFriendly: Boolean!, email: String, facilities: [String]!, familyFriendly: Boolean!, frameImage: String!, holeAddress: String!, interiorImage: String!, languages: [String]!, lowestPrice: Float!, name: String!, petFriendly: Boolean!, policiesAndRules: String!, postalCode: String!, services: [String]!, smokerFriendly: Boolean!, street: String, telephone: String!): Hotel
   createNewClient(cellularNumber: String!, email: String!, firstName: String!, homePhoneNumber: String!, lastName: String!): Client
   editRoomModelVicibility(hotelId: Int!, id: ID!, public: Boolean!): RoomModel
-  makeBooking(adults: Int!, checkInDate: String!, checkOutDate: String!, childrens: Int!, clientId: ID!, hotelId: ID!, nights: Int!, paymentMethod: String, rooModelId: ID!, roomId: ID!, rooms: Int!): Booking
+  makeBooking(adults: Int!, checkInDate: String!, checkOutDate: String!, children: Int!, clientId: ID!, hotelId: ID!, nights: Int!, paymentMethod: String, rooModelId: ID!, roomId: ID!, rooms: Int!): Booking
   signin(email: String!, password: String!): AuthPayload
+  signout(date: String): PlainResponse
   signup(email: String!, firstName: String!, lastName: String!, password: String!): User
+  updateHotelAddress(administrativeArea: String!, city: String, country: String, holeAddress: String!, hotelId: ID!, postalCode: String!, street: String): Address
   updateHotelLowestPrice(hotelId: ID!, lowestPrice: Float!): Hotel
   updateRoomModelPrice(hotelId: Int!, id: ID!, lowestPrice: Float!): RoomModel
 }
 
 type Mutetion {
-  updateMyAccount(email: String, firstName: String, password: String, secondName: String): User
+  updateMyAccount(email: String, firstName: String, lastName: String, password: String): User
 }
 
 enum PaymentMethod {
@@ -155,6 +155,10 @@ enum PaymentMethod {
   CREDIT_CARD
   DEBIT_CARD
   TRAVELER_CHECK
+}
+
+type PlainResponse {
+  message: String
 }
 
 type Query {
@@ -166,9 +170,10 @@ type Query {
   getMessages: [TestArray]
   getMoreMessages: [TestArray]
   hotelCategoriesList: [HotelCategory]
-  hotels: [Hotel]
+  hotels(activities: [String], categories: [String], facilities: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): [Hotel]
   languagesList: [Language]
   me: User
+  roomCategoriesList: [RoomCategory]
   roomModelById(id: ID!): RoomModel
   servicesList: [Service]
 }
@@ -191,6 +196,11 @@ type RoomBed {
   type: String
 }
 
+type RoomCategory {
+  id: ID
+  name: String
+}
+
 type RoomConsultResponse {
   isAvailable: Boolean
   message: String
@@ -211,6 +221,7 @@ type RoomModel {
   maximunStay: Int
   minimunStay: Int
   mts2: Int
+  name: String
   rooms: [[Room]]
   services: [Service]
 }
@@ -227,14 +238,14 @@ type TestArray {
 
 type User {
   email: String
+  firstname: String
   id: ID
   lastname: String
-  name: String
   password: String
   role: Role
 }
 
 input roomSpecifications {
   adults: Int
-  childrens: Int
+  children: Int
 }

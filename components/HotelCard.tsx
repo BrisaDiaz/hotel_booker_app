@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { CardActionArea, CardActions } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import type { Hotel } from '@/interfaces';
+import type { Hotel } from '@/interfaces/index';
 import useMediaQuery from '@mui/material/useMediaQuery';
 export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
   const router = useRouter();
@@ -15,10 +15,10 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
     router.push(`/hotel/${hotelId}`);
   };
   const matchesSize = useMediaQuery('(min-width:700px)');
-  const styles = {};
+
   return (
     <Card
-      sx={{ flexWrap: 'wrap' }}
+      sx={{ flexWrap: 'wrap', maxWidth: '100vw' }}
       key={hotel.id}
       onClick={() => handleRedirectToHotelPage(hotel.id)}
     >
@@ -68,7 +68,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
               paddingRight: 2,
             }}
           >
-            ${hotel.lowestPrice} USD
+            USD${hotel.lowestPrice}
           </Typography>
 
           <Box sx={{ marginTop: 'auto', display: 'flex' }}>

@@ -8,6 +8,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,7 +20,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import CheckboxGroup from './CheckboxGroup';
 import Accordion from './Acconrdion';
-
+import SortIcon from '@mui/icons-material/Sort';
 const drawerWidth = 240;
 
 const Search = styled('div')(({ theme }) => ({
@@ -104,6 +105,7 @@ const SortSelect = () => {
           value={sort}
           sx={{ maxHeight: '45px' }}
           onChange={handleChange}
+          IconComponent={() => <SortIcon sx={{ mr: 1.5 }} />}
         >
           <MenuItem value="-price">Lowest Price</MenuItem>
           <MenuItem value="price">Highest Price</MenuItem>
@@ -232,6 +234,13 @@ export default function PersistentDrawerLeft({
         open={open}
       >
         <DrawerHeader>
+          <Button
+            variant="outlined"
+            color="primary"
+            sx={{ width: '100%', marginLeft: '10px' }}
+          >
+            Apply
+          </Button>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? (
               <ChevronLeftIcon />
@@ -240,21 +249,7 @@ export default function PersistentDrawerLeft({
             )}
           </IconButton>
         </DrawerHeader>
-        <Divider />
 
-        <Typography
-          variant="subtitle2"
-          color="primary"
-          sx={{
-            fontWeight: 500,
-            padding: '10px 20px',
-
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-          }}
-        >
-          Sort By:
-        </Typography>
         <Divider />
 
         <SortSelect />
@@ -300,6 +295,7 @@ export default function PersistentDrawerLeft({
         </Accordion>
         <Divider />
       </Drawer>
+
       <Main open={open}>
         <DrawerHeader />
         {children}

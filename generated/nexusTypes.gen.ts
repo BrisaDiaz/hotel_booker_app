@@ -4,7 +4,7 @@
  */
 
 
-import type { Context as ctx } from "./../graphql/context"
+
 
 
 
@@ -16,7 +16,7 @@ declare global {
 export interface NexusGenInputs {
   roomSpecifications: { // input type
     adults?: number | null; // Int
-    childrens?: number | null; // Int
+    children?: number | null; // Int
   }
 }
 
@@ -65,7 +65,7 @@ export interface NexusGenObjects {
     adults?: number | null; // Int
     checkInDate?: number | null; // Int
     checkOutDate?: number | null; // Int
-    childrens?: number | null; // Int
+    children?: number | null; // Int
     clientId?: number | null; // Int
     hotelId?: number | null; // Int
     id?: string | null; // ID
@@ -135,6 +135,9 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Mutetion: {};
+  PlainResponse: { // root type
+    message?: string | null; // String
+  }
   Query: {};
   Room: { // root type
     id?: string | null; // ID
@@ -144,6 +147,10 @@ export interface NexusGenObjects {
     quantity?: number | null; // Int
     roomId?: number | null; // Int
     type?: string | null; // String
+  }
+  RoomCategory: { // root type
+    id?: string | null; // ID
+    name?: string | null; // String
   }
   RoomConsultResponse: { // root type
     isAvailable?: boolean | null; // Boolean
@@ -162,6 +169,7 @@ export interface NexusGenObjects {
     maximunStay?: number | null; // Int
     minimunStay?: number | null; // Int
     mts2?: number | null; // Int
+    name?: string | null; // String
     services?: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
   }
   Service: { // root type
@@ -174,9 +182,9 @@ export interface NexusGenObjects {
   }
   User: { // root type
     email?: string | null; // String
+    firstname?: string | null; // String
     id?: string | null; // ID
     lastname?: string | null; // String
-    name?: string | null; // String
     password?: string | null; // String
     role?: NexusGenEnums['Role'] | null; // Role
   }
@@ -225,7 +233,7 @@ export interface NexusGenFieldTypes {
     adults: number | null; // Int
     checkInDate: number | null; // Int
     checkOutDate: number | null; // Int
-    childrens: number | null; // Int
+    children: number | null; // Int
     client: NexusGenRootTypes['Client'] | null; // Client
     clientId: number | null; // Int
     hotel: NexusGenRootTypes['Hotel'] | null; // Hotel
@@ -302,8 +310,6 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
   }
   Mutation: { // field return type
-    addHotelAddress: NexusGenRootTypes['Address'] | null; // Address
-    addHotelFeatures: NexusGenRootTypes['Features'] | null; // Features
     addRoomToHotel: NexusGenRootTypes['Room'] | null; // Room
     checkRoomAvailability: NexusGenRootTypes['RoomConsultResponse'] | null; // RoomConsultResponse
     creatHotelRoomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
@@ -312,12 +318,17 @@ export interface NexusGenFieldTypes {
     editRoomModelVicibility: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     makeBooking: NexusGenRootTypes['Booking'] | null; // Booking
     signin: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
+    signout: NexusGenRootTypes['PlainResponse'] | null; // PlainResponse
     signup: NexusGenRootTypes['User'] | null; // User
+    updateHotelAddress: NexusGenRootTypes['Address'] | null; // Address
     updateHotelLowestPrice: NexusGenRootTypes['Hotel'] | null; // Hotel
     updateRoomModelPrice: NexusGenRootTypes['RoomModel'] | null; // RoomModel
   }
   Mutetion: { // field return type
     updateMyAccount: NexusGenRootTypes['User'] | null; // User
+  }
+  PlainResponse: { // field return type
+    message: string | null; // String
   }
   Query: { // field return type
     activitiesList: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
@@ -331,6 +342,7 @@ export interface NexusGenFieldTypes {
     hotels: Array<NexusGenRootTypes['Hotel'] | null> | null; // [Hotel]
     languagesList: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
     me: NexusGenRootTypes['User'] | null; // User
+    roomCategoriesList: Array<NexusGenRootTypes['RoomCategory'] | null> | null; // [RoomCategory]
     roomModelById: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     servicesList: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
   }
@@ -344,6 +356,10 @@ export interface NexusGenFieldTypes {
     quantity: number | null; // Int
     roomId: number | null; // Int
     type: string | null; // String
+  }
+  RoomCategory: { // field return type
+    id: string | null; // ID
+    name: string | null; // String
   }
   RoomConsultResponse: { // field return type
     isAvailable: boolean | null; // Boolean
@@ -364,6 +380,7 @@ export interface NexusGenFieldTypes {
     maximunStay: number | null; // Int
     minimunStay: number | null; // Int
     mts2: number | null; // Int
+    name: string | null; // String
     rooms: Array<Array<NexusGenRootTypes['Room'] | null> | null> | null; // [[Room]]
     services: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
   }
@@ -377,9 +394,9 @@ export interface NexusGenFieldTypes {
   }
   User: { // field return type
     email: string | null; // String
+    firstname: string | null; // String
     id: string | null; // ID
     lastname: string | null; // String
-    name: string | null; // String
     password: string | null; // String
     role: NexusGenEnums['Role'] | null; // Role
   }
@@ -418,7 +435,7 @@ export interface NexusGenFieldTypeNames {
     adults: 'Int'
     checkInDate: 'Int'
     checkOutDate: 'Int'
-    childrens: 'Int'
+    children: 'Int'
     client: 'Client'
     clientId: 'Int'
     hotel: 'Hotel'
@@ -495,8 +512,6 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
   }
   Mutation: { // field return type name
-    addHotelAddress: 'Address'
-    addHotelFeatures: 'Features'
     addRoomToHotel: 'Room'
     checkRoomAvailability: 'RoomConsultResponse'
     creatHotelRoomModel: 'RoomModel'
@@ -505,12 +520,17 @@ export interface NexusGenFieldTypeNames {
     editRoomModelVicibility: 'RoomModel'
     makeBooking: 'Booking'
     signin: 'AuthPayload'
+    signout: 'PlainResponse'
     signup: 'User'
+    updateHotelAddress: 'Address'
     updateHotelLowestPrice: 'Hotel'
     updateRoomModelPrice: 'RoomModel'
   }
   Mutetion: { // field return type name
     updateMyAccount: 'User'
+  }
+  PlainResponse: { // field return type name
+    message: 'String'
   }
   Query: { // field return type name
     activitiesList: 'Activity'
@@ -524,6 +544,7 @@ export interface NexusGenFieldTypeNames {
     hotels: 'Hotel'
     languagesList: 'Language'
     me: 'User'
+    roomCategoriesList: 'RoomCategory'
     roomModelById: 'RoomModel'
     servicesList: 'Service'
   }
@@ -537,6 +558,10 @@ export interface NexusGenFieldTypeNames {
     quantity: 'Int'
     roomId: 'Int'
     type: 'String'
+  }
+  RoomCategory: { // field return type name
+    id: 'ID'
+    name: 'String'
   }
   RoomConsultResponse: { // field return type name
     isAvailable: 'Boolean'
@@ -557,6 +582,7 @@ export interface NexusGenFieldTypeNames {
     maximunStay: 'Int'
     minimunStay: 'Int'
     mts2: 'Int'
+    name: 'String'
     rooms: 'Room'
     services: 'Service'
   }
@@ -570,9 +596,9 @@ export interface NexusGenFieldTypeNames {
   }
   User: { // field return type name
     email: 'String'
+    firstname: 'String'
     id: 'ID'
     lastname: 'String'
-    name: 'String'
     password: 'String'
     role: 'Role'
   }
@@ -580,24 +606,6 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    addHotelAddress: { // args
-      administrativeArea: string; // String!
-      city?: string | null; // String
-      country: string; // String!
-      holeAddress: string; // String!
-      hotelId: string; // ID!
-      postalCode: string; // String!
-      street?: string | null; // String
-    }
-    addHotelFeatures: { // args
-      accesible: boolean; // Boolean!
-      cancelationFree: boolean; // Boolean!
-      ecoFriendly: boolean; // Boolean!
-      familyFriendly: boolean; // Boolean!
-      hotelId: string; // ID!
-      petFriendly: boolean; // Boolean!
-      smokerFriendly: boolean; // Boolean!
-    }
     addRoomToHotel: { // args
       hotelId: string; // ID!
       number: number; // Int!
@@ -620,25 +628,37 @@ export interface NexusGenArgTypes {
       maximunStay: number; // Int!
       minimunStay: number; // Int!
       mts2: number; // Int!
-      quantityInHotel: number; // Int!
+      name: string; // String!
       services: Array<string | null>; // [String]!
     }
     createHotel: { // args
-      InteriorImage: string; // String!
+      accessible: boolean; // Boolean!
       activities: Array<string | null>; // [String]!
+      administrativeArea: string; // String!
       brand?: string | null; // String
+      cancelationFree: boolean; // Boolean!
       category?: string | null; // String
       checkInHour: string; // String!
       checkOutHour: string; // String!
+      city?: string | null; // String
+      country?: string | null; // String
       description: string; // String!
+      ecoFriendly: boolean; // Boolean!
       email?: string | null; // String
       facilities: Array<string | null>; // [String]!
+      familyFriendly: boolean; // Boolean!
       frameImage: string; // String!
+      holeAddress: string; // String!
+      interiorImage: string; // String!
       languages: Array<string | null>; // [String]!
       lowestPrice: number; // Float!
       name: string; // String!
+      petFriendly: boolean; // Boolean!
       policiesAndRules: string; // String!
+      postalCode: string; // String!
       services: Array<string | null>; // [String]!
+      smokerFriendly: boolean; // Boolean!
+      street?: string | null; // String
       telephone: string; // String!
     }
     createNewClient: { // args
@@ -657,7 +677,7 @@ export interface NexusGenArgTypes {
       adults: number; // Int!
       checkInDate: string; // String!
       checkOutDate: string; // String!
-      childrens: number; // Int!
+      children: number; // Int!
       clientId: string; // ID!
       hotelId: string; // ID!
       nights: number; // Int!
@@ -670,11 +690,23 @@ export interface NexusGenArgTypes {
       email: string; // String!
       password: string; // String!
     }
+    signout: { // args
+      date?: string | null; // String
+    }
     signup: { // args
       email: string; // String!
       firstName: string; // String!
       lastName: string; // String!
       password: string; // String!
+    }
+    updateHotelAddress: { // args
+      administrativeArea: string; // String!
+      city?: string | null; // String
+      country?: string | null; // String
+      holeAddress: string; // String!
+      hotelId: string; // ID!
+      postalCode: string; // String!
+      street?: string | null; // String
     }
     updateHotelLowestPrice: { // args
       hotelId: string; // ID!
@@ -690,8 +722,8 @@ export interface NexusGenArgTypes {
     updateMyAccount: { // args
       email?: string | null; // String
       firstName?: string | null; // String
+      lastName?: string | null; // String
       password?: string | null; // String
-      secondName?: string | null; // String
     }
   }
   Query: {
@@ -700,6 +732,17 @@ export interface NexusGenArgTypes {
     }
     getHotelById: { // args
       id: string; // ID!
+    }
+    hotels: { // args
+      activities?: Array<string | null> | null; // [String]
+      categories?: Array<string | null> | null; // [String]
+      facilities?: Array<string | null> | null; // [String]
+      languages?: Array<string | null> | null; // [String]
+      search?: string | null; // String
+      services?: Array<string | null> | null; // [String]
+      skip?: number | null; // Int
+      sort?: string | null; // String
+      take?: number | null; // Int
     }
     roomModelById: { // args
       id: string; // ID!
@@ -738,7 +781,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: ctx;
+  context: any;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;

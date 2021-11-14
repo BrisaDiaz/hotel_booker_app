@@ -75,5 +75,11 @@ export const Query = extendType({
         return prisma.hotelCategory.findMany({});
       },
     });
+    t.field('roomCategoriesList', {
+      type: list('RoomCategory'),
+      resolve: () => {
+        return prisma.roomCategory.findMany({});
+      },
+    });
   },
 });

@@ -1,27 +1,38 @@
 import { gql } from '@apollo/client';
-
+export const SIGN_OUT = gql`
+  mutation signout($date: String) {
+    signout(date: $date) {
+      message
+    }
+  }
+`;
 export const SIGN_IN = gql`
-  mutation signIn($email: String!, $password: String!) {
-    signIn(email: $email, password: $password) {
-      user
-      token
+  mutation signin($email: String!, $password: String!) {
+    signin(email: $email, password: $password) {
+      user {
+        firstname
+        lastname
+        email
+      }
     }
   }
 `;
 export const SIGN_UP = gql`
-  mutation signUp(
+  mutation signup(
     $firstName: String!
     $lastName: String!
     $email: String!
     $password: String!
   ) {
-    signUp(
+    signup(
       firstName: $firstName
       lastName: $lastName
       email: $email
       password: $password
     ) {
-      user
+      firstname
+      lastname
+      email
     }
   }
 `;
@@ -31,7 +42,7 @@ export const CREATE_HOTEL = gql`
     $brand: String!
     $category: String!
     $telephone: String!
-    $email: String!
+    $email: String
     $lowestPrice: Float!
     $checkInHour: String!
     $checkOutHour: String!
@@ -39,10 +50,22 @@ export const CREATE_HOTEL = gql`
     $description: String!
     $frameImage: String!
     $interiorImage: String!
-    $activities: [String]
+    $activities: [String]!
     $facilities: [String]!
     $services: [String]!
     $languages: [String]!
+    $accessible: Boolean!
+    $cancelationFree: Boolean!
+    $familyFriendly: Boolean!
+    $petFriendly: Boolean!
+    $smokerFriendly: Boolean!
+    $ecoFriendly: Boolean!
+    $holeAddress: String!
+    $country: String
+    $postalCode: String!
+    $administrativeArea: String!
+    $city: String
+    $street: String!
   ) {
     createHotel(
       name: $name
@@ -61,43 +84,35 @@ export const CREATE_HOTEL = gql`
       facilities: $facilities
       services: $services
       languages: $languages
-    ) {
-      id
-    }
-  }
-`;
-export const ADD_HOTEL_FEATURES = gql`
-  mutation addHotelFeatures(
-    $hotelId: ID!
-    $accesible: Boolean!
-    $cancelationFree: Boolean!
-    $familyFriendly: Boolean!
-    $petFriendly: Boolean!
-    $smokerFriendly: Boolean!
-    $ecoFriendly: Boolean!
-  ) {
-    addHotelFeatures(
-      hotelId: $hotelId
-      accesible: $accesible
+      accessible: $accessible
       cancelationFree: $cancelationFree
       familyFriendly: $familyFriendly
       petFriendly: $petFriendly
       smokerFriendly: $smokerFriendly
       ecoFriendly: $ecoFriendly
-    )
+      holeAddress: $holeAddress
+      country: $country
+      postalCode: $postalCode
+      administrativeArea: $administrativeArea
+      city: $city
+      street: $street
+    ) {
+      id
+    }
   }
 `;
-export const ADD_HOTEL_ADDRESS = gql`
-  mutation addHotelAddress(
+
+export const EDIT_HOTEL_ADDRESS = gql`
+  mutation editHotelAddress(
     $hotelId: ID!
-    $holeAddress: String!
-    $country: String!
-    $postalCode: String!
-    $administrativeArea: String!
-    $city: String!
-    $street: String!
+    $holeAddress: String
+    $country: String
+    $postalCode: String
+    $administrativeArea: String
+    $city: String
+    $street: String
   ) {
-    addHotelAddress(
+    editHotelAddress(
       hotelId: $hotelId
       holeAddress: $holeAddress
       country: $country
@@ -105,7 +120,9 @@ export const ADD_HOTEL_ADDRESS = gql`
       administrativeArea: $administrativeArea
       city: $city
       street: $street
-    )
+    ) {
+      id
+    }
   }
 `;
 export const GET_ALL_SERVICES = gql`
@@ -116,7 +133,7 @@ export const GET_ALL_SERVICES = gql`
     }
   }
 `;
-export const GET_ALL_AMENETIES = gql`
+export const GET_ALL_AMENITIES = gql`
   query amenitiesList {
     amenitiesList {
       id
@@ -157,22 +174,102 @@ export const GET_ALL_HOTEL_CATEGORIES = gql`
     }
   }
 `;
-
-export const MAKE_ROOM_CONSULT = gql`
-mutation checkRoomAvailability($roomModelId:ID!,$checkInDate:String!,$checkOutDate:String!,$rooms:[RoomSpecification!]!){
-  checkRoomAvailability(
-    roomModelId:$roomModelId
-checkInDate:$checkInDate
-checkOutDate:$checkOutDate
-rooms:$rooms
-  ){
-  isAvailable
-  message
+export const GET_ALL_ROOM_CATEGORIES = gql`
+  query roomCategoriesList {
+    roomCategoriesList {
+      id
+      name
+    }
   }
+`;
+export const GET_HOTELS = gql`
+  query hotels(
+    $search: String
+    $sort: String
+    $take: Int
+    $skip: Int
+    $categories: [String]
+    $facilities: [String]
+    $activities: [String]
+    $services: [String]
+    $languages: [String]
+  ) {
+    hotels(
+      search: $search
+      sort: $sort
+      take: $take
+      skip: $skip
+      services: $services
+      categories: $categories
+      facilities: $facilities
+      activities: $activities
+      languages: $languages
+    ) {
+      id
+      name
+      lowestPrice
+      frameImage
+      description
+      address {
+        id
+        holeAddress
+      }
+    }
+  }
+`;
+export const MAKE_ROOM_CONSULT = gql`
+  mutation checkRoomAvailability(
+    $roomModelId: ID!
+    $checkInDate: String!
+    $checkOutDate: String!
+    $rooms: [RoomSpecification!]!
+  ) {
+    checkRoomAvailability(
+      roomModelId: $roomModelId
+      checkInDate: $checkInDate
+      checkOutDate: $checkOutDate
+      rooms: $rooms
+    ) {
+      isAvailable
+      message
+    }
+  }
+  extend type RoomSpecification {
+    children: Int!
+    adults: Int!
+  }
+`;
 
-}
- extend type RoomSpecification {
-  $childrens:!Number
-  $adults:!Number
-}
-// `;
+export const CREATE_ROOM_MODEL = gql`
+  mutation creatHotelRoomModel(
+    $hotelId: Int!
+    $lowestPrice: Float!
+    $name: String!
+    $mts2: Int!
+    $category: String!
+    $description: String!
+    $minimunStay: Int!
+    $maximunStay: Int!
+    $maximunGuests: Int!
+    $mainImage: String!
+    $services: [String]!
+    $amenities: [String]!
+  ) {
+    creatHotelRoomModel(
+      hotelId: $hotelId
+      lowestPrice: $lowestPrice
+      name: $name
+      mts2: $mts2
+      category: $category
+      description: $description
+      minimunStay: $minimunStay
+      maximunStay: $maximunStay
+      maximunGuests: $maximunGuests
+      mainImage: $mainImage
+      services: $services
+      amenities: $amenities
+    ) {
+      id
+    }
+  }
+`;

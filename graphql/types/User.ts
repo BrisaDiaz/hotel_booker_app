@@ -1,13 +1,13 @@
 import { objectType, enumType, extendType, stringArg } from 'nexus';
-import type { NextApiRequest } from 'next';
-
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from '../../lib/prisma';
 import { getUser, hashPassword } from '../utils';
 
 export const User = objectType({
   name: 'User',
   definition(t) {
     t.id('id');
-    t.string('name');
+    t.string('firstname');
     t.string('lastname');
     t.string('email');
     t.string('password');
@@ -20,8 +20,8 @@ export const Query = extendType({
     t.field('me', {
       type: 'User',
       resolve(root, args, ctx) {
-        async function getMyProfile(req: NextApiRequest) {
-          const user: { id: number } = await getUser(req);
+        async function getMyProfile(req: NextApiRequest, res: NextApiResponse) {
+          const user: { id: number } = await getUser(req, res);
 
           return await prisma.user.findUnique({
             where: {
@@ -29,7 +29,7 @@ export const Query = extendType({
             },
           });
         }
-        return getMyProfile(ctx.req);
+        return getMyProfile(ctx.req, ctx.res);
       },
     });
   },
@@ -41,18 +41,17 @@ export const Mutation = extendType({
       type: 'User',
       args: {
         firstName: stringArg(),
-        secondName: stringArg(),
+        lastName: stringArg(),
         email: stringArg(),
         password: stringArg(),
       },
       resolve(_, args, ctx) {
-        async function updateAccount(args: {
-          firstName?: string;
-          secondName?: string;
-          email?: string;
-          password?: string;
-        }) {
-          const user = await getUser(ctx.req);
+        async function updateAccount(
+          req: NextApiRequest,
+          res: NextApiResponse,
+          args
+        ) {
+          const user = await getUser(req, res);
 
           const encryptedPasswod = args.password
             ? await hashPassword(args.password)
@@ -69,7 +68,7 @@ export const Mutation = extendType({
             },
           });
         }
-        return updateAccount(args);
+        return updateAccount(ctx.req, ctx.res, args);
       },
     });
   },

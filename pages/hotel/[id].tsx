@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+
 import Head from 'next/head';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -8,20 +9,14 @@ import EmailIcon from '@mui/icons-material/Email';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import Typography from '@mui/material/Typography';
 import AlarmIcon from '@mui/icons-material/Alarm';
-import Tabs from '../../components/Tabs';
-import ImageSlider from '../../components/ImageSlider';
-
+import Tabs from '@/components/Tabs';
+import ImageSlider from '@/components/ImageSlider';
+import DinamicFieldIcone from '@/components/DinamicFieldIcone';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import HikingIcon from '@mui/icons-material/Hiking';
 import LanguageIcon from '@mui/icons-material/Language';
-import ChildCareIcon from '@mui/icons-material/ChildCare';
-import PetsIcon from '@mui/icons-material/Pets';
-import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
-import SmokingRoomsIcon from '@mui/icons-material/SmokingRooms';
-import PaidIcon from '@mui/icons-material/Paid';
-import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
-import RoomCard from '../../components/RoomCard';
+import RoomCard from '@/components/RoomCard';
 import hotel from '@/mocks/hotel';
 
 const Hotel: NextPage = () => {
@@ -99,7 +94,7 @@ const Hotel: NextPage = () => {
           <ImageSlider images={images} />
 
           <h4 className="price">
-            Prices from <span> ${hotel.lowestPrice} USD</span>
+            Prices from <span> USD${hotel.lowestPrice}</span>
           </h4>
           <div className="list row">
             <div className="list-item">
@@ -210,19 +205,7 @@ const Hotel: NextPage = () => {
                 {formattedAdditonalFeatures.map((featureName) => (
                   <div className="list" key={featureName}>
                     <div className="list-item">
-                      {featureName === 'family friendly' ? (
-                        <ChildCareIcon color="primary" />
-                      ) : featureName === 'pet friendly' ? (
-                        <PetsIcon color="primary" />
-                      ) : featureName === 'smoker friendly' ? (
-                        <SmokingRoomsIcon color="primary" />
-                      ) : featureName === 'accessible' ? (
-                        <AccessibleForwardIcon color="primary" />
-                      ) : featureName === 'cancelation free' ? (
-                        <PaidIcon color="primary" />
-                      ) : featureName === 'eco friendly' ? (
-                        <LocalFloristIcon color="primary" />
-                      ) : null}
+                      {DinamicFieldIcone(featureName)}
 
                       <p>{featureName}</p>
                     </div>

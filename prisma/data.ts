@@ -1,6 +1,6 @@
 export const facilities = [
   'parking',
-  'Airport shuttle',
+  'airport shuttle',
   'Free parking',
   'wellness center',
   'fitness center',
@@ -12,6 +12,7 @@ export const facilities = [
   'smooking area',
   'Non-smoking rooms',
   'bar',
+  'garden',
   'pool-side bar',
   'open-air patio',
   'lounge area',
@@ -20,7 +21,7 @@ export const facilities = [
   'open restaurant',
   'restaurant',
   'conference room',
-  'e-bike rental',
+
   'horse cart rental',
   'terrance',
   'outdoor terrance',
@@ -32,6 +33,7 @@ export const facilities = [
   'elevator',
   'facilies for childrens',
   'beach access',
+  'hair/beauty salon',
 ];
 
 export const services = [
@@ -46,10 +48,13 @@ export const services = [
   'babysitting on request',
   '24hrs concierge',
   'concierge',
-  'garden',
+  'e-bike rental',
   'cooking service',
   'vIP room facilities',
+  'special diet meal',
+  'Coffee house on site',
   'bar/cafe 24hrs',
+  'Breakfast in the room',
   'security 24hrs',
   'room service 24hrs',
   'front desk 24hrs',
@@ -162,14 +167,24 @@ export const hotelCategories = [
   'airpost hotel',
   'motel',
   'flotel',
+  'Boutique hotel',
   'trancient hotel',
   'casino hotel',
+  'beach resort',
   'comertial/business hotel',
   'suite hotel',
   'residencial hotel',
   'bed & breackfast hotel',
   'conference centers',
   'convention hotel',
+  'gastro hotel',
+  'pop-up hotel',
+  'capsule hotel',
+  'hotelship',
+  'apart-hotel',
+  'hostel',
+  'serviced apartment',
+  'extended-stay hotel',
 ];
 export const activities = [
   'cycling',
@@ -210,11 +225,14 @@ export const languages = [
   'bengali',
   'russian',
   'indonesian',
+  'estonian',
+  'german',
+  'portuguese',
 ];
 
 export const adminUser = {
   firstName: 'Default',
-  secondName: 'Admin',
+  lastName: 'admin',
   email: 'admin@hotelBooker.com',
   password: 'admin',
 };
