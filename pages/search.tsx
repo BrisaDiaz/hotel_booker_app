@@ -1,7 +1,7 @@
-import type { NextPage } from 'next';
+import React from 'react';
 import { GetStaticProps } from 'next';
 import { client } from '../lib/apollo';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import Head from 'next/head';
 import HotelsGrid from '../components/HotelsGrid';
 import FilterMenu from '../components/FilterMenu';
@@ -22,7 +22,7 @@ type Data = {
   name: string;
   __typename: string;
 };
-interface hotel {
+interface Hotel {
   name: string;
   lowestPrice: number;
   address: {
@@ -37,8 +37,9 @@ type Props = {
   languagesList: Data[];
   servicesList: Data[];
   hotelCategoriesList: Data[];
-  hotels: hotel[];
+  hotels: Hotel[];
 };
+
 const Search = ({
   facilitiesList,
   activitiesList,
@@ -47,6 +48,24 @@ const Search = ({
   hotelCategoriesList,
   hotels,
 }: Props) => {
+  const [displayHotels, setDisplayHotels] = React.useState<Hotel[]>(hotels);
+  const [requestHotels, { data, error, loading }] = useLazyQuery(GET_HOTELS, {
+    fetchPolicy: 'no-cache',
+  });
+  const handleSearch = async (variables: {
+    features: string[];
+    categories: string[];
+    services: string[];
+    activities: string[];
+    languages: string[];
+    sort: string;
+    search: string | null;
+  }) => {
+    await requestHotels({
+      variables: variables,
+    });
+  };
+  console.log(data, loading, error);
   return (
     <div>
       <Head>
@@ -62,6 +81,7 @@ const Search = ({
           languages={languagesList}
           services={servicesList}
           hotelCategories={hotelCategoriesList}
+          handleSubmit={handleSearch}
         >
           <Box
             sx={{
@@ -70,7 +90,7 @@ const Search = ({
               padding: '30px 0',
             }}
           >
-            <HotelsGrid hotels={hotels} />
+            <HotelsGrid hotels={displayHotels || hotels} />
           </Box>
         </FilterMenu>
       </main>

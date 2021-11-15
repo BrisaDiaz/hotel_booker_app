@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -45,12 +46,14 @@ model Hotel {
   brand            String
   administratorId  Int
   administrator    Administrator  @relation(fields: [administratorId], references: [id])
-  email            String
   hotelCategory    HotelCategory? @relation(fields: [category], references: [name])
   category         String
   telephone        String
+  email            String
+  webSite          String
   description      String?
   lowestPrice      Float
+  taxesAndCharges  Int
   checkInHour      String
   checkOutHour     String
   policiesAndRules String
@@ -63,8 +66,8 @@ model Hotel {
   rooms            Room[]
   comments         Comment[]
   roomModels       RoomModel[]
-
-
+  Features         Features?
+  Address          Address?
 }
 
 model Facility {
@@ -79,12 +82,14 @@ model Address {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
   hotelId            Int      @unique
+  hotel              Hotel    @relation(fields: [hotelId], references: [id])
   holeAddress        String
   country            String
   administrativeArea String
   postalCode         String
   city               String
   street             String
+
 
 }
 
@@ -129,19 +134,22 @@ model RoomModel {
   rooms           Room[]
   public          Boolean      @default(true)
 
+
 }
 
 model Features {
   id              Int      @id @default(autoincrement())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  hotelId         Int
+  hotelId         Int      @unique
+  hotel           Hotel    @relation(fields: [hotelId], references: [id])
   cancelationFree Boolean  @default(false)
   accessible      Boolean  @default(false)
   petFriendly     Boolean  @default(false)
   familyFriendly  Boolean  @default(false)
   ecoFriendly     Boolean  @default(false)
   smokerFriendly  Boolean  @default(false)
+
 
 }
 

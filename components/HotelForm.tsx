@@ -22,7 +22,7 @@ import AddLinkIcon from '@mui/icons-material/AddLink';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
-
+import LanguageIcon from '@mui/icons-material/Language';
 const styles = {
   root: {
     maxWidth: '900px',
@@ -135,10 +135,12 @@ export default function MultilineTextFields(props: {
       name: data.name,
       telephone: data.telephone,
       email: data.email,
+      website: data.website,
       brand: data.brand,
       checkInHour: data.checkInHour,
       checkOutHour: data.checkOutHour,
       lowestPrice: data.lowestPrice * 1,
+      taxesAndCharges: data.taxesAndCharges,
       description: data.description,
       policiesAndRules: data.policiesAndRules,
       frameImage: data.frameImage,
@@ -225,32 +227,6 @@ export default function MultilineTextFields(props: {
         </Grid>
         <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">
           <Grid item xs={12} sm={6}>
-            <TextField
-              sx={styles.textField}
-              id="lowestPrice"
-              {...register('lowestPrice', {
-                required: 'The lowest price is required',
-                min: {
-                  value: 0,
-                  message: 'The lowest price must be a positive number',
-                },
-              })}
-              variant="outlined"
-              label={
-                errors['lowestPrice']
-                  ? errors['lowestPrice'].message
-                  : 'Lowest Price'
-              }
-              type="number"
-              error={errors['lowestPrice'] ? true : false}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel id="hotel-type">Category</InputLabel>
 
@@ -274,6 +250,7 @@ export default function MultilineTextFields(props: {
             </FormControl>
           </Grid>
         </Grid>
+
         <TextField
           id="description"
           multiline
@@ -291,7 +268,65 @@ export default function MultilineTextFields(props: {
           sx={styles.textField}
         />
       </Grid>
-
+      <Grid component="fieldset" sx={styles.fieldset}>
+        <Typography component="h3" variant="h6" sx={styles.groupTitle}>
+          Prices
+        </Typography>
+        <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">
+          <Grid item xs={12} sm={6}>
+            <TextField
+              sx={styles.textField}
+              id="lowestPrice"
+              {...register('lowestPrice', {
+                required: 'The lowest price is required',
+                min: {
+                  value: 0,
+                  message: 'The ammount must be a positive number',
+                },
+              })}
+              variant="outlined"
+              label={
+                errors['lowestPrice']
+                  ? errors['lowestPrice'].message
+                  : 'Lowest Price'
+              }
+              type="number"
+              error={errors['lowestPrice'] ? true : false}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              sx={styles.textField}
+              id="taxesAndCharges"
+              {...register('taxesAndCharges', {
+                required: 'The lowest price is required',
+                min: {
+                  value: 0,
+                  message: 'The ammount must be a positive number',
+                },
+              })}
+              variant="outlined"
+              label={
+                errors['taxesAndCharges']
+                  ? errors['taxesAndCharges'].message
+                  : 'Taxes And Charges'
+              }
+              type="number"
+              error={errors['lowestPrice'] ? true : false}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
       <Grid component="fieldset" sx={styles.fieldset}>
         <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Contact
@@ -346,6 +381,31 @@ export default function MultilineTextFields(props: {
                 startAdornment: (
                   <InputAdornment position="start">
                     <EmailOutlinedIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+        </Grid>
+        <Grid container spacing={matchesSize ? 2 : 0} alignItems="center">
+          <Grid item xs={12} sm={6}>
+            <TextField
+              sx={styles.textField}
+              id="website"
+              variant="outlined"
+              label={errors['website'] ? errors['website'].message : 'Website'}
+              error={errors['website'] && true}
+              {...register('website', {
+                pattern: {
+                  value:
+                    /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi,
+                  message: 'Invalid website url',
+                },
+              })}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LanguageIcon />
                   </InputAdornment>
                 ),
               }}

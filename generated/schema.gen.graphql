@@ -170,7 +170,7 @@ type Query {
   getMessages: [TestArray]
   getMoreMessages: [TestArray]
   hotelCategoriesList: [HotelCategory]
-  hotels(activities: [String], categories: [String], facilities: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): [Hotel]
+  hotels(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): [Hotel]
   languagesList: [Language]
   me: User
   roomCategoriesList: [RoomCategory]

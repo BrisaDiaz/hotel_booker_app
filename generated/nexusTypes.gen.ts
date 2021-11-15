@@ -737,6 +737,7 @@ export interface NexusGenArgTypes {
       activities?: Array<string | null> | null; // [String]
       categories?: Array<string | null> | null; // [String]
       facilities?: Array<string | null> | null; // [String]
+      features?: Array<string | null> | null; // [String]
       languages?: Array<string | null> | null; // [String]
       search?: string | null; // String
       services?: Array<string | null> | null; // [String]

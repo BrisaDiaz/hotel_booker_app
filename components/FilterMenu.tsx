@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { alpha, useTheme, styled } from '@mui/material/styles';
+import React, { ChangeEvent } from 'react';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import Drawer from '@mui/material/Drawer';
@@ -42,9 +42,11 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: '100%',
   position: 'absolute',
+  cursor: 'pointer',
   pointerEvents: 'none',
   display: 'flex',
   alignItems: 'center',
+  zIndex: 50,
   justifyContent: 'center',
 }));
 
@@ -52,6 +54,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
+
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
@@ -84,11 +87,12 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }),
 }));
 
-const SortSelect = () => {
+const SortSelect = ({ handdleChange }: { handdleChange: Function }) => {
   const [sort, setSort] = React.useState('-price');
 
   const handleChange = (event: SelectChangeEvent) => {
     setSort(event.target.value as string);
+    handdleChange(event.target.value);
   };
 
   return (
@@ -103,12 +107,12 @@ const SortSelect = () => {
           labelId="select-sort"
           id="select-sort"
           value={sort}
-          sx={{ maxHeight: '45px' }}
+          sx={{ maxHeight: '45px', maxWidth: 'min-content' }}
           onChange={handleChange}
           IconComponent={() => <SortIcon sx={{ mr: 1.5 }} />}
         >
-          <MenuItem value="-price">Lowest Price</MenuItem>
-          <MenuItem value="price">Highest Price</MenuItem>
+          <MenuItem value="price">Lowest Price</MenuItem>
+          <MenuItem value="-price">Highest Price</MenuItem>
         </Select>
       </FormControl>
     </Box>
@@ -157,6 +161,7 @@ export default function PersistentDrawerLeft({
   languages,
   services,
   hotelCategories,
+  handleSubmit,
 }: {
   children: React.ReactNode;
   facilities: Data[];
@@ -164,6 +169,7 @@ export default function PersistentDrawerLeft({
   languages: Data[];
   services: Data[];
   hotelCategories: Data[];
+  handleSubmit: Function;
 }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -183,6 +189,86 @@ export default function PersistentDrawerLeft({
     { id: 5, name: 'eco friendly ' },
     { id: 6, name: 'smoker friendly' },
   ];
+
+  const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>(
+    []
+  );
+  const [languagesSelected, setLanguagesSelected] = React.useState<string[]>(
+    []
+  );
+  const [activitiesSelected, setActivitiesSelected] = React.useState<string[]>(
+    []
+  );
+  interface Query {
+    features: string[];
+    categories: string[];
+    services: string[];
+    activities: string[];
+    languages: string[];
+    sort: string;
+    search: string | null;
+  }
+
+  const [query, setQuery] = React.useState<Query>({
+    features: [],
+    categories: [],
+    services: [],
+    activities: [],
+    languages: [],
+    sort: 'price',
+    search: '',
+  });
+  const handleSort = (newValue: string) => {
+    setQuery({ ...query, sort: newValue });
+  };
+  const handdleCategories = (e: ChangeEvent<HTMLInputElement>) => {
+    handleAdditionOrDelete(e, 'categories');
+  };
+  const handdleLanguages = (e: ChangeEvent<HTMLInputElement>) => {
+    handleAdditionOrDelete(e, 'languages');
+  };
+  const handdleActivities = (e: ChangeEvent<HTMLInputElement>) => {
+    handleAdditionOrDelete(e, 'activities');
+  };
+
+  const handdleServices = (e: ChangeEvent<HTMLInputElement>) => {
+    handleAdditionOrDelete(e, 'services');
+  };
+  const handdleFeatures = (e: ChangeEvent<HTMLInputElement>) => {
+    handleAdditionOrDelete(e, 'features');
+  };
+  const handleAdditionOrDelete = (
+    e: ChangeEvent<HTMLInputElement>,
+    field: any
+  ) => {
+    if (e.target.checked) {
+      return setQuery({ ...query, [field]: [...query[field], e.target.value] });
+    }
+    setQuery({
+      ...query,
+      [field]: query[field].filter((name: string) => name === e.target.value),
+    });
+  };
+
+  const handleSearchValue = (newValue: string) => {
+    setQuery({ ...query, search: newValue });
+  };
+
+  const handdleSearch = () => {
+    setQuery({
+      features: [],
+      categories: [],
+      services: [],
+      activities: [],
+      languages: [],
+      sort: 'price',
+      search: query.search,
+    });
+    submitMiddleware();
+  };
+  const submitMiddleware = () => {
+    handleSubmit(query);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -213,7 +299,9 @@ export default function PersistentDrawerLeft({
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              onKeyPress={(e) => e.key === 'Enter' && handdleSearch()}
               placeholder="Search…"
+              onChange={(e) => handleSearchValue(e.target.value)}
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
@@ -235,9 +323,15 @@ export default function PersistentDrawerLeft({
       >
         <DrawerHeader>
           <Button
-            variant="outlined"
-            color="primary"
-            sx={{ width: '100%', marginLeft: '10px' }}
+            variant="contained"
+            color="secondary"
+            sx={{
+              width: '100%',
+              marginLeft: '10px',
+              p: 1,
+              color: 'common.white',
+            }}
+            onClick={submitMiddleware}
           >
             Apply
           </Button>
@@ -252,7 +346,7 @@ export default function PersistentDrawerLeft({
 
         <Divider />
 
-        <SortSelect />
+        <SortSelect handdleChange={handleSort} />
 
         <Divider />
 
@@ -271,27 +365,30 @@ export default function PersistentDrawerLeft({
 
         <Divider />
         <Accordion title={'Category'}>
-          <CheckboxGroup items={hotelCategories} />
+          <CheckboxGroup
+            items={hotelCategories}
+            handleChanges={handdleCategories}
+          />
         </Accordion>
         <Divider />
         <Accordion title={'Facilities'}>
-          <CheckboxGroup items={facilities} />
+          <CheckboxGroup items={facilities} handleChanges={handdleCategories} />
         </Accordion>
         <Divider />
         <Accordion title={'Services'}>
-          <CheckboxGroup items={services} />
+          <CheckboxGroup items={services} handleChanges={handdleServices} />
         </Accordion>
         <Divider />
         <Accordion title={'Activities'}>
-          <CheckboxGroup items={activities} />
+          <CheckboxGroup items={activities} handleChanges={handdleActivities} />
         </Accordion>
         <Divider />
         <Accordion title={'Other Features'}>
-          <CheckboxGroup items={features} />
+          <CheckboxGroup items={features} handleChanges={handdleFeatures} />
         </Accordion>
         <Divider />
         <Accordion title={'Languages'}>
-          <CheckboxGroup items={languages} />
+          <CheckboxGroup items={languages} handleChanges={handdleLanguages} />
         </Accordion>
         <Divider />
       </Drawer>

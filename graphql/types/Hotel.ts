@@ -157,6 +157,7 @@ export const Query = extendType({
         sort: stringArg(),
         skip: intArg(),
         take: intArg(),
+        features: list(stringArg()),
         categories: list(stringArg()),
         facilities: list(stringArg()),
         activities: list(stringArg()),
@@ -166,11 +167,12 @@ export const Query = extendType({
 
       resolve(root, args: args, ctx) {
         interface args {
-          facilities?: string[] | null[];
-          activities?: string[] | null[];
-          services?: string[] | null[];
-          languages?: string[] | null[];
-          categories?: string[] | null[];
+          facilities?: string[];
+          activities?: string[];
+          services?: string[];
+          languages?: string[];
+          categories?: string[];
+          features?: string[];
           search?: string;
           sort?: string;
           skip?: number;
@@ -182,26 +184,38 @@ export const Query = extendType({
             hasSome: String[];
           };
         }
+
         interface PropietyFilter {
           [key: string]: { equeals: string };
         }
-
+        interface searchFilter {
+          [key: string]: {
+            contains: string;
+          };
+        }
         interface BooleanFilter {
           [key: string]: boolean;
         }
         interface sortField {
           [key: string]: 'desc' | 'asc';
         }
+        type OR = (
+          | PropietyFilter
+          | searchFilter
+          | { [key: string]: searchFilter }
+        )[];
+        type AND = (ArrayFilter | BooleanFilter)[];
         interface Query {
           orderBy: sortField[];
           where: {
-            AND: (ArrayFilter | BooleanFilter)[];
-            OR: PropietyFilter[];
+            AND?: AND;
+            OR?: OR;
           };
           take: number;
-          skip: number;
+          skip?: number;
         }
-        let ANDconditionals: (ArrayFilter | BooleanFilter)[] = [];
+
+        let ANDconditionals: AND = [];
 
         args.facilities?.length &&
           ANDconditionals.push({ facilities: { hasSome: args.facilities } });
@@ -214,8 +228,13 @@ export const Query = extendType({
 
         args.languages?.length &&
           ANDconditionals.push({ languages: { hasSome: args.languages } });
-
-        let ORconditionals: PropietyFilter[] = [];
+        args.features?.length &&
+          ANDconditionals.push(
+            args.features.map((feature: string) => ({
+              features: { [feature]: true },
+            }))
+          );
+        let ORconditionals: OR = [];
 
         args.categories?.length &&
           ORconditionals.push(
@@ -223,27 +242,35 @@ export const Query = extendType({
               category: { equals: category },
             }))
           );
+        args.search &&
+          ORconditionals.push({ title: { contains: args.search } }) &&
+          ORconditionals.push({ description: { contains: args.search } }) &&
+          ORconditionals.push({
+            address: { holeAddress: { contains: args.search } },
+          });
 
         let orderBy: sortField[] = [
           {
-            lowestPrice: args?.sort?.lowestPrice === '-price' ? 'desc' : 'asc',
+            lowestPrice: args?.sort === '-price' ? 'desc' : 'asc',
           },
         ];
-
         let query: Query = {
           orderBy: orderBy,
-          where: {
-            AND: ANDconditionals,
-            OR: ORconditionals,
-          },
+          where: {},
           take: args.take || 6,
           skip: args.skip || 0,
         };
+        if (ANDconditionals.length) {
+          query.where['AND'] = ANDconditionals;
+        }
+        if (ORconditionals.length) {
+          query.where['OR'] = ORconditionals;
+        }
 
-        const searchHotels = async () => {
-          return prisma.hotel.findMany({});
+        const searchHotels = async (query: Query) => {
+          return prisma.hotel.findMany(query);
         };
-        return searchHotels();
+        return searchHotels(query);
       },
     });
     t.field('getHotelById', {
@@ -251,10 +278,10 @@ export const Query = extendType({
       args: {
         id: nonNull(idArg()),
       },
-      resolve(_, args, ctx) {
+      resolve(_, args: { id: number }, ctx) {
         return prisma.hotel.findUnique({
           where: {
-            id: args.id * 1,
+            id: args.id,
           },
           include: {
             facilities: true,
@@ -278,8 +305,10 @@ export const Mutation = extendType({
         brand: stringArg(),
         category: stringArg(),
         email: stringArg(),
+        email: stringArg(),
         telephone: nonNull(stringArg()),
         lowestPrice: nonNull(floatArg()),
+        taxesAndCharges: nonNull(floatArg()),
         frameImage: nonNull(stringArg()),
         interiorImage: nonNull(stringArg()),
         checkInHour: nonNull(stringArg()),
@@ -317,9 +346,11 @@ export const Mutation = extendType({
               name: args.name,
               hotelCategory: { connect: { name: args.category } },
               brand: args.brand,
+              website: args.website,
               email: args.email,
               telephone: args.telephone,
               lowestPrice: args.lowestPrice,
+              taxesAndCharges: args.taxesAndCharges,
               frameImage: args.frameImage,
               interiorImage: args.interiorImage,
               description: args.description,

@@ -192,6 +192,7 @@ export const activities = [
   'tennis',
   'fishing',
   'squash',
+
   'paintball',
   'downhill skiing',
   'indoor cycling',

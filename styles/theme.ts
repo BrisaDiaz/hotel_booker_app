@@ -15,7 +15,7 @@ let theme = createTheme({
       main: '#3f51b5',
     },
     secondary: {
-      main: '#ab003c',
+      main: '#efb810',
     },
   },
 });

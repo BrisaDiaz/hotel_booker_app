@@ -7,15 +7,21 @@ type Data = {
   name: string;
   __typename?: string;
 };
-export default function CheckboxLabels({ items }: { items: Data[] }) {
+export default function CheckboxLabels({
+  items,
+  handleChanges,
+}: {
+  items: Data[];
+  handleChanges: Function;
+}) {
   return (
     <FormGroup>
       {items.map((item) => (
         <FormControlLabel
           sx={{ textTransform: 'capitalize', fontSize: '14px' }}
           key={`${item.name}-${item.id}`}
-          control={<Checkbox />}
           label={item.name}
+          control={<Checkbox onChange={handleChanges} />}
         />
       ))}
     </FormGroup>
