@@ -35,7 +35,9 @@ const styles = {
   title: {
     mt: 0,
     mb: 4,
-    fontWeight: 500,
+    fontWeight: 200,
+    fontFamily: 'Raleway',
+    textTransform: 'uppercase',
   },
   card: {
     maxWidth: 400,

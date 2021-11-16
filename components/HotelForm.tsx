@@ -34,11 +34,11 @@ const styles = {
   title: {
     mt: 0,
     mb: 4,
-    fontWeight: 500,
+    fontWeight: 200,
+      fontFamily: 'Raleway',
+    textTransform: 'uppercase',
   },
-  card: {
-    maxWidth: 400,
-  },
+
   groupTitle: {
     fontWeight: 500,
     color: '#484848',
@@ -140,7 +140,7 @@ export default function MultilineTextFields(props: {
       checkInHour: data.checkInHour,
       checkOutHour: data.checkOutHour,
       lowestPrice: data.lowestPrice * 1,
-      taxesAndCharges: data.taxesAndCharges,
+      taxesAndCharges: data.taxesAndCharges * 1,
       description: data.description,
       policiesAndRules: data.policiesAndRules,
       frameImage: data.frameImage,
@@ -547,18 +547,21 @@ export default function MultilineTextFields(props: {
           onChange={(data: autocompliteData[]) => handleFacilitiesField(data)}
           label="Facilities"
           options={facilities}
+          value={facilitiesSelected}
           sx={styles.textField}
         />
         <AutocompleteCheckbox
           onChange={(data: autocompliteData[]) => handleServicesField(data)}
           label="Services"
           options={services}
+          value={servicesSelected}
           sx={styles.textField}
         />
         <AutocompleteCheckbox
           onChange={(data: autocompliteData[]) => handleActivitiesField(data)}
           label="Activities"
           options={activities}
+          value={activitiesSelected}
           sx={styles.textField}
         />
 
@@ -566,6 +569,7 @@ export default function MultilineTextFields(props: {
           onChange={(data: autocompliteData[]) => handleLanguagesField(data)}
           label="Languages"
           options={languages}
+          value={languagesSelected}
           sx={styles.textField}
         />
 
@@ -727,7 +731,7 @@ export default function MultilineTextFields(props: {
         </Grid>
         <Grid container spacing={2} alignItems="center" sx={{ mt: 0, mb: 2 }}>
           <Grid item xs={12} sm={6}>
-            <Card sx={styles.card}>
+            <Card>
               <CardMedia
                 component="img"
                 alt="frame image"
@@ -739,7 +743,7 @@ export default function MultilineTextFields(props: {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Card sx={styles.card}>
+            <Card>
               <CardMedia
                 component="img"
                 alt="Interior image"

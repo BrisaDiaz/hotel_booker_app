@@ -57,7 +57,7 @@ export const GET_ALL_ROOM_CATEGORIES = gql`
   }
 `;
 export const GET_HOTELS = gql`
-  query hotels(
+  query hotelSearch(
     $search: String
     $sort: String
     $take: Int
@@ -69,7 +69,7 @@ export const GET_HOTELS = gql`
     $languages: [String]
     $features: [String]
   ) {
-    hotels(
+    hotelSearch(
       search: $search
       sort: $sort
       take: $take
@@ -81,15 +81,19 @@ export const GET_HOTELS = gql`
       features: $features
       languages: $languages
     ) {
-      id
-      name
-      lowestPrice
-      frameImage
-      description
-      address {
+      hotels {
         id
-        holeAddress
+        name
+        lowestPrice
+        frameImage
+        description
+        address {
+          id
+          holeAddress
+        }
       }
+      totalResults
+      pageCount
     }
   }
 `;

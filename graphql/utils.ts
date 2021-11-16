@@ -168,6 +168,134 @@ export async function hashPassword(password: string): Promise<string> {
   const hashPassword = await hash(password, salt);
   return hashPassword;
 }
+export function hotelQueryConstructor(args: Args) {
+  interface Args {
+    facilities?: string[];
+    activities?: string[];
+    services?: string[];
+    languages?: string[];
+    categories?: string[];
+    features?: string[];
+    search?: string;
+    sort?: string;
+    skip?: number;
+    take?: number;
+  }
+
+  interface ArrayFilter {
+    [key: string]: {
+      some: { name: string };
+    };
+  }
+
+  interface PropietyFilter {
+    [key: string]: { equeals: string };
+  }
+  interface searchFilter {
+    [key: string]: {
+      contains: string;
+      mode: 'insensitive';
+    };
+  }
+  interface BooleanFilter {
+    [key: string]: boolean;
+  }
+  interface sortField {
+    [key: string]: 'desc' | 'asc';
+  }
+  interface AddressFilter {
+    holeAddress: {
+      contains: string;
+      mode: 'insensitive';
+    };
+  }
+  type OR = (PropietyFilter | searchFilter | { [key: string]: searchFilter })[];
+  type AND = (ArrayFilter | BooleanFilter)[];
+
+  interface Query {
+    orderBy: sortField[];
+    where: {
+      AND?: AND;
+      OR?: OR;
+    };
+    take: number;
+    skip?: number;
+  }
+
+  let ANDconditionals: AND = [];
+
+  args.facilities?.length &&
+    ANDconditionals.push(
+      ...args.facilities.map((facility: string) => ({
+        facilities: { some: { name: facility } },
+      }))
+    );
+  args.activities?.length &&
+    ANDconditionals.push(
+      ...args.activities.map((activity: string) => ({
+        activities: { some: { name: activity } },
+      }))
+    );
+
+  args.services?.length &&
+    ANDconditionals.push(
+      ...args.services.map((service: string) => ({
+        services: { some: { name: service } },
+      }))
+    );
+
+  args.languages?.length &&
+    ANDconditionals.push(
+      ...args.languages.map((language: string) => ({
+        languages: { some: { name: language } },
+      }))
+    );
+  args.features?.length &&
+    ANDconditionals.push(
+      ...args.features.map((feature: string) => ({
+        Features: { [feature]: true },
+      }))
+    );
+  let ORconditionals: OR = [];
+
+  args.categories?.length &&
+    ORconditionals.push(
+      ...args.categories.map((category: string) => ({
+        category: { equals: category },
+      }))
+    );
+  args.search &&
+    ORconditionals.push({
+      name: { contains: args.search, mode: 'insensitive' },
+    }) &&
+    ORconditionals.push({
+      description: { contains: args.search, mode: 'insensitive' },
+    }) &&
+    ORconditionals.push({
+      Address: { holeAddress: { contains: args.search, mode: 'insensitive' } },
+    });
+
+  let orderBy: sortField[] = [
+    {
+      lowestPrice: args?.sort === '-price' ? 'desc' : 'asc',
+    },
+  ];
+  let query: Query = {
+    orderBy: orderBy,
+    where: {},
+    take: args.take || 6,
+    skip: args.skip || 0,
+  };
+  if (ANDconditionals.length) {
+    query.where['AND'] = ANDconditionals;
+  }
+  if (ORconditionals.length) {
+    query.where['OR'] = ORconditionals;
+  }
+
+  console.log(query);
+  return query;
+}
 export async function compirePassword({
   hash,
   plain,

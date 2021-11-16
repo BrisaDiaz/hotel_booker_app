@@ -17,19 +17,22 @@ export default function CheckboxesTags({
   options,
   label,
   onChange,
+  value,
 }: {
   options: Option[];
   label: string;
   onChange: Function;
+  value: any;
   sx: any;
 }) {
   return (
     <Autocomplete
       multiple
       onChange={(event, newInputValue) => onChange(newInputValue)}
-      id="checkboxes-tags-demo"
+      id={label}
       options={options}
       key={label}
+      value={value}
       disableCloseOnSelect
       sx={{ textTransform: 'capitalize' }}
       getOptionLabel={(option) => option.name}

@@ -12,7 +12,11 @@ import {
 import { prisma } from '../../lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { getAdminInfo, verifyIsHotelAdmin } from '../utils';
+import {
+  getAdminInfo,
+  verifyIsHotelAdmin,
+  hotelQueryConstructor,
+} from '../utils';
 import { Category } from '@mui/icons-material';
 export const Address = objectType({
   name: 'Address',
@@ -95,6 +99,7 @@ export const Hotel = objectType({
     t.string('category');
     t.string('telephone');
     t.string('email');
+    t.string('website');
     t.string('description');
     t.string('frameImage');
     t.string('interiorImage');
@@ -102,6 +107,7 @@ export const Hotel = objectType({
     t.string('checkOutHour');
     t.string('policiesAndRules');
     t.float('lowestPrice');
+    t.float('taxesAndCharges');
     t.boolean('public');
     t.list.field('facilities', {
       type: 'Facility',
@@ -146,12 +152,21 @@ export const Hotel = objectType({
     });
   },
 });
-
+export const HotelSearchResponse = objectType({
+  name: 'HotelSearch',
+  definition(t) {
+    t.list.field('hotels', {
+      type: 'Hotel',
+    });
+    t.int('totalResults');
+    t.int('pageCount');
+  },
+});
 export const Query = extendType({
   type: 'Query',
   definition(t) {
-    t.field('hotels', {
-      type: list('Hotel'),
+    t.field('hotelSearch', {
+      type: 'HotelSearch',
       args: {
         search: stringArg(),
         sort: stringArg(),
@@ -165,110 +180,15 @@ export const Query = extendType({
         languages: list(stringArg()),
       },
 
-      resolve(root, args: args, ctx) {
-        interface args {
-          facilities?: string[];
-          activities?: string[];
-          services?: string[];
-          languages?: string[];
-          categories?: string[];
-          features?: string[];
-          search?: string;
-          sort?: string;
-          skip?: number;
-          take?: number;
-        }
-
-        interface ArrayFilter {
-          [key: string]: {
-            hasSome: String[];
-          };
-        }
-
-        interface PropietyFilter {
-          [key: string]: { equeals: string };
-        }
-        interface searchFilter {
-          [key: string]: {
-            contains: string;
-          };
-        }
-        interface BooleanFilter {
-          [key: string]: boolean;
-        }
-        interface sortField {
-          [key: string]: 'desc' | 'asc';
-        }
-        type OR = (
-          | PropietyFilter
-          | searchFilter
-          | { [key: string]: searchFilter }
-        )[];
-        type AND = (ArrayFilter | BooleanFilter)[];
-        interface Query {
-          orderBy: sortField[];
-          where: {
-            AND?: AND;
-            OR?: OR;
-          };
-          take: number;
-          skip?: number;
-        }
-
-        let ANDconditionals: AND = [];
-
-        args.facilities?.length &&
-          ANDconditionals.push({ facilities: { hasSome: args.facilities } });
-
-        args.activities?.length &&
-          ANDconditionals.push({ activities: { hasSome: args.activities } });
-
-        args.services?.length &&
-          ANDconditionals.push({ services: { hasSome: args.services } });
-
-        args.languages?.length &&
-          ANDconditionals.push({ languages: { hasSome: args.languages } });
-        args.features?.length &&
-          ANDconditionals.push(
-            args.features.map((feature: string) => ({
-              features: { [feature]: true },
-            }))
-          );
-        let ORconditionals: OR = [];
-
-        args.categories?.length &&
-          ORconditionals.push(
-            args.categories.map((category: string) => ({
-              category: { equals: category },
-            }))
-          );
-        args.search &&
-          ORconditionals.push({ title: { contains: args.search } }) &&
-          ORconditionals.push({ description: { contains: args.search } }) &&
-          ORconditionals.push({
-            address: { holeAddress: { contains: args.search } },
+      resolve(root, args, ctx) {
+        const query = hotelQueryConstructor(args);
+        const searchHotels = async (query: { where: any; take: number }) => {
+          const hotels = await prisma.hotel.findMany(query);
+          const totalResults: number = await prisma.hotel.count({
+            where: query.where,
           });
-
-        let orderBy: sortField[] = [
-          {
-            lowestPrice: args?.sort === '-price' ? 'desc' : 'asc',
-          },
-        ];
-        let query: Query = {
-          orderBy: orderBy,
-          where: {},
-          take: args.take || 6,
-          skip: args.skip || 0,
-        };
-        if (ANDconditionals.length) {
-          query.where['AND'] = ANDconditionals;
-        }
-        if (ORconditionals.length) {
-          query.where['OR'] = ORconditionals;
-        }
-
-        const searchHotels = async (query: Query) => {
-          return prisma.hotel.findMany(query);
+          const pageCount: number = Math.floor(totalResults / query.take);
+          return { hotels, totalResults, pageCount };
         };
         return searchHotels(query);
       },
@@ -305,7 +225,7 @@ export const Mutation = extendType({
         brand: stringArg(),
         category: stringArg(),
         email: stringArg(),
-        email: stringArg(),
+        website: stringArg(),
         telephone: nonNull(stringArg()),
         lowestPrice: nonNull(floatArg()),
         taxesAndCharges: nonNull(floatArg()),
@@ -319,7 +239,7 @@ export const Mutation = extendType({
         services: nonNull(list(stringArg())),
         activities: nonNull(list(stringArg())),
         languages: nonNull(list(stringArg())),
-        cancelationFree: nonNull(booleanArg()),
+        freeCancelation: nonNull(booleanArg()),
         accessible: nonNull(booleanArg()),
         familyFriendly: nonNull(booleanArg()),
         petFriendly: nonNull(booleanArg()),
@@ -381,7 +301,7 @@ export const Mutation = extendType({
           });
           await prisma.address.create({
             data: {
-              hotelId: hotel.id,
+              hotelId: hotel.id * 1,
               country: args.country,
               holeAddress: args.holeAddress,
               postalCode: args.postalCode,
@@ -392,8 +312,8 @@ export const Mutation = extendType({
           });
           await prisma.features.create({
             data: {
-              hotelId: hotel.id,
-              cancelationFree: args.cancelationFree,
+              hotelId: hotel.id * 1,
+              freeCancelation: args.freeCancelation,
               accessible: args.accessible,
               familyFriendly: args.familyFriendly,
               petFriendly: args.petFriendly,

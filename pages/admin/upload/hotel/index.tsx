@@ -37,27 +37,23 @@ const Home = ({
 }): JSX.Element => {
   const [createHotel, { error, loading, data }] = useMutation(CREATE_HOTEL);
 
-  const [success, setSuccess] = React.useState(false);
+  const [success, setSuccess] = React.useState<Boolean>(false);
 
-  React.useEffect(() => {
-    data?.id && !loading ? toggleSuccessMessage() : setSuccess(false);
-  }, [data]);
-  const toggleSuccessMessage = () => {
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-    }, 5000);
-  };
   const onSubmit = async (hotelVariables: Hotel) => {
     try {
       await createHotel({
         variables: hotelVariables,
       });
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 5000);
     } catch (err) {
       console.log(err);
+      console.log(error?.graphQLErrors);
     }
   };
-  console.log(error);
+
   return (
     <div>
       <Head>

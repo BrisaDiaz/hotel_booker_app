@@ -44,41 +44,70 @@ export const Query = extendType({
     t.field('servicesList', {
       type: list('Service'),
       resolve: () => {
-        return prisma.service.findMany({});
+        return prisma.service.findMany({
+          orderBy: {
+            name: 'asc',
+          },
+        });
       },
     });
     t.field('activitiesList', {
       type: list('Activity'),
-      resolve: () => prisma.activity.findMany({}),
+      resolve: () =>
+        prisma.activity.findMany({
+          orderBy: {
+            name: 'asc',
+          },
+        }),
     });
     t.list.field('languagesList', {
       type: 'Language',
       resolve: () => {
-        return prisma.language.findMany({});
+        return prisma.language.findMany({
+          orderBy: {
+            name: 'asc',
+          },
+        });
       },
     });
     t.field('facilitiesList', {
       type: list('Facility'),
       resolve: () => {
-        return prisma.facility.findMany({});
+        return prisma.facility.findMany({
+          orderBy: {
+            name: 'asc',
+          },
+        });
       },
     });
     t.field('amenitiesList', {
       type: list('Amenity'),
       resolve: () => {
-        return prisma.amenity.findMany({});
+        return prisma.amenity.findMany({
+          orderBy: {
+            name: 'asc',
+          },
+        });
       },
     });
     t.field('hotelCategoriesList', {
       type: list('HotelCategory'),
       resolve: () => {
-        return prisma.hotelCategory.findMany({});
+        return prisma.hotelCategory.findMany({
+          orderBy: {
+            name: 'asc',
+          },
+        });
       },
     });
     t.field('roomCategoriesList', {
       type: list('RoomCategory'),
       resolve: () => {
-        return prisma.roomCategory.findMany({});
+        return prisma.roomCategory.findMany({
+          orderBy: {
+            name: 'asc',
+          },
+        });
       },
     });
   },

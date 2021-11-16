@@ -17,7 +17,7 @@ interface typeProps {
 }
 export default function ResponsiveGrid(props: typeProps) {
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 1200 }}>
+    <Box sx={{ flexGrow: 1, maxWidth: 1200, minHeight: '65vh' }}>
       <Grid container spacing={{ xs: 2 }} justifyContent="flex-start">
         {props.hotels.map((hotel, index) => (
           <Grid item xs={12} sm={12} md={6} key={index}>

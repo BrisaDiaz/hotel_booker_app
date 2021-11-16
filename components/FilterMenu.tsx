@@ -21,6 +21,7 @@ import InputBase from '@mui/material/InputBase';
 import CheckboxGroup from './CheckboxGroup';
 import Accordion from './Acconrdion';
 import SortIcon from '@mui/icons-material/Sort';
+import { toCamelCase } from '../utils/index';
 const drawerWidth = 240;
 
 const Search = styled('div')(({ theme }) => ({
@@ -88,7 +89,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 }));
 
 const SortSelect = ({ handdleChange }: { handdleChange: Function }) => {
-  const [sort, setSort] = React.useState('-price');
+  const [sort, setSort] = React.useState('price');
 
   const handleChange = (event: SelectChangeEvent) => {
     setSort(event.target.value as string);
@@ -107,7 +108,7 @@ const SortSelect = ({ handdleChange }: { handdleChange: Function }) => {
           labelId="select-sort"
           id="select-sort"
           value={sort}
-          sx={{ maxHeight: '45px', maxWidth: 'min-content' }}
+          sx={{ maxHeight: '45px' }}
           onChange={handleChange}
           IconComponent={() => <SortIcon sx={{ mr: 1.5 }} />}
         >
@@ -190,20 +191,12 @@ export default function PersistentDrawerLeft({
     { id: 6, name: 'smoker friendly' },
   ];
 
-  const [categoriesSelected, setCategoriesSelected] = React.useState<string[]>(
-    []
-  );
-  const [languagesSelected, setLanguagesSelected] = React.useState<string[]>(
-    []
-  );
-  const [activitiesSelected, setActivitiesSelected] = React.useState<string[]>(
-    []
-  );
   interface Query {
     features: string[];
     categories: string[];
     services: string[];
     activities: string[];
+    facilities: string[];
     languages: string[];
     sort: string;
     search: string | null;
@@ -214,6 +207,7 @@ export default function PersistentDrawerLeft({
     categories: [],
     services: [],
     activities: [],
+    facilities: [],
     languages: [],
     sort: 'price',
     search: '',
@@ -221,32 +215,80 @@ export default function PersistentDrawerLeft({
   const handleSort = (newValue: string) => {
     setQuery({ ...query, sort: newValue });
   };
-  const handdleCategories = (e: ChangeEvent<HTMLInputElement>) => {
-    handleAdditionOrDelete(e, 'categories');
-  };
-  const handdleLanguages = (e: ChangeEvent<HTMLInputElement>) => {
-    handleAdditionOrDelete(e, 'languages');
-  };
-  const handdleActivities = (e: ChangeEvent<HTMLInputElement>) => {
-    handleAdditionOrDelete(e, 'activities');
-  };
-
-  const handdleServices = (e: ChangeEvent<HTMLInputElement>) => {
-    handleAdditionOrDelete(e, 'services');
-  };
-  const handdleFeatures = (e: ChangeEvent<HTMLInputElement>) => {
-    handleAdditionOrDelete(e, 'features');
-  };
-  const handleAdditionOrDelete = (
-    e: ChangeEvent<HTMLInputElement>,
-    field: any
-  ) => {
-    if (e.target.checked) {
-      return setQuery({ ...query, [field]: [...query[field], e.target.value] });
+  const handdleCategories = (checked: Boolean, value: string) => {
+    if (checked) {
+      return setQuery({
+        ...query,
+        categories: [...query.categories, value],
+      });
     }
     setQuery({
       ...query,
-      [field]: query[field].filter((name: string) => name === e.target.value),
+      categories: query.categories.filter((name: string) => name === value),
+    });
+  };
+  const handdleLanguages = (checked: Boolean, value: string) => {
+    if (checked) {
+      return setQuery({
+        ...query,
+        languages: [...query.languages, value],
+      });
+    }
+    setQuery({
+      ...query,
+      languages: query.languages.filter((name: string) => name === value),
+    });
+  };
+  const handdleActivities = (checked: Boolean, value: string) => {
+    if (checked) {
+      return setQuery({
+        ...query,
+        activities: [...query.activities, value],
+      });
+    }
+    setQuery({
+      ...query,
+      activities: query.activities.filter((name: string) => name === value),
+    });
+  };
+  const handdleFacilities = (checked: Boolean, value: string) => {
+    if (checked) {
+      return setQuery({
+        ...query,
+        facilities: [...query.facilities, value],
+      });
+    }
+    setQuery({
+      ...query,
+      facilities: query.facilities.filter((name: string) => name !== value),
+    });
+  };
+  const handdleServices = (checked: Boolean, value: string) => {
+    if (checked) {
+      return setQuery({
+        ...query,
+        services: [...query.services, value],
+      });
+    }
+    setQuery({
+      ...query,
+      services: query.services.filter((name: string) => name === value),
+    });
+  };
+  const handdleFeatures = (checked: Boolean, value: string) => {
+    let valueToCamelCase = toCamelCase(value);
+
+    if (checked) {
+      return setQuery({
+        ...query,
+        features: [...query.features, valueToCamelCase],
+      });
+    }
+    setQuery({
+      ...query,
+      features: query.features.filter(
+        (name: string) => name === valueToCamelCase
+      ),
     });
   };
 
@@ -258,6 +300,7 @@ export default function PersistentDrawerLeft({
     setQuery({
       features: [],
       categories: [],
+      facilities: [],
       services: [],
       activities: [],
       languages: [],
@@ -322,19 +365,6 @@ export default function PersistentDrawerLeft({
         open={open}
       >
         <DrawerHeader>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{
-              width: '100%',
-              marginLeft: '10px',
-              p: 1,
-              color: 'common.white',
-            }}
-            onClick={submitMiddleware}
-          >
-            Apply
-          </Button>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? (
               <ChevronLeftIcon />
@@ -372,7 +402,7 @@ export default function PersistentDrawerLeft({
         </Accordion>
         <Divider />
         <Accordion title={'Facilities'}>
-          <CheckboxGroup items={facilities} handleChanges={handdleCategories} />
+          <CheckboxGroup items={facilities} handleChanges={handdleFacilities} />
         </Accordion>
         <Divider />
         <Accordion title={'Services'}>
@@ -391,6 +421,19 @@ export default function PersistentDrawerLeft({
           <CheckboxGroup items={languages} handleChanges={handdleLanguages} />
         </Accordion>
         <Divider />
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{
+            width: '100%',
+
+            p: 1,
+            color: 'common.white',
+          }}
+          onClick={submitMiddleware}
+        >
+          Apply
+        </Button>
       </Drawer>
 
       <Main open={open}>

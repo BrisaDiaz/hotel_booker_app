@@ -116,11 +116,18 @@ export interface NexusGenObjects {
     policiesAndRules?: string | null; // String
     public?: boolean | null; // Boolean
     services?: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
+    taxesAndCharges?: number | null; // Float
     telephone?: string | null; // String
+    website?: string | null; // String
   }
   HotelCategory: { // root type
     id?: string | null; // ID
     name?: string | null; // String
+  }
+  HotelSearch: { // root type
+    hotels?: Array<NexusGenRootTypes['Hotel'] | null> | null; // [Hotel]
+    pageCount?: number | null; // Int
+    totalResults?: number | null; // Int
   }
   Image: { // root type
     hotelId?: number | null; // Int
@@ -292,11 +299,18 @@ export interface NexusGenFieldTypes {
     public: boolean | null; // Boolean
     roomModels: Array<NexusGenRootTypes['RoomModel'] | null> | null; // [RoomModel]
     services: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
+    taxesAndCharges: number | null; // Float
     telephone: string | null; // String
+    website: string | null; // String
   }
   HotelCategory: { // field return type
     id: string | null; // ID
     name: string | null; // String
+  }
+  HotelSearch: { // field return type
+    hotels: Array<NexusGenRootTypes['Hotel'] | null> | null; // [Hotel]
+    pageCount: number | null; // Int
+    totalResults: number | null; // Int
   }
   Image: { // field return type
     hotelId: number | null; // Int
@@ -339,7 +353,7 @@ export interface NexusGenFieldTypes {
     getMessages: Array<NexusGenRootTypes['TestArray'] | null> | null; // [TestArray]
     getMoreMessages: Array<NexusGenRootTypes['TestArray'] | null> | null; // [TestArray]
     hotelCategoriesList: Array<NexusGenRootTypes['HotelCategory'] | null> | null; // [HotelCategory]
-    hotels: Array<NexusGenRootTypes['Hotel'] | null> | null; // [Hotel]
+    hotelSearch: NexusGenRootTypes['HotelSearch'] | null; // HotelSearch
     languagesList: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
     me: NexusGenRootTypes['User'] | null; // User
     roomCategoriesList: Array<NexusGenRootTypes['RoomCategory'] | null> | null; // [RoomCategory]
@@ -494,11 +508,18 @@ export interface NexusGenFieldTypeNames {
     public: 'Boolean'
     roomModels: 'RoomModel'
     services: 'Service'
+    taxesAndCharges: 'Float'
     telephone: 'String'
+    website: 'String'
   }
   HotelCategory: { // field return type name
     id: 'ID'
     name: 'String'
+  }
+  HotelSearch: { // field return type name
+    hotels: 'Hotel'
+    pageCount: 'Int'
+    totalResults: 'Int'
   }
   Image: { // field return type name
     hotelId: 'Int'
@@ -541,7 +562,7 @@ export interface NexusGenFieldTypeNames {
     getMessages: 'TestArray'
     getMoreMessages: 'TestArray'
     hotelCategoriesList: 'HotelCategory'
-    hotels: 'Hotel'
+    hotelSearch: 'HotelSearch'
     languagesList: 'Language'
     me: 'User'
     roomCategoriesList: 'RoomCategory'
@@ -636,7 +657,6 @@ export interface NexusGenArgTypes {
       activities: Array<string | null>; // [String]!
       administrativeArea: string; // String!
       brand?: string | null; // String
-      cancelationFree: boolean; // Boolean!
       category?: string | null; // String
       checkInHour: string; // String!
       checkOutHour: string; // String!
@@ -648,6 +668,7 @@ export interface NexusGenArgTypes {
       facilities: Array<string | null>; // [String]!
       familyFriendly: boolean; // Boolean!
       frameImage: string; // String!
+      freeCancelation: boolean; // Boolean!
       holeAddress: string; // String!
       interiorImage: string; // String!
       languages: Array<string | null>; // [String]!
@@ -659,7 +680,9 @@ export interface NexusGenArgTypes {
       services: Array<string | null>; // [String]!
       smokerFriendly: boolean; // Boolean!
       street?: string | null; // String
+      taxesAndCharges: number; // Float!
       telephone: string; // String!
+      website?: string | null; // String
     }
     createNewClient: { // args
       cellularNumber: string; // String!
@@ -733,7 +756,7 @@ export interface NexusGenArgTypes {
     getHotelById: { // args
       id: string; // ID!
     }
-    hotels: { // args
+    hotelSearch: { // args
       activities?: Array<string | null> | null; // [String]
       categories?: Array<string | null> | null; // [String]
       facilities?: Array<string | null> | null; // [String]

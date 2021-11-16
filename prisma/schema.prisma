@@ -50,10 +50,10 @@ model Hotel {
   category         String
   telephone        String
   email            String
-  webSite          String
+  website          String
   description      String?
   lowestPrice      Float
-  taxesAndCharges  Int
+  taxesAndCharges  Float
   checkInHour      String
   checkOutHour     String
   policiesAndRules String
@@ -143,7 +143,7 @@ model Features {
   updatedAt       DateTime @updatedAt
   hotelId         Int      @unique
   hotel           Hotel    @relation(fields: [hotelId], references: [id])
-  cancelationFree Boolean  @default(false)
+  freeCancelation Boolean  @default(false)
   accessible      Boolean  @default(false)
   petFriendly     Boolean  @default(false)
   familyFriendly  Boolean  @default(false)

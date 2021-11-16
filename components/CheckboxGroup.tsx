@@ -21,7 +21,11 @@ export default function CheckboxLabels({
           sx={{ textTransform: 'capitalize', fontSize: '14px' }}
           key={`${item.name}-${item.id}`}
           label={item.name}
-          control={<Checkbox onChange={handleChanges} />}
+          control={
+            <Checkbox
+              onChange={(e) => handleChanges(e.target.checked, item.name)}
+            />
+          }
         />
       ))}
     </FormGroup>

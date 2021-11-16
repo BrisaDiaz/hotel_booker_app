@@ -12,7 +12,7 @@ export type Option = {
 };
 export type Features = {
   accesible: string;
-  cancelationFree: string;
+  freeCancelation: string;
   familyFriendly: string;
   petFriendly: string;
   smokerFriendly: string;
@@ -22,7 +22,7 @@ export type WithQuantityItem = {
   type: string;
   quantity: number;
 };
-export type RoomModel = {
+export interface RoomModel {
   id: number;
   hotelId: number;
   category: string;
@@ -39,16 +39,18 @@ export type RoomModel = {
   services?: Option[];
   beds?: WithQuantityItem[];
   public: boolean;
-};
+}
 
-export type Hotel = {
+export interface Hotel {
   id?: number;
   name: string;
   brand?: string;
   category?: string;
   lowestPrice: number;
+  taxesAndCharges?: number;
   telephone?: string;
   email?: string;
+  website?: string;
   description?: string;
   policiesAndRules?: string;
   frameImage: string;
@@ -60,4 +62,4 @@ export type Hotel = {
   languages?: Option[];
   roomsModels?: RoomModel[];
   public: boolean;
-};
+}

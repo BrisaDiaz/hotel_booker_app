@@ -3,9 +3,10 @@ import { GetStaticProps } from 'next';
 import { client } from '../lib/apollo';
 import { useLazyQuery } from '@apollo/client';
 import Head from 'next/head';
-import HotelsGrid from '../components/HotelsGrid';
-import FilterMenu from '../components/FilterMenu';
-import hotel from '@/mocks/hotel';
+import Typography from '@mui/material/Typography';
+import HotelsGrid from '@/components/HotelsGrid';
+import FilterMenu from '@/components/FilterMenu';
+import Pagination from '@/components/pagination';
 import Box from '@mui/material/Box';
 
 import {
@@ -37,7 +38,12 @@ type Props = {
   languagesList: Data[];
   servicesList: Data[];
   hotelCategoriesList: Data[];
-  hotels: Hotel[];
+
+  hotelSearch: {
+    hotels: Hotel[];
+    pageCount: number;
+    totalResults: number;
+  };
 };
 
 const Search = ({
@@ -46,9 +52,16 @@ const Search = ({
   languagesList,
   servicesList,
   hotelCategoriesList,
-  hotels,
+  hotelSearch,
 }: Props) => {
-  const [displayHotels, setDisplayHotels] = React.useState<Hotel[]>(hotels);
+  const [page, setPage] = React.useState<number>(1);
+  const [pageCount, setPageCount] = React.useState<number>(
+    hotelSearch.pageCount
+  );
+  const [displayHotels, setDisplayHotels] = React.useState<Hotel[]>(
+    hotelSearch.hotels
+  );
+
   const [requestHotels, { data, error, loading }] = useLazyQuery(GET_HOTELS, {
     fetchPolicy: 'no-cache',
   });
@@ -61,10 +74,25 @@ const Search = ({
     sort: string;
     search: string | null;
   }) => {
-    await requestHotels({
-      variables: variables,
-    });
+    const skipe: number = page - 1 * 6;
+
+    let serchVariables = { ...variables, take: 6, skipe };
+    console.log(serchVariables);
+    try {
+      await requestHotels({
+        variables: serchVariables,
+      });
+    } catch (err) {
+      console.log(err);
+      console.log(error?.graphQLErrors);
+    }
   };
+  React.useEffect(() => {
+    if (data?.hotelSearch && !loading) {
+      setDisplayHotels(data?.hotelSearch.hotels);
+      setPageCount(data?.hotelSearch.pageCount);
+    }
+  }, [loading]);
   console.log(data, loading, error);
   return (
     <div>
@@ -90,7 +118,19 @@ const Search = ({
               padding: '30px 0',
             }}
           >
-            <HotelsGrid hotels={displayHotels || hotels} />
+            {displayHotels.length ? (
+              <HotelsGrid hotels={displayHotels} />
+            ) : (
+              <Box>
+                <Typography>
+                  There wasn't any coincidens for the search
+                </Typography>
+              </Box>
+            )}
+          </Box>
+          {!displayHotels.length && <Box sx={{ height: '65vh' }} />}
+          <Box sx={{ p: 2, pb: 4, mx: 'auto', maxWidth: 'fit-content' }}>
+            <Pagination setPage={setPage} count={pageCount} />
           </Box>
         </FilterMenu>
       </main>
