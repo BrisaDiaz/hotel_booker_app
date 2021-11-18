@@ -97,3 +97,91 @@ export const GET_HOTELS = gql`
     }
   }
 `;
+
+export const GET_HOTEL_BY_ID = gql`
+  query hotelById($id: ID!) {
+    hotelById(id: $id) {
+      id
+      name
+      lowestPrice
+      frameImage
+      interiorImage
+      description
+      policiesAndRules
+      checkInHour
+      checkOutHour
+      telephone
+      email
+      website
+      address {
+        holeAddress
+      }
+      services {
+        id
+        name
+      }
+      activities {
+        id
+        name
+      }
+      languages {
+        id
+        name
+      }
+      facilities {
+        id
+        name
+      }
+      features {
+        freeCancelation
+        accessible
+        familyFriendly
+        petFriendly
+        smokerFriendly
+        ecoFriendly
+      }
+      roomModels {
+        id
+        name
+        mts2
+        lowestPrice
+        mainImage
+        beds {
+          id
+          type
+          quantity
+        }
+      }
+    }
+  }
+`;
+export const GET_ROOM_MODEL_BY_ID = gql`
+  query roomModelById($id: ID!) {
+    roomModelById(id: $id) {
+      id
+      hotelId
+      category
+      name
+      mts2
+      mainImage
+      lowestPrice
+      maximunGuests
+      maximunStays
+      minimunStays
+      description
+      freeCancelation
+      amenties {
+        id
+        name
+      }
+      services {
+        id
+        name
+      }
+      beds {
+        type
+        quantity
+      }
+    }
+  }
+`;

@@ -17,7 +17,7 @@ import {
   verifyIsHotelAdmin,
   hotelQueryConstructor,
 } from '../utils';
-import { Category } from '@mui/icons-material';
+
 export const Address = objectType({
   name: 'Address',
   definition(t) {
@@ -115,16 +115,22 @@ export const Hotel = objectType({
     t.list.field('services', { type: 'Service' });
     t.list.field('activities', { type: 'Activity' });
     t.list.field('languages', { type: 'Language' });
+    t.field('features', {
+      type: 'Features',
+      resolve: (root) => {
+        return prisma.features.findUnique({
+          where: {
+            hotelId: root.id * 1,
+          },
+        });
+      },
+    });
     t.list.field('roomModels', {
       type: 'RoomModel',
       resolve: (root) => {
         return prisma.roomModel.findMany({
           where: {
-            hotelId: root.id,
-          },
-          include: {
-            amenities: true,
-            services: true,
+            hotelId: root.id * 1,
           },
         });
       },
@@ -193,23 +199,27 @@ export const Query = extendType({
         return searchHotels(query);
       },
     });
-    t.field('getHotelById', {
+    t.field('hotelById', {
       type: 'Hotel',
       args: {
         id: nonNull(idArg()),
       },
-      resolve(_, args: { id: number }, ctx) {
-        return prisma.hotel.findUnique({
-          where: {
-            id: args.id,
-          },
-          include: {
-            facilities: true,
-            services: true,
-            activities: true,
-            languages: true,
-          },
-        });
+      resolve(_, args, ctx) {
+        const searchHote = async (id: number) => {
+          const hotel = await prisma.hotel.findUnique({
+            where: {
+              id: id,
+            },
+            include: {
+              facilities: true,
+              services: true,
+              activities: true,
+              languages: true,
+            },
+          });
+          return hotel;
+        };
+        return searchHote(args.id * 1);
       },
     });
   },

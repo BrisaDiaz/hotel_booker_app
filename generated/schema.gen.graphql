@@ -77,10 +77,10 @@ type Facility {
 }
 
 type Features {
-  accesible: Boolean
-  cancelationFree: Boolean
+  accessible: Boolean
   ecoFriendly: Boolean
   familyFriendly: Boolean
+  freeCancelation: Boolean
   petFriendly: Boolean
   smokerFriendly: Boolean
 }
@@ -97,6 +97,7 @@ type Hotel {
   description: String
   email: String
   facilities: [Facility]
+  features: Features
   frameImage: String
   id: ID!
   images: [Image]
@@ -174,9 +175,9 @@ type Query {
   amenitiesList: [Amenity]
   facilitiesList: [Facility]
   getBookingById(id: ID!): Booking
-  getHotelById(id: ID!): Hotel
   getMessages: [TestArray]
   getMoreMessages: [TestArray]
+  hotelById(id: ID!): Hotel
   hotelCategoriesList: [HotelCategory]
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
   languagesList: [Language]
@@ -199,6 +200,7 @@ type Room {
 }
 
 type RoomBed {
+  id: ID
   quantity: Int
   roomId: Int
   type: String

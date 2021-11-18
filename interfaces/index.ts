@@ -38,7 +38,6 @@ export interface RoomModel {
   amenties?: Option[];
   services?: Option[];
   beds?: WithQuantityItem[];
-  public: boolean;
 }
 
 export interface Hotel {

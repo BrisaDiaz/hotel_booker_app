@@ -29,31 +29,37 @@ const styles = {
     maxWidth: '900px',
     width: '100%',
     margin: '0 auto',
-    py: 4,
-    px: 1,
+    pb: 4,
+    pt: 2,
+    px: { sm: 1 },
   },
   title: {
-    mt: 0,
-    mb: 4,
-    fontWeight: 200,
-    fontFamily: 'Raleway',
-    textTransform: 'uppercase',
+    mt: 1,
+    mb: 5,
+    fontWeight: 600,
+    opacity: 0.8,
   },
   card: {
     maxWidth: 400,
+    mb: 1,
+    mx: 'auto',
   },
   groupTitle: {
     fontWeight: 500,
     color: '#484848',
     background: '#fff',
-    mt: '-25px',
+    mb: '10px',
     px: '10px',
     width: 'max-content',
   },
   fieldset: {
     my: 4,
     pt: 1.5,
-    borderRadious: '5px',
+    borderRadius: 5,
+    border: '1px solid  rgb(0 0 0 / 10%)',
+    padding: { xs: '15px', sm: '20px', md: '25px ' },
+    background: '#fff',
+    boxShadow: '1px 5px 32px -12px rgb(0 0 0 / 30%)',
   },
   formBottons: {
     display: 'flex',
@@ -138,7 +144,7 @@ export default function MultilineTextFields(props: {
       <Typography component="h1" variant="h4" align="center" sx={styles.title}>
         Add a new room template
       </Typography>
-      <Grid component="fieldset" sx={styles.fieldset}>
+      <Box component="fieldset" sx={styles.fieldset}>
         <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           About
         </Typography>
@@ -201,8 +207,8 @@ export default function MultilineTextFields(props: {
           variant="outlined"
           sx={styles.textField}
         />
-      </Grid>
-      <Grid component="fieldset" sx={styles.fieldset}>
+      </Box>
+      <Box component="fieldset" sx={styles.fieldset}>
         <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Details
         </Typography>
@@ -234,12 +240,12 @@ export default function MultilineTextFields(props: {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} sx={{ width: { md: '50%' } }}>
             <TextField
               sx={styles.textField}
               id="maximunGues"
               {...register('maximunGues', {
-                required: 'The field  is required',
+                required: 'The guest limit is required',
                 min: {
                   value: 0,
                   message: 'the value must be a positive number',
@@ -262,7 +268,7 @@ export default function MultilineTextFields(props: {
               sx={styles.textField}
               id="minimunNights"
               {...register('minimunNights', {
-                required: 'The field  is required',
+                required: 'The minimun staying  is required',
                 min: {
                   value: 0,
                   message: 'the value must be a positive number',
@@ -306,7 +312,7 @@ export default function MultilineTextFields(props: {
               sx={styles.textField}
               id="mts2"
               {...register('mts2', {
-                required: 'The Meters  is required',
+                required: 'The mts2 are required',
                 min: {
                   value: 0,
                   message: 'Meters must positive number',
@@ -321,9 +327,9 @@ export default function MultilineTextFields(props: {
             />
           </Grid>
         </Grid>
-      </Grid>
+      </Box>
 
-      <Grid component="fieldset" sx={styles.fieldset}>
+      <Box component="fieldset" sx={styles.fieldset}>
         <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Features
         </Typography>
@@ -345,9 +351,9 @@ export default function MultilineTextFields(props: {
           control={<Checkbox {...register('FreeCancelation')} />}
           label="Free Cancelation"
         />
-      </Grid>
+      </Box>
 
-      <Grid component="fieldset" sx={styles.fieldset}>
+      <Box component="fieldset" sx={styles.fieldset}>
         <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Aspect
         </Typography>
@@ -391,7 +397,7 @@ export default function MultilineTextFields(props: {
             </Card>
           </Grid>
         </Grid>
-      </Grid>
+      </Box>
       <Box sx={styles.formBottons}>
         <Button
           variant="contained"

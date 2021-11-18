@@ -1,5 +1,6 @@
-import type { NextPage } from 'next';
-
+import type { NextPage, GetServerSideProps, NextApiResponse } from 'next';
+import { client } from '@/lib/apollo';
+import { GET_HOTEL_BY_ID } from '@/queries/index';
 import Head from 'next/head';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -17,9 +18,10 @@ import RoomServiceIcon from '@mui/icons-material/RoomService';
 import HikingIcon from '@mui/icons-material/Hiking';
 import LanguageIcon from '@mui/icons-material/Language';
 import RoomCard from '@/components/RoomCard';
-import hotel from '@/mocks/hotel';
+import { useTheme } from '@mui/material/styles';
 
-const Hotel: NextPage = () => {
+const Hotel: NextPage = ({ hotel }) => {
+  const theme = useTheme();
   const images = [
     { title: 'Hotel frame', image: hotel.frameImage },
     { title: 'Hotel Interior', image: hotel.interiorImage },
@@ -44,7 +46,8 @@ const Hotel: NextPage = () => {
     },
   ];
   const includedFeatures = Object.keys(hotel.features).filter(
-    (featureName) => hotel.features[featureName] !== true
+    (featureName) =>
+      hotel.features[featureName] !== true && featureName !== '__typename'
   );
 
   const formattedAdditonalFeatures = includedFeatures.map((featureName) =>
@@ -71,6 +74,7 @@ const Hotel: NextPage = () => {
               fontWeight: 700,
               margin: '0 16px',
               width: 'fit-content',
+              color: theme.palette.common.black,
               padding: '10px 0 5px',
             }}
           >
@@ -85,17 +89,41 @@ const Hotel: NextPage = () => {
               <LocalPhoneIcon />
               <p>{hotel.telephone}</p>
             </div>
-            <div className="list-item">
-              <EmailIcon />
-              <p>{hotel.email}</p>
-            </div>
+            {hotel?.email && (
+              <div className="list-item">
+                <EmailIcon />
+                <p>{hotel.email}</p>
+              </div>
+            )}
+            {hotel?.website && (
+              <div className="list-item">
+                <LanguageIcon />
+                <p>{hotel.website}</p>
+              </div>
+            )}
           </div>
           {/* CARROUSEL */}
           <ImageSlider images={images} />
 
-          <h4 className="price">
-            Prices from <span> USD${hotel.lowestPrice}</span>
-          </h4>
+          <Typography
+            component="h4"
+            variant="h5"
+            sx={{
+              p: '10px',
+              fontWeight: 200,
+              maxWidth: 'fit-content',
+              m: '0 15px 10px auto',
+            }}
+          >
+            Prices from{' '}
+            <Typography
+              variant="h5"
+              component="span"
+              sx={{ color: 'primary.main', fontWeight: 700, ml: 1 }}
+            >
+              USD${hotel.lowestPrice}
+            </Typography>
+          </Typography>
           <div className="list row">
             <div className="list-item">
               <AlarmIcon color="primary" />
@@ -148,54 +176,59 @@ const Hotel: NextPage = () => {
               alignItems="flex-start"
               sx={{ margin: '0 ', columnGap: '80px' }}
             >
-              {characteristics.map((characteristic) => (
-                <div key={characteristic.title}>
-                  <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    sx={{ padding: 1, minWidth: 'max-content' }}
-                  >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        gap: '10px',
-                        alignItems: 'center',
-                        marginBottom: '15px',
-                      }}
+              {characteristics.map((characteristic) =>
+                characteristic.items.length ? (
+                  <div key={characteristic.title}>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}
+                      sx={{ padding: 1, minWidth: 'max-content' }}
                     >
-                      {characteristic.title === 'facilities' ? (
-                        <ApartmentIcon color="primary" />
-                      ) : characteristic.title === 'services' ? (
-                        <RoomServiceIcon color="primary" />
-                      ) : characteristic.title === 'languages' ? (
-                        <LanguageIcon color="primary" />
-                      ) : characteristic.title === 'activities' ? (
-                        <HikingIcon color="primary" />
-                      ) : null}
-
-                      <Typography
-                        variant="h6"
+                      <Box
                         sx={{
-                          fontWeight: 300,
-                          textTransform: 'capitalize',
+                          display: 'flex',
+                          gap: '10px',
+                          alignItems: 'center',
+                          marginBottom: '15px',
                         }}
                       >
-                        {characteristic.title}
-                      </Typography>
-                    </Box>
+                        {characteristic.title === 'facilities' ? (
+                          <ApartmentIcon color="primary" />
+                        ) : characteristic.title === 'services' ? (
+                          <RoomServiceIcon color="primary" />
+                        ) : characteristic.title === 'languages' ? (
+                          <LanguageIcon color="primary" />
+                        ) : characteristic.title === 'activities' ? (
+                          <HikingIcon color="primary" />
+                        ) : null}
 
-                    <div className="list">
-                      {characteristic.items.map((item) => (
-                        <div key={item.id} className="list-item">
-                          <DoneIcon fontSize="small" color="secondary" />
-                          <p>{item.name}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </Grid>
-                </div>
-              ))}
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 300,
+                            textTransform: 'capitalize',
+                          }}
+                        >
+                          {characteristic.title}
+                        </Typography>
+                      </Box>
+
+                      <div className="list">
+                        {characteristic.items.map((item) => (
+                          <div key={item.id} className="list-item">
+                            <DoneIcon
+                              fontSize="small"
+                              sx={{ color: theme.palette.primary.light }}
+                            />
+                            <p>{item.name}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </Grid>
+                  </div>
+                ) : null
+              )}
               <Grid
                 item
                 xs={12}
@@ -215,22 +248,43 @@ const Hotel: NextPage = () => {
             </Grid>
           </Box>
         </section>
-        <Typography
-          variant="h4"
-          component="h2"
-          sx={{ fontWeight: 700, opacity: '0.85', margin: '20px 15px 30px' }}
-        >
-          Rooms
-        </Typography>
-        <Box sx={{ margin: '20px auto' }}>
-          <Grid container spacing={3} justifyContent="center">
-            {hotel.roomModels.map((room) => (
-              <Grid item xs={12} sm={6} md={4}>
-                <RoomCard room={room} />
+        {hotel?.roomModels?.length > 0 && (
+          <Box>
+            <Typography
+              variant="h4"
+              component="h2"
+              sx={{
+                fontWeight: 700,
+                color: 'primary.main',
+                margin: '20px 15px 30px',
+              }}
+            >
+              Rooms
+            </Typography>
+            <Box sx={{ margin: '20px auto' }}>
+              <Grid container spacing={3} justifyContent="center">
+                {hotel.roomModels.map(
+                  (room: {
+                    id: number;
+                    name: string;
+                    mts2: number;
+                    lowestPrice: number;
+                    mainImage: string;
+                    beds?: {
+                      id: number;
+                      quantity: number;
+                      type: string;
+                    };
+                  }) => (
+                    <Grid item xs={12} sm={6} md={4}>
+                      <RoomCard room={room} />
+                    </Grid>
+                  )
+                )}
               </Grid>
-            ))}
-          </Grid>
-        </Box>
+            </Box>
+          </Box>
+        )}
       </main>
 
       <style jsx>
@@ -244,20 +298,7 @@ const Hotel: NextPage = () => {
             font-size: 18px;
             margin: 0;
           }
-          .price {
-            margin: 0 15px 10px 15px;
-            margin-left: auto;
-            max-width: fit-content;
-            display: block;
-            padding: 10px;
-            font-weight: 200;
-            font-size: 22px;
-          }
-          .price span {
-            color: #3f51b5;
-            font-weight: 700;
-            margin-left: 5px;
-          }
+
           .list {
             display: flex;
             flex-direction: column;
@@ -269,7 +310,7 @@ const Hotel: NextPage = () => {
           }
           span,
           .inportant {
-            color: #3f51b5;
+            color: ${theme.palette.primary.main};
           }
           .row {
             flex-direction: row;
@@ -290,7 +331,7 @@ const Hotel: NextPage = () => {
 
           .contact-info {
             margin: 5px 0;
-            color: #3f51b5;
+            color: ${theme.palette.primary.main};
             padding: 10px;
             justify-content: 'start';
             flex-direction: row;
@@ -307,3 +348,32 @@ const Hotel: NextPage = () => {
 };
 
 export default Hotel;
+export const getServerSideProps: GetServerSideProps = async ({
+  query,
+  res,
+}: {
+  query: { id: number };
+  res: NextApiResponse;
+}) => {
+  const { data, error, loading } = await client.query({
+    query: GET_HOTEL_BY_ID,
+    variables: { id: query.id },
+  });
+  if (!data?.hotelById && !loading) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/search',
+      },
+      props: {},
+    };
+  }
+
+  if (data?.getHotelById && !loading) {
+    return {
+      props: {
+        hotel: data?.getHotelById,
+      },
+    };
+  }
+};

@@ -17,12 +17,12 @@ export default function ImageSlider({ images }: { images: ImageObj[] }) {
             <ImageList
               sx={{
                 width: '100%',
-                maxHeight: '450px',
+                maxHeight: '550px',
                 overflow: 'hidden',
                 objectFit: 'cover',
                 objectPosition: 'center',
               }}
-              rowHeight={450}
+              rowHeight={550}
               cols={1}
             >
               <ImageListItem cols={1}>

@@ -18,10 +18,10 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
-import CheckboxGroup from './CheckboxGroup';
-import Accordion from './Acconrdion';
+import CheckboxGroup from '../CheckboxGroup';
+import Accordion from '../Acconrdion';
 import SortIcon from '@mui/icons-material/Sort';
-import { toCamelCase } from '../utils/index';
+import { toCamelCase } from '../../utils/index';
 const drawerWidth = 240;
 
 const Search = styled('div')(({ theme }) => ({
@@ -425,8 +425,9 @@ export default function PersistentDrawerLeft({
           variant="contained"
           color="secondary"
           sx={{
-            width: '100%',
-
+            width: '80%',
+            my: 3,
+            mx: 'auto',
             p: 1,
             color: 'common.white',
           }}

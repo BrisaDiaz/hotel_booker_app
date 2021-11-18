@@ -1,6 +1,7 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSideProps, NextApiResponse } from 'next';
+import React from 'react';
+import { client } from '@/lib/apollo';
 import Head from 'next/head';
-import room from '@/mocks/roomModel';
 import Box from '@mui/material/Box';
 import DoneIcon from '@mui/icons-material/Done';
 import Typography from '@mui/material/Typography';
@@ -8,17 +9,19 @@ import TodayIcon from '@mui/icons-material/Today';
 import Button from '@mui/material/Button';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageList from '@mui/material/ImageList';
-
+import { useTheme } from '@mui/material/styles';
 import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import BedIcon from '@mui/icons-material/Bed';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
-import Modal from '../../components/AbailableRoomModal';
+import Modal from '@/components/AbailableRoomModal';
 import RoomBedsUI from '@/components/RoomBedsUI';
+import { Room } from '@/interfaces/index';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
-import { MAKE_ROOM_CONSULT } from '@/queries/index';
-const RoomPage: NextPage = () => {
+import { MAKE_ROOM_CONSULT, GET_ROOM_MODEL_BY_ID } from '@/queries/index';
+const RoomPage: NextPage = ({ room }: { room: Room }) => {
   const router = useRouter();
+  const theme = useTheme();
   const handleRedirectToHotel = (id: number) => {
     router.push(`/hotel/${id}`);
   };
@@ -33,11 +36,20 @@ const RoomPage: NextPage = () => {
     checkOutDate: string;
     rooms: Room[];
   };
-  const handleConsutlSubmit = (data: Data) => {
+  const handleConsutlSubmit = async (data: Data) => {
     console.log(data);
-    makeRoomConsult({ variables: { ...data, roomModelId: room.id } });
+    try {
+      await makeRoomConsult({ variables: { ...data, roomModelId: room.id } });
+    } catch (err) {
+      console.log(err);
+      console.log(error?.graphQLErrors);
+    }
   };
-
+  React.useEffect(() => {
+    if (!loading && data?.message) {
+      console.log(data);
+    }
+  }, [loading]);
   return (
     <div>
       <Head>
@@ -101,10 +113,26 @@ const RoomPage: NextPage = () => {
             />
           </ImageListItem>
         </ImageList>
-
-        <h4 className="price">
-          <span> USD${room.lowestPrice}</span>/Night
-        </h4>
+        <Typography
+          component="h4"
+          variant="h5"
+          sx={{
+            p: '10px',
+            fontWeight: 200,
+            maxWidth: 'fit-content',
+            m: '0 15px 10px auto',
+          }}
+        >
+          From{' '}
+          <Typography
+            variant="h5"
+            component="span"
+            sx={{ color: 'primary.main', fontWeight: 700, ml: 1 }}
+          >
+            USD${room.lowestPrice}
+          </Typography>
+          /Night
+        </Typography>
 
         <Typography sx={{ margin: '20px 10px' }}>{room.description}</Typography>
         <div className="list">
@@ -184,7 +212,10 @@ const RoomPage: NextPage = () => {
             <div className="list">
               {room.amenities.map((item) => (
                 <div key={item.id} className="list-item">
-                  <DoneIcon fontSize="small" color="secondary" />
+                  <DoneIcon
+                    fontSize="small"
+                    sx={{ color: theme.palette.primary.light }}
+                  />
                   <Typography>{item.name}</Typography>
                 </div>
               ))}
@@ -212,7 +243,10 @@ const RoomPage: NextPage = () => {
             <div className="list">
               {room.services.map((item) => (
                 <div key={item.id} className="list-item">
-                  <DoneIcon fontSize="small" color="secondary" />
+                  <DoneIcon
+                    fontSize="small"
+                    sx={{ color: theme.palette.primary.light }}
+                  />
                   <Typography>{item.name}</Typography>
                 </div>
               ))}
@@ -243,20 +277,7 @@ const RoomPage: NextPage = () => {
             font-size: 18px;
             margin: 0;
           }
-          .price {
-            margin: 0 15px 10px 15px;
-            margin-left: auto;
-            max-width: fit-content;
-            display: block;
-            padding: 10px;
-            font-weight: 200;
-            font-size: 22px;
-          }
-          .price span {
-            color: #3f51b5;
-            font-weight: 700;
-            margin-left: 5px;
-          }
+
           .list {
             display: flex;
             row-gap: 20px;
@@ -269,7 +290,7 @@ const RoomPage: NextPage = () => {
           }
           span,
           .inportant {
-            color: #3f51b5;
+            color: ${theme.palette.primary.main};
           }
 
           .list-item {
@@ -288,3 +309,32 @@ const RoomPage: NextPage = () => {
 };
 
 export default RoomPage;
+export const getServerSideProps: GetServerSideProps = async ({
+  query,
+  res,
+}: {
+  query: { id: number };
+  res: NextApiResponse;
+}) => {
+  const { data, error, loading } = await client.query({
+    query: GET_ROOM_MODEL_BY_ID,
+    variables: { id: query.id },
+  });
+  if (!data?.roomModelById && !loading) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/search',
+      },
+      props: {},
+    };
+  }
+
+  if (data?.getHotelById && !loading) {
+    return {
+      props: {
+        room: data?.roomModelById,
+      },
+    };
+  }
+};

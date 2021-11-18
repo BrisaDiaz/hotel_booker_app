@@ -19,8 +19,8 @@ export const Facility = objectType({
 export const Features = objectType({
   name: 'Features',
   definition(t) {
-    t.boolean('cancelationFree');
-    t.boolean('accesible');
+    t.boolean('freeCancelation');
+    t.boolean('accessible');
     t.boolean('familyFriendly');
     t.boolean('petFriendly');
     t.boolean('smokerFriendly');

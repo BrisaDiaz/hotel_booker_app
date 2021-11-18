@@ -1,11 +1,11 @@
 import React from 'react';
 import { GetStaticProps } from 'next';
-import { client } from '../lib/apollo';
+import { client } from '@/lib/apollo';
 import { useLazyQuery } from '@apollo/client';
 import Head from 'next/head';
 import Typography from '@mui/material/Typography';
 import HotelsGrid from '@/components/HotelsGrid';
-import FilterMenu from '@/components/FilterMenu';
+import FilterMenu from '@/components/layouts/FilterMenu';
 import Pagination from '@/components/pagination';
 import Box from '@mui/material/Box';
 
@@ -77,7 +77,7 @@ const Search = ({
     const skipe: number = page - 1 * 6;
 
     let serchVariables = { ...variables, take: 6, skipe };
-    console.log(serchVariables);
+
     try {
       await requestHotels({
         variables: serchVariables,
@@ -93,7 +93,7 @@ const Search = ({
       setPageCount(data?.hotelSearch.pageCount);
     }
   }, [loading]);
-  console.log(data, loading, error);
+
   return (
     <div>
       <Head>

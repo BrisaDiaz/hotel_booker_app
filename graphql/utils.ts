@@ -203,12 +203,7 @@ export function hotelQueryConstructor(args: Args) {
   interface sortField {
     [key: string]: 'desc' | 'asc';
   }
-  interface AddressFilter {
-    holeAddress: {
-      contains: string;
-      mode: 'insensitive';
-    };
-  }
+
   type OR = (PropietyFilter | searchFilter | { [key: string]: searchFilter })[];
   type AND = (ArrayFilter | BooleanFilter)[];
 

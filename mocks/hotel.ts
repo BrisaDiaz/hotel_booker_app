@@ -13,6 +13,7 @@ const hotel = {
     street1: 'Posadas 1086/88',
   },
   lowestPrice: 546.9,
+  w: 45,
   telephone: '+54 11 4321-1200',
   email: 'catering.bue@fourseasons.com',
   checkInHour: '15:00',

@@ -5,17 +5,19 @@ import { deepPurple, amber } from '@mui/material/colors';
 let theme = createTheme({
   palette: {
     background: {
-      default: '#efefef00',
+      default: '#f1f3f98c',
     },
     common: {
       white: '#fff',
-      black: '#000',
+      black: '#373737',
     },
     primary: {
-      main: '#3f51b5',
+      main: '#435b9c',
+      dark: '#304170',
+      light: '#A9B6DA',
     },
     secondary: {
-      main: '#efb810',
+      main: '#9c5443',
     },
   },
 });

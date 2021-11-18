@@ -90,10 +90,10 @@ export interface NexusGenObjects {
     name: string; // String!
   }
   Features: { // root type
-    accesible?: boolean | null; // Boolean
-    cancelationFree?: boolean | null; // Boolean
+    accessible?: boolean | null; // Boolean
     ecoFriendly?: boolean | null; // Boolean
     familyFriendly?: boolean | null; // Boolean
+    freeCancelation?: boolean | null; // Boolean
     petFriendly?: boolean | null; // Boolean
     smokerFriendly?: boolean | null; // Boolean
   }
@@ -151,6 +151,7 @@ export interface NexusGenObjects {
     roomModelId?: number | null; // Int
   }
   RoomBed: { // root type
+    id?: string | null; // ID
     quantity?: number | null; // Int
     roomId?: number | null; // Int
     type?: string | null; // String
@@ -269,10 +270,10 @@ export interface NexusGenFieldTypes {
     name: string; // String!
   }
   Features: { // field return type
-    accesible: boolean | null; // Boolean
-    cancelationFree: boolean | null; // Boolean
+    accessible: boolean | null; // Boolean
     ecoFriendly: boolean | null; // Boolean
     familyFriendly: boolean | null; // Boolean
+    freeCancelation: boolean | null; // Boolean
     petFriendly: boolean | null; // Boolean
     smokerFriendly: boolean | null; // Boolean
   }
@@ -288,6 +289,7 @@ export interface NexusGenFieldTypes {
     description: string | null; // String
     email: string | null; // String
     facilities: Array<NexusGenRootTypes['Facility'] | null> | null; // [Facility]
+    features: NexusGenRootTypes['Features'] | null; // Features
     frameImage: string | null; // String
     id: string; // ID!
     images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
@@ -349,9 +351,9 @@ export interface NexusGenFieldTypes {
     amenitiesList: Array<NexusGenRootTypes['Amenity'] | null> | null; // [Amenity]
     facilitiesList: Array<NexusGenRootTypes['Facility'] | null> | null; // [Facility]
     getBookingById: NexusGenRootTypes['Booking'] | null; // Booking
-    getHotelById: NexusGenRootTypes['Hotel'] | null; // Hotel
     getMessages: Array<NexusGenRootTypes['TestArray'] | null> | null; // [TestArray]
     getMoreMessages: Array<NexusGenRootTypes['TestArray'] | null> | null; // [TestArray]
+    hotelById: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelCategoriesList: Array<NexusGenRootTypes['HotelCategory'] | null> | null; // [HotelCategory]
     hotelSearch: NexusGenRootTypes['HotelSearch'] | null; // HotelSearch
     languagesList: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
@@ -367,6 +369,7 @@ export interface NexusGenFieldTypes {
     roomModelId: number | null; // Int
   }
   RoomBed: { // field return type
+    id: string | null; // ID
     quantity: number | null; // Int
     roomId: number | null; // Int
     type: string | null; // String
@@ -478,10 +481,10 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
   }
   Features: { // field return type name
-    accesible: 'Boolean'
-    cancelationFree: 'Boolean'
+    accessible: 'Boolean'
     ecoFriendly: 'Boolean'
     familyFriendly: 'Boolean'
+    freeCancelation: 'Boolean'
     petFriendly: 'Boolean'
     smokerFriendly: 'Boolean'
   }
@@ -497,6 +500,7 @@ export interface NexusGenFieldTypeNames {
     description: 'String'
     email: 'String'
     facilities: 'Facility'
+    features: 'Features'
     frameImage: 'String'
     id: 'ID'
     images: 'Image'
@@ -558,9 +562,9 @@ export interface NexusGenFieldTypeNames {
     amenitiesList: 'Amenity'
     facilitiesList: 'Facility'
     getBookingById: 'Booking'
-    getHotelById: 'Hotel'
     getMessages: 'TestArray'
     getMoreMessages: 'TestArray'
+    hotelById: 'Hotel'
     hotelCategoriesList: 'HotelCategory'
     hotelSearch: 'HotelSearch'
     languagesList: 'Language'
@@ -576,6 +580,7 @@ export interface NexusGenFieldTypeNames {
     roomModelId: 'Int'
   }
   RoomBed: { // field return type name
+    id: 'ID'
     quantity: 'Int'
     roomId: 'Int'
     type: 'String'
@@ -753,7 +758,7 @@ export interface NexusGenArgTypes {
     getBookingById: { // args
       id: string; // ID!
     }
-    getHotelById: { // args
+    hotelById: { // args
       id: string; // ID!
     }
     hotelSearch: { // args

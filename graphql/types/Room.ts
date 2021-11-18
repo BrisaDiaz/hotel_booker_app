@@ -23,6 +23,7 @@ export const Amenity = objectType({
 export const RoomBed = objectType({
   name: 'RoomBed',
   definition(t) {
+    t.id('id');
     t.int('roomId');
     t.string('type');
     t.int('quantity');
