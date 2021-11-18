@@ -1,7 +1,7 @@
 import { objectType, enumType, extendType, stringArg } from 'nexus';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../lib/prisma';
-import { getUser, hashPassword } from '../utils';
+import { getUser, hashPassword } from '../utils/index';
 
 export const User = objectType({
   name: 'User',

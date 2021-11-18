@@ -15,7 +15,7 @@ import {
   verifyIsHotelAdmin,
   checkIfClientExist,
   getAdminInfo,
-} from '../utils';
+} from '../utils/index';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   ForbiddenError,

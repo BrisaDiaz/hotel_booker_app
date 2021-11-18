@@ -16,7 +16,7 @@ import {
   getAdminInfo,
   verifyIsHotelAdmin,
   hotelQueryConstructor,
-} from '../utils';
+} from '../utils/index';
 
 export const Address = objectType({
   name: 'Address',

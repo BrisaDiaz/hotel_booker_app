@@ -9,7 +9,7 @@ import {
   booleanArg,
   floatArg,
 } from 'nexus';
-import { verifyIsHotelAdmin } from '../utils';
+import { verifyIsHotelAdmin } from '../utils/index';
 import { prisma } from '../../lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 export const Amenity = objectType({

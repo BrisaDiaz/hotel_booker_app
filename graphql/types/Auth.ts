@@ -7,7 +7,7 @@ import {
   signToken,
   setCookie,
   deleteCookie,
-} from '../utils';
+} from '../utils/index';
 
 export const AuthPayload = objectType({
   name: 'AuthPayload',

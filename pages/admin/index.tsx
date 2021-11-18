@@ -3,7 +3,7 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import AdminMenu from '@/components/AdminMenu';
+import AdminMenu from '@/components/layouts/AdminMenu';
 
 const Dashboard: NextPage = () => {
   const router = useRouter();
