@@ -103,13 +103,6 @@ export async function verifyIsHotelAdmin(
   if (!isHotelAdmin) throw new ForbiddenError('Forbiden');
   return admin;
 }
-export async function checkIfClientExist(clientEmail: string) {
-  return await prisma.client.findUnique({
-    where: {
-      email: clientEmail,
-    },
-  });
-}
 
 export async function hashPassword(password: string): Promise<string> {
   const saltRounds = 10;
