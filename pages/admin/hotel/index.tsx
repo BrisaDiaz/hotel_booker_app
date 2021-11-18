@@ -1,4 +1,6 @@
 import type { NextPage } from 'next';
+import React from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
@@ -7,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import DashboardCardGrid from '@/components/DashboardCardGrid';
 import hotel from '@/mocks/hotel';
 import Card from '@mui/material/Card';
-
+import { WithLayoutPage } from '@/interfaces/index';
 const styles = {
   legend: {
     opacity: 0.6,
@@ -15,13 +17,16 @@ const styles = {
     width: '55%',
   },
 };
-const features = [
-  { title: 'Facilities', items: hotel.facilities },
-  { title: 'Services', items: hotel.services },
-  { title: 'Activities', items: hotel.activities },
-  { title: 'Languages', items: hotel.languages },
-];
-const HotelAdmin: NextPage = () => {
+
+const HotelAdmin: WithLayoutPage = () => {
+  const router = useRouter();
+  const { hotelId } = router.query;
+  const features = [
+    { title: 'Facilities', items: hotel.facilities },
+    { title: 'Services', items: hotel.services },
+    { title: 'Activities', items: hotel.activities },
+    { title: 'Languages', items: hotel.languages },
+  ];
   const cardsData = [
     {
       title: 'Room types',
@@ -30,13 +35,19 @@ const HotelAdmin: NextPage = () => {
         {
           name: 'view',
           callback: () => {
-            console.log('view all room types');
+            router.push({
+              pathname: '/admin/hotel/room-type',
+              query: { hotelId },
+            });
           },
         },
         {
           name: 'add',
           callback: () => {
-            console.log('add  room types');
+            router.push({
+              pathname: '/admin/upload/room',
+              query: { hotelId },
+            });
           },
         },
       ],
@@ -48,7 +59,10 @@ const HotelAdmin: NextPage = () => {
         {
           name: 'view',
           callback: () => {
-            console.log('view all guests');
+            router.push({
+              pathname: '/admin/hotel/guests',
+              query: { hotelId },
+            });
           },
         },
         {
@@ -66,12 +80,16 @@ const HotelAdmin: NextPage = () => {
         {
           name: 'view',
           callback: () => {
-            console.log('view all requests');
+            router.push({
+              pathname: '/admin/hotel/requests',
+              query: { hotelId },
+            });
           },
         },
       ],
     },
   ];
+
   return (
     <div>
       <Head>
@@ -91,7 +109,6 @@ const HotelAdmin: NextPage = () => {
             flexWrap: 'wrap',
             height: '260px',
             my: 4,
-            mx: 'auto',
           }}
         >
           <Card
@@ -165,7 +182,8 @@ const HotelAdmin: NextPage = () => {
     </div>
   );
 };
-HotelAdmin.getLayout = function getLayout(page: ReactElement) {
+
+HotelAdmin.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="hotel">{page}</AdminMenu>;
 };
 

@@ -1,3 +1,4 @@
+import { NextPage } from 'next';
 export type Address = {
   holeAddress: string;
   country?: string;
@@ -62,3 +63,7 @@ export interface Hotel {
   roomsModels?: RoomModel[];
   public: boolean;
 }
+
+export type WithLayoutPage<P = {}> = NextPage<P> & {
+  getLayout?: (page: React.ReactNode) => React.ReactNode;
+};

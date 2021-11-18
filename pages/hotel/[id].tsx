@@ -148,20 +148,28 @@ const Hotel: NextPage = ({ hotel }) => {
                 {
                   title: 'About Us',
                   Content: (
-                    <p
-                      className="text"
-                      dangerouslySetInnerHTML={{
-                        __html: hotel.description.replace('/n', '</br>'),
-                      }}
-                    />
+                    <Box sx={{ margin: '30px 6px' }}>
+                      <Typography
+                        sx={{ whiteSpace: 'pre-line' }}
+                        component="pre"
+                        dangerouslySetInnerHTML={{
+                          __html: hotel.description,
+                        }}
+                      />
+                    </Box>
                   ),
                 },
                 {
                   title: 'Policies and Rules',
                   Content: (
-                    <>
-                      <p className="text">{hotel.policiesAndRules}</p>
-                    </>
+                    <Box sx={{ margin: '30px 6px' }}>
+                      <Typography
+                        sx={{ whiteSpace: 'pre-line' }}
+                        component="pre"
+                      >
+                        {hotel.policiesAndRules}
+                      </Typography>
+                    </Box>
                   ),
                 },
               ]}
@@ -359,7 +367,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     query: GET_HOTEL_BY_ID,
     variables: { id: query.id },
   });
-  if (!data?.hotelById && !loading) {
+  if (error) {
     return {
       redirect: {
         permanent: false,
@@ -369,11 +377,9 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  if (data?.getHotelById && !loading) {
-    return {
-      props: {
-        hotel: data?.getHotelById,
-      },
-    };
-  }
+  return {
+    props: {
+      hotel: data?.hotelById,
+    },
+  };
 };

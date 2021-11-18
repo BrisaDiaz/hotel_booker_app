@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import React from 'react';
 import { GetStaticProps } from 'next';
+import AdminMenu from '@/components/layouts/AdminMenu';
+
 import HotelForm from '@/components/HotelForm';
 import Backdrop from '@/components/Backdrop';
 
@@ -22,7 +24,7 @@ type Option = {
   name: string;
 };
 
-const Home = ({
+const HotelPage = ({
   facilitiesList,
   activitiesList,
   servicesList,
@@ -89,7 +91,10 @@ const Home = ({
     </div>
   );
 };
-export default Home;
+HotelPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <AdminMenu activeLink="dashboard">{page}</AdminMenu>;
+};
+export default HotelPage;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const activitiesRequest = await client.query({

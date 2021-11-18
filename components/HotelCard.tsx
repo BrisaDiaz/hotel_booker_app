@@ -18,6 +18,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
 
   return (
     <Card
+      elevation={matchesSize ? 3 : 1}
       sx={{ flexWrap: 'wrap', maxWidth: '100vw' }}
       key={hotel.id}
       onClick={() => handleRedirectToHotelPage(hotel.id)}

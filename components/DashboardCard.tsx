@@ -22,24 +22,23 @@ type Action = {
 const getIcone = (title: string) => {
   const formatedTitle = title.trim().toLocaleLowerCase();
   return formatedTitle.includes('room type') ? (
-    <MeetingRoomIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.5 }} />
+    <MeetingRoomIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
   ) : formatedTitle.includes('room') ? (
-    <VpnKeyIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.5 }} />
+    <VpnKeyIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
   ) : formatedTitle.includes('guest') ? (
-    <PeopleAltIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.5 }} />
+    <PeopleAltIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
   ) : formatedTitle.includes('hotel') ? (
-    <ApartmentIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.5 }} />
+    <ApartmentIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
   ) : formatedTitle.includes('request') ? (
-    <NotificationsIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.5 }} />
+    <NotificationsIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
   ) : formatedTitle.includes('booking') ? (
-    <InboxIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.5 }} />
+    <InboxIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
   ) : formatedTitle.includes('calendar') ? (
-    <CalendarTodayIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.5 }} />
+    <CalendarTodayIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
   ) : null;
 };
 export default function DashboardCard({
   card,
-  color,
 }: {
   card: {
     title: string;
@@ -47,16 +46,14 @@ export default function DashboardCard({
     count: number;
     color?: string;
   };
-  color: string;
 }) {
   return (
     <Paper
-      elevation={3}
+      elevation={6}
       sx={{
         width: '240px',
-
-        m: '0 auto',
-        backgroundColor: ` ${color || '#795548'}`,
+        borderRadius: '20px',
+        backgroundColor: ` ${card.color || '#795548'}`,
       }}
     >
       <Box
@@ -91,11 +88,16 @@ export default function DashboardCard({
             color: '#fff',
             background: 'rgba(0,0,0,0.1)',
             p: 0,
+            borderRadius: '0 0 20px 20px',
             display: 'flex',
           }}
         >
           {card.actions.map((action: { name: string; callback: Function }) => (
-            <ListItem disablePadding onClick={() => action.callback()}>
+            <ListItem
+              disablePadding
+              onClick={() => action.callback()}
+              key={action.name}
+            >
               <ListItemButton
                 sx={{ border: '1px solid rgba(255,255,255,0.05)' }}
               >

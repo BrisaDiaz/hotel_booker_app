@@ -17,6 +17,7 @@ export default function RoomCard({ room }: { room: RoomModel }) {
   return (
     <div key={room.id} onClick={() => handleRedirectToRoomPage(room.id)}>
       <Card
+        elevation={2}
         sx={{
           maxWidth: '400px',
           minWidth: '310px',

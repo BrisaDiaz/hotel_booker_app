@@ -1,6 +1,6 @@
 import * as React from 'react';
 import NextLink from 'next/link';
-
+import { NextRouter } from 'next/router';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -42,11 +42,20 @@ export default function ResponsiveDrawer(props: Props) {
   const { window } = props;
   const { children } = props;
   const { activeLink } = props;
-  const router = useRouter();
+  console.log(activeLink);
+  interface Query {
+    hotelId?: number;
+    roomTypeId?: number;
+  }
+  const router: {
+    push: Function;
+    query: Query;
+  } = useRouter();
+
+  const { hotelId, roomTypeId } = router.query;
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  const { hotelId, roomTypeId } = router.query;
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -59,19 +68,21 @@ export default function ResponsiveDrawer(props: Props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const links = [
+  const links: Link[] = [
     {
       label: 'Dashboard',
       icone: <DashboardIcon />,
       selected: activeLink === 'dashboard',
       sub: false,
       url: '/admin',
+      query: {},
     },
     {
       label: 'hotel',
       icone: <ApartmentIcon />,
       selected: activeLink === 'hotel',
       sub: false,
+      family: ['room types', 'requests', 'guests'],
       url: hotelId ? '/admin/hotel' : '/admin',
       query: {
         hotelId: hotelId,
@@ -81,10 +92,11 @@ export default function ResponsiveDrawer(props: Props) {
       label: 'room types',
       icone: <MeetingRoomIcon />,
       selected: activeLink === 'room types',
-      parent: 'hotels',
+
+      family: ['hotel', 'rooms', 'bookings'],
       sub: true,
       level: 1,
-      url: hotelId ? `/adimin/hotel/room-type` : '/admin',
+      url: hotelId ? `/admin/hotel/room-type` : '/admin',
       query: {
         hotelId: hotelId,
       },
@@ -94,9 +106,26 @@ export default function ResponsiveDrawer(props: Props) {
       icone: <VpnKeyIcon />,
       selected: activeLink === 'rooms',
       sub: true,
-      parent: 'room types',
+      family: ['hotel', 'room types'],
       level: 2,
-      url: hotelId && roomTypeId ? `/adimin/hotel/room-type/rooms` : '/admin',
+      url: hotelId && roomTypeId ? `/admin/hotel/room-type/rooms` : '/admin',
+      query: {
+        roomTypeId: roomTypeId,
+        hotelId: hotelId,
+      },
+    },
+    {
+      label: 'bookings',
+      icone: <CalendarTodayIcon />,
+      selected: activeLink === 'bookings',
+      sub: true,
+      family: ['room types'],
+
+      level: 2,
+      url:
+        hotelId && roomTypeId
+          ? `/admin/hotel/room-type/bookings`
+          : '/admin/hotel/room-type',
       query: {
         roomTypeId: roomTypeId,
         hotelId: hotelId,
@@ -107,13 +136,11 @@ export default function ResponsiveDrawer(props: Props) {
       icone: <NotificationsIcon />,
       selected: activeLink === 'requests',
       sub: true,
-      parent: 'hotels',
+      family: ['hotel'],
       level: 1,
-      url: hotelId ? 'admin/hotel/requests' : '/adimin',
+      url: hotelId ? '/admin/hotel/requests' : '/admin',
       query: {
-        query: {
-          hotelId: hotelId,
-        },
+        hotelId: hotelId,
       },
     },
     {
@@ -121,28 +148,38 @@ export default function ResponsiveDrawer(props: Props) {
       icone: <PeopleAltIcon />,
       selected: activeLink === 'guests',
       sub: true,
-      parent: 'hotels',
+      family: ['hotel'],
       level: 1,
-      url: hotelId ? 'admin/hotel/guests' : '/admin',
+      url: hotelId ? '/admin/hotel/guests' : '/admin',
       query: {
-        query: {
-          hotelId: hotelId,
-        },
+        hotelId: hotelId,
       },
     },
   ];
-  const toDisplayLinks = links.filter(
-    (link) => !link.sub || (link.sub && link.parent === activeLink)
+  interface Link {
+    label: string;
+    icone: React.ReactNode;
+    selected: boolean;
+    sub: boolean;
+    family?: string[];
+    level?: number;
+    url: string;
+    query: Query | {};
+  }
+
+  const activeLinkInfo = links.find((link) => link.label === activeLink);
+  const toDisplayLinks: Link[] = links.filter(
+    (link: Link) =>
+      !link.sub ||
+      link.label === activeLink ||
+      activeLinkInfo?.family?.includes(link.label)
   );
-  const handleRedirect = (link) => {
+
+  const handleRedirect = (link: Link) => {
     let buildLink: {
       pathname: string;
-      query?: { [key: string]: string | number };
-    } = { pathname: link.url };
-
-    if (link?.query) {
-      buildLink['query'] = link?.query;
-    }
+      query?: Query;
+    } = { pathname: link.url, query: link?.query };
 
     router.push(buildLink);
   };
@@ -170,52 +207,42 @@ export default function ResponsiveDrawer(props: Props) {
       </Typography>
 
       <List sx={{ mx: '10px' }}>
-        {toDisplayLinks.map(
-          (field: {
-            label: string;
-            icone: React.ReactNode;
-            selected: boolean;
-            sub: boolean;
-            parent?: string;
-            level?: number;
-            url: string;
-          }) => (
-            <ListItem
-              button
-              onClick={() => handleRedirect(field.url)}
-              key={field.label}
-              selected={field.selected}
-              sx={{
-                borderRadius: '10px',
-                height: '65px',
-                border: `${
-                  field.selected
-                    ? '2px solid rgba(255,255,255,0.8)'
-                    : '1px solid rgba(255,255,255,0.3)'
-                }`,
+        {toDisplayLinks.map((link: Link) => (
+          <ListItem
+            button
+            onClick={() => handleRedirect(link)}
+            key={link.label}
+            selected={link.selected}
+            sx={{
+              borderRadius: '10px',
+              height: '65px',
+              border: `${
+                link.selected
+                  ? '2px solid rgba(255,255,255,0.8)'
+                  : '1px solid rgba(255,255,255,0.3)'
+              }`,
 
-                m: '10px 0 10px 0',
-                width: `${
-                  field.level === 2 ? '80%' : field.level === 1 ? '90%' : '100%'
-                }`,
+              m: '10px 0 10px 0',
+              width: `${
+                link.level === 2 ? '80%' : link.level === 1 ? '90%' : '100%'
+              }`,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: '40px',
+
+                color: '#fff',
               }}
             >
-              <ListItemIcon
-                sx={{
-                  minWidth: '40px',
-
-                  color: '#fff',
-                }}
-              >
-                {field.icone}
-              </ListItemIcon>
-              <ListItemText
-                primary={field.label}
-                sx={{ mr: 2, textTransform: 'capitalize' }}
-              />
-            </ListItem>
-          )
-        )}
+              {link.icone}
+            </ListItemIcon>
+            <ListItemText
+              primary={link.label}
+              sx={{ mr: 2, textTransform: 'capitalize' }}
+            />
+          </ListItem>
+        ))}
       </List>
     </Box>
   );
@@ -335,7 +362,7 @@ export default function ResponsiveDrawer(props: Props) {
         component="div"
         sx={{
           flexGrow: 1,
-          overflowY: 'scroll',
+
           mt: 10,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}

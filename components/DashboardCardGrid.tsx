@@ -1,28 +1,35 @@
 import Grid from '@mui/material/Grid';
 
 import DashboardCard from './DashboardCard';
-
+type Card = {
+  title: string;
+  actions: Action[];
+  count: number;
+  color?: string;
+};
 export default function DashboardCardGrid({ cards }: { cards: Card[] }) {
   return (
     <Grid
       container
       sx={{
         width: '100%',
-        maxWidth: '1050px',
-        mx: 'auto',
-
-        justifyContent: { xs: 'center', lg: 'start' },
+        maxWidth: '1000px',
+        justifyContent: { xs: 'center', md: 'start' },
+        p: 3,
       }}
-      columns={{ xs: 12, sm: 14, lg: 12 }}
+      spacing={3}
     >
       {cards.map((card) => (
         <Grid
           item
           xs={12}
-          lg={3}
-          md={6}
-          sx={{ p: 2, width: '240px', gap: 1.5 }}
+          md={4}
+          lg={3.5}
           key={card.title}
+          sx={{
+            display: 'flex',
+            justifyContent: { sx: 'center', md: 'start' },
+          }}
         >
           <DashboardCard card={card} />
         </Grid>

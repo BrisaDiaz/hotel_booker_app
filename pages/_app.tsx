@@ -10,17 +10,13 @@ import theme from '../styles/theme';
 import createEmotionCache from '../styles/createEmotionCache';
 import { client } from '../lib/apollo';
 import { ApolloProvider } from '@apollo/client';
-
+import { WithLayoutPage } from '@/interfaces/index';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-type Page<P = {}> = NextPage<P> & {
-  getLayout?: (page: ReactNode) => ReactNode;
-};
-
 interface MyAppProps extends AppProps {
   emotionCache: any;
-  Component: Page;
+  Component: WithLayoutPage;
 }
 
 function MyApp(props: MyAppProps) {

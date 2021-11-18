@@ -1,9 +1,10 @@
 import Head from 'next/head';
+import React from 'react';
 import { GetServerSideProps } from 'next';
+import SnackBar from '@/components/SnackBar';
 import RoomForm from '@/components/RoomForm';
-import HotelForm from '@/components/HotelForm';
 import Backdrop from '@/components/Backdrop';
-
+import AdminMenu from '@/components/layouts/AdminMenu';
 import { client } from '@/lib/apollo';
 import { useMutation } from '@apollo/client';
 import {
@@ -16,7 +17,7 @@ type Option = {
   id: number;
   name: string;
 };
-const Home = ({
+const RoomPage = ({
   amenitiesList,
   servicesList,
   roomCategoriesList,
@@ -25,11 +26,22 @@ const Home = ({
   servicesList: Option[];
   roomCategoriesList: Option[];
 }): JSX.Element => {
-  const [createRoomModel, { error, loading }] = useMutation(CREATE_ROOM_MODEL);
-  const onSubmit = async (data) => {
+  const [createRoomPageModel, { error, loading, data }] =
+    useMutation(CREATE_ROOM_MODEL);
+  const [success, setSuccess] = React.useState<Boolean>(false);
+  const onSubmit = async (variables) => {
     try {
-      // createRoomModel({variables:data})
-    } catch (err) {}
+      // await createRoomPageModel({
+      //   variables: variables,
+      // });
+      // setSuccess(true);
+      // setTimeout(() => {
+      //   setSuccess(false);
+      // }, 5000);
+    } catch (err) {
+      console.log(err);
+      console.log(error?.graphQLErrors);
+    }
   };
 
   return (
@@ -41,22 +53,33 @@ const Home = ({
       </Head>
 
       <main>
-        {!loading && error && (
-          <Alerts type="error" alerts={error.graphQLErrors} />
+        {error && (
+          <SnackBar
+            severity="error"
+            message="somthing went worng the request "
+          />
+        )}
+        {success && (
+          <SnackBar
+            severity="success"
+            message="hotel was created successfully"
+          />
         )}
         <RoomForm
           services={servicesList}
           amenities={amenitiesList}
           roomCategories={roomCategoriesList}
-          onSubmit={onSubmit}
+          handdleSubmit={onSubmit}
         />
         <Backdrop loading={loading} />
       </main>
     </div>
   );
 };
-export default Home;
-
+export default RoomPage;
+RoomPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <AdminMenu activeLink="dashboard">{page}</AdminMenu>;
+};
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const servicesRequest = await client.query({
     query: GET_ALL_SERVICES,

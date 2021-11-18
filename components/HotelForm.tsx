@@ -33,7 +33,6 @@ const styles = {
     px: { sm: 1 },
   },
   title: {
-    mt: 1,
     mb: 5,
     fontWeight: 600,
     opacity: 0.8,
@@ -738,7 +737,7 @@ export default function MultilineTextFields(props: {
           </Grid>
         </Grid>
         <Grid container spacing={2} alignItems="center" sx={{ mt: 0, mb: 2 }}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} md={6}>
             <Card>
               <CardMedia
                 component="img"

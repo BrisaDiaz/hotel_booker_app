@@ -134,7 +134,12 @@ const RoomPage: NextPage = ({ room }: { room: Room }) => {
           /Night
         </Typography>
 
-        <Typography sx={{ margin: '20px 10px' }}>{room.description}</Typography>
+        <Typography
+          componet="pre"
+          sx={{ margin: '20px 10px', whiteSpace: 'pre-line' }}
+        >
+          {room.description}
+        </Typography>
         <div className="list">
           <div className="list-item">
             <TodayIcon color="primary" />
@@ -320,7 +325,8 @@ export const getServerSideProps: GetServerSideProps = async ({
     query: GET_ROOM_MODEL_BY_ID,
     variables: { id: query.id },
   });
-  if (!data?.roomModelById && !loading) {
+
+  if (error) {
     return {
       redirect: {
         permanent: false,
@@ -330,11 +336,9 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  if (data?.getHotelById && !loading) {
-    return {
-      props: {
-        room: data?.roomModelById,
-      },
-    };
-  }
+  return {
+    props: {
+      room: data?.roomModelById,
+    },
+  };
 };
