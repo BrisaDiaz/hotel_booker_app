@@ -40,6 +40,14 @@ export const GET_ALL_LANGUAGES = gql`
     }
   }
 `;
+export const GET_ALL_BEDS = gql`
+  query bedTypesList {
+    bedTypesList {
+      id
+      name
+    }
+  }
+`;
 export const GET_ALL_HOTEL_CATEGORIES = gql`
   query hotelCategoriesList {
     hotelCategoriesList {

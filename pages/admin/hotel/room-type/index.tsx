@@ -9,13 +9,16 @@ const RoomTypes = () => {
   const router = useRouter();
   const { hotelId, roomTypeId } = router.query;
   const cardData = {
-    title: 'rooms',
+    title: 'room types',
     count: 0,
     actions: [
       {
         name: 'add',
         callback: () => {
-          console.log('adding a new room');
+          router.push({
+            pathname: '/admin/upload/room',
+            query: { hotelId, roomTypeId },
+          });
         },
       },
     ],
@@ -29,7 +32,7 @@ const RoomTypes = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{ m: 3 }}>
+      <Box sx={{ mx: 3 }}>
         <DashboardCard card={cardData} />
         <Typography sx={{ m: '20px auto' }}>Room Type </Typography>
         {new Array(5).fill(1).map((num, index) => (

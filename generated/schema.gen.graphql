@@ -35,6 +35,11 @@ type AuthPayload {
   user: User
 }
 
+type BedType {
+  id: ID
+  name: String
+}
+
 type Booking {
   adults: Int
   checkInDate: Int
@@ -173,6 +178,7 @@ type PlainResponse {
 type Query {
   activitiesList: [Activity]
   amenitiesList: [Amenity]
+  bedTypesList: [BedType]
   facilitiesList: [Facility]
   getBookingById(id: ID!): Booking
   getMessages: [TestArray]

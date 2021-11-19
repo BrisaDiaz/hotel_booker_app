@@ -134,8 +134,12 @@ export const CREATE_ROOM_MODEL = gql`
   mutation creatHotelRoomModel(
     $hotelId: Int!
     $lowestPrice: Float!
+    $taxesAndCharges: Float!
     $name: String!
     $mts2: Int!
+    $beds:[Beds]!
+    $smooking: Boolean!
+    $freeCancelation: Boolean!
     $category: String!
     $description: String!
     $minimunStay: Int!
@@ -148,8 +152,12 @@ export const CREATE_ROOM_MODEL = gql`
     creatHotelRoomModel(
       hotelId: $hotelId
       lowestPrice: $lowestPrice
+      smooking;$smooking
+      freeCancelation;$freeCancelation
+      taxesAndCharges: $taxesAndCharges
       name: $name
       mts2: $mts2
+      beds:$beds
       category: $category
       description: $description
       minimunStay: $minimunStay
@@ -161,6 +169,10 @@ export const CREATE_ROOM_MODEL = gql`
     ) {
       id
     }
+  }
+    input Beds {
+    children: Int!
+    adults: Int!
   }
 `;
 
@@ -181,7 +193,7 @@ export const MAKE_ROOM_CONSULT = gql`
       message
     }
   }
-  extend type RoomSpecification {
+  input RoomSpecification {
     children: Int!
     adults: Int!
   }

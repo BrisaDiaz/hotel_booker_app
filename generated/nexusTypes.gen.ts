@@ -61,6 +61,10 @@ export interface NexusGenObjects {
     token?: string | null; // String
     user?: NexusGenRootTypes['User'] | null; // User
   }
+  BedType: { // root type
+    id?: string | null; // ID
+    name?: string | null; // String
+  }
   Booking: { // root type
     adults?: number | null; // Int
     checkInDate?: number | null; // Int
@@ -237,6 +241,10 @@ export interface NexusGenFieldTypes {
     token: string | null; // String
     user: NexusGenRootTypes['User'] | null; // User
   }
+  BedType: { // field return type
+    id: string | null; // ID
+    name: string | null; // String
+  }
   Booking: { // field return type
     adults: number | null; // Int
     checkInDate: number | null; // Int
@@ -349,6 +357,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     activitiesList: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
     amenitiesList: Array<NexusGenRootTypes['Amenity'] | null> | null; // [Amenity]
+    bedTypesList: Array<NexusGenRootTypes['BedType'] | null> | null; // [BedType]
     facilitiesList: Array<NexusGenRootTypes['Facility'] | null> | null; // [Facility]
     getBookingById: NexusGenRootTypes['Booking'] | null; // Booking
     getMessages: Array<NexusGenRootTypes['TestArray'] | null> | null; // [TestArray]
@@ -447,6 +456,10 @@ export interface NexusGenFieldTypeNames {
   AuthPayload: { // field return type name
     token: 'String'
     user: 'User'
+  }
+  BedType: { // field return type name
+    id: 'ID'
+    name: 'String'
   }
   Booking: { // field return type name
     adults: 'Int'
@@ -560,6 +573,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     activitiesList: 'Activity'
     amenitiesList: 'Amenity'
+    bedTypesList: 'BedType'
     facilitiesList: 'Facility'
     getBookingById: 'Booking'
     getMessages: 'TestArray'

@@ -8,12 +8,21 @@ import {
   nonNull,
   booleanArg,
   floatArg,
+  inputObjectType,
 } from 'nexus';
 import { verifyIsHotelAdmin } from '../utils/index';
 import { prisma } from '../../lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { RoomBuildierVariables } from '@/interfaces/';
 export const Amenity = objectType({
   name: 'Amenity',
+  definition(t) {
+    t.id('id');
+    t.string('name');
+  },
+});
+export const BedType = objectType({
+  name: 'BedType',
   definition(t) {
     t.id('id');
     t.string('name');
@@ -134,7 +143,13 @@ export const Query = extendType({
     });
   },
 });
-
+export const bedsSpecifications = inputObjectType({
+  name: 'bedsSpecifications',
+  definition(t) {
+    t.string('type');
+    t.int('quantity');
+  },
+});
 export const Mutation = extendType({
   type: 'Mutation',
   definition(t) {
@@ -143,6 +158,7 @@ export const Mutation = extendType({
       args: {
         hotelId: nonNull(intArg()),
         lowestPrice: nonNull(intArg()),
+        taxesAndCharges: nonNull(intArg()),
         name: nonNull(stringArg()),
         mts2: nonNull(intArg()),
         category: nonNull(stringArg()),
@@ -153,26 +169,32 @@ export const Mutation = extendType({
         mainImage: nonNull(stringArg()),
         services: nonNull(list(stringArg())),
         amenities: nonNull(list(stringArg())),
+        freeCancelation: nonNull(booleanArg()),
+        smooking: nonNull(booleanArg()),
+        beds: nonNull(list(bedsSpecifications)),
       },
       resolve(root, args, ctx) {
         const createHotelRoomModel = async (
           req: NextApiRequest,
           res: NextApiResponse,
-          args: RoomModel
+          args: RoomBuildierVariables
         ) => {
           await verifyIsHotelAdmin(req, res, args.hotelId);
-          return await prisma.roomModel.create({
+          const roomModel = await prisma.roomModel.create({
             data: {
               hotelId: args.hotelId,
               name: args.name,
               mts2: args.mts2,
-              category: args.category,
+              category: { connect: { name: args.category } },
               lowestPrice: args.lowestPrice,
               description: args.description,
               maximunStay: args.maximunStay,
               minimunStay: args.maximunStay,
               maximunGuests: args.maximunGuests,
               mainImage: args.mainImage,
+              freeCancelation: args.freeCancelation,
+              smooking: args.smooking,
+
               services: {
                 connect: args?.services?.map((service: string) => ({
                   name: service,
@@ -185,6 +207,14 @@ export const Mutation = extendType({
               },
             },
           });
+const roomBeds = args.beds.map((bed) => prisma.roomBed.create({data:{
+  roomModelId:roomModel.id
+  type:bed.type,
+  quantity:bed:quantity
+}}));
+await Promise.all(roomBeds)
+return roomModel
+
         };
         return createHotelRoomModel(ctx.req, ctx.res, args);
       },

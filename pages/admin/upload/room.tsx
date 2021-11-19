@@ -1,17 +1,20 @@
 import Head from 'next/head';
 import React from 'react';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import SnackBar from '@/components/SnackBar';
 import RoomForm from '@/components/RoomForm';
 import Backdrop from '@/components/Backdrop';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import { client } from '@/lib/apollo';
 import { useMutation } from '@apollo/client';
+import { RoomBuildierVariables } from '@/interfaces/index';
 import {
   GET_ALL_SERVICES,
   GET_ALL_ROOM_CATEGORIES,
   CREATE_ROOM_MODEL,
   GET_ALL_AMENITIES,
+  GET_ALL_BEDS,
 } from '@/queries/index';
 type Option = {
   id: number;
@@ -21,23 +24,28 @@ const RoomPage = ({
   amenitiesList,
   servicesList,
   roomCategoriesList,
+  bedTypesList,
 }: {
   amenitiesList: Option[];
   servicesList: Option[];
   roomCategoriesList: Option[];
+  bedTypesList: Option[];
 }): JSX.Element => {
+  const router = useRouter();
+  const { hotelId } = router.query;
+
   const [createRoomPageModel, { error, loading, data }] =
     useMutation(CREATE_ROOM_MODEL);
   const [success, setSuccess] = React.useState<Boolean>(false);
-  const onSubmit = async (variables) => {
+  const onSubmit = async (variables: RoomBuildierVariables) => {
     try {
-      // await createRoomPageModel({
-      //   variables: variables,
-      // });
-      // setSuccess(true);
-      // setTimeout(() => {
-      //   setSuccess(false);
-      // }, 5000);
+      await createRoomPageModel({
+        variables: { ...variables, hotelId: hotelId },
+      });
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 5000);
     } catch (err) {
       console.log(err);
       console.log(error?.graphQLErrors);
@@ -69,6 +77,7 @@ const RoomPage = ({
           services={servicesList}
           amenities={amenitiesList}
           roomCategories={roomCategoriesList}
+          bedTypes={bedTypesList}
           handdleSubmit={onSubmit}
         />
         <Backdrop loading={loading} />
@@ -90,17 +99,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const categoriesRequest = await client.query({
     query: GET_ALL_ROOM_CATEGORIES,
   });
+  const bedsRequest = await client.query({
+    query: GET_ALL_BEDS,
+  });
 
   const response = await Promise.all([
     servicesRequest,
     categoriesRequest,
     amenitiesRequest,
+    bedsRequest,
   ]);
 
   const props = {
     ...amenitiesRequest.data,
     ...servicesRequest.data,
     ...categoriesRequest.data,
+    ...bedsRequest.data,
   };
 
   return {

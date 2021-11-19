@@ -110,5 +110,15 @@ export const Query = extendType({
         });
       },
     });
+    t.field('bedTypesList', {
+      type: list('BedType'),
+      resolve: () => {
+        return prisma.bedType.findMany({
+          orderBy: {
+            name: 'asc',
+          },
+        });
+      },
+    });
   },
 });

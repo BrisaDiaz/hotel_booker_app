@@ -82,19 +82,74 @@ const styles = {
     my: 2,
   },
 };
-type Feature = {
+interface Feature {
   id: number;
   name: string;
+}
+
+const BedsSetters = ({
+  beds,
+  register,
+  errors,
+}: {
+  beds: Feature[];
+  register: Function;
+  errors: {
+    [key: string]: {
+      message: string;
+    };
+  };
+}) => {
+  return beds.map((bed) => (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        maxWidth: '300px',
+        padding: '0 20px',
+      }}
+    >
+      <Typography
+        sx={{ mr: 1, width: 'max-content', textTransform: 'capitalize' }}
+      >
+        {bed.name}
+        {' :'}
+      </Typography>
+      <Box sx={{ width: '100px' }}>
+        <TextField
+          sx={styles.textField}
+          id="bedQuantity"
+          defaultValue={0}
+          {...register(`${bed.name}`, {
+            min: {
+              value: 0,
+              message: 'Bed quantity must be positive number',
+            },
+          })}
+          variant="outlined"
+          label={
+            errors[`${bed.name}`] ? errors[`${bed.name}`].message : 'Quantity'
+          }
+          type="number"
+          error={errors[`${bed.name}`] ? true : false}
+        />
+      </Box>
+    </Box>
+  ));
 };
 export default function MultilineTextFields(props: {
   services: Feature[];
   amenities: Feature[];
   roomCategories: Feature[];
+  bedTypes: Feature[];
   handdleSubmit: Function;
 }) {
   const defaultImage =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU';
-  const { services, amenities, roomCategories, handdleSubmit } = props;
+  const { services, amenities, roomCategories, handdleSubmit, bedTypes } =
+    props;
 
   const matchesSize = useMediaQuery('(min-width:600px)');
   const {
@@ -125,8 +180,32 @@ export default function MultilineTextFields(props: {
     return data.map((option) => option.name);
   };
   const submitMiddleware = (data) => {
-    console.log(data, servicesSelected, amenitiesSelected, categorySelected);
-    // handdleSubmit()
+    let pickedBedQuantities = bedTypes
+      .map((bed) => ({
+        type: bed.name,
+        quantity: data[bed.name],
+      }))
+      .filter((bed) => bed.quantity > 0);
+
+    const variables = {
+      beds: pickedBedQuantities,
+      services: servicesSelected,
+      amenities: amenitiesSelected,
+      name: data.name,
+      description: data.description,
+      smooking: data.smooking,
+      freeCancelation: data.freeCancelation,
+      category: categorySelected,
+      mts2: data.mts2,
+      mainImage: data.mainImage,
+      maximunGuests: data.maximunGuests,
+      maximunNights: data.maximunNights,
+      minimunNights: data.minimunNights,
+      lowestPrice: data.lowestPrice,
+      taxesAndCharges: data.taxesAndCharges,
+    };
+
+    handdleSubmit(variables);
   };
   const handleReset = () => {
     setServicesSelected([]);
@@ -162,7 +241,7 @@ export default function MultilineTextFields(props: {
                 },
               })}
               variant="outlined"
-              label={errors['brand'] ? errors['name'].message : 'Name/Title'}
+              label={errors['name'] ? errors['name'].message : 'Name/Title'}
               type="text"
               error={errors['name'] ? true : false}
             />
@@ -219,6 +298,7 @@ export default function MultilineTextFields(props: {
             <TextField
               sx={styles.textField}
               id="lowestPrice"
+              defaultValue={0}
               {...register('lowestPrice', {
                 required: 'The lowest price is required',
                 min: {
@@ -241,25 +321,31 @@ export default function MultilineTextFields(props: {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ width: { md: '50%' } }}>
+          <Grid item xs={12} sm={6}>
             <TextField
               sx={styles.textField}
-              id="maximunGues"
-              {...register('maximunGues', {
-                required: 'The guest limit is required',
+              defaultValue={0}
+              id="taxesAndCharges"
+              {...register('taxesAndCharges', {
+                required: 'Taxes are required',
                 min: {
                   value: 0,
-                  message: 'the value must be a positive number',
+                  message: 'Taxes ammount must be a positive number',
                 },
               })}
               variant="outlined"
               label={
-                errors['maximunGues']
-                  ? errors['maximunGues'].message
-                  : 'Maximun guest'
+                errors['taxesAndCharges']
+                  ? errors['taxesAndCharges'].message
+                  : 'Taxes&Charges'
               }
               type="number"
-              error={errors['maximunGues'] ? true : false}
+              error={errors['taxesAndCharges'] ? true : false}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+              }}
             />
           </Grid>
         </Grid>
@@ -290,7 +376,6 @@ export default function MultilineTextFields(props: {
               sx={styles.textField}
               id="maximunNights"
               {...register('maximunNights', {
-                required: 'The field  is required',
                 min: {
                   value: 0,
                   message: 'the value must be a positive number',
@@ -316,7 +401,7 @@ export default function MultilineTextFields(props: {
                 required: 'The mts2 are required',
                 min: {
                   value: 0,
-                  message: 'Meters must positive number',
+                  message: 'Meters must be positive number',
                 },
               })}
               variant="outlined"
@@ -327,6 +412,27 @@ export default function MultilineTextFields(props: {
               error={errors['mts2'] ? true : false}
             />
           </Grid>
+          <Grid item xs={12} sm={6} sx={{ width: { md: '50%' } }}>
+            <TextField
+              sx={styles.textField}
+              id="maximunGues"
+              {...register('maximunGues', {
+                required: 'The guest limit is required',
+                min: {
+                  value: 0,
+                  message: 'the value must be a positive number',
+                },
+              })}
+              variant="outlined"
+              label={
+                errors['maximunGues']
+                  ? errors['maximunGues'].message
+                  : 'Maximun guest'
+              }
+              type="number"
+              error={errors['maximunGues'] ? true : false}
+            />
+          </Grid>
         </Grid>
       </Box>
 
@@ -334,7 +440,6 @@ export default function MultilineTextFields(props: {
         <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Features
         </Typography>
-
         <AutocompleteCheckbox
           onChange={(data: autocompliteData[]) => handleAmenitiesField(data)}
           label="Amenities"
@@ -347,13 +452,22 @@ export default function MultilineTextFields(props: {
           options={services}
           sx={styles.textField}
         />
-
+        <Box sx={{ m: '10px 0', display: 'flex', flexWrap: 'wrap' }}>
+          {BedsSetters({ beds: bedTypes, register, errors })}
+        </Box>
         <FormControlLabel
-          control={<Checkbox {...register('FreeCancelation')} />}
-          label="Free Cancelation"
+          sx={{ textTransform: 'capitalize' }}
+          {...register('freeCancelation')}
+          control={<Checkbox />}
+          label="free cancelation"
+        />
+        <FormControlLabel
+          sx={{ textTransform: 'capitalize' }}
+          {...register('smooking')}
+          control={<Checkbox />}
+          label="smooking"
         />
       </Box>
-
       <Box component="fieldset" sx={styles.fieldset}>
         <Typography component="h3" variant="h6" sx={styles.groupTitle}>
           Aspect

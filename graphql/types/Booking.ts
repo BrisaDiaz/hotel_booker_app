@@ -45,7 +45,8 @@ export const RoomConsult = objectType({
 export const roomSpecifications = inputObjectType({
   name: 'roomSpecifications',
   definition(t) {
-    t.int('adults'), t.int('children');
+    t.int('adults');
+    t.int('children');
   },
 });
 export const ConsultMutation = extendType({

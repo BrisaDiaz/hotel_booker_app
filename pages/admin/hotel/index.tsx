@@ -98,7 +98,7 @@ const HotelAdmin: WithLayoutPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box component="main" sx={{ minHeight: '70vh' }}>
+      <Box component="main">
         <DashboardCardGrid cards={cardsData} />
 
         <Box

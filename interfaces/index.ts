@@ -61,7 +61,24 @@ export interface Hotel {
   services?: Option[];
   languages?: Option[];
   roomsModels?: RoomModel[];
-  public: boolean;
+}
+export interface RoomBuildierVariables {
+  hotelId?: number;
+  beds: Array<{ type: string; quantity: number }>;
+  services: string[];
+  amenities: string[];
+  name: string;
+  description: string;
+  smooking: boolean;
+  freeCancelation: boolean;
+  category: string;
+  mts2: number;
+  mainImage: string;
+  maximunGuests: number;
+  maximunNights?: number;
+  minimunNights: number;
+  lowestPrice: number;
+  taxesAndCharges?: number;
 }
 
 export type WithLayoutPage<P = {}> = NextPage<P> & {
