@@ -18,7 +18,7 @@
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.0.0-rc.1",
     "@mui/material": "^5.0.0-rc.1",
-    "@prisma/client": "^3.4.2",
+    "@prisma/client": "^3.5.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "^8.5.5",
     "apollo-server-micro": "^3.4.0",
