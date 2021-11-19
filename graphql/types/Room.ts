@@ -182,10 +182,10 @@ export const Mutation = extendType({
           await verifyIsHotelAdmin(req, res, args.hotelId);
           const roomModel = await prisma.roomModel.create({
             data: {
-              hotelId: args.hotelId,
+              hotel: { connect: { id: args.hotelId } },
               name: args.name,
               mts2: args.mts2,
-              category: { connect: { name: args.category } },
+              roomCategory: { connect: { name: args.category } },
               lowestPrice: args.lowestPrice,
               description: args.description,
               maximunStay: args.maximunStay,
@@ -194,7 +194,6 @@ export const Mutation = extendType({
               mainImage: args.mainImage,
               freeCancelation: args.freeCancelation,
               smooking: args.smooking,
-
               services: {
                 connect: args?.services?.map((service: string) => ({
                   name: service,
@@ -207,7 +206,7 @@ export const Mutation = extendType({
               },
             },
           });
-const roomBeds = args.beds.map((bed) => prisma.roomBed.create({data:{
+const roomBeds = args.beds.map((bed:{type:string ,quantity:number}) => prisma.roomBed.create({data:{
   roomModelId:roomModel.id
   type:bed.type,
   quantity:bed:quantity

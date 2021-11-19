@@ -123,7 +123,9 @@ model RoomModel {
   roomCategory    RoomCategory @relation(fields: [category], references: [name])
   category        String
   lowestPrice     Float
+  taxesAndCharges Float
   freeCancelation Boolean
+  smooking        Boolean
   mainImage       String
   description     String?
   maximunStay     Int          @default(0)
@@ -132,7 +134,9 @@ model RoomModel {
   amenities       Amenity[]
   services        Service[]
   rooms           Room[]
-  public          Boolean      @default(true)
+
+
+  public Boolean @default(true)
 
 
 }
