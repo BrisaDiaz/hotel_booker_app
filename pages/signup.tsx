@@ -3,7 +3,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 import Avatar from '@mui/material/Avatar';
 import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
-import Alerts from '@/components/Alerts';
+import SnackBar from '@/components/SnackBar';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
@@ -33,6 +33,8 @@ function Copyright(props: any) {
 }
 
 export default function SignUp() {
+  const [errorMessage, setErrorMessage] = React.useState<string>('');
+  const [success, setSuccess] = React.useState<Boolean>(false);
   const {
     register,
     handleSubmit,
@@ -42,7 +44,17 @@ export default function SignUp() {
   const redirectToSignin = () => {
     router.push('/signin');
   };
-  const [signUp, { error, data, loading }] = useMutation(SIGN_UP);
+  const [signUp, { error, data, loading }] = useMutation(SIGN_UP, {
+    onCompleted: () => {
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 5000);
+    },
+    onError: (graphError) => {
+      setErrorMessage(graphError.message);
+    },
+  });
 
   const onSubmit = async (formData: any, event: any) => {
     try {
@@ -55,16 +67,6 @@ export default function SignUp() {
     redirectToSignin();
   }
 
-  const [signOut] = useMutation(SIGN_OUT);
-  const handdleSignOut = async () => {
-    try {
-      await signOut({
-        variables: { date: new Date(Date.now()).toISOString() },
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
   return (
     <Box
       sx={{
@@ -72,12 +74,16 @@ export default function SignUp() {
         m: '0 auto',
       }}
     >
-      {!loading && error && (
-        <Alerts type="error" alerts={error.graphQLErrors} />
+      {success && (
+        <SnackBar severity="success" message="hotel was created successfully" />
       )}
-      <Button sx={{ ml: 'auto' }} onClick={() => handdleSignOut()}>
-        Sign Out
-      </Button>
+      {error && (
+        <SnackBar
+          severity="error"
+          message={errorMessage || "Signup couldn't be complited"}
+        />
+      )}
+
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
@@ -153,7 +159,6 @@ export default function SignUp() {
                   label={
                     errors['password'] ? errors['password'].message : 'Password'
                   }
-                  type="password"
                   id="password"
                   autoComplete="new-password"
                 />

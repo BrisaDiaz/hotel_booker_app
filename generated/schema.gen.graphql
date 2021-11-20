@@ -146,7 +146,7 @@ type Language {
 type Mutation {
   addRoomToHotel(hotelId: ID!, number: Int!, roomModelId: Int!): Room
   checkRoomAvailability(checkInDate: String, checkOutDate: String, roomModelId: String, rooms: [roomSpecifications]): RoomConsultResponse
-  creatHotelRoomModel(amenities: [String]!, category: String!, description: String!, hotelId: Int!, lowestPrice: Int!, mainImage: String!, maximunGuests: Int!, maximunStay: Int!, minimunStay: Int!, mts2: Int!, name: String!, services: [String]!): RoomModel
+  creatHotelRoomModel(amenities: [String]!, beds: [bedsSpecifications]!, category: String!, description: String!, freeCancelation: Boolean!, hotelId: ID!, lowestPrice: Float!, mainImage: String!, maximunGuests: Int!, maximunStay: Int, minimunStay: Int!, mts2: Int!, name: String!, services: [String]!, smooking: Boolean!, taxesAndCharges: Float!): RoomModel
   createHotel(accessible: Boolean!, activities: [String]!, administrativeArea: String!, brand: String, category: String, checkInHour: String!, checkOutHour: String!, city: String, country: String, description: String!, ecoFriendly: Boolean!, email: String, facilities: [String]!, familyFriendly: Boolean!, frameImage: String!, freeCancelation: Boolean!, holeAddress: String!, interiorImage: String!, languages: [String]!, lowestPrice: Float!, name: String!, petFriendly: Boolean!, policiesAndRules: String!, postalCode: String!, services: [String]!, smokerFriendly: Boolean!, street: String, taxesAndCharges: Float!, telephone: String!, website: String): Hotel
   createNewClient(cellularNumber: String!, email: String!, firstName: String!, homePhoneNumber: String!, lastName: String!): Client
   editRoomModelVicibility(hotelId: Int!, id: ID!, public: Boolean!): RoomModel
@@ -156,7 +156,7 @@ type Mutation {
   signup(email: String!, firstName: String!, lastName: String!, password: String!): User
   updateHotelAddress(administrativeArea: String!, city: String, country: String, holeAddress: String!, hotelId: ID!, postalCode: String!, street: String): Address
   updateHotelLowestPrice(hotelId: ID!, lowestPrice: Float!): Hotel
-  updateRoomModelPrice(hotelId: Int!, id: ID!, lowestPrice: Float!): RoomModel
+  updateRoomModelPrice(hotelId: Int!, id: ID!, lowestPrice: Float, taxesAndCharges: Float): RoomModel
 }
 
 type Mutetion {
@@ -240,6 +240,7 @@ type RoomModel {
   name: String
   rooms: [[Room]]
   services: [Service]
+  taxesAndCharges: Float
 }
 
 type Service {
@@ -254,11 +255,16 @@ type TestArray {
 
 type User {
   email: String
-  firstname: String
+  firstName: String
   id: ID
-  lastname: String
+  lastName: String
   password: String
   role: Role
+}
+
+input bedsSpecifications {
+  quantity: Int
+  type: String
 }
 
 input roomSpecifications {

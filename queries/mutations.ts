@@ -11,9 +11,11 @@ export const SIGN_IN = gql`
   mutation signin($email: String!, $password: String!) {
     signin(email: $email, password: $password) {
       user {
-        firstname
-        lastname
+        firstName
+        lastName
+
         email
+        role
       }
     }
   }
@@ -132,18 +134,18 @@ export const EDIT_HOTEL_ADDRESS = gql`
 `;
 export const CREATE_ROOM_MODEL = gql`
   mutation creatHotelRoomModel(
-    $hotelId: Int!
+    $hotelId: ID!
     $lowestPrice: Float!
     $taxesAndCharges: Float!
     $name: String!
     $mts2: Int!
-    $beds:[Beds]!
+    $beds: [bedsSpecifications]!
     $smooking: Boolean!
     $freeCancelation: Boolean!
     $category: String!
     $description: String!
     $minimunStay: Int!
-    $maximunStay: Int!
+    $maximunStay: Int
     $maximunGuests: Int!
     $mainImage: String!
     $services: [String]!
@@ -152,12 +154,12 @@ export const CREATE_ROOM_MODEL = gql`
     creatHotelRoomModel(
       hotelId: $hotelId
       lowestPrice: $lowestPrice
-      smooking;$smooking
-      freeCancelation;$freeCancelation
+      smooking: $smooking
+      freeCancelation: $freeCancelation
       taxesAndCharges: $taxesAndCharges
       name: $name
       mts2: $mts2
-      beds:$beds
+      beds: $beds
       category: $category
       description: $description
       minimunStay: $minimunStay
@@ -170,10 +172,6 @@ export const CREATE_ROOM_MODEL = gql`
       id
     }
   }
-    input Beds {
-    children: Int!
-    adults: Int!
-  }
 `;
 
 export const MAKE_ROOM_CONSULT = gql`
@@ -181,7 +179,7 @@ export const MAKE_ROOM_CONSULT = gql`
     $roomModelId: ID!
     $checkInDate: String!
     $checkOutDate: String!
-    $rooms: [RoomSpecification!]!
+    $rooms: [roomSpecifications!]!
   ) {
     checkRoomAvailability(
       roomModelId: $roomModelId
@@ -192,9 +190,5 @@ export const MAKE_ROOM_CONSULT = gql`
       isAvailable
       message
     }
-  }
-  input RoomSpecification {
-    children: Int!
-    adults: Int!
   }
 `;

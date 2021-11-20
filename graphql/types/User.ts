@@ -7,8 +7,8 @@ export const User = objectType({
   name: 'User',
   definition(t) {
     t.id('id');
-    t.string('firstname');
-    t.string('lastname');
+    t.string('firstName');
+    t.string('lastName');
     t.string('email');
     t.string('password');
     t.field('role', { type: Role });

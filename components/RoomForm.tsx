@@ -102,6 +102,7 @@ const BedsSetters = ({
 }) => {
   return beds.map((bed) => (
     <Box
+      key={bed.id}
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -183,7 +184,7 @@ export default function MultilineTextFields(props: {
     let pickedBedQuantities = bedTypes
       .map((bed) => ({
         type: bed.name,
-        quantity: data[bed.name],
+        quantity: data[bed.name] * 1,
       }))
       .filter((bed) => bed.quantity > 0);
 
@@ -196,13 +197,13 @@ export default function MultilineTextFields(props: {
       smooking: data.smooking,
       freeCancelation: data.freeCancelation,
       category: categorySelected,
-      mts2: data.mts2,
+      mts2: data.mts2 * 2,
       mainImage: data.mainImage,
-      maximunGuests: data.maximunGuests,
-      maximunNights: data.maximunNights,
-      minimunNights: data.minimunNights,
-      lowestPrice: data.lowestPrice,
-      taxesAndCharges: data.taxesAndCharges,
+      maximunGuests: data.maximunGuests * 1,
+      maximunStay: data.maximunNights * 1 || 0,
+      minimunStay: data.minimunNights * 1,
+      lowestPrice: data.lowestPrice * 1,
+      taxesAndCharges: data.taxesAndCharges * 1,
     };
 
     handdleSubmit(variables);
@@ -210,7 +211,7 @@ export default function MultilineTextFields(props: {
   const handleReset = () => {
     setServicesSelected([]);
     setAmenitiesSelected([]);
-    setCategorieSelected([]);
+    setCategorieSelected('');
     setFrameImage(defaultImage);
   };
   return (
@@ -415,8 +416,9 @@ export default function MultilineTextFields(props: {
           <Grid item xs={12} sm={6} sx={{ width: { md: '50%' } }}>
             <TextField
               sx={styles.textField}
-              id="maximunGues"
-              {...register('maximunGues', {
+              id="maximunGueststs"
+              defaultValue={0}
+              {...register('maximunGuests', {
                 required: 'The guest limit is required',
                 min: {
                   value: 0,
@@ -425,12 +427,12 @@ export default function MultilineTextFields(props: {
               })}
               variant="outlined"
               label={
-                errors['maximunGues']
-                  ? errors['maximunGues'].message
+                errors['maximunGuests']
+                  ? errors['maximunGuests'].message
                   : 'Maximun guest'
               }
               type="number"
-              error={errors['maximunGues'] ? true : false}
+              error={errors['maximunGuests'] ? true : false}
             />
           </Grid>
         </Grid>
@@ -475,17 +477,17 @@ export default function MultilineTextFields(props: {
         <Grid container spacing={matchesSize ? 2 : 0} alignItems="start">
           <Grid item xs={12}>
             <TextField
-              id="frame-image"
-              {...register('frameImage')}
+              id="main-image"
+              {...register('mainImage')}
               label={
-                errors['frameImage']
-                  ? errors['frameImage'].message
-                  : 'Frame image url'
+                errors['mainImage']
+                  ? errors['mainImage'].message
+                  : 'Main image url'
               }
               type="text"
-              error={errors['frameImage'] ? true : false}
-              {...register('frameImage', {
-                required: 'The frame image is required',
+              error={errors['mainImage'] ? true : false}
+              {...register('mainImage', {
+                required: 'The Main image is required',
               })}
               onChange={(e) => setFrameImage(e.target.value)}
               variant="outlined"

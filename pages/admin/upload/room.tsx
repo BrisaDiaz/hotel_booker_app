@@ -34,21 +34,29 @@ const RoomPage = ({
   const router = useRouter();
   const { hotelId } = router.query;
 
-  const [createRoomPageModel, { error, loading, data }] =
-    useMutation(CREATE_ROOM_MODEL);
+  const [createRoomPageModel, { error, loading, data }] = useMutation(
+    CREATE_ROOM_MODEL,
+    {
+      onCompleted: () => {
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+        }, 5000);
+      },
+      onError: (graphError) => {
+        setErrorMessage(graphError.message);
+      },
+    }
+  );
   const [success, setSuccess] = React.useState<Boolean>(false);
+  const [errorMessage, setErrorMessage] = React.useState<string>('');
   const onSubmit = async (variables: RoomBuildierVariables) => {
     try {
       await createRoomPageModel({
         variables: { ...variables, hotelId: hotelId },
       });
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
     } catch (err) {
       console.log(err);
-      console.log(error?.graphQLErrors);
     }
   };
 
@@ -64,7 +72,7 @@ const RoomPage = ({
         {error && (
           <SnackBar
             severity="error"
-            message="somthing went worng the request "
+            message={errorMessage || "Request couldn't be complited"}
           />
         )}
         {success && (

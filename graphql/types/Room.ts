@@ -55,6 +55,7 @@ export const RoomModel = objectType({
     t.string('category');
     t.boolean('canselationFree');
     t.float('lowestPrice');
+    t.float('taxesAndCharges');
     t.string('description');
     t.string('mainImage');
     t.int('maximunGuests');
@@ -156,15 +157,15 @@ export const Mutation = extendType({
     t.field('creatHotelRoomModel', {
       type: 'RoomModel',
       args: {
-        hotelId: nonNull(intArg()),
-        lowestPrice: nonNull(intArg()),
-        taxesAndCharges: nonNull(intArg()),
+        hotelId: nonNull(idArg()),
+        lowestPrice: nonNull(floatArg()),
+        taxesAndCharges: nonNull(floatArg()),
         name: nonNull(stringArg()),
         mts2: nonNull(intArg()),
         category: nonNull(stringArg()),
         description: nonNull(stringArg()),
         minimunStay: nonNull(intArg()),
-        maximunStay: nonNull(intArg()),
+        maximunStay: intArg(),
         maximunGuests: nonNull(intArg()),
         mainImage: nonNull(stringArg()),
         services: nonNull(list(stringArg())),
@@ -206,14 +207,18 @@ export const Mutation = extendType({
               },
             },
           });
-const roomBeds = args.beds.map((bed:{type:string ,quantity:number}) => prisma.roomBed.create({data:{
-  roomModelId:roomModel.id
-  type:bed.type,
-  quantity:bed:quantity
-}}));
-await Promise.all(roomBeds)
-return roomModel
-
+          const roomBeds = args.beds.map(
+            (bed: { type: string; quantity: number }) =>
+              prisma.roomBed.create({
+                data: {
+                  roomModelId: roomModel.id,
+                  type: bed.type,
+                  quantity: bed.quantity,
+                },
+              })
+          );
+          await Promise.all(roomBeds);
+          return roomModel;
         };
         return createHotelRoomModel(ctx.req, ctx.res, args);
       },
@@ -249,7 +254,8 @@ return roomModel
       args: {
         id: nonNull(idArg()),
         hotelId: nonNull(intArg()),
-        lowestPrice: nonNull(floatArg()),
+        lowestPrice: floatArg(),
+        taxesAndCharges: floatArg(),
       },
       resolve(root, args, ctx) {
         const updateRoomModelPrice = async (

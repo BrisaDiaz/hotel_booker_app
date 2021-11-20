@@ -14,6 +14,10 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  bedsSpecifications: { // input type
+    quantity?: number | null; // Int
+    type?: string | null; // String
+  }
   roomSpecifications: { // input type
     adults?: number | null; // Int
     children?: number | null; // Int
@@ -183,6 +187,7 @@ export interface NexusGenObjects {
     mts2?: number | null; // Int
     name?: string | null; // String
     services?: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
+    taxesAndCharges?: number | null; // Float
   }
   Service: { // root type
     id?: string | null; // ID
@@ -194,9 +199,9 @@ export interface NexusGenObjects {
   }
   User: { // root type
     email?: string | null; // String
-    firstname?: string | null; // String
+    firstName?: string | null; // String
     id?: string | null; // ID
-    lastname?: string | null; // String
+    lastName?: string | null; // String
     password?: string | null; // String
     role?: NexusGenEnums['Role'] | null; // Role
   }
@@ -409,6 +414,7 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
     rooms: Array<Array<NexusGenRootTypes['Room'] | null> | null> | null; // [[Room]]
     services: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
+    taxesAndCharges: number | null; // Float
   }
   Service: { // field return type
     id: string | null; // ID
@@ -420,9 +426,9 @@ export interface NexusGenFieldTypes {
   }
   User: { // field return type
     email: string | null; // String
-    firstname: string | null; // String
+    firstName: string | null; // String
     id: string | null; // ID
-    lastname: string | null; // String
+    lastName: string | null; // String
     password: string | null; // String
     role: NexusGenEnums['Role'] | null; // Role
   }
@@ -625,6 +631,7 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     rooms: 'Room'
     services: 'Service'
+    taxesAndCharges: 'Float'
   }
   Service: { // field return type name
     id: 'ID'
@@ -636,9 +643,9 @@ export interface NexusGenFieldTypeNames {
   }
   User: { // field return type name
     email: 'String'
-    firstname: 'String'
+    firstName: 'String'
     id: 'ID'
-    lastname: 'String'
+    lastName: 'String'
     password: 'String'
     role: 'Role'
   }
@@ -659,17 +666,21 @@ export interface NexusGenArgTypes {
     }
     creatHotelRoomModel: { // args
       amenities: Array<string | null>; // [String]!
+      beds: Array<NexusGenInputs['bedsSpecifications'] | null>; // [bedsSpecifications]!
       category: string; // String!
       description: string; // String!
-      hotelId: number; // Int!
-      lowestPrice: number; // Int!
+      freeCancelation: boolean; // Boolean!
+      hotelId: string; // ID!
+      lowestPrice: number; // Float!
       mainImage: string; // String!
       maximunGuests: number; // Int!
-      maximunStay: number; // Int!
+      maximunStay?: number | null; // Int
       minimunStay: number; // Int!
       mts2: number; // Int!
       name: string; // String!
       services: Array<string | null>; // [String]!
+      smooking: boolean; // Boolean!
+      taxesAndCharges: number; // Float!
     }
     createHotel: { // args
       accessible: boolean; // Boolean!
@@ -757,7 +768,8 @@ export interface NexusGenArgTypes {
     updateRoomModelPrice: { // args
       hotelId: number; // Int!
       id: string; // ID!
-      lowestPrice: number; // Float!
+      lowestPrice?: number | null; // Float
+      taxesAndCharges?: number | null; // Float
     }
   }
   Mutetion: {

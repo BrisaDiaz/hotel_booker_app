@@ -12,11 +12,11 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import validations from '@/utils/formValidations';
 import { SIGN_IN } from '@/queries/index';
 import Backdrop from '@/components/Backdrop';
-import Alerts from '@/components/Alerts';
+import SnackBar from '@/components/SnackBar';
 function Copyright(props: any) {
   return (
     <Typography
@@ -38,14 +38,25 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
-  const [signIn, { data, error, loading }] = useMutation(SIGN_IN);
+  const [errorMessage, setErrorMessage] = React.useState<string>('');
+
+  const [signIn, { loading, error }] = useMutation(SIGN_IN, {
+    onError: (graphError) => {
+      setErrorMessage(graphError.message);
+    },
+    onCompleted: (data) => {
+      data.signin.user.role === 'ADMIN'
+        ? router.push('/admin')
+        : router.push('/search');
+    },
+  });
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: 'onBlur' });
   const router = useRouter();
-  const redirectToSignup = () => {
+  const redirectToSignup = (data) => {
     router.push('/signup');
   };
   const onSubmit = async (data: any, event: any) => {
@@ -54,11 +65,9 @@ export default function SignIn() {
       await signIn({
         variables: { ...data },
       });
-    } catch (error) {}
+    } catch (err) {}
   };
-  if (data?.signin?.user && !loading) {
-    router.push('/search');
-  }
+
   return (
     <Box
       sx={{
@@ -66,9 +75,13 @@ export default function SignIn() {
         m: '0 auto',
       }}
     >
-      {!loading && error && (
-        <Alerts type="error" alerts={error.graphQLErrors} />
+      {error && (
+        <SnackBar
+          severity="error"
+          message={errorMessage || "Signin couldn't be complited"}
+        />
       )}
+
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -116,7 +129,6 @@ export default function SignIn() {
                   label={
                     errors['password'] ? errors['password'].message : 'Password'
                   }
-                  type="password"
                   id="password"
                   autoComplete="new-password"
                 />

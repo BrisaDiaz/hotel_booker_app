@@ -1,6 +1,6 @@
 import * as React from 'react';
 import NextLink from 'next/link';
-import { NextRouter } from 'next/router';
+import { useMutation } from '@apollo/client';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,7 +13,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -22,10 +21,11 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Menu from '@mui/material/Menu';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import InboxIcon from '@mui/icons-material/Inbox';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import { SIGN_OUT } from '../../queries/index';
+
 const drawerWidth = 240;
 
 interface Props {
@@ -37,12 +37,66 @@ interface Props {
   children: React.ReactNode;
   activeLink: string;
 }
+function userMenu() {
+  const [signOut] = useMutation(SIGN_OUT);
 
+  const handdleSignOut = async () => {
+    try {
+      handleClose();
+      await signOut({
+        variables: { date: new Date(Date.now()).toISOString() },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <>
+      <IconButton
+        size="large"
+        aria-label="account of current user"
+        aria-controls="menu-appbar"
+        aria-haspopup="true"
+        onClick={handleMenu}
+        color="inherit"
+      >
+        <AccountCircle />
+      </IconButton>
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={() => handdleSignOut()}>Logout</MenuItem>
+      </Menu>
+    </>
+  );
+}
 export default function ResponsiveDrawer(props: Props) {
   const { window } = props;
   const { children } = props;
   const { activeLink } = props;
-  console.log(activeLink);
+
   interface Query {
     hotelId?: number;
     roomTypeId?: number;
@@ -59,15 +113,7 @@ export default function ResponsiveDrawer(props: Props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   const links: Link[] = [
     {
       label: 'Dashboard',
@@ -286,34 +332,7 @@ export default function ResponsiveDrawer(props: Props) {
               ml: 'auto',
             }}
           >
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
-            </Menu>
+            {userMenu}
           </Box>
         </Toolbar>
       </AppBar>

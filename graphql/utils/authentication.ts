@@ -97,6 +97,8 @@ export async function verifyIsHotelAdmin(
   hotelId: number
 ) {
   const admin = await getAdminInfo(req, res);
+  console.log('*******ADMIN INFO************');
+  console.log(admin);
   const isHotelAdmin = admin.hotels.includes({
     id: hotelId,
   });

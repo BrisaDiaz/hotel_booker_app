@@ -37,22 +37,27 @@ const HotelPage = ({
   languagesList: Option[];
   hotelCategoriesList: Option[];
 }): JSX.Element => {
-  const [createHotel, { error, loading, data }] = useMutation(CREATE_HOTEL);
+  const [createHotel, { error, loading, data }] = useMutation(CREATE_HOTEL, {
+    onCompleted: () => {
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 5000);
+    },
+    onError: (graphError) => {
+      setErrorMessage(graphError.message);
+    },
+  });
 
   const [success, setSuccess] = React.useState<Boolean>(false);
-
+  const [errorMessage, setErrorMessage] = React.useState<string>('');
   const onSubmit = async (hotelVariables: Hotel) => {
     try {
       await createHotel({
         variables: hotelVariables,
       });
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
     } catch (err) {
       console.log(err);
-      console.log(error?.graphQLErrors);
     }
   };
 
@@ -68,7 +73,7 @@ const HotelPage = ({
         {error && (
           <SnackBar
             severity="error"
-            message="somthing went worng the request "
+            message={errorMessage || "Request couldn't be complited"}
           />
         )}
         {success && (
