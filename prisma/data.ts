@@ -21,7 +21,6 @@ export const facilities = [
   'open restaurant',
   'restaurant',
   'conference room',
-
   'horse cart rental',
   'terrance',
   'outdoor terrance',
@@ -54,7 +53,7 @@ export const services = [
   'special diet meal',
   'coffee house on site',
   'bar/cafe 24hrs',
-  'Breakfast in the room',
+  'breakfast in the room',
   'security 24hrs',
   'room service 24hrs',
   'room service',

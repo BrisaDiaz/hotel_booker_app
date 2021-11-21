@@ -33,7 +33,7 @@ export const RoomBed = objectType({
   name: 'RoomBed',
   definition(t) {
     t.id('id');
-    t.int('roomId');
+    t.int('roomModelId');
     t.string('type');
     t.int('quantity');
   },
@@ -50,6 +50,16 @@ export const RoomModel = objectType({
   definition(t) {
     t.id('id');
     t.int('hotelId');
+    t.field('hotel', {
+      type: 'Hotel',
+      resolve: (root) => {
+        return prisma.hotel.findUnique({
+          where: {
+            id: root.id,
+          },
+        });
+      },
+    });
     t.string('name');
     t.int('mts2');
     t.string('category');
@@ -61,6 +71,8 @@ export const RoomModel = objectType({
     t.int('maximunGuests');
     t.int('maximunStay');
     t.int('minimunStay');
+    t.boolean('freeCancelation');
+    t.boolean('smooking');
     t.list.field('beds', {
       type: 'RoomBed',
       resolve: (root) => {
@@ -180,14 +192,16 @@ export const Mutation = extendType({
           res: NextApiResponse,
           args: RoomBuildierVariables
         ) => {
-          await verifyIsHotelAdmin(req, res, args.hotelId);
+          const hotelId = parseInt(args.hotelId);
+          await verifyIsHotelAdmin(req, res, hotelId);
           const roomModel = await prisma.roomModel.create({
             data: {
-              hotel: { connect: { id: args.hotelId } },
+              hotel: { connect: { id: hotelId } },
               name: args.name,
               mts2: args.mts2,
               roomCategory: { connect: { name: args.category } },
               lowestPrice: args.lowestPrice,
+              taxesAndCharges: args.taxesAndCharges,
               description: args.description,
               maximunStay: args.maximunStay,
               minimunStay: args.maximunStay,
@@ -231,12 +245,13 @@ export const Mutation = extendType({
         public: nonNull(booleanArg()),
       },
       resolve(root, args, ctx) {
+        const hotelId = parseInt(args.hotelId);
         const editRoomModelVicibility = async (
           req: NextApiRequest,
           res: NextApiResponse,
           args: any
         ) => {
-          await verifyIsHotelAdmin(req, res, args.hotelId);
+          await verifyIsHotelAdmin(req, res, hotelId);
           return await prisma.roomModel.update({
             where: {
               id: args.id,
@@ -246,7 +261,7 @@ export const Mutation = extendType({
             },
           });
         };
-        return editRoomModelVicibility(ctx.req, ctx.res, args.hotelId);
+        return editRoomModelVicibility(ctx.req, ctx.res, hotelId);
       },
     });
     t.field('updateRoomModelPrice', {
@@ -289,10 +304,12 @@ export const Mutation = extendType({
           res: NextApiResponse,
           args
         ) => {
-          await verifyIsHotelAdmin(req, res, args.hotelId);
+          const hotelId = parseInt(args.hotelId);
+          const roomModelId = parseInt(args.roomModelId);
+          await verifyIsHotelAdmin(req, res, hotelId);
           await prisma.roomModel.update({
             where: {
-              id: args.roomModelId,
+              id: roomModelId,
             },
             data: {
               quantityInHotel: { increment: 1 },
@@ -300,8 +317,8 @@ export const Mutation = extendType({
           });
           return await prisma.room.create({
             data: {
-              hotelId: args.hotelId,
-              roomModelId: args.roomModelId,
+              hotelId: hotelId,
+              roomModelId: roomModelId,
               number: args.number,
             },
           });

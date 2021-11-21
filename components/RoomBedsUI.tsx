@@ -4,13 +4,13 @@ import SingleBedIcon from '@mui/icons-material/SingleBed';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-function DinamicBedIcone(bedType: string) {
+function DinamicBedIcone(bedType: string, size: string) {
   return bedType === 'californian king' ? (
-    <KingBedIcon fontSize="small" color="secondary" />
+    <KingBedIcon fontSize={size} color="secondary" />
   ) : bedType === 'full' || bedType === 'queen' ? (
-    <BedIcon fontSize="small" color="secondary" />
+    <BedIcon fontSize={size} color="secondary" />
   ) : (
-    <SingleBedIcon fontSize="small" color="secondary" />
+    <SingleBedIcon fontSize={size} color="secondary" />
   );
 }
 
@@ -19,6 +19,7 @@ interface withIconeBed {
   Icone: JSX.Element;
 }
 interface withQuantityItem {
+  id: number;
   type: string;
   quantity: number;
 }
@@ -30,12 +31,12 @@ const getBedsInterface = (
     label: `${bedInfo.quantity} ${bedInfo.type} ${
       bedInfo.quantity > 1 ? 'beds' : 'bed'
     }`,
-    Icone: DinamicBedIcone(bedInfo.type),
+    Icone: DinamicBedIcone(bedInfo.type, size),
   }));
   return bedsInterface;
 };
 export default function RoomBedsUI(roomBeds: withQuantityItem[], size: string) {
-  const beds = getBedsInterface(roomBeds);
+  const beds = getBedsInterface(roomBeds, size);
   return (
     <Box sx={{ display: 'flex', columnGap: '8px' }}>
       <Box

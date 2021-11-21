@@ -355,6 +355,7 @@ export default function MultilineTextFields(props: {
             <TextField
               sx={styles.textField}
               id="minimunNights"
+              defaultValue={1}
               {...register('minimunNights', {
                 required: 'The minimun staying  is required',
                 min: {

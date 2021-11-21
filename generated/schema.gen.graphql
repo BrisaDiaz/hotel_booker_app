@@ -208,7 +208,7 @@ type Room {
 type RoomBed {
   id: ID
   quantity: Int
-  roomId: Int
+  roomModelId: Int
   type: String
 }
 
@@ -228,6 +228,8 @@ type RoomModel {
   canselationFree: Boolean
   category: String
   description: String
+  freeCancelation: Boolean
+  hotel: Hotel
   hotelId: Int
   id: ID
   images: [Image]
@@ -240,6 +242,7 @@ type RoomModel {
   name: String
   rooms: [[Room]]
   services: [Service]
+  smooking: Boolean
   taxesAndCharges: Float
 }
 

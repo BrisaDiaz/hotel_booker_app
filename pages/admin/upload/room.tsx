@@ -44,6 +44,8 @@ const RoomPage = ({
         }, 5000);
       },
       onError: (graphError) => {
+        console.log(graphError.message);
+        console.log(graphError);
         setErrorMessage(graphError.message);
       },
     }

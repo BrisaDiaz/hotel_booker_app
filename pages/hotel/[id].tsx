@@ -19,9 +19,37 @@ import HikingIcon from '@mui/icons-material/Hiking';
 import LanguageIcon from '@mui/icons-material/Language';
 import RoomCard from '@/components/RoomCard';
 import { useTheme } from '@mui/material/styles';
+import { Hotel } from '@/interfaces/index';
+const styles = {
+  list: {
+    display: 'flex',
+    p: '0 10px',
+    flexWrap: 'wrap',
+    flexDirection: 'column',
+    columnGap: '20px',
 
-const Hotel: NextPage = ({ hotel }) => {
+    fontWeight: 400,
+  },
+  listItem: {
+    display: 'flex',
+    gap: '10px',
+    minWidth: 'min-content',
+    textTransform: 'capitalize',
+    alignItems: 'center',
+    ':& p': {
+      m: '8px 0',
+    },
+  },
+  contactInfo: {
+    p: '10px',
+    display: 'flex',
+    gap: '20px',
+    flexWrap: 'wrap',
+  },
+};
+const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
   const theme = useTheme();
+
   const images = [
     { title: 'Hotel frame', image: hotel.frameImage },
     { title: 'Hotel Interior', image: hotel.interiorImage },
@@ -65,14 +93,14 @@ const Hotel: NextPage = ({ hotel }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="page">
+      <Box sx={{ maxWidth: '1000px', m: '20px auto 30px' }}>
         <section className="container">
           <Typography
             variant="h3"
             component="h1"
             sx={{
               fontWeight: 700,
-              margin: '0 16px',
+              margin: { xs: '0 10px', md: 0 },
               width: 'fit-content',
               color: theme.palette.common.black,
               padding: '10px 0 5px',
@@ -80,28 +108,52 @@ const Hotel: NextPage = ({ hotel }) => {
           >
             {hotel.name}
           </Typography>
-          <div className="list inportant contact-info">
-            <div className="list-item">
-              <MyLocationIcon />
-              <p>{hotel.address.holeAddress}</p>
-            </div>
-            <div className="list-item">
-              <LocalPhoneIcon />
-              <p>{hotel.telephone}</p>
-            </div>
+          <Box component="address" sx={styles.contactInfo}>
+            <Box sx={styles.listItem}>
+              <MyLocationIcon color="primary" />
+              <Typography color="primary" sx={{ fontSize: '14px' }}>
+                {hotel.address.holeAddress}
+              </Typography>
+            </Box>
+            <Box sx={styles.listItem}>
+              <LocalPhoneIcon color="primary" />
+              <Typography
+                sx={{ fontSize: '14px' }}
+                color="primary"
+                component="a"
+                href={`tel:${hotel.telephone}`}
+              >
+                {hotel.telephone}
+              </Typography>
+            </Box>
             {hotel?.email && (
-              <div className="list-item">
-                <EmailIcon />
-                <p>{hotel.email}</p>
-              </div>
+              <Box sx={styles.listItem}>
+                <EmailIcon color="primary" />
+                <Typography
+                  sx={{ fontSize: '14px' }}
+                  color="primary"
+                  component="a"
+                  href={`mailto: ${hotel.email}`}
+                >
+                  {hotel.email}
+                </Typography>
+              </Box>
             )}
             {hotel?.website && (
-              <div className="list-item">
-                <LanguageIcon />
-                <p>{hotel.website}</p>
-              </div>
+              <Box sx={styles.listItem}>
+                <LanguageIcon color="primary" />
+                <Typography
+                  sx={{ fontSize: '14px' }}
+                  color="primary"
+                  component="a"
+                  href={'https://' + hotel.website}
+                  target="_blank"
+                >
+                  {hotel.website}
+                </Typography>
+              </Box>
             )}
-          </div>
+          </Box>
           {/* CARROUSEL */}
           <ImageSlider images={images} />
 
@@ -112,7 +164,7 @@ const Hotel: NextPage = ({ hotel }) => {
               p: '10px',
               fontWeight: 200,
               maxWidth: 'fit-content',
-              m: '0 15px 10px auto',
+              m: '0 15px 0 auto',
             }}
           >
             Prices from{' '}
@@ -124,22 +176,53 @@ const Hotel: NextPage = ({ hotel }) => {
               USD${hotel.lowestPrice}
             </Typography>
           </Typography>
-          <div className="list row">
-            <div className="list-item">
+
+          <Typography
+            variant="subtitle1"
+            color="primary"
+            sx={{
+              p: '0 10px ',
+              fontWeight: 200,
+              width: 200,
+
+              textAlign: 'end',
+              m: { xs: '0 15px 30px auto', md: '0 15px 20px auto ' },
+            }}
+          >
+            Taxes and Charges{' '}
+            <Typography component="span" sx={{ fontWeight: 200, ml: 0.5 }}>
+              USD${hotel.taxesAndCharges}
+            </Typography>
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              columnGap: '20px',
+              rowGap: '10px',
+              flexWrap: 'wrap',
+              mx: '5px',
+            }}
+          >
+            <Box sx={styles.listItem}>
               <AlarmIcon color="primary" />
-              <p>
-                <span>Check In Hour:</span>
-                {`  ${hotel.checkInHour}`}
-              </p>
-            </div>
-            <div className="list-item">
+              <Typography>
+                <Typography component="span" color="primary">
+                  Check In Hour:
+                </Typography>
+                <time> {`  ${hotel.checkInHour}`}</time>
+              </Typography>
+            </Box>
+            <Box sx={styles.listItem}>
               <AlarmIcon color="primary" />
-              <p>
-                <span>Check Out Hour:</span>
-                {`  ${hotel.checkOutHour}`}
-              </p>
-            </div>
-          </div>
+              <Typography>
+                <Typography component="span" color="primary">
+                  Check Out Hour:
+                </Typography>
+                <time> {`  ${hotel.checkOutHour}`}</time>
+              </Typography>
+            </Box>
+          </Box>
 
           {/* HOTEL POLICIES AND RULES */}
           <Box sx={{ margin: '20px 10px' }} component="section">
@@ -152,10 +235,9 @@ const Hotel: NextPage = ({ hotel }) => {
                       <Typography
                         sx={{ whiteSpace: 'pre-line' }}
                         component="pre"
-                        dangerouslySetInnerHTML={{
-                          __html: hotel.description,
-                        }}
-                      />
+                      >
+                        {hotel.description}
+                      </Typography>
                     </Box>
                   ),
                 },
@@ -176,7 +258,7 @@ const Hotel: NextPage = ({ hotel }) => {
             />
           </Box>
 
-          {/* HOTEL CHARAACTERISTICS */}
+          {/* HOTEL CHARACTERISTICS */}
 
           <Box sx={{ margin: '20px 0' }} component="section">
             <Grid
@@ -184,79 +266,90 @@ const Hotel: NextPage = ({ hotel }) => {
               alignItems="flex-start"
               sx={{ margin: '0 ', columnGap: '80px' }}
             >
-              {characteristics.map((characteristic) =>
-                characteristic.items.length ? (
-                  <div key={characteristic.title}>
-                    <Grid
-                      item
-                      xs={12}
-                      sm={6}
-                      sx={{ padding: 1, minWidth: 'max-content' }}
-                    >
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          gap: '10px',
-                          alignItems: 'center',
-                          marginBottom: '15px',
-                        }}
+              {characteristics.length &&
+                characteristics.map((characteristic) =>
+                  characteristic.items && characteristic.items.length ? (
+                    <div key={characteristic.title}>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        sx={{ padding: 1, minWidth: 'max-content' }}
                       >
-                        {characteristic.title === 'facilities' ? (
-                          <ApartmentIcon color="primary" />
-                        ) : characteristic.title === 'services' ? (
-                          <RoomServiceIcon color="primary" />
-                        ) : characteristic.title === 'languages' ? (
-                          <LanguageIcon color="primary" />
-                        ) : characteristic.title === 'activities' ? (
-                          <HikingIcon color="primary" />
-                        ) : null}
-
-                        <Typography
-                          variant="h6"
+                        <Box
                           sx={{
-                            fontWeight: 300,
-                            textTransform: 'capitalize',
+                            display: 'flex',
+                            gap: '10px',
+                            alignItems: 'center',
+                            marginBottom: '15px',
                           }}
                         >
-                          {characteristic.title}
-                        </Typography>
-                      </Box>
+                          {characteristic.title === 'facilities' ? (
+                            <ApartmentIcon color="primary" />
+                          ) : characteristic.title === 'services' ? (
+                            <RoomServiceIcon color="primary" />
+                          ) : characteristic.title === 'languages' ? (
+                            <LanguageIcon color="primary" />
+                          ) : characteristic.title === 'activities' ? (
+                            <HikingIcon color="primary" />
+                          ) : null}
 
-                      <div className="list">
-                        {characteristic.items.map((item) => (
-                          <div key={item.id} className="list-item">
-                            <DoneIcon
-                              fontSize="small"
-                              sx={{ color: theme.palette.primary.light }}
-                            />
-                            <p>{item.name}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </Grid>
-                  </div>
-                ) : null
-              )}
-              <Grid
-                item
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              fontWeight: 300,
+                              textTransform: 'capitalize',
+                            }}
+                          >
+                            {characteristic.title}
+                          </Typography>
+                        </Box>
+
+                        <Box sx={styles.list} component="ul">
+                          {characteristic.items.map((item) => (
+                            <Box
+                              key={item.id}
+                              sx={styles.listItem}
+                              component="li"
+                            >
+                              <DoneIcon
+                                fontSize="small"
+                                sx={{ color: theme.palette.secondary.main }}
+                              />
+                              <p>{item.name}</p>
+                            </Box>
+                          ))}
+                        </Box>
+                      </Grid>
+                    </div>
+                  ) : null
+                )}
+              <Box
+                component="ul"
                 xs={12}
                 sm={6}
-                sx={{ padding: 1, minWidth: 'max-content' }}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+
+                  p: 0,
+                }}
               >
                 {formattedAdditonalFeatures.map((featureName) => (
-                  <div className="list" key={featureName}>
-                    <div className="list-item">
+                  <Box component="li" sx={styles.list} key={featureName}>
+                    <Box sx={styles.listItem}>
                       {DinamicFieldIcone(featureName)}
 
                       <p>{featureName}</p>
-                    </div>
-                  </div>
+                    </Box>
+                  </Box>
                 ))}
-              </Grid>
+              </Box>
             </Grid>
           </Box>
         </section>
-        {hotel?.roomModels?.length > 0 && (
+        {hotel.roomModels && hotel?.roomModels?.length > 0 && (
           <Box>
             <Typography
               variant="h4"
@@ -270,92 +363,22 @@ const Hotel: NextPage = ({ hotel }) => {
               Rooms
             </Typography>
             <Box sx={{ margin: '20px auto' }}>
-              <Grid container spacing={3} justifyContent="center">
-                {hotel.roomModels.map(
-                  (room: {
-                    id: number;
-                    name: string;
-                    mts2: number;
-                    lowestPrice: number;
-                    mainImage: string;
-                    beds?: {
-                      id: number;
-                      quantity: number;
-                      type: string;
-                    };
-                  }) => (
-                    <Grid item xs={12} sm={6} md={4}>
-                      <RoomCard room={room} />
-                    </Grid>
-                  )
-                )}
+              <Grid container spacing={3} justifyContent="start">
+                {hotel.roomModels.map((room) => (
+                  <Grid item xs={12} sm={6} md={4}>
+                    <RoomCard room={room} />
+                  </Grid>
+                ))}
               </Grid>
             </Box>
           </Box>
         )}
-      </main>
-
-      <style jsx>
-        {`
-          .page {
-            max-width: 1000px;
-            margin: 20px auto;
-          }
-
-          h5 {
-            font-size: 18px;
-            margin: 0;
-          }
-
-          .list {
-            display: flex;
-            flex-direction: column;
-            column-gap: 20px;
-            flex-wrap: wrap;
-            padding: 0 10px;
-            text-transform: capitalize;
-            font-weight: 400;
-          }
-          span,
-          .inportant {
-            color: ${theme.palette.primary.main};
-          }
-          .row {
-            flex-direction: row;
-          }
-          .text {
-            padding: 0 10px;
-          }
-
-          .list-item {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-          }
-
-          .list-item p {
-            margin: 8px 0;
-          }
-
-          .contact-info {
-            margin: 5px 0;
-            color: ${theme.palette.primary.main};
-            padding: 10px;
-            justify-content: 'start';
-            flex-direction: row;
-          }
-          .contact-info div p {
-            font-weight: 100;
-            margin: 8px;
-            font-size: 14px;
-          }
-        `}
-      </style>
+      </Box>
     </div>
   );
 };
 
-export default Hotel;
+export default HotelPage;
 export const getServerSideProps: GetServerSideProps = async ({
   query,
   res,

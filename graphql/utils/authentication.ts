@@ -97,11 +97,11 @@ export async function verifyIsHotelAdmin(
   hotelId: number
 ) {
   const admin = await getAdminInfo(req, res);
-  console.log('*******ADMIN INFO************');
-  console.log(admin);
-  const isHotelAdmin = admin.hotels.includes({
-    id: hotelId,
-  });
+
+  const isHotelAdmin = admin.hotels.find(
+    (hotel: { id: number }) => hotel.id === hotelId
+  );
+
   if (!isHotelAdmin) throw new ForbiddenError('Forbiden');
   return admin;
 }

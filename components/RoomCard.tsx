@@ -5,10 +5,26 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import Box from '@mui/material/Box';
-import type { RoomModel } from '../interfaces';
+
 import RoomBedsUI from './RoomBedsUI';
 
-export default function RoomCard({ room }: { room: RoomModel }) {
+export default function RoomCard({
+  room,
+}: {
+  room: {
+    name: string;
+    id: number;
+    mainImage: string;
+    category: string;
+    lowestPrice: number;
+    mts2: number;
+    beds: {
+      id: number;
+      type: string;
+      quantity: number;
+    };
+  };
+}) {
   const router = useRouter();
   const handleRedirectToRoomPage = (roomId: number) => {
     router.push(`/room/${roomId}`);

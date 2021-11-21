@@ -7,7 +7,7 @@ export type Address = {
   city?: string;
   street?: string;
 };
-export type Option = {
+export type Item = {
   id: number;
   name: string;
 };
@@ -20,24 +20,28 @@ export type Features = {
   ecoFriendly: string;
 };
 export type WithQuantityItem = {
+  id: number;
   type: string;
   quantity: number;
 };
 export interface RoomModel {
   id: number;
+  hotel: Hotel;
   hotelId: number;
   category: string;
   name: string;
   mts2: number;
   mainImage: string;
   lowestPrice: number;
-  maximunGuests?: number;
-  maximunStays?: number;
-  minimunStays?: number;
+  taxesAndCharges: number;
+  maximunGuests: number;
+  maximunStay?: number;
+  minimunStay?: number;
   description?: string;
   freeCancelation?: Boolean;
-  amenties?: Option[];
-  services?: Option[];
+  smooking?: boolean;
+  amenities?: Item[];
+  services?: Item[];
   beds?: WithQuantityItem[];
 }
 
@@ -47,6 +51,9 @@ export interface Hotel {
   brand?: string;
   category?: string;
   lowestPrice: number;
+  address: Address;
+  checkInHour: string;
+  checkOutHour: string;
   taxesAndCharges?: number;
   telephone?: string;
   email?: string;
@@ -56,11 +63,11 @@ export interface Hotel {
   frameImage: string;
   interiorImage?: string;
   features?: Features;
-  activities?: Option[];
-  facilities?: Option[];
-  services?: Option[];
-  languages?: Option[];
-  roomsModels?: RoomModel[];
+  activities?: Item[];
+  facilities?: Item[];
+  services?: Item[];
+  languages?: Item[];
+  roomModels?: RoomModel[];
 }
 export interface RoomBuildierVariables {
   hotelId?: number;

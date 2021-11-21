@@ -15,11 +15,39 @@ import BedIcon from '@mui/icons-material/Bed';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import Modal from '@/components/AbailableRoomModal';
 import RoomBedsUI from '@/components/RoomBedsUI';
-import { Room } from '@/interfaces/index';
+import DinamicFieldIcone from '@/components/DinamicFieldIcone';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import StraightenIcon from '@mui/icons-material/Straighten';
+import { RoomModel, Item } from '@/interfaces/index';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
 import { MAKE_ROOM_CONSULT, GET_ROOM_MODEL_BY_ID } from '@/queries/index';
-const RoomPage: NextPage = ({ room }: { room: Room }) => {
+const styles = {
+  list: {
+    display: 'flex',
+    p: '0 10px',
+    flexWrap: 'wrap',
+    gap: '20px',
+    fontWeight: 400,
+  },
+  listItem: {
+    display: 'flex',
+    gap: '10px',
+    textTransform: 'capitalize',
+    alignItems: 'center',
+    '& p': {
+      m: '8px 0',
+    },
+  },
+  featuresItems: {
+    display: 'flex',
+    gap: '10px',
+    textTransform: 'capitalize',
+    alignItems: 'center',
+    width: { xs: '250px', sm: '300px' },
+  },
+};
+const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
   const router = useRouter();
   const theme = useTheme();
   const handleRedirectToHotel = (id: number) => {
@@ -58,17 +86,17 @@ const RoomPage: NextPage = ({ room }: { room: Room }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="page">
+      <Box component="main" sx={{ maxWidth: '1000px', m: '20px auto 30px' }}>
         <Typography
           variant="h3"
           component="h1"
           onClick={() => handleRedirectToHotel(room.hotelId)}
           sx={{
             fontWeight: 700,
-            margin: '0 16px',
+            margin: { xs: '0 10px', md: 0 },
             width: 'fit-content',
             textTransform: 'capitalize',
-            padding: '10px 0 0',
+
             cursor: 'pointer',
             '&:hover': {
               color: 'rgb(0 0 0 / 70%)',
@@ -85,23 +113,24 @@ const RoomPage: NextPage = ({ room }: { room: Room }) => {
           color="primary"
           sx={{
             fontWeight: 700,
-            margin: '0 16px',
+            margin: { xs: '0 10px', md: 0 },
             width: 'fit-content',
             textTransform: 'capitalize',
             padding: '10px 0 5px',
           }}
         >
-          {room.category}
+          {room.name}
         </Typography>
+
         <ImageList
           sx={{
             width: '100%',
-            maxHeight: '450px',
+            maxHeight: '500px',
             overflow: 'hidden',
             objectFit: 'cover',
             objectPosition: 'center bottom',
           }}
-          rowHeight={450}
+          rowHeight={500}
           cols={1}
         >
           <ImageListItem cols={1}>
@@ -120,7 +149,7 @@ const RoomPage: NextPage = ({ room }: { room: Room }) => {
             p: '10px',
             fontWeight: 200,
             maxWidth: 'fit-content',
-            m: '0 15px 10px auto',
+            m: '0 15px 0 auto',
           }}
         >
           From{' '}
@@ -133,67 +162,141 @@ const RoomPage: NextPage = ({ room }: { room: Room }) => {
           </Typography>
           /Night
         </Typography>
-
         <Typography
-          componet="pre"
-          sx={{ margin: '20px 10px', whiteSpace: 'pre-line' }}
+          variant="subtitle1"
+          color="primary"
+          sx={{
+            p: '0 10px ',
+            fontWeight: 200,
+            width: 200,
+            textAlign: 'end',
+            m: { xs: '0 15px 30px auto', md: '0 15px 20px auto ' },
+          }}
+        >
+          Taxes and Charges{' '}
+          <Typography component="span" sx={{ fontWeight: 200, ml: 0.5 }}>
+            USD${room.taxesAndCharges}
+          </Typography>
+        </Typography>
+        <Box
+          component="ul"
+          sx={{
+            display: 'flex',
+            gap: 3,
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            mx: { sx: '5px', md: 0 },
+            p: 0,
+          }}
+        >
+          {room.freeCancelation && (
+            <Box sx={styles.listItem} component="li">
+              {DinamicFieldIcone('free cancelation')}
+              <Typography>free cancelation</Typography>
+            </Box>
+          )}
+          {room.smooking && (
+            <Box sx={styles.listItem} component="li">
+              {DinamicFieldIcone('smoker friendly')}
+              <Typography>smoker friendly</Typography>
+            </Box>
+          )}
+        </Box>
+        <Typography
+          component="pre"
+          sx={{ margin: ' 10px 10px 20px ', whiteSpace: 'pre-line' }}
         >
           {room.description}
         </Typography>
-        <div className="list">
-          <div className="list-item">
-            <TodayIcon color="primary" />
-            <Typography>
-              <span> minimun stays:</span>
-              {`  ${room.minimunStays} nights`}
+
+        <Modal onSubmit={handleConsutlSubmit}>
+          <Button
+            sx={{ padding: '10px 20px', m: '10px' }}
+            color="secondary"
+            variant="contained"
+          >
+            Check Diponibility
+          </Button>
+        </Modal>
+        <Box
+          sx={{
+            m: '20px 10px 30px',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '10px',
+
+              alignItems: 'center',
+              my: 3,
+            }}
+          >
+            <BedIcon color="primary" />
+
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 300,
+                textTransform: 'capitalize',
+              }}
+            >
+              Capacity
             </Typography>
-          </div>
-          <div className="list-item">
-            <TodayIcon color="primary" />
-            <Typography>
-              <span>maximun stays:</span>
-              {`  ${room.maximunStays} nights`}
-            </Typography>
-          </div>
-        </div>
-        <section className="container">
+          </Box>
+          <Box
+            component="ul"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 3,
+              textTransform: 'capitalize',
+              margin: ' 0 15px',
+              flexWrap: 'wrap',
+              p: 0,
+            }}
+          >
+            <Box
+              component="li"
+              sx={{
+                display: 'flex',
+                mx: 2,
+              }}
+            >
+              <StraightenIcon color="secondary" sx={{ mr: 1 }} />
+              <Typography
+                sx={{
+                  width: 'max-content',
+
+                  marginRight: '5px',
+                  fontWeight: 400,
+                }}
+              >
+                {room.mts2} Mts <sup>2</sup>
+              </Typography>
+            </Box>
+            {room.beds && room.beds.length && RoomBedsUI(room.beds, 'medium')}
+            <Box
+              component="li"
+              sx={{
+                display: 'flex',
+                mx: 2,
+              }}
+            >
+              {new Array(room.maximunGuests).fill(1).map((_, index) => (
+                <PersonOutlineIcon color="secondary" key={index} />
+              ))}
+              <Typography sx={{ mx: 1 }}>
+                {room.maximunGuests}
+                {room.maximunGuests > 1 ? ' people ' : ' persone '} max
+              </Typography>
+            </Box>
+          </Box>
           <Box
             sx={{
               margin: '30px 0',
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                gap: '10px',
-                alignItems: 'center',
-                my: 3,
-              }}
-            >
-              <BedIcon color="primary" />
-
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 300,
-                  textTransform: 'capitalize',
-                }}
-              >
-                Beds
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                minWidth: 'max-content',
-                textTransform: 'capitalize',
-                margin: '15px',
-              }}
-            >
-              {RoomBedsUI(room.beds, 'medium')}
-            </Box>
-
             <Box
               sx={{
                 display: 'flex',
@@ -214,17 +317,19 @@ const RoomPage: NextPage = ({ room }: { room: Room }) => {
                 Amenities
               </Typography>
             </Box>
-            <div className="list">
-              {room.amenities.map((item) => (
-                <div key={item.id} className="list-item">
-                  <DoneIcon
-                    fontSize="small"
-                    sx={{ color: theme.palette.primary.light }}
-                  />
-                  <Typography>{item.name}</Typography>
-                </div>
-              ))}
-            </div>
+            {room.amenities && room?.amenities?.length && (
+              <Box sx={styles.list} component="ul">
+                {room.amenities.map((item: Item) => (
+                  <Box key={item.id} sx={styles.featuresItems} component="li">
+                    <DoneIcon
+                      fontSize="small"
+                      sx={{ color: theme.palette.secondary.main }}
+                    />
+                    <Typography>{item.name}</Typography>
+                  </Box>
+                ))}
+              </Box>
+            )}
             <Box
               sx={{
                 display: 'flex',
@@ -245,70 +350,22 @@ const RoomPage: NextPage = ({ room }: { room: Room }) => {
                 Services
               </Typography>
             </Box>
-            <div className="list">
-              {room.services.map((item) => (
-                <div key={item.id} className="list-item">
-                  <DoneIcon
-                    fontSize="small"
-                    sx={{ color: theme.palette.primary.light }}
-                  />
-                  <Typography>{item.name}</Typography>
-                </div>
-              ))}
-            </div>
+            {room.services && room?.services?.length && (
+              <Box sx={styles.list} component="ul">
+                {room.services.map((item: Item) => (
+                  <Box key={item.id} sx={styles.featuresItems} component="li">
+                    <DoneIcon
+                      fontSize="small"
+                      sx={{ color: theme.palette.secondary.main }}
+                    />
+                    <Typography>{item.name}</Typography>
+                  </Box>
+                ))}
+              </Box>
+            )}
           </Box>
-          <Modal onSubmit={handleConsutlSubmit}>
-            <Button
-              sx={{ padding: '10px 20px' }}
-              color="secondary"
-              variant="contained"
-            >
-              Check Diponibility
-            </Button>
-          </Modal>
-        </section>
-      </main>
-      <style jsx>
-        {`
-          .page {
-            max-width: 1000px;
-            margin: 20px auto;
-          }
-
-          .container {
-            padding: 0 10px;
-          }
-          h5 {
-            font-size: 18px;
-            margin: 0;
-          }
-
-          .list {
-            display: flex;
-            row-gap: 20px;
-            column-gap: 150px;
-            flex-wrap: wrap;
-
-            padding: 0 10px;
-            text-transform: capitalize;
-            font-weight: 400;
-          }
-          span,
-          .inportant {
-            color: ${theme.palette.primary.main};
-          }
-
-          .list-item {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-          }
-
-          .list-item p {
-            margin: 8px 0;
-          }
-        `}
-      </style>
+        </Box>
+      </Box>
     </div>
   );
 };

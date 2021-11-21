@@ -161,7 +161,7 @@ export interface NexusGenObjects {
   RoomBed: { // root type
     id?: string | null; // ID
     quantity?: number | null; // Int
-    roomId?: number | null; // Int
+    roomModelId?: number | null; // Int
     type?: string | null; // String
   }
   RoomCategory: { // root type
@@ -177,6 +177,7 @@ export interface NexusGenObjects {
     canselationFree?: boolean | null; // Boolean
     category?: string | null; // String
     description?: string | null; // String
+    freeCancelation?: boolean | null; // Boolean
     hotelId?: number | null; // Int
     id?: string | null; // ID
     lowestPrice?: number | null; // Float
@@ -187,6 +188,7 @@ export interface NexusGenObjects {
     mts2?: number | null; // Int
     name?: string | null; // String
     services?: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
+    smooking?: boolean | null; // Boolean
     taxesAndCharges?: number | null; // Float
   }
   Service: { // root type
@@ -385,7 +387,7 @@ export interface NexusGenFieldTypes {
   RoomBed: { // field return type
     id: string | null; // ID
     quantity: number | null; // Int
-    roomId: number | null; // Int
+    roomModelId: number | null; // Int
     type: string | null; // String
   }
   RoomCategory: { // field return type
@@ -402,6 +404,8 @@ export interface NexusGenFieldTypes {
     canselationFree: boolean | null; // Boolean
     category: string | null; // String
     description: string | null; // String
+    freeCancelation: boolean | null; // Boolean
+    hotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelId: number | null; // Int
     id: string | null; // ID
     images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
@@ -414,6 +418,7 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
     rooms: Array<Array<NexusGenRootTypes['Room'] | null> | null> | null; // [[Room]]
     services: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
+    smooking: boolean | null; // Boolean
     taxesAndCharges: number | null; // Float
   }
   Service: { // field return type
@@ -602,7 +607,7 @@ export interface NexusGenFieldTypeNames {
   RoomBed: { // field return type name
     id: 'ID'
     quantity: 'Int'
-    roomId: 'Int'
+    roomModelId: 'Int'
     type: 'String'
   }
   RoomCategory: { // field return type name
@@ -619,6 +624,8 @@ export interface NexusGenFieldTypeNames {
     canselationFree: 'Boolean'
     category: 'String'
     description: 'String'
+    freeCancelation: 'Boolean'
+    hotel: 'Hotel'
     hotelId: 'Int'
     id: 'ID'
     images: 'Image'
@@ -631,6 +638,7 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     rooms: 'Room'
     services: 'Service'
+    smooking: 'Boolean'
     taxesAndCharges: 'Float'
   }
   Service: { // field return type name

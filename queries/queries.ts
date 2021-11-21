@@ -112,6 +112,7 @@ export const GET_HOTEL_BY_ID = gql`
       id
       name
       lowestPrice
+      taxesAndCharges
       frameImage
       interiorImage
       description
@@ -168,17 +169,22 @@ export const GET_ROOM_MODEL_BY_ID = gql`
     roomModelById(id: $id) {
       id
       hotelId
+      hotel {
+        name
+      }
       category
       name
       mts2
       mainImage
       lowestPrice
+      taxesAndCharges
       maximunGuests
-      maximunStays
-      minimunStays
+      maximunStay
+      minimunStay
       description
       freeCancelation
-      amenties {
+      smooking
+      amenities {
         id
         name
       }
@@ -187,6 +193,7 @@ export const GET_ROOM_MODEL_BY_ID = gql`
         name
       }
       beds {
+        id
         type
         quantity
       }

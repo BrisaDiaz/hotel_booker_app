@@ -20,7 +20,10 @@ export default function CustomizedSnackbars({
 }) {
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      <Snackbar open={true} autoHideDuration={6000}>
+      <Snackbar
+        open={true}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
         <Alert
           severity={severity === 'error' ? 'error' : 'success'}
           sx={{ width: '100%' }}
