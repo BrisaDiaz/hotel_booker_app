@@ -228,8 +228,9 @@ enum PaymentMethod {
 enum BookingStatus {
   ACTIVE
   CANCELED
-  REYECTED
-
+  DECLINED
+  FINISH
+  PENDING
 }
 
 model RoomBed {

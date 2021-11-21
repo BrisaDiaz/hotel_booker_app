@@ -170,7 +170,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
             fontWeight: 200,
             width: 200,
             textAlign: 'end',
-            m: { xs: '0 15px 30px auto', md: '0 15px 20px auto ' },
+            m: '0 15px 30px auto',
           }}
         >
           Taxes and Charges{' '}
@@ -185,7 +185,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
             gap: 3,
             flexWrap: 'wrap',
             alignItems: 'center',
-            mx: { sx: '5px', md: 0 },
+            mx: '10px',
             p: 0,
           }}
         >
@@ -249,7 +249,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: 3,
+              rowGap: 3,
               textTransform: 'capitalize',
               margin: ' 0 15px',
               flexWrap: 'wrap',
@@ -259,11 +259,11 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
             <Box
               component="li"
               sx={{
+                width: '300px',
                 display: 'flex',
-                mx: 2,
               }}
             >
-              <StraightenIcon color="secondary" sx={{ mr: 1 }} />
+              <StraightenIcon color="secondary" sx={{ mr: 2 }} />
               <Typography
                 sx={{
                   width: 'max-content',
@@ -275,18 +275,26 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
                 {room.mts2} Mts <sup>2</sup>
               </Typography>
             </Box>
-            {room.beds && room.beds.length && RoomBedsUI(room.beds, 'medium')}
             <Box
               component="li"
               sx={{
+                width: '300px',
                 display: 'flex',
-                mx: 2,
+              }}
+            >
+              {room.beds && room.beds.length && RoomBedsUI(room.beds, 'medium')}
+            </Box>
+            <Box
+              component="li"
+              sx={{
+                width: '300px',
+                display: 'flex',
               }}
             >
               {new Array(room.maximunGuests).fill(1).map((_, index) => (
                 <PersonOutlineIcon color="secondary" key={index} />
               ))}
-              <Typography sx={{ mx: 1 }}>
+              <Typography sx={{ mx: 2 }}>
                 {room.maximunGuests}
                 {room.maximunGuests > 1 ? ' people ' : ' persone '} max
               </Typography>

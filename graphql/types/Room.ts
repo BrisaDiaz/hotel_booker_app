@@ -145,7 +145,7 @@ export const Query = extendType({
       resolve(root, args, ctx) {
         return prisma.roomModel.findUnique({
           where: {
-            id: args.id * 1,
+            id: parseInt(args.id),
           },
           include: {
             amenities: true,
@@ -291,6 +291,7 @@ export const Mutation = extendType({
         return updateRoomModelPrice(ctx.req, ctx.res, args);
       },
     });
+
     t.field('addRoomToHotel', {
       type: 'Room',
       args: {

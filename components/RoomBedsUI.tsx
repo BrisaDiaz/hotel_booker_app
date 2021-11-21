@@ -53,13 +53,15 @@ export default function RoomBedsUI(roomBeds: withQuantityItem[], size: string) {
                 display: 'flex',
                 alignItems: 'center',
                 flexWrap: 'wrap',
-                columnGap: '3px',
+                columnGap: `${size === 'small' ? '3px' : '15px'}`,
               }}
             >
               {bed.Icone}
               <Typography
                 variant={size === 'small' ? 'body2' : 'subtitle1'}
-                sx={{ minWidth: 'max-content' }}
+                sx={{
+                  minWidth: 'max-content',
+                }}
               >
                 {bed.label}
                 {beds.length > 1 && index < beds.length - 1 && <b>{'  '}+</b>}

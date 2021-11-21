@@ -200,3 +200,12 @@ export const GET_ROOM_MODEL_BY_ID = gql`
     }
   }
 `;
+// const GET_ADMIN_HOTELS = gql`
+//   query adminHotels {
+//     adminHotels {
+// hotels{ name
+//       frameImage }
+//     }
+//count
+//   }
+// `;

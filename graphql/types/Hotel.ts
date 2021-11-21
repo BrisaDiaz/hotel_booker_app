@@ -215,9 +215,10 @@ export const Query = extendType({
               services: true,
               activities: true,
               languages: true,
+              roomModels: true,
             },
           });
-          return hotel;
+          return { hotel, roomModels: hotel.roomModels };
         };
         return searchHote(args.id * 1);
       },
