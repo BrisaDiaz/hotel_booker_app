@@ -139,6 +139,7 @@ model RoomModel {
   public Boolean @default(true)
 
 
+  BookingRequest BookingRequest[]
 }
 
 model Features {
@@ -185,36 +186,39 @@ model Service {
 }
 
 model Client {
-  id              Int       @id @default(autoincrement())
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id              Int              @id @default(autoincrement())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   firstName       String
   lastName        String
-  email           String    @unique
+  email           String
   cellularNumber  String
   homePhoneNumber String
   bookings        Booking[]
+  BookingRequest  BookingRequest[]
 }
 
 model Booking {
-  id              Int           @id @default(autoincrement())
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  clientId        Int
-  hotelId         Int
-  roomModelId     Int
-  administratorId Int
-  children        Int
-  adults          Int
-  nights          Int
-  checkInDate     DateTime
-  checkOutDate    DateTime
-  specifications  String
-  paymentMethod   PaymentMethod @default(CASH)
-  status          BookingStatus @default(ACTIVE)
-  client          Client        @relation(fields: [clientId], references: [id])
-  Room            Room?         @relation(fields: [roomId], references: [id])
-  roomId          Int?
+  id                 Int                  @id @default(autoincrement())
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  clientId           Int
+  hotelId            Int
+  roomModelId        Int
+  administratorId    Int
+  guestsDistribution GuestsDistribution[]
+  children           Int
+  adults             Int
+  nights             Int
+  checkInDate        DateTime
+  checkOutDate       DateTime
+  specifications     String
+  totalCost          Int
+  paymentMethod      PaymentMethod        @default(CASH)
+  status             BookingStatus        @default(ACTIVE)
+  client             Client               @relation(fields: [clientId], references: [id])
+  rooms              Room[]
+  roomId             Int?
 }
 
 enum PaymentMethod {
@@ -225,12 +229,47 @@ enum PaymentMethod {
   TRAVELER_CHECK
 }
 
+model GuestsDistribution {
+  id               Int             @id @default(autoincrement())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  children         Int
+  adults           Int
+  bookingRequest   BookingRequest? @relation(fields: [bookingRequestId], references: [id])
+  bookingRequestId Int?
+  Booking          Booking?        @relation(fields: [bookingId], references: [id])
+  bookingId        Int?
+}
+
+model BookingRequest {
+  id                 Int                  @id @default(autoincrement())
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  clientId           Int
+  client             Client               @relation(fields: [clientId], references: [id])
+  hotelId            Int
+  roomModelId        Int
+  roomModel          RoomModel            @relation(fields: [roomModelId], references: [id])
+  guestsDistribution GuestsDistribution[]
+  children           Int
+  adults             Int
+  nights             Int
+  checkInDate        DateTime
+  checkOutDate       DateTime
+  specifications     String
+  status             BookingRequestStatus @default(PENDING)
+  roomId             Int?
+}
+
 enum BookingStatus {
   ACTIVE
   CANCELED
-  DECLINED
   FINISH
+}
+
+enum BookingRequestStatus {
   PENDING
+  DECLINED
 }
 
 model RoomBed {

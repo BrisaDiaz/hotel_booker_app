@@ -11,10 +11,17 @@ import {
 } from 'nexus';
 import { prisma } from '../../lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { AuthenticationError, UserInputError } from 'apollo-server-micro';
-import { getAdminInfo, verifyIsHotelAdmin } from '../utils/index';
-import { Booking } from './Booking';
-import { resolve } from 'path/posix';
+import {
+  AuthenticationError,
+  UserInputError,
+  ForbiddenError,
+} from 'apollo-server-micro';
+import {
+  getAdminInfo,
+  verifyIsHotelAdmin,
+  checkIfClientExist,
+} from '../utils/index';
+import { roomSpecifications } from './Booking';
 
 export const AdminHotels = objectType({
   name: 'AdminHotels',
@@ -112,10 +119,14 @@ export const Query = extendType({
             },
           });
           const guests = bookings.map((booking) => booking.client);
-          const requests = await prisma.booking.findMany({
+          const requests = await prisma.bookingRequest.findMany({
             where: {
               hotelId: hotelId,
               status: 'PENDING',
+            },
+            include: {
+              roomModel: true,
+              guestsDistribution: true,
             },
           });
           return {
@@ -190,6 +201,119 @@ export const Query = extendType({
           };
         };
         return getData(parseInt(args.roomModelId), ctx.req, ctx.res);
+      },
+    });
+    t.field('bookingById', {
+      type: 'Booking',
+      args: {
+        id: nonNull(idArg()),
+      },
+      resolve(root, args, ctx) {
+        const getBooking = async (
+          req: NextApiRequest,
+          res: NextApiResponse,
+          bookingId: number
+        ) => {
+          const booking = await prisma.booking.findUnique({
+            where: {
+              id: bookingId,
+            },
+            include: {
+              guestDistribution: true,
+              rooms: true,
+              client: true,
+            },
+          });
+          if (!booking) throw new UserInputError('Booking dose not exist');
+          const admin = await getAdminInfo(req, res);
+
+          if (!admin.hotels.includes(booking.hotelId))
+            throw new ForbiddenError('Forbidden');
+          return booking;
+        };
+        return getBooking(ctx.req, ctx.res, args.id);
+      },
+    });
+  },
+});
+export const Mutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.field('makeBooking', {
+      type: 'Booking',
+      args: {
+        hotelId: nonNull(idArg()),
+        roomId: nonNull(idArg()),
+        rooModelId: nonNull(idArg()),
+        clientId: nonNull(idArg()),
+        children: nonNull(intArg()),
+        guestsDistribution: list(roomSpecifications),
+        adults: nonNull(intArg()),
+        nights: nonNull(intArg()),
+        rooms: nonNull(intArg()),
+        checkInDate: nonNull(stringArg()),
+        checkOutDate: nonNull(stringArg()),
+        totalCost: nonNull(floatArg()),
+        paymentMethod: stringArg(),
+      },
+      resolve(root, args, ctx) {
+        const makeBooking = async (
+          req: NextApiRequest,
+          res: NextApiResponse,
+          args: any
+        ) => {
+          const admin = await verifyIsHotelAdmin(req, res, args.hotelId);
+          return await prisma.booking.create({
+            data: {
+              clientId: args.clientId,
+              hotelId: args.hotelId,
+              roomId: args.roomId,
+              roomModelId: args.roomModelId,
+              administratorId: admin.id,
+              specifications: args.specifications,
+              children: args.children,
+              adults: args.adults,
+              nights: args.nights,
+              guestsDistribution: args.guestsDistribution,
+              checkInDate: new Date(args.checkInDate).toISOString(),
+              checkOutDate: new Date(args.checkOutDate).toISOString(),
+              paymentMethod: args.paymentMethod,
+              totalCost: args.totalCost,
+              status: 'ACTIVE',
+            },
+          });
+        };
+        return makeBooking(ctx.req, ctx.res, args);
+      },
+    });
+    t.field('addNewClient', {
+      type: 'Client',
+      args: {
+        firstName: nonNull(stringArg()),
+        lastName: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+        cellularNumber: nonNull(stringArg()),
+        homePhoneNumber: nonNull(stringArg()),
+      },
+      resolve: (root, args, ctx) => {
+        const createNewClient = async (
+          req: NextApiRequest,
+          res: NextApiResponse,
+          args: any
+        ) => {
+          await verifyIsHotelAdmin(req, res, args.hotelId);
+
+          return await prisma.client.create({
+            data: {
+              firstName: args.firstName,
+              lastName: args.lastName,
+              email: args.email,
+              cellularNumber: args.cellularNumber,
+              homePhoneNumber: args.homePhoneNumber,
+            },
+          });
+        };
+        return createNewClient(ctx.req, ctx.res, args);
       },
     });
   },

@@ -1,13 +1,5 @@
 import { prisma } from '../../lib/prisma';
 
-export async function checkIfClientExist(clientEmail: string) {
-  return await prisma.client.findUnique({
-    where: {
-      email: clientEmail,
-    },
-  });
-}
-
 export async function checkRoomsAvailable({
   roomModelId,
   checkInDate,

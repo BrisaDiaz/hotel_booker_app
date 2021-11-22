@@ -10,12 +10,7 @@ import {
   inputObjectType,
 } from 'nexus';
 import { prisma } from '../../lib/prisma';
-import {
-  checkRoomsAvailable,
-  verifyIsHotelAdmin,
-  checkIfClientExist,
-  getAdminInfo,
-} from '../utils/index';
+import { checkRoomsAvailable, getUser } from '../utils/index';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   ForbiddenError,
@@ -45,6 +40,14 @@ export const RoomConsult = objectType({
 export const roomSpecifications = inputObjectType({
   name: 'roomSpecifications',
   definition(t) {
+    t.int('adults');
+    t.int('children');
+  },
+});
+export const GuestsDistribution = objectType({
+  name: 'GuestsDistribution',
+  definition(t) {
+    t.id('id');
     t.int('adults');
     t.int('children');
   },
@@ -107,7 +110,11 @@ export const ConsultMutation = extendType({
 });
 export const BookingStatus = enumType({
   name: 'BookingStatus',
-  members: ['ACTIVE', 'REJECTED', 'CANCELED'],
+  members: ['ACTIVE', 'CANCELED', 'FINISH'],
+});
+export const BookingRequestStatus = enumType({
+  name: 'BookingRequestStatus',
+  members: ['PENDING', 'DECLINED'],
 });
 export const PaymentMethod = enumType({
   name: 'PaymentMethod',
@@ -173,123 +180,102 @@ export const Booking = objectType({
     t.int('checkInDate');
     t.int('checkOutDate');
     t.string('specifications');
+    t.field('guestsDistribution', { type: GuestsDistribution });
     t.field('status', { type: 'BookingStatus' });
+    t.float('totalCost');
     t.field('paymentMethod', { type: 'PaymentMethod' });
   },
 });
-
-export const Query = extendType({
-  type: 'Query',
+export const BookingRequest = objectType({
+  name: 'BookingRequest',
   definition(t) {
-    t.field('getBookingById', {
-      type: 'Booking',
-      args: {
-        id: nonNull(idArg()),
-      },
-      resolve(root, args, ctx) {
-        const getBooking = async (
-          req: NextApiRequest,
-          res: NextApiResponse,
-          bookingId: number
-        ) => {
-          const booking = await prisma.booking.findUnique({
-            where: {
-              id: bookingId,
-            },
-          });
-          if (!booking) throw new ValidationError('Invalid Booking Id');
-          const admin = await getAdminInfo(req, res);
-
-          if (!admin.hotels.includes(booking.hotelId))
-            throw new ForbiddenError('Forbidden');
-          return booking;
-        };
-        return getBooking(ctx.req, ctx.res, args.id);
+    t.id('id');
+    t.int('hotelId');
+    t.int('userId');
+    t.int('roomModelId');
+    t.field('roomModel', {
+      type: 'RoomModel',
+      resolve(root) {
+        return prisma.roomModel.findUnique({
+          where: {
+            id: root.roomModelId,
+          },
+        });
       },
     });
+    t.field('user', {
+      type: 'User',
+      resolve(root) {
+        return prisma.user.findUnique({
+          where: {
+            id: root.userId,
+          },
+        });
+      },
+    });
+    t.field('guestsDistribution', { type: GuestsDistribution });
+    t.int('telephone');
+    t.string('email');
+    t.int('children');
+    t.int('adults');
+    t.int('checkInDate');
+    t.int('checkOutDate');
+    t.string('specifications');
+    t.field('status', { type: BookingRequestStatus });
   },
 });
-
 export const Mutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.field('makeBooking', {
-      type: 'Booking',
+    t.field('makeBookingRequest', {
+      type: BookingRequest,
       args: {
-        hotelId: nonNull(idArg()),
-        roomId: nonNull(idArg()),
-        rooModelId: nonNull(idArg()),
-        clientId: nonNull(idArg()),
+        roomModelId: nonNull(idArg()),
+        guestsDistribution: nonNull(list(roomSpecifications)),
+        telephone: nonNull(intArg()),
+        email: nonNull(stringArg()),
         children: nonNull(intArg()),
         adults: nonNull(intArg()),
-        nights: nonNull(intArg()),
-        rooms: nonNull(intArg()),
         checkInDate: nonNull(stringArg()),
         checkOutDate: nonNull(stringArg()),
-        paymentMethod: stringArg(),
+        specifications: nonNull(stringArg()),
       },
       resolve(root, args, ctx) {
-        const makeBooking = async (
+        const makeRequest = async (
+          args,
           req: NextApiRequest,
-          res: NextApiResponse,
-          args: any
+          res: NextApiResponse
         ) => {
-          const admin = await verifyIsHotelAdmin(req, res, args.hotelId);
-          return await prisma.booking.create({
-            data: {
-              clientId: args.clientId,
-              hotelId: args.hotelId,
-              roomId: args.roomId,
-              roomModelId: args.roomModelId,
-              administratorId: admin.id,
-              specifications: args.specifications,
-              children: args.children,
-              adults: args.adults,
-              nights: args.nights,
-              checkInDate: new Date(args.checkInDate),
-              checkOutDate: new Date(args.checkOutDate),
-              paymentMethod: args.paymentMethod,
-              status: 'ACTIVE',
+          const user = await getUser(req, res);
+          const roomModel = await prisma.roomModel.findUnique({
+            where: {
+              id: args.roomModelId,
             },
           });
-        };
-        return makeBooking(ctx.req, ctx.res, args);
-      },
-    });
-    t.field('createNewClient', {
-      type: 'Client',
-      args: {
-        firstName: nonNull(stringArg()),
-        lastName: nonNull(stringArg()),
-        email: nonNull(stringArg()),
-        cellularNumber: nonNull(stringArg()),
-        homePhoneNumber: nonNull(stringArg()),
-      },
-      resolve: (root, args, ctx) => {
-        const createNewClient = async (
-          req: NextApiRequest,
-          res: NextApiResponse,
-          args: any
-        ) => {
-          await verifyIsHotelAdmin(req, res, args.hotelId);
+          if (!roomModel) throw new UserInputError('Room type dose not exist.');
 
-          const foundClient = await checkIfClientExist(args.email);
-          if (foundClient)
-            throw new UserInputError(
-              'Already exist a client account with this email.'
-            );
-
-          return await prisma.client.create({
+          const request = await prisma.bookingRequest.create({
             data: {
-              firstName: args.firstName,
-              lastName: args.lastName,
+              userId: user.id,
+              roomModelId: roomModel.id,
+              hotelId: roomModel.hotelId,
               email: args.email,
-              cellularNumber: args.cellularNumber,
-              homePhoneNumber: args.homePhoneNumber,
+              telephone: args.telephone,
+              checkInDate: new Date(args.checkInDate).toISOString(),
+              checkOutDate: new Date(args.checkOutDate).toISOString(),
+              specifications: args.specifications,
             },
           });
+          await prisma.guestsDistribution.createMany({
+            data: args.guestsDistribution.map(
+              (room: { children: number; adults: number }) => ({
+                children: room.children,
+                adults: room.adults,
+                bookingRequest: { connect: { id: request.id } },
+              })
+            ),
+          });
         };
-        return createNewClient(ctx.req, ctx.res, args);
       },
     });
   },
