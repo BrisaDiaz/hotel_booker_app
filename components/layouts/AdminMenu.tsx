@@ -27,7 +27,16 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import { SIGN_OUT } from '../../queries/index';
 
 const drawerWidth = 240;
-
+interface Link {
+  label: string;
+  icone: React.ReactNode;
+  selected: boolean;
+  sub: boolean;
+  family?: string[];
+  level?: number;
+  url: string;
+  query: Query | {};
+}
 interface Props {
   /**
    * Injected by the documentation to work in an iframe.
@@ -90,6 +99,51 @@ function userMenu() {
         <MenuItem onClick={() => handdleSignOut()}>Logout</MenuItem>
       </Menu>
     </>
+  );
+}
+
+function NavLink({
+  link,
+  handdleRedirect,
+}: {
+  link: Link;
+  handdleRedirect: Function;
+}) {
+  return (
+    <ListItem
+      button
+      onClick={() => handdleRedirect(link)}
+      key={link.label}
+      selected={link.selected}
+      sx={{
+        borderRadius: '10px',
+        height: '65px',
+        border: `${
+          link.selected
+            ? '2px solid rgba(255,255,255,0.8)'
+            : '1px solid rgba(255,255,255,0.3)'
+        }`,
+
+        m: '10px 0 10px 0',
+        width: `${
+          link.level === 2 ? '80%' : link.level === 1 ? '90%' : '100%'
+        }`,
+      }}
+    >
+      <ListItemIcon
+        sx={{
+          minWidth: '40px',
+
+          color: '#fff',
+        }}
+      >
+        {link.icone}
+      </ListItemIcon>
+      <ListItemText
+        primary={link.label}
+        sx={{ mr: 2, textTransform: 'capitalize' }}
+      />
+    </ListItem>
   );
 }
 export default function ResponsiveDrawer(props: Props) {
@@ -202,16 +256,6 @@ export default function ResponsiveDrawer(props: Props) {
       },
     },
   ];
-  interface Link {
-    label: string;
-    icone: React.ReactNode;
-    selected: boolean;
-    sub: boolean;
-    family?: string[];
-    level?: number;
-    url: string;
-    query: Query | {};
-  }
 
   const activeLinkInfo = links.find((link) => link.label === activeLink);
   const toDisplayLinks: Link[] = links.filter(
@@ -221,7 +265,7 @@ export default function ResponsiveDrawer(props: Props) {
       activeLinkInfo?.family?.includes(link.label)
   );
 
-  const handleRedirect = (link: Link) => {
+  const handdleRedirect = (link: Link) => {
     let buildLink: {
       pathname: string;
       query?: Query;
@@ -253,42 +297,13 @@ export default function ResponsiveDrawer(props: Props) {
       </Typography>
 
       <List sx={{ mx: '10px' }}>
-        {toDisplayLinks.map((link: Link) => (
-          <ListItem
-            button
-            onClick={() => handleRedirect(link)}
-            key={link.label}
-            selected={link.selected}
-            sx={{
-              borderRadius: '10px',
-              height: '65px',
-              border: `${
-                link.selected
-                  ? '2px solid rgba(255,255,255,0.8)'
-                  : '1px solid rgba(255,255,255,0.3)'
-              }`,
-
-              m: '10px 0 10px 0',
-              width: `${
-                link.level === 2 ? '80%' : link.level === 1 ? '90%' : '100%'
-              }`,
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: '40px',
-
-                color: '#fff',
-              }}
-            >
-              {link.icone}
-            </ListItemIcon>
-            <ListItemText
-              primary={link.label}
-              sx={{ mr: 2, textTransform: 'capitalize' }}
-            />
-          </ListItem>
-        ))}
+        {activeLink === 'dashboard' ? (
+          <NavLink link={toDisplayLinks[0]} handdleRedirect={handdleRedirect} />
+        ) : (
+          toDisplayLinks.map((link: Link) => (
+            <NavLink link={link} handdleRedirect={handdleRedirect} />
+          ))
+        )}
       </List>
     </Box>
   );
