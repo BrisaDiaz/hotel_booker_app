@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Typography from '@mui/material/Typography';
 import AdminMenu from '@/components/layouts/AdminMenu';
-import DashboardCardGrid from '@/components/DashboardCardGrid';
+import DashboardCardGrid from '@/components/dashboard/ActionCardGrid';
 const Rooms = () => {
   const router = useRouter();
   const { hotelId, roomTypeId } = router.query;

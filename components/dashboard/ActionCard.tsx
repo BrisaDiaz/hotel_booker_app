@@ -48,83 +48,87 @@ export default function DashboardCard({
   };
 }) {
   return (
-    <Paper
-      elevation={6}
-      sx={{
-        width: '240px',
-        borderRadius: '20px',
-        backgroundColor: ` ${card.color || '#795548'}`,
-      }}
-    >
-      <Box
+    <div key={card.title}>
+      <Paper
+        elevation={4}
         sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          gap: '20px',
-          alignItems: 'center',
-
-          p: 3,
+          width: '240px',
+          borderRadius: '20px',
+          backgroundColor: ` ${card.color || '#795548'}`,
         }}
       >
-        {getIcone(card.title)}
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-          }}
-        >
-          <Typography variant="h3" sx={{ color: '#fff', fontWeight: 200 }}>
-            {card.count}
-          </Typography>
-          <Typography variant="h6" sx={{ color: '#fff', fontWeight: 200 }}>
-            {card.title}
-          </Typography>
-        </Box>
-      </Box>
-      <Box>
-        <List
-          sx={{
-            color: '#fff',
-            background: 'rgba(0,0,0,0.1)',
-            p: 0,
-            borderRadius: '0 0 20px 20px',
-            display: 'flex',
-          }}
-        >
-          {card.actions.map((action: { name: string; callback: Function }) => (
-            <ListItem
-              disablePadding
-              onClick={() => action.callback()}
-              key={action.name}
-            >
-              <ListItemButton
-                sx={{ border: '1px solid rgba(255,255,255,0.05)' }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: '40px',
-                    color: '#fff',
+            justifyContent: 'space-between',
+            gap: '20px',
+            alignItems: 'center',
 
-                    opacity: 0.8,
-                    textTransform: 'capitalize',
-                  }}
+            p: 3,
+          }}
+        >
+          {getIcone(card.title)}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+            }}
+          >
+            <Typography variant="h3" sx={{ color: '#fff', fontWeight: 200 }}>
+              {card.count}
+            </Typography>
+            <Typography variant="h6" sx={{ color: '#fff', fontWeight: 200 }}>
+              {card.title}
+            </Typography>
+          </Box>
+        </Box>
+        <Box>
+          <List
+            sx={{
+              color: '#fff',
+              background: 'rgba(0,0,0,0.1)',
+              p: 0,
+              borderRadius: '0 0 20px 20px',
+              display: 'flex',
+            }}
+          >
+            {card.actions.map(
+              (action: { name: string; callback: Function }) => (
+                <ListItem
+                  disablePadding
+                  onClick={() => action.callback()}
+                  key={action.name}
                 >
-                  {action.name === 'view' ? (
-                    <VisibilityIcon />
-                  ) : (
-                    <AddCircleIcon />
-                  )}
-                </ListItemIcon>
-                <ListItemText
-                  primary={action.name}
-                  sx={{ textTransform: 'capitalize' }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-    </Paper>
+                  <ListItemButton
+                    sx={{ border: '1px solid rgba(255,255,255,0.05)' }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: '40px',
+                        color: '#fff',
+
+                        opacity: 0.8,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {action.name === 'view' ? (
+                        <VisibilityIcon />
+                      ) : (
+                        <AddCircleIcon />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={action.name}
+                      sx={{ textTransform: 'capitalize' }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              )
+            )}
+          </List>
+        </Box>
+      </Paper>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import DashboardCard from '@/components/DashboardCard';
+import DashboardCard from '@/components/dashboard/ActionCard';
 
 import AdminMenu from '@/components/layouts/AdminMenu';
 import { useRouter } from 'next/router';

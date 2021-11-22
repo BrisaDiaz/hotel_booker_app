@@ -5,8 +5,9 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
-import DashboardCard from '@/components/DashboardCard';
-const Dashboard = () => {
+import DashboardCard from '@/components/dashboard/ActionCard';
+import HotelCard from '@/components/dashboard/HotelCard';
+const Dashboard: NextPage = () => {
   const router = useRouter();
   const cardData = {
     title: 'hotels',
@@ -20,6 +21,39 @@ const Dashboard = () => {
       },
     ],
   };
+
+  const hotels = [
+    {
+      id: 1,
+      name: 'Four Seasons Hotel Buenos Aires',
+      frameImage:
+        'https://cf.bstatic.com/xdata/images/hotel/max1024x768/22113570.jpg?k=50944ce5e79a439a84781c80e40564ad174a0eb0955bcc5b5033469b4f44bfa7&o=&hp=1',
+      address: {
+        holeAddress:
+          'Posadas 1086/88, Buenos Aires, C1011 ABB, Capital Federal, Argentina',
+      },
+    },
+    {
+      id: 2,
+      name: 'Four Seasons Hotel Buenos Aires',
+      frameImage:
+        'https://cf.bstatic.com/xdata/images/hotel/max1024x768/22113570.jpg?k=50944ce5e79a439a84781c80e40564ad174a0eb0955bcc5b5033469b4f44bfa7&o=&hp=1',
+      address: {
+        holeAddress:
+          'Posadas 1086/88, Buenos Aires, C1011 ABB, Capital Federal, Argentina',
+      },
+    },
+    {
+      id: 3,
+      name: 'Four Seasons Hotel Buenos Aires',
+      frameImage:
+        'https://cf.bstatic.com/xdata/images/hotel/max1024x768/22113570.jpg?k=50944ce5e79a439a84781c80e40564ad174a0eb0955bcc5b5033469b4f44bfa7&o=&hp=1',
+      address: {
+        holeAddress:
+          'Posadas 1086/88, Buenos Aires, C1011 ABB, Capital Federal, Argentina',
+      },
+    },
+  ];
   return (
     <div>
       <Head>
@@ -28,22 +62,31 @@ const Dashboard = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{ p: 3 }}>
-        <DashboardCard card={cardData} />
-        <Typography sx={{ m: '20px auto' }}>Room Requests</Typography>
-        {new Array(5).fill(1).map((num, index) => (
-          <div
-            key={num + index}
-            onClick={() =>
-              router.push({
-                pathname: '/admin/hotel',
-                query: { hotelId: num + index },
-              })
-            }
-          >
-            <h3>Hotel number {num + index}</h3>
-          </div>
-        ))}
+      <Box sx={{ p: { xs: '20px 0', sm: '20px 16px' }, maxWidth: 1200 }}>
+        <Box sx={{ p: '10px', maxWidth: 'fit-content' }}>
+          <DashboardCard card={cardData} />
+        </Box>
+        <Box
+          sx={{
+            p: ' 20px 10px',
+            display: 'flex',
+            justifyContent: { xs: 'center', md: 'start' },
+            flexWrap: 'wrap',
+            gap: '20px',
+          }}
+        >
+          {hotels.map((hotel) => (
+            <HotelCard
+              hotel={hotel}
+              onClick={() =>
+                router.push({
+                  pathname: '/admin/hotel',
+                  query: { hotelId: hotel.id },
+                })
+              }
+            />
+          ))}
+        </Box>
       </Box>
     </div>
   );

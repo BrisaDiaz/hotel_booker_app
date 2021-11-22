@@ -4,9 +4,11 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import ActionCard from '@/components/dashboard/ActionCard';
+
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import DashboardCardGrid from '@/components/DashboardCardGrid';
 import hotel from '@/mocks/hotel';
 import Card from '@mui/material/Card';
 import { WithLayoutPage } from '@/interfaces/index';
@@ -18,6 +20,42 @@ const styles = {
   },
 };
 
+interface ActionCard {
+  title: string;
+  actions: Array<{ name: string; callback: Function }>;
+  count: number;
+  color?: string;
+}
+function ActionCardGrid({ cards }: { cards: ActionCard[] }) {
+  return (
+    <Grid
+      container
+      sx={{
+        width: '100%',
+        maxWidth: '1000px',
+        justifyContent: { xs: 'center', md: 'start' },
+        p: 3,
+      }}
+      spacing={3}
+    >
+      {cards.map((card) => (
+        <Grid
+          item
+          xs={12}
+          md={4}
+          lg={3.5}
+          key={card.title}
+          sx={{
+            display: 'flex',
+            justifyContent: { sx: 'center', md: 'start' },
+          }}
+        >
+          <ActionCard card={card} />
+        </Grid>
+      ))}
+    </Grid>
+  );
+}
 const HotelAdmin: WithLayoutPage = () => {
   const router = useRouter();
   const { hotelId } = router.query;
@@ -99,7 +137,7 @@ const HotelAdmin: WithLayoutPage = () => {
       </Head>
 
       <Box component="main">
-        <DashboardCardGrid cards={cardsData} />
+        <ActionCardGrid cards={cardsData} />
 
         <Box
           sx={{

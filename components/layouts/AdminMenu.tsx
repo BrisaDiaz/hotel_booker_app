@@ -46,7 +46,7 @@ interface Props {
   children: React.ReactNode;
   activeLink: string;
 }
-function userMenu() {
+function UserMenu() {
   const [signOut] = useMutation(SIGN_OUT);
 
   const handdleSignOut = async () => {
@@ -347,7 +347,7 @@ export default function ResponsiveDrawer(props: Props) {
               ml: 'auto',
             }}
           >
-            {userMenu}
+            <UserMenu />
           </Box>
         </Toolbar>
       </AppBar>
@@ -396,7 +396,7 @@ export default function ResponsiveDrawer(props: Props) {
         component="div"
         sx={{
           flexGrow: 1,
-          mt: 10,
+          mt: 8,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
