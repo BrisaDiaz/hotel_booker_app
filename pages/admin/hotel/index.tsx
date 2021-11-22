@@ -34,7 +34,7 @@ function ActionCardGrid({ cards }: { cards: ActionCard[] }) {
         width: '100%',
         maxWidth: '1000px',
         justifyContent: { xs: 'center', md: 'start' },
-        p: 3,
+        p: 2,
       }}
       spacing={3}
     >
@@ -136,7 +136,7 @@ const HotelAdmin: WithLayoutPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box component="main">
+      <Box component="main" sx={{ p: { xs: '20px 0', sm: '20px 16px' } }}>
         <ActionCardGrid cards={cardsData} />
 
         <Box
@@ -146,7 +146,7 @@ const HotelAdmin: WithLayoutPage = () => {
             display: 'flex',
             flexWrap: 'wrap',
             height: '260px',
-            my: 4,
+            my: 2,
           }}
         >
           <Card

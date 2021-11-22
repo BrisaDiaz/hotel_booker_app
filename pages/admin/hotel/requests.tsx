@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import Typography from '@mui/material/Typography';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Head from 'next/head';
-
+import Box from '@mui/material/Box';
 const RoomRequests = () => {
   return (
     <div>
@@ -12,9 +12,12 @@ const RoomRequests = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <Box
+        component="main"
+        sx={{ p: { xs: '20px 0', sm: '20px 16px' }, maxWidth: 1200 }}
+      >
         <Typography sx={{ m: '20px auto' }}>Room Requests</Typography>
-      </main>
+      </Box>
     </div>
   );
 };

@@ -19,7 +19,7 @@ export default function HotelCard({
       holeAddress: string;
     };
   };
-  onClick: Function;
+  onClick: React.EventHandler;
 }) {
   return (
     <div key={hotel.id} onClick={onClick}>

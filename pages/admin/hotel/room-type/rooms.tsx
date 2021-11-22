@@ -3,7 +3,49 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Typography from '@mui/material/Typography';
 import AdminMenu from '@/components/layouts/AdminMenu';
-import DashboardCardGrid from '@/components/dashboard/ActionCardGrid';
+import Grid from '@mui/material/Grid';
+import ActionCard from '@/components/dashboard/ActionCard';
+import Box from '@mui/material/Box';
+
+function ActionCardGrid({
+  cards,
+}: {
+  cards: Array<{
+    title: string;
+    actions: Array<{ name: string; callback: Function }>;
+    count: number;
+    color?: string;
+  }>;
+}) {
+  return (
+    <Grid
+      container
+      sx={{
+        width: '100%',
+        maxWidth: '1000px',
+        justifyContent: { xs: 'center', md: 'start' },
+        p: 2,
+      }}
+      spacing={3}
+    >
+      {cards.map((card) => (
+        <Grid
+          item
+          xs={12}
+          md={4}
+          lg={3.5}
+          key={card.title}
+          sx={{
+            display: 'flex',
+            justifyContent: { sx: 'center', md: 'start' },
+          }}
+        >
+          <ActionCard card={card} />
+        </Grid>
+      ))}
+    </Grid>
+  );
+}
 const Rooms = () => {
   const router = useRouter();
   const { hotelId, roomTypeId } = router.query;
@@ -47,10 +89,13 @@ const Rooms = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <Box
+        component="main"
+        sx={{ p: { xs: '20px 0', sm: '20px 16px' }, maxWidth: 1200 }}
+      >
         <Typography sx={{ m: '20px auto' }}>Rooms </Typography>
-        <DashboardCardGrid cards={cardsData} />
-      </main>
+        <ActionCardGrid cards={cardsData} />
+      </Box>
     </div>
   );
 };

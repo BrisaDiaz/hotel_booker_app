@@ -63,7 +63,7 @@ const Dashboard: NextPage = () => {
       </Head>
 
       <Box sx={{ p: { xs: '20px 0', sm: '20px 16px' }, maxWidth: 1200 }}>
-        <Box sx={{ p: '10px', maxWidth: 'fit-content' }}>
+        <Box sx={{ p: 2, maxWidth: 'fit-content' }}>
           <DashboardCard card={cardData} />
         </Box>
         <Box

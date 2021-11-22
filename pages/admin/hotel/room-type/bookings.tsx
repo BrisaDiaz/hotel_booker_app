@@ -13,7 +13,10 @@ const Bookings = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{ m: 3 }}>
+      <Box
+        component="main"
+        sx={{ p: { xs: '20px 0', sm: '20px 16px' }, maxWidth: 1200 }}
+      >
         <Typography sx={{ m: '20px auto' }}>Bookings </Typography>
       </Box>
     </div>

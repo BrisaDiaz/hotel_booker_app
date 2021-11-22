@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 const Guest = () => {
   return (
     <div>
@@ -11,9 +12,12 @@ const Guest = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <Box
+        component="main"
+        sx={{ p: { xs: '20px 0', sm: '20px 16px' }, maxWidth: 1200 }}
+      >
         <Typography sx={{ m: '20px auto' }}>Guests List</Typography>
-      </main>
+      </Box>
     </div>
   );
 };

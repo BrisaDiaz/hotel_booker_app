@@ -1,8 +1,7 @@
 import Head from 'next/head';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import DashboardCard from '@/components/dashboard/ActionCard';
-
+import ActionCard from '@/components/dashboard/ActionCard';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import { useRouter } from 'next/router';
 const RoomTypes = () => {
@@ -32,8 +31,13 @@ const RoomTypes = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{ mx: 3 }}>
-        <DashboardCard card={cardData} />
+      <Box
+        component="main"
+        sx={{ p: { xs: '20px 0', sm: '20px 16px' }, maxWidth: 1200 }}
+      >
+        <Box sx={{ p: 2, maxWidth: 'fit-content' }}>
+          <ActionCard card={cardData} />
+        </Box>
         <Typography sx={{ m: '20px auto' }}>Room Type </Typography>
         {new Array(5).fill(1).map((num, index) => (
           <div
