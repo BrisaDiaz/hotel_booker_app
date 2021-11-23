@@ -62,7 +62,7 @@ export const RoomModelData = objectType({
 export const Query = extendType({
   type: 'Query',
   definition(t) {
-    t.field('AdminHotels', {
+    t.field('adminHotels', {
       type: AdminHotels,
       resolve(root, args, ctx) {
         const getAdimHotels = async (

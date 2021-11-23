@@ -200,12 +200,44 @@ export const GET_ROOM_MODEL_BY_ID = gql`
     }
   }
 `;
-// const GET_ADMIN_HOTELS = gql`
-//   query adminHotels {
-//     adminHotels {
-// hotels{ name
-//       frameImage }
-//     }
-//count
-//   }
-// `;
+export const GET_ADMIN_HOTELS = gql`
+  query adminHotels {
+    adminHotels {
+      adminHotels {
+        hotels {
+          id
+          name
+          frameImage
+          address {
+            holeAddress
+          }
+        }
+      }
+      hotelsCount
+    }
+  }
+`;
+export const GET_DASHBOARD_HOTEL_DATA = gql`
+  query hotelData($hotelId: ID!) {
+    hotelData(hotelId: $hotelId) {
+      hotel {
+        id
+        name
+        frameImage
+        lowestPrice
+        taxesAndCharges
+      }
+      roomModels {
+        id
+        name
+        mainImage
+        lowestPrice
+        taxesAndCharges
+        quantityInHotel
+      }
+      roomModelsCount
+      guestsCount
+      requestsCount
+    }
+  }
+`;

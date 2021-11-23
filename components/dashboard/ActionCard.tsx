@@ -78,7 +78,14 @@ export default function DashboardCard({
             <Typography variant="h3" sx={{ color: '#fff', fontWeight: 200 }}>
               {card.count}
             </Typography>
-            <Typography variant="h6" sx={{ color: '#fff', fontWeight: 200 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                color: '#fff',
+                fontWeight: 200,
+                textTransform: 'capitalize',
+              }}
+            >
               {card.title}
             </Typography>
           </Box>

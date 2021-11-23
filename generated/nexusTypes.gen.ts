@@ -444,8 +444,8 @@ export interface NexusGenFieldTypes {
     message: string | null; // String
   }
   Query: { // field return type
-    AdminHotels: NexusGenRootTypes['AdminHotels'] | null; // AdminHotels
     activitiesList: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
+    adminHotels: NexusGenRootTypes['AdminHotels'] | null; // AdminHotels
     amenitiesList: Array<NexusGenRootTypes['Amenity'] | null> | null; // [Amenity]
     bedTypesList: Array<NexusGenRootTypes['BedType'] | null> | null; // [BedType]
     bookingById: NexusGenRootTypes['Booking'] | null; // Booking
@@ -709,8 +709,8 @@ export interface NexusGenFieldTypeNames {
     message: 'String'
   }
   Query: { // field return type name
-    AdminHotels: 'AdminHotels'
     activitiesList: 'Activity'
+    adminHotels: 'AdminHotels'
     amenitiesList: 'Amenity'
     bedTypesList: 'BedType'
     bookingById: 'Booking'

@@ -35,7 +35,7 @@ interface Link {
   family?: string[];
   level?: number;
   url: string;
-  query: Query | {};
+  query: { hotelId: string } | {};
 }
 interface Props {
   /**
@@ -125,9 +125,7 @@ function NavLink({
         }`,
 
         m: '10px 0 10px 0',
-        width: `${
-          link.level === 2 ? '80%' : link.level === 1 ? '90%' : '100%'
-        }`,
+        width: `${link.level === 1 ? '90%' : '100%'}`,
       }}
     >
       <ListItemIcon
@@ -182,55 +180,13 @@ export default function ResponsiveDrawer(props: Props) {
       icone: <ApartmentIcon />,
       selected: activeLink === 'hotel',
       sub: false,
-      family: ['room types', 'requests', 'guests'],
+      family: ['requests', 'guests', 'rooms', 'bookings'],
       url: hotelId ? '/admin/hotel' : '/admin',
       query: {
         hotelId: hotelId,
       },
     },
-    {
-      label: 'room types',
-      icone: <MeetingRoomIcon />,
-      selected: activeLink === 'room types',
 
-      family: ['hotel', 'rooms', 'bookings'],
-      sub: true,
-      level: 1,
-      url: hotelId ? `/admin/hotel/room-type` : '/admin',
-      query: {
-        hotelId: hotelId,
-      },
-    },
-    {
-      label: 'rooms',
-      icone: <VpnKeyIcon />,
-      selected: activeLink === 'rooms',
-      sub: true,
-      family: ['hotel', 'room types'],
-      level: 2,
-      url: hotelId && roomTypeId ? `/admin/hotel/room-type/rooms` : '/admin',
-      query: {
-        roomTypeId: roomTypeId,
-        hotelId: hotelId,
-      },
-    },
-    {
-      label: 'bookings',
-      icone: <CalendarTodayIcon />,
-      selected: activeLink === 'bookings',
-      sub: true,
-      family: ['room types'],
-
-      level: 2,
-      url:
-        hotelId && roomTypeId
-          ? `/admin/hotel/room-type/bookings`
-          : '/admin/hotel/room-type',
-      query: {
-        roomTypeId: roomTypeId,
-        hotelId: hotelId,
-      },
-    },
     {
       label: 'requests',
       icone: <NotificationsIcon />,
@@ -238,7 +194,7 @@ export default function ResponsiveDrawer(props: Props) {
       sub: true,
       family: ['hotel'],
       level: 1,
-      url: hotelId ? '/admin/hotel/requests' : '/admin',
+      url: '/admin/hotel/requests',
       query: {
         hotelId: hotelId,
       },
@@ -250,20 +206,25 @@ export default function ResponsiveDrawer(props: Props) {
       sub: true,
       family: ['hotel'],
       level: 1,
-      url: hotelId ? '/admin/hotel/guests' : '/admin',
+      url: '/admin/hotel/guests',
+      query: {
+        hotelId: hotelId,
+      },
+    },
+    {
+      label: 'bookings',
+      icone: <CalendarTodayIcon />,
+      selected: activeLink === 'bookings',
+      sub: true,
+      family: ['hotel'],
+      level: 1,
+
+      url: `/admin/hotel/bookings`,
       query: {
         hotelId: hotelId,
       },
     },
   ];
-
-  const activeLinkInfo = links.find((link) => link.label === activeLink);
-  const toDisplayLinks: Link[] = links.filter(
-    (link: Link) =>
-      !link.sub ||
-      link.label === activeLink ||
-      activeLinkInfo?.family?.includes(link.label)
-  );
 
   const handdleRedirect = (link: Link) => {
     let buildLink: {
@@ -298,9 +259,9 @@ export default function ResponsiveDrawer(props: Props) {
 
       <List sx={{ mx: '10px' }}>
         {activeLink === 'dashboard' ? (
-          <NavLink link={toDisplayLinks[0]} handdleRedirect={handdleRedirect} />
+          <NavLink link={links[0]} handdleRedirect={handdleRedirect} />
         ) : (
-          toDisplayLinks.map((link: Link) => (
+          links.map((link: Link) => (
             <NavLink link={link} handdleRedirect={handdleRedirect} />
           ))
         )}

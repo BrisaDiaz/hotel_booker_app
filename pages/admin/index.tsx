@@ -1,12 +1,15 @@
-import type { NextPage } from 'next';
 import React from 'react';
-import Typography from '@mui/material/Typography';
+import type { NextPage, GetServerSideProps, NextApiResponse } from 'next';
+import { client } from '@/lib/apollo';
+import { GET_ADMIN_HOTELS } from '@/queries/index';
+
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
-import DashboardCard from '@/components/dashboard/ActionCard';
+import ActionCard from '@/components/dashboard/ActionCard';
 import HotelCard from '@/components/dashboard/HotelCard';
+
 const Dashboard: NextPage = () => {
   const router = useRouter();
   const cardData = {
@@ -21,7 +24,17 @@ const Dashboard: NextPage = () => {
       },
     ],
   };
-
+  const handleRedirect = (hotelId: number) => {
+    router.push({
+      pathname: '/admin/hotel',
+      query: {
+        hotelId: hotelId,
+      },
+    });
+  };
+  const handleEdit = (fieldToEdit: string) => {
+    alert('editing ' + fieldToEdit);
+  };
   const hotels = [
     {
       id: 1,
@@ -32,7 +45,10 @@ const Dashboard: NextPage = () => {
         holeAddress:
           'Posadas 1086/88, Buenos Aires, C1011 ABB, Capital Federal, Argentina',
       },
+      lowestPrice: 546.9,
+      taxesAndCharges: 45,
     },
+
     {
       id: 2,
       name: 'Four Seasons Hotel Buenos Aires',
@@ -42,6 +58,8 @@ const Dashboard: NextPage = () => {
         holeAddress:
           'Posadas 1086/88, Buenos Aires, C1011 ABB, Capital Federal, Argentina',
       },
+      lowestPrice: 546.9,
+      taxesAndCharges: 45,
     },
     {
       id: 3,
@@ -52,6 +70,8 @@ const Dashboard: NextPage = () => {
         holeAddress:
           'Posadas 1086/88, Buenos Aires, C1011 ABB, Capital Federal, Argentina',
       },
+      lowestPrice: 546.9,
+      taxesAndCharges: 45,
     },
   ];
   return (
@@ -63,8 +83,8 @@ const Dashboard: NextPage = () => {
       </Head>
 
       <Box sx={{ p: { xs: '20px 0', sm: '20px 16px' }, maxWidth: 1200 }}>
-        <Box sx={{ p: 2, maxWidth: 'fit-content' }}>
-          <DashboardCard card={cardData} />
+        <Box sx={{ p: ' 20px 10px', maxWidth: 'fit-content' }}>
+          <ActionCard card={cardData} />
         </Box>
         <Box
           sx={{
@@ -72,18 +92,14 @@ const Dashboard: NextPage = () => {
             display: 'flex',
             justifyContent: { xs: 'center', md: 'start' },
             flexWrap: 'wrap',
-            gap: '20px',
+            gap: { xs: '20px', lg: '30px' },
           }}
         >
           {hotels.map((hotel) => (
             <HotelCard
               hotel={hotel}
-              onClick={() =>
-                router.push({
-                  pathname: '/admin/hotel',
-                  query: { hotelId: hotel.id },
-                })
-              }
+              handleRedirect={handleRedirect}
+              handleEdit={handleEdit}
             />
           ))}
         </Box>
@@ -95,3 +111,26 @@ Dashboard.getLayout = function getLayout(page: React.ReactElement) {
   return <AdminMenu activeLink="dashboard">{page}</AdminMenu>;
 };
 export default Dashboard;
+
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const { data, error, loading } = await client.query({
+//     query: GET_ADMIN_HOTELS,
+//   });
+//   console.log(error);
+//   if (error) {
+//     return {
+//       redirect: {
+//         permanent: false,
+//         destination: '/search',
+//       },
+//       props: {},
+//     };
+//   }
+
+//   return {
+//     props: {
+//       hotels: data?.adminHotels.hotels,
+//       hotelsCount: data?.adminHotels.hotelsCount,
+//     },
+//   };
+// };

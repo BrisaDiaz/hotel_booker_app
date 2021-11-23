@@ -71,15 +71,6 @@ const HotelAdmin: WithLayoutPage = () => {
       count: 3,
       actions: [
         {
-          name: 'view',
-          callback: () => {
-            router.push({
-              pathname: '/admin/hotel/room-type',
-              query: { hotelId },
-            });
-          },
-        },
-        {
           name: 'add',
           callback: () => {
             router.push({
@@ -101,12 +92,6 @@ const HotelAdmin: WithLayoutPage = () => {
               pathname: '/admin/hotel/guests',
               query: { hotelId },
             });
-          },
-        },
-        {
-          name: 'add',
-          callback: () => {
-            console.log('add  guest');
           },
         },
       ],
@@ -139,7 +124,7 @@ const HotelAdmin: WithLayoutPage = () => {
       <Box component="main" sx={{ p: { xs: '20px 0', sm: '20px 16px' } }}>
         <ActionCardGrid cards={cardsData} />
 
-        <Box
+        {/* <Box
           sx={{
             width: '100%',
             maxWidth: '1100px',
@@ -215,7 +200,7 @@ const HotelAdmin: WithLayoutPage = () => {
               ))}
             </Box>
           ))}
-        </Box>
+        </Box> */}
       </Box>
     </div>
   );

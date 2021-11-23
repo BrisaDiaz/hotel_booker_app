@@ -145,11 +145,11 @@ export default function MultilineTextFields(props: {
   amenities: Feature[];
   roomCategories: Feature[];
   bedTypes: Feature[];
-  handdleSubmit: Function;
+  handleSubmit: Function;
 }) {
   const defaultImage =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU';
-  const { services, amenities, roomCategories, handdleSubmit, bedTypes } =
+  const { services, amenities, roomCategories, handleSubmit, bedTypes } =
     props;
 
   const matchesSize = useMediaQuery('(min-width:600px)');
@@ -206,7 +206,7 @@ export default function MultilineTextFields(props: {
       taxesAndCharges: data.taxesAndCharges * 1,
     };
 
-    handdleSubmit(variables);
+    handleSubmit(variables);
   };
   const handleReset = () => {
     setServicesSelected([]);
