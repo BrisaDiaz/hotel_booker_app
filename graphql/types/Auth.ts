@@ -138,6 +138,7 @@ export const Query = extendType({
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            role:user.role
           };
         };
         return getUserSession(ctx.req, ctx.res);

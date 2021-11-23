@@ -56,6 +56,8 @@ async function verifyToken(
   res: NextApiResponse
 ): Promise<Token | ApolloError> {
   const token = getCookie(req, res);
+   if (!token)
+    throw new AuthenticationError('Unauthenticated');
   const verifiedToken: any = await verify(token, APP_SECRET);
   if (!verifiedToken || !verifiedToken?.user)
     throw new ForbiddenError('Forbidden');

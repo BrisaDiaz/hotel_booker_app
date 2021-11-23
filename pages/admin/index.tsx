@@ -2,7 +2,7 @@ import React from 'react';
 import type { NextPage, GetServerSideProps, NextApiResponse } from 'next';
 import { client } from '@/lib/apollo';
 import { GET_ADMIN_HOTELS } from '@/queries/index';
-
+import {getServerSideSession}from '@/utils/index'
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
@@ -108,25 +108,30 @@ Dashboard.getLayout = function getLayout(page: React.ReactElement) {
 };
 export default Dashboard;
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const { data, error, loading } = await client.query({
-//     query: GET_ADMIN_HOTELS,
-//   });
-//   console.log(error);
-//   if (error) {
-//     return {
-//       redirect: {
-//         permanent: false,
-//         destination: '/search',
-//       },
-//       props: {},
-//     };
-//   }
+export const getServerSideProps: GetServerSideProps = async () => {
+  const user = await getServerSideSession()
+  // const { data, error, loading } = await client.query({
+  //   query: GET_ADMIN_HOTELS,
+  // });
+  // console.log(error);
+  // if (error) {
+  //   return {
+  //     redirect: {
+  //       permanent: false,
+  //       destination: '/search',
+  //     },
+  //     props: {},
+  //   };
+  // }
 
-//   return {
-//     props: {
-//       hotels: data?.adminHotels.hotels,
-//       hotelsCount: data?.adminHotels.hotelsCount,
-//     },
-//   };
-// };
+  // return {
+  //   props: {
+  //     hotels: data?.adminHotels.hotels,
+  //     hotelsCount: data?.adminHotels.hotelsCount,
+  //   },
+  // };
+  console.log(user)
+  return {
+    props:{}
+  }
+};
