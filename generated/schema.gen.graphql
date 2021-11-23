@@ -228,6 +228,7 @@ type Query {
   activitiesList: [Activity]
   adminHotels: AdminHotels
   amenitiesList: [Amenity]
+  authentication: User
   bedTypesList: [BedType]
   bookingById(id: ID!): Booking
   facilitiesList: [Facility]

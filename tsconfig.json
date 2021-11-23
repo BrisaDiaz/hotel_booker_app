@@ -13,9 +13,11 @@
       "@/mocks/*": ["mocks/*"],
       "@/interfaces/*": ["interfaces/*"],
       "@/utils/*": ["utils/*"],
-            "@/lib/*": [
+      "@/context/*": ["context/*"],
+        "@/lib/*": [
               "lib/*"
             ],
+
 
     },
 

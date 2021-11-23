@@ -25,7 +25,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { SIGN_OUT } from '../../queries/index';
-
+import {useAuth} from '../../context/useAuth'
 const drawerWidth = 240;
 interface Link {
   label: string;
@@ -48,6 +48,7 @@ interface Props {
 }
 function UserMenu() {
   const [signOut] = useMutation(SIGN_OUT);
+const {resetSession} =useAuth()
 
   const handdleSignOut = async () => {
     try {
@@ -55,6 +56,7 @@ function UserMenu() {
       await signOut({
         variables: { date: new Date(Date.now()).toISOString() },
       });
+      resetSession()
     } catch (e) {
       console.log(e);
     }

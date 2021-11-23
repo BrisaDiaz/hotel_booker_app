@@ -447,6 +447,7 @@ export interface NexusGenFieldTypes {
     activitiesList: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
     adminHotels: NexusGenRootTypes['AdminHotels'] | null; // AdminHotels
     amenitiesList: Array<NexusGenRootTypes['Amenity'] | null> | null; // [Amenity]
+    authentication: NexusGenRootTypes['User'] | null; // User
     bedTypesList: Array<NexusGenRootTypes['BedType'] | null> | null; // [BedType]
     bookingById: NexusGenRootTypes['Booking'] | null; // Booking
     facilitiesList: Array<NexusGenRootTypes['Facility'] | null> | null; // [Facility]
@@ -712,6 +713,7 @@ export interface NexusGenFieldTypeNames {
     activitiesList: 'Activity'
     adminHotels: 'AdminHotels'
     amenitiesList: 'Amenity'
+    authentication: 'User'
     bedTypesList: 'BedType'
     bookingById: 'Booking'
     facilitiesList: 'Facility'

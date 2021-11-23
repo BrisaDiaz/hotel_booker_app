@@ -241,3 +241,13 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
     }
   }
 `;
+
+export const GET_USER_SESSION = gql`
+  query authentication {
+    authentication {
+      firstName
+      lastName
+      email
+    }
+  }
+`;

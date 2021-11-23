@@ -96,11 +96,7 @@ const Dashboard: NextPage = () => {
           }}
         >
           {hotels.map((hotel) => (
-            <HotelCard
-              hotel={hotel}
-              handleRedirect={handleRedirect}
-              handleEdit={handleEdit}
-            />
+            <HotelCard hotel={hotel} handleRedirect={handleRedirect} handleEdit={handleEdit} />
           ))}
         </Box>
       </Box>

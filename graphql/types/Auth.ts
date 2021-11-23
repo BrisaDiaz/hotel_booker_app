@@ -120,7 +120,7 @@ export const Mutation = extendType({
 export const Query = extendType({
   type: 'Query',
   definition(t) {
-    t.field('authenticate', {
+    t.field('authentication', {
       type: 'User',
       resolve(root, args, ctx) {
         const getUserSession = async (

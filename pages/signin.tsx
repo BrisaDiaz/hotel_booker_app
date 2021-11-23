@@ -15,8 +15,10 @@ import Container from '@mui/material/Container';
 import { createTheme } from '@mui/material/styles';
 import validations from '@/utils/formValidations';
 import { SIGN_IN } from '@/queries/index';
+import {useAuth}from '../context/useAuth'
 import Backdrop from '@/components/Backdrop';
 import SnackBar from '@/components/SnackBar';
+
 function Copyright(props: any) {
   return (
     <Typography
@@ -38,6 +40,8 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
+
+  const {setSession} = useAuth()
   const [errorMessage, setErrorMessage] = React.useState<string>('');
 
   const [signIn, { loading, error }] = useMutation(SIGN_IN, {
@@ -45,7 +49,9 @@ export default function SignIn() {
       setErrorMessage(graphError.message);
     },
     onCompleted: (data) => {
-      data.signin.user.role === 'ADMIN'
+      const {email,firstName,lastName,role} = data.signin.user
+setSession({email,firstName,lastName,role})
+      role === 'ADMIN'
         ? router.push('/admin')
         : router.push('/search');
     },
