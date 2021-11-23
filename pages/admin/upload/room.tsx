@@ -88,7 +88,7 @@ const RoomPage = ({
           amenities={amenitiesList}
           roomCategories={roomCategoriesList}
           bedTypes={bedTypesList}
-          handdleSubmit={onSubmit}
+          submitHandler={onSubmit}
         />
         <Backdrop loading={loading} />
       </main>
