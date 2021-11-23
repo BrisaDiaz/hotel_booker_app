@@ -2,7 +2,8 @@ import React from 'react';
 import type { NextPage, GetServerSideProps, NextApiResponse } from 'next';
 import { client } from '@/lib/apollo';
 import { GET_ADMIN_HOTELS } from '@/queries/index';
-import {getServerSideSession}from '@/utils/index'
+import { WithLayoutPage } from '@/interfaces/index';
+import { getServerSideSession } from '@/utils/index';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
@@ -10,7 +11,7 @@ import Box from '@mui/material/Box';
 import ActionCard from '@/components/dashboard/ActionCard';
 import HotelCard from '@/components/dashboard/HotelCard';
 
-const Dashboard: NextPage = () => {
+const Dashboard: WithLayoutPage = () => {
   const router = useRouter();
   const cardData = {
     title: 'hotels',
@@ -96,20 +97,23 @@ const Dashboard: NextPage = () => {
           }}
         >
           {hotels.map((hotel) => (
-            <HotelCard hotel={hotel} handleRedirect={handleRedirect} handleEdit={handleEdit} />
+            <HotelCard
+              hotel={hotel}
+              handleRedirect={handleRedirect}
+              handleEdit={handleEdit}
+            />
           ))}
         </Box>
       </Box>
     </div>
   );
 };
-Dashboard.getLayout = function getLayout(page: React.ReactElement) {
+Dashboard.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="dashboard">{page}</AdminMenu>;
 };
 export default Dashboard;
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const user = await getServerSideSession()
   // const { data, error, loading } = await client.query({
   //   query: GET_ADMIN_HOTELS,
   // });
@@ -130,8 +134,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
   //     hotelsCount: data?.adminHotels.hotelsCount,
   //   },
   // };
-  console.log(user)
+
   return {
-    props:{}
-  }
+    props: {},
+  };
 };

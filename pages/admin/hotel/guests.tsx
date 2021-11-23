@@ -1,9 +1,10 @@
 import type { NextPage } from 'next';
+import { WithLayoutPage } from '@/interfaces/index';
 import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-const Guest = () => {
+const Guest: WithLayoutPage = () => {
   return (
     <div>
       <Head>
@@ -21,7 +22,7 @@ const Guest = () => {
     </div>
   );
 };
-Guest.getLayout = function getLayout(page: React.ReactElement) {
+Guest.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="guests">{page}</AdminMenu>;
 };
 export default Guest;

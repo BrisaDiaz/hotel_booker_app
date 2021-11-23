@@ -32,6 +32,12 @@ type AdminPayload = {
   id: number;
   hotels: HotelId[];
 };
+type UserProfile = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+};
 
 export function setCookie(
   req: NextApiRequest,
@@ -56,8 +62,7 @@ async function verifyToken(
   res: NextApiResponse
 ): Promise<Token | ApolloError> {
   const token = getCookie(req, res);
-   if (!token)
-    throw new AuthenticationError('Unauthenticated');
+  if (!token) throw new AuthenticationError('Unauthenticated');
   const verifiedToken: any = await verify(token, APP_SECRET);
   if (!verifiedToken || !verifiedToken?.user)
     throw new ForbiddenError('Forbidden');
@@ -92,6 +97,27 @@ export async function getAdminInfo(
   });
   if (!admin) throw new ForbiddenError('Forbiden');
   return admin;
+}
+export async function getUserProfile(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<UserProfile | null> {
+  const user = await getUser(req, res);
+  if (!user) return null;
+  const userProfile = await prisma.user.findUnique({
+    where: {
+      userId: user.id,
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      role: true,
+    },
+  });
+  if (!userProfile) return null;
+  return userProfile;
 }
 export async function verifyIsHotelAdmin(
   req: NextApiRequest,

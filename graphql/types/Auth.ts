@@ -8,6 +8,7 @@ import {
   setCookie,
   deleteCookie,
   getUser,
+  getUserProfile,
 } from '../utils/index';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -127,19 +128,10 @@ export const Query = extendType({
           req: NextApiRequest,
           res: NextApiResponse
         ) => {
-          const tokenPayload = await getUser(req, res);
-          const user = await prisma.user.findUnique({
-            where: {
-              id: tokenPayload.id,
-            },
-          });
-          if (!user) return {};
-          return {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            role:user.role
-          };
+          const userProfile = await getUserProfile(req, res);
+
+          if (!userProfile) return null;
+          return userProfile;
         };
         return getUserSession(ctx.req, ctx.res);
       },

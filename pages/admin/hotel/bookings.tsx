@@ -1,10 +1,10 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
+import { WithLayoutPage } from '@/interfaces/index';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import AdminMenu from '@/components/layouts/AdminMenu';
 
-const Bookings = () => {
+const Bookings: WithLayoutPage = () => {
   return (
     <div>
       <Head>
@@ -22,7 +22,7 @@ const Bookings = () => {
     </div>
   );
 };
-Bookings.getLayout = function getLayout(page: React.ReactElement) {
+Bookings.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="bookings">{page}</AdminMenu>;
 };
 

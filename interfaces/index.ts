@@ -87,7 +87,14 @@ export interface RoomBuildierVariables {
   lowestPrice: number;
   taxesAndCharges?: number;
 }
-
+export interface SessionPayload {
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+  };
+}
 export type WithLayoutPage<P = {}> = NextPage<P> & {
   getLayout?: (page: React.ReactNode) => React.ReactNode;
 };

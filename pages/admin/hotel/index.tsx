@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import { WithLayoutPage } from '@/interfaces/index';
 import React from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
@@ -11,7 +11,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import hotel from '@/mocks/hotel';
 import Card from '@mui/material/Card';
-import { WithLayoutPage } from '@/interfaces/index';
+
 const styles = {
   legend: {
     opacity: 0.6,

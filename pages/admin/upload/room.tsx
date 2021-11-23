@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
+import { WithLayoutPage } from '@/interfaces/index';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import SnackBar from '@/components/SnackBar';
@@ -20,7 +21,7 @@ type Option = {
   id: number;
   name: string;
 };
-const RoomPage = ({
+const RoomUploadPage: WithLayoutPage = ({
   amenitiesList,
   servicesList,
   roomCategoriesList,
@@ -34,7 +35,7 @@ const RoomPage = ({
   const router = useRouter();
   const { hotelId } = router.query;
 
-  const [createRoomPageModel, { error, loading, data }] = useMutation(
+  const [createRoomUploadPageModel, { error, loading, data }] = useMutation(
     CREATE_ROOM_MODEL,
     {
       onCompleted: () => {
@@ -54,7 +55,7 @@ const RoomPage = ({
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const onSubmit = async (variables: RoomBuildierVariables) => {
     try {
-      await createRoomPageModel({
+      await createRoomUploadPageModel({
         variables: { ...variables, hotelId: hotelId },
       });
     } catch (err) {
@@ -95,8 +96,8 @@ const RoomPage = ({
     </div>
   );
 };
-export default RoomPage;
-RoomPage.getLayout = function getLayout(page: React.ReactElement) {
+export default RoomUploadPage;
+RoomUploadPage.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="dashboard">{page}</AdminMenu>;
 };
 export const getServerSideProps: GetServerSideProps = async (context) => {

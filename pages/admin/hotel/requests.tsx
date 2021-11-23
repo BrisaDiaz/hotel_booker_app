@@ -3,7 +3,8 @@ import Typography from '@mui/material/Typography';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
-const RoomRequests = () => {
+import { WithLayoutPage } from '@/interfaces/index';
+const RoomRequests: WithLayoutPage = () => {
   return (
     <div>
       <Head>
@@ -21,7 +22,7 @@ const RoomRequests = () => {
     </div>
   );
 };
-RoomRequests.getLayout = function getLayout(page: React.ReactElement) {
+RoomRequests.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="requests">{page}</AdminMenu>;
 };
 export default RoomRequests;
