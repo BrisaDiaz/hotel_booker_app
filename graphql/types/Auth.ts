@@ -7,7 +7,9 @@ import {
   signToken,
   setCookie,
   deleteCookie,
+  getUser,
 } from '../utils/index';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export const AuthPayload = objectType({
   name: 'AuthPayload',
@@ -110,6 +112,35 @@ export const Mutation = extendType({
       resolve(_, args, ctx) {
         deleteCookie(ctx.req, ctx.res);
         return { message: `User logout successfully at ${args.date}` };
+      },
+    });
+  },
+});
+
+export const Query = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('authenticate', {
+      type: 'User',
+      resolve(root, args, ctx) {
+        const getUserSession = async (
+          req: NextApiRequest,
+          res: NextApiResponse
+        ) => {
+          const tokenPayload = await getUser(req, res);
+          const user = await prisma.user.findUnique({
+            where: {
+              id: tokenPayload.id,
+            },
+          });
+          if (!user) return {};
+          return {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+          };
+        };
+        return getUserSession(ctx.req, ctx.res);
       },
     });
   },

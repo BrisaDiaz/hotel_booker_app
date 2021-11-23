@@ -32,13 +32,6 @@ type AdminPayload = {
   id: number;
   hotels: HotelId[];
 };
-export async function getUser(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<User | ApolloError> {
-  const token = await verifyToken(req, res);
-  return token.user;
-}
 
 export function setCookie(
   req: NextApiRequest,
@@ -67,6 +60,13 @@ async function verifyToken(
   if (!verifiedToken || !verifiedToken?.user)
     throw new ForbiddenError('Forbidden');
   return verifiedToken;
+}
+export async function getUser(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<User | ApolloError> {
+  const token = await verifyToken(req, res);
+  return token.user;
 }
 
 export async function getAdminInfo(
