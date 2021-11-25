@@ -11,16 +11,8 @@ import {
 } from 'nexus';
 import { prisma } from '../../lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import {
-  AuthenticationError,
-  UserInputError,
-  ForbiddenError,
-} from 'apollo-server-micro';
-import {
-  getAdminInfo,
-  verifyIsHotelAdmin,
-  checkIfClientExist,
-} from '../utils/index';
+import { UserInputError, ForbiddenError } from 'apollo-server-micro';
+import { getAdminInfo, verifyIsHotelAdmin } from '../utils/index';
 import { roomSpecifications } from './Booking';
 
 export const AdminHotels = objectType({
@@ -38,11 +30,11 @@ export const HotelData = objectType({
   definition(t) {
     t.int('roomModelsCount');
     t.int('requestsCount');
-    t.int('bookingCount');
+    t.int('bookingsCount');
     t.int('guestsCount');
     t.field('hotel', { type: 'Hotel' });
     t.list.field('roomModels', { type: 'RoomModel' });
-    t.list.field('requests', { type: 'Booking' });
+    t.list.field('requests', { type: 'BookingRequest' });
     t.list.field('bookings', { type: 'Booking' });
     t.list.field('guests', { type: 'Client' });
   },
@@ -68,8 +60,6 @@ export const Query = extendType({
         userId: nonNull(idArg()),
       },
       resolve(root, args, ctx) {
-        console.log('----------');
-        console.log(ctx.req);
         const getAdimHotels = async (userId: number) => {
           const admin = await getAdminInfo(userId);
           const hotels = await prisma.hotel.findMany({
@@ -133,7 +123,7 @@ export const Query = extendType({
             roomModels: hotel.roomModels,
             roomModelsCount: hotel.roomModels.length,
             requests,
-            requestCount: requests.length,
+            requestsCount: requests.length,
             bookings,
             bookingsCount: bookings.length,
             guests,
@@ -283,6 +273,7 @@ export const Mutation = extendType({
       type: 'Client',
       args: {
         userId: nonNull(idArg()),
+        hotelId: nonNull(idArg()),
         firstName: nonNull(stringArg()),
         lastName: nonNull(stringArg()),
         email: nonNull(stringArg()),

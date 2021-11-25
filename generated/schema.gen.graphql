@@ -161,12 +161,12 @@ type HotelCategory {
 }
 
 type HotelData {
-  bookingCount: Int
   bookings: [Booking]
+  bookingsCount: Int
   guests: [Client]
   guestsCount: Int
   hotel: Hotel
-  requests: [Booking]
+  requests: [BookingRequest]
   requestsCount: Int
   roomModels: [RoomModel]
   roomModelsCount: Int
@@ -192,7 +192,7 @@ type Language {
 }
 
 type Mutation {
-  addNewClient(cellularNumber: String!, email: String!, firstName: String!, homePhoneNumber: String!, lastName: String!, userId: ID!): Client
+  addNewClient(cellularNumber: String!, email: String!, firstName: String!, homePhoneNumber: String!, hotelId: ID!, lastName: String!, userId: ID!): Client
   addRoomToHotel(hotelId: ID!, number: Int!, roomModelId: Int!, userId: ID!): Room
   checkRoomAvailability(checkInDate: String, checkOutDate: String, roomModelId: String, rooms: [roomSpecifications]): RoomConsultResponse
   creatHotelRoomModel(amenities: [String]!, beds: [bedsSpecifications]!, category: String!, description: String!, freeCancelation: Boolean!, hotelId: ID!, lowestPrice: Float!, mainImage: String!, maximunGuests: Int!, maximunStay: Int, minimunStay: Int!, mts2: Int!, name: String!, services: [String]!, smooking: Boolean!, taxesAndCharges: Float!, userId: ID!): RoomModel
@@ -232,13 +232,13 @@ type Query {
   bedTypesList: [BedType]
   bookingById(bookingId: ID!, userId: ID!): Booking
   facilitiesList: [Facility]
-  hotelById(id: ID!): Hotel
+  hotelById(hotelId: ID!): Hotel
   hotelCategoriesList: [HotelCategory]
   hotelData(hotelId: ID!, userId: ID!): HotelData
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
   languagesList: [Language]
   roomCategoriesList: [RoomCategory]
-  roomModelById(id: ID!): RoomModel
+  roomModelById(roomModelId: ID!): RoomModel
   roomModelData(roomModelId: ID!, userId: ID!): RoomModelData
   servicesList: [Service]
 }
@@ -251,6 +251,7 @@ enum Role {
 type Room {
   bookings: [Booking]
   id: ID
+  number: Int
   roomModel: RoomModel
   roomModelId: Int
 }

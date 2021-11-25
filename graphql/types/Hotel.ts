@@ -202,25 +202,24 @@ export const Query = extendType({
     t.field('hotelById', {
       type: 'Hotel',
       args: {
-        id: nonNull(idArg()),
+        hotelId: nonNull(idArg()),
       },
       resolve(_, args, ctx) {
-        const searchHote = async (id: number) => {
+        const searchHote = async (hotelId: number) => {
           const hotel = await prisma.hotel.findUnique({
             where: {
-              id: id,
+              id: hotelId,
             },
             include: {
               facilities: true,
               services: true,
               activities: true,
               languages: true,
-              roomModels: true,
             },
           });
-          return { hotel, roomModels: hotel.roomModels };
+          return hotel;
         };
-        return searchHote(args.id * 1);
+        return searchHote(parseInt(args.hotelId));
       },
     });
   },
@@ -353,7 +352,7 @@ export const Mutation = extendType({
           hotelId: number,
           args: any
         ) => {
-          await verifyIsHotelAdmin(user, hotelId);
+          await verifyIsHotelAdmin(userId, hotelId);
           return await prisma.address.update({
             where: {
               hotelId: hotelId,

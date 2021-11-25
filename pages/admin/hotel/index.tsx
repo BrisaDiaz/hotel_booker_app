@@ -1,24 +1,17 @@
-import { WithLayoutPage } from '@/interfaces/index';
 import React from 'react';
+import { WithLayoutPage } from '@/interfaces/index';
+import { GET_DASHBOARD_HOTEL_DATA } from '@/queries/index';
+import { client } from '@/lib/apollo';
+import type { GetServerSideProps, NextApiRequest, NextApiResponse } from 'next';
+import { getUser } from '@/graphql/utils';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import ActionCard from '@/components/dashboard/ActionCard';
-
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import hotel from '@/mocks/hotel';
-import Card from '@mui/material/Card';
-
-const styles = {
-  legend: {
-    opacity: 0.6,
-    fontWeight: 400,
-    width: '55%',
-  },
-};
 
 interface ActionCard {
   title: string;
@@ -32,9 +25,10 @@ function ActionCardGrid({ cards }: { cards: ActionCard[] }) {
       container
       sx={{
         width: '100%',
-        maxWidth: '1000px',
+
         justifyContent: { xs: 'center', md: 'start' },
         p: 2,
+        gap: { lg: 0 },
       }}
       spacing={3}
     >
@@ -43,7 +37,7 @@ function ActionCardGrid({ cards }: { cards: ActionCard[] }) {
           item
           xs={12}
           md={4}
-          lg={3.5}
+          lg={3}
           key={card.title}
           sx={{
             display: 'flex',
@@ -56,19 +50,35 @@ function ActionCardGrid({ cards }: { cards: ActionCard[] }) {
     </Grid>
   );
 }
-const HotelAdmin: WithLayoutPage = () => {
+interface PageProps {
+  roomTypes: Array<{
+    id: number;
+    name: string;
+    mainImage: string;
+    lowestPrice: number;
+    taxesAndCharges: number;
+    rooms: Array<{ id: number; number: number }>;
+  }>;
+  roomTypesCount: number;
+  bookingsCount: number;
+  guestsCount: number;
+  requestsCount: number;
+  hotelId: number;
+}
+const HotelAdmin: WithLayoutPage = ({
+  roomTypes,
+  roomTypesCount,
+  bookingsCount,
+  guestsCount,
+  requestsCount,
+  hotelId,
+}: PageProps) => {
   const router = useRouter();
-  const { hotelId } = router.query;
-  const features = [
-    { title: 'Facilities', items: hotel.facilities },
-    { title: 'Services', items: hotel.services },
-    { title: 'Activities', items: hotel.activities },
-    { title: 'Languages', items: hotel.languages },
-  ];
+
   const cardsData = [
     {
-      title: 'Room types',
-      count: 3,
+      title: roomTypesCount === 1 ? 'Room type' : 'Room types',
+      count: roomTypesCount,
       actions: [
         {
           name: 'add',
@@ -82,8 +92,8 @@ const HotelAdmin: WithLayoutPage = () => {
       ],
     },
     {
-      title: 'Guests',
-      count: 3,
+      title: guestsCount === 1 ? 'Guest' : 'Guests',
+      count: guestsCount,
       actions: [
         {
           name: 'view',
@@ -97,8 +107,8 @@ const HotelAdmin: WithLayoutPage = () => {
       ],
     },
     {
-      title: 'Requests',
-      count: 2,
+      title: requestsCount === 1 ? 'Request' : 'Requests',
+      count: requestsCount,
       actions: [
         {
           name: 'view',
@@ -111,8 +121,23 @@ const HotelAdmin: WithLayoutPage = () => {
         },
       ],
     },
+    {
+      title: bookingsCount === 1 ? 'Booking' : 'Bookings',
+      count: bookingsCount,
+      actions: [
+        {
+          name: 'view',
+          callback: () => {
+            router.push({
+              pathname: '/admin/hotel/bookings',
+              query: { hotelId },
+            });
+          },
+        },
+      ],
+    },
   ];
-
+  console.log(roomTypes);
   return (
     <div>
       <Head>
@@ -123,84 +148,6 @@ const HotelAdmin: WithLayoutPage = () => {
 
       <Box component="main" sx={{ p: { xs: '20px 0', sm: '20px 16px' } }}>
         <ActionCardGrid cards={cardsData} />
-
-        {/* <Box
-          sx={{
-            width: '100%',
-            maxWidth: '1100px',
-            display: 'flex',
-            flexWrap: 'wrap',
-            height: '260px',
-            my: 2,
-          }}
-        >
-          <Card
-            sx={{
-              maxWidth: '500px',
-              width: '100%',
-              minWidth: '318px',
-              height: 'fit-content',
-              m: { sm: 3 },
-            }}
-          >
-            <CardMedia
-              component="img"
-              alt="frame image"
-              height="250"
-              sx={{ objectFit: 'cover' }}
-              image={hotel.frameImage}
-              title="frame image"
-            />
-          </Card>
-          <Box
-            sx={{
-              py: 2,
-              px: 3,
-              minWidth: '318px',
-              height: 'fit-content',
-            }}
-          >
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Prices
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 3, mb: 2 }}>
-              <Typography sx={styles.legend}>Lowest price</Typography>
-              <Typography>USD${hotel.lowestPrice}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 3, mb: 2 }}>
-              <Typography sx={styles.legend}>Taxes and Charges</Typography>
-              <Typography>USD${hotel.taxesAndCharges}</Typography>
-            </Box>
-            <Box></Box>
-          </Box>
-          {features.map((feature) => (
-            <Box
-              key={feature.title}
-              sx={{
-                py: 2,
-                px: 3,
-                width: 'fit-content',
-                height: '100%',
-                overflow: 'hidden',
-              }}
-            >
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                {feature.title}
-                <Typography
-                  component="span"
-                  sx={{ opacity: 0.8, fontSize: '16px' }}
-                >
-                  {`(${feature.items.length})`}{' '}
-                </Typography>
-              </Typography>
-              {feature.items.map((item) => (
-                <Box key={item.id} sx={{ display: 'flex', gap: 3, mb: 2 }}>
-                  <Typography>{item.name}</Typography>
-                </Box>
-              ))}
-            </Box>
-          ))}
-        </Box> */}
       </Box>
     </div>
   );
@@ -211,3 +158,52 @@ HotelAdmin.getLayout = function getLayout(page: React.ReactNode) {
 };
 
 export default HotelAdmin;
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  query,
+}: {
+  req: NextApiRequest;
+  res: NextApiResponse;
+  query: {
+    hotelId: number;
+  };
+}) => {
+  try {
+    const user = await getUser(req, res);
+    if (user.role === 'ADMIN') {
+      const { data } = await client.query({
+        query: GET_DASHBOARD_HOTEL_DATA,
+        variables: { userId: user.id, hotelId: query.hotelId },
+      });
+
+      return {
+        props: {
+          hotelId: query.hotelId,
+          roomTypes: data.hotelData.roomModels,
+          roomTypesCount: data.hotelData.roomModelsCount,
+          guestsCount: data.hotelData.guestsCount,
+          requestsCount: data.hotelData.requestsCount,
+          bookingsCount: data.hotelData.bookingsCount,
+        },
+      };
+    }
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
+      props: {},
+    };
+  } catch (e) {
+    console.log(e);
+
+    return {
+      // redirect: {
+      //   permanent: false,
+      //   destination: '/signin',
+      // },
+      props: {},
+    };
+  }
+};

@@ -39,12 +39,14 @@ export default function RoomCard({
           minWidth: '310px',
           p: '5px',
           pb: '10px',
+          borderRadius: 3,
         }}
       >
         <CardActionArea
           sx={{
             padding: '16px',
             textTransform: 'capitalize',
+            borderRadius: 3,
           }}
         >
           <Box>

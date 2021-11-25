@@ -72,9 +72,8 @@ export async function getUser(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<User | ApolloError> {
-  console.log(req.cookies);
   const token = await verifyToken(req, res);
-  console.log(token);
+
   return token.user;
 }
 
@@ -102,7 +101,7 @@ export async function getUserProfile(
 ): Promise<UserProfile | null> {
   const userProfile = await prisma.user.findUnique({
     where: {
-      userId: userId,
+      id: userId,
     },
     select: {
       id: true,

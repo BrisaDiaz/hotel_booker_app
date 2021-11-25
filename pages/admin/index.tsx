@@ -1,17 +1,20 @@
 import React from 'react';
 import type { GetServerSideProps, NextApiRequest, NextApiResponse } from 'next';
-
-import { getUser } from '../../graphql/utils';
+import { getUser } from '@/graphql/utils';
 import { client } from '@/lib/apollo';
-import { GET_ADMIN_HOTELS } from '@/queries/index';
+import { GET_ADMIN_HOTELS, GET_HOTEL_BY_ID } from '@/queries/index';
+import { useLazyQuery } from '@apollo/client';
+import { Hotel } from '@/interfaces/index';
 import { WithLayoutPage } from '@/interfaces/index';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Backdrop from '@/components/Backdrop';
+
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
 import ActionCard from '@/components/dashboard/ActionCard';
 import HotelCard from '@/components/dashboard/HotelCard';
-
+import HotelModal from '@/components/dashboard/HotelModal';
 const Dashboard: WithLayoutPage = ({
   hotels,
   hotelsCount,
@@ -41,7 +44,7 @@ const Dashboard: WithLayoutPage = ({
       },
     ],
   };
-  console.log(hotels);
+
   const handleRedirect = (hotelId: number) => {
     router.push({
       pathname: '/admin/hotel',
@@ -50,8 +53,21 @@ const Dashboard: WithLayoutPage = ({
       },
     });
   };
-  const handleEdit = (fieldToEdit: string) => {
+  const handleEditSelected = (fieldToEdit: string) => {
     alert('editing ' + fieldToEdit);
+  };
+  const [isInEditMode, setIsInEditMode] = React.useState<boolean>(false);
+
+  const [getHotelToEdit, { loading, error, data }] =
+    useLazyQuery(GET_HOTEL_BY_ID);
+
+  const toggleEditMode = (hotelId: number) => {
+    setIsInEditMode(true);
+
+    getHotelToEdit({ variables: { hotelId: hotelId } });
+  };
+  const closeEditingMode = () => {
+    setIsInEditMode(false);
   };
 
   return (
@@ -79,11 +95,20 @@ const Dashboard: WithLayoutPage = ({
             <HotelCard
               hotel={hotel}
               handleRedirect={handleRedirect}
-              handleEdit={handleEdit}
+              toggleEditMode={toggleEditMode}
             />
           ))}
         </Box>
+        {!loading && data && isInEditMode && (
+          <HotelModal
+            isModalOpend={isInEditMode}
+            closeModal={closeEditingMode}
+            onEdit={handleEditSelected}
+            hotel={data?.hotelById}
+          />
+        )}
       </Box>
+      <Backdrop loading={loading} />
     </div>
   );
 };
@@ -102,7 +127,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   try {
     const user = await getUser(req, res);
 
-    const { data, error, loading } = await client.query({
+    const { data } = await client.query({
       query: GET_ADMIN_HOTELS,
       variables: { userId: user.id },
     });

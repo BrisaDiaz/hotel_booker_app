@@ -174,7 +174,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
           }}
         >
           Taxes and Charges{' '}
-          <Typography component="span" sx={{ fontWeight: 200, ml: 0.5 }}>
+          <Typography component="span" sx={{ fontWeight: 200, ml: 0.5, mb: 0 }}>
             USD${room.taxesAndCharges}
           </Typography>
         </Typography>
@@ -386,9 +386,9 @@ export const getServerSideProps: GetServerSideProps = async ({
   query: { id: number };
   res: NextApiResponse;
 }) => {
-  const { data, error, loading } = await client.query({
+  const { data, error } = await client.query({
     query: GET_ROOM_MODEL_BY_ID,
-    variables: { id: query.id },
+    variables: { roomModelId: query.id },
   });
 
   if (error) {

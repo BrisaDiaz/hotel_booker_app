@@ -160,12 +160,12 @@ export interface NexusGenObjects {
     name?: string | null; // String
   }
   HotelData: { // root type
-    bookingCount?: number | null; // Int
     bookings?: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
+    bookingsCount?: number | null; // Int
     guests?: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
     guestsCount?: number | null; // Int
     hotel?: NexusGenRootTypes['Hotel'] | null; // Hotel
-    requests?: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
+    requests?: Array<NexusGenRootTypes['BookingRequest'] | null> | null; // [BookingRequest]
     requestsCount?: number | null; // Int
     roomModels?: Array<NexusGenRootTypes['RoomModel'] | null> | null; // [RoomModel]
     roomModelsCount?: number | null; // Int
@@ -195,6 +195,7 @@ export interface NexusGenObjects {
   Room: { // root type
     bookings?: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     id?: string | null; // ID
+    number?: number | null; // Int
     roomModelId?: number | null; // Int
   }
   RoomBed: { // root type
@@ -396,12 +397,12 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
   }
   HotelData: { // field return type
-    bookingCount: number | null; // Int
     bookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
+    bookingsCount: number | null; // Int
     guests: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
     guestsCount: number | null; // Int
     hotel: NexusGenRootTypes['Hotel'] | null; // Hotel
-    requests: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
+    requests: Array<NexusGenRootTypes['BookingRequest'] | null> | null; // [BookingRequest]
     requestsCount: number | null; // Int
     roomModels: Array<NexusGenRootTypes['RoomModel'] | null> | null; // [RoomModel]
     roomModelsCount: number | null; // Int
@@ -465,6 +466,7 @@ export interface NexusGenFieldTypes {
   Room: { // field return type
     bookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     id: string | null; // ID
+    number: number | null; // Int
     roomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     roomModelId: number | null; // Int
   }
@@ -661,12 +663,12 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
   }
   HotelData: { // field return type name
-    bookingCount: 'Int'
     bookings: 'Booking'
+    bookingsCount: 'Int'
     guests: 'Client'
     guestsCount: 'Int'
     hotel: 'Hotel'
-    requests: 'Booking'
+    requests: 'BookingRequest'
     requestsCount: 'Int'
     roomModels: 'RoomModel'
     roomModelsCount: 'Int'
@@ -730,6 +732,7 @@ export interface NexusGenFieldTypeNames {
   Room: { // field return type name
     bookings: 'Booking'
     id: 'ID'
+    number: 'Int'
     roomModel: 'RoomModel'
     roomModelId: 'Int'
   }
@@ -799,6 +802,7 @@ export interface NexusGenArgTypes {
       email: string; // String!
       firstName: string; // String!
       homePhoneNumber: string; // String!
+      hotelId: string; // ID!
       lastName: string; // String!
       userId: string; // ID!
     }
@@ -955,7 +959,7 @@ export interface NexusGenArgTypes {
       userId: string; // ID!
     }
     hotelById: { // args
-      id: string; // ID!
+      hotelId: string; // ID!
     }
     hotelData: { // args
       hotelId: string; // ID!
@@ -974,7 +978,7 @@ export interface NexusGenArgTypes {
       take?: number | null; // Int
     }
     roomModelById: { // args
-      id: string; // ID!
+      roomModelId: string; // ID!
     }
     roomModelData: { // args
       roomModelId: string; // ID!

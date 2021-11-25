@@ -9,21 +9,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
 import Tooltip from '@mui/material/Tooltip';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-function EditMenu({ handleEdit }: { handleEdit: Function }) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleEditSelected = (toEditField: string) => {
-    handleEdit(toEditField);
-    handleClose();
-  };
+
+function EditButtom({ onClick }: { onClick: React.MouseEventHandler }) {
   return (
     <Box
       sx={{ position: 'absolute', zIndex: 10, m: 1 }}
@@ -35,40 +22,20 @@ function EditMenu({ handleEdit }: { handleEdit: Function }) {
         <Fab
           onClick={(e) => {
             e.stopPropagation();
-            handleClick(e);
+            onClick();
           }}
-          color="secondary"
           aria-label="edit"
           size="medium"
         >
           <EditIcon />
         </Fab>
       </Tooltip>
-
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <MenuItem onClick={() => handleEditSelected('prices')}>Prices</MenuItem>
-        <MenuItem onClick={() => handleEditSelected('address')}>
-          Address
-        </MenuItem>
-        <MenuItem onClick={() => handleEditSelected('desscription')}>
-          Description
-        </MenuItem>
-        <MenuItem onClick={() => handleEditSelected('images')}>Images</MenuItem>
-      </Menu>
     </Box>
   );
 }
 export default function HotelCard({
   hotel,
-  handleEdit,
+  toggleEditMode,
   handleRedirect,
 }: {
   hotel: {
@@ -82,13 +49,13 @@ export default function HotelCard({
     };
   };
   handleRedirect: Function;
-  handleEdit: Function;
+  toggleEditMode: Function;
 }) {
   return (
     <div key={hotel.id} onClick={() => handleRedirect(hotel.id)}>
       <Card sx={{ width: '300px', position: 'relative' }}>
         <CardActionArea>
-          <EditMenu handleEdit={handleEdit} />
+          <EditButtom onClick={() => toggleEditMode(hotel.id)} />
           <CardMedia
             component="img"
             height="150px"

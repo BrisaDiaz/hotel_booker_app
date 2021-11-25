@@ -107,10 +107,12 @@ export const GET_HOTELS = gql`
 `;
 
 export const GET_HOTEL_BY_ID = gql`
-  query hotelById($id: ID!) {
-    hotelById(id: $id) {
+  query hotelById($hotelId: ID!) {
+    hotelById(hotelId: $hotelId) {
       id
       name
+      brand
+      category
       lowestPrice
       taxesAndCharges
       frameImage
@@ -165,8 +167,8 @@ export const GET_HOTEL_BY_ID = gql`
   }
 `;
 export const GET_ROOM_MODEL_BY_ID = gql`
-  query roomModelById($id: ID!) {
-    roomModelById(id: $id) {
+  query roomModelById($roomModelId: ID!) {
+    roomModelById(roomModelId: $roomModelId) {
       id
       hotelId
       hotel {
@@ -218,26 +220,23 @@ export const GET_ADMIN_HOTELS = gql`
   }
 `;
 export const GET_DASHBOARD_HOTEL_DATA = gql`
-  query hotelData($hotelId: ID!) {
-    hotelData(hotelId: $hotelId) {
-      hotel {
-        id
-        name
-        frameImage
-        lowestPrice
-        taxesAndCharges
-      }
+  query hotelData($userId: ID!, $hotelId: ID!) {
+    hotelData(userId: $userId, hotelId: $hotelId) {
       roomModels {
         id
         name
         mainImage
         lowestPrice
         taxesAndCharges
-        quantityInHotel
+        rooms {
+          id
+          number
+        }
       }
       roomModelsCount
-      guestsCount
       requestsCount
+      guestsCount
+      bookingsCount
     }
   }
 `;

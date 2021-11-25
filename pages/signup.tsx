@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMutation, useLazyQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import Avatar from '@mui/material/Avatar';
 import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
@@ -12,7 +12,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
-import { SIGN_UP, SIGN_OUT } from '@/queries/index';
+import { SIGN_UP } from '@/queries/index';
+import Backdrop from '@/components/Backdrop';
 import validations from '@/utils/formValidations';
 function Copyright(props: any) {
   return (
@@ -187,6 +188,7 @@ export default function SignUp() {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
+      <Backdrop loading={loading} />
     </Box>
   );
 }

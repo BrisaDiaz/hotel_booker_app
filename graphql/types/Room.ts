@@ -112,6 +112,7 @@ export const Room = objectType({
   definition(t) {
     t.id('id');
     t.int('roomModelId');
+    t.int('number');
     t.field('roomModel', {
       type: 'RoomModel',
       resolve: (root) => {
@@ -133,12 +134,12 @@ export const Query = extendType({
     t.field('roomModelById', {
       type: 'RoomModel',
       args: {
-        id: nonNull(idArg()),
+        roomModelId: nonNull(idArg()),
       },
       resolve(root, args, ctx) {
         return prisma.roomModel.findUnique({
           where: {
-            id: parseInt(args.id),
+            id: parseInt(args.roomModelId),
           },
           include: {
             amenities: true,

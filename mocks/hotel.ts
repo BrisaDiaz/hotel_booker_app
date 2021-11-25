@@ -2,6 +2,7 @@ import roomModel from './roomModel';
 const hotel = {
   id: 5,
   name: 'Four Seasons Hotel Buenos Aires',
+  brand: 'Four Seasons',
   category: 'recidential hotel',
   address: {
     holeAddress:
@@ -15,7 +16,8 @@ const hotel = {
   lowestPrice: 546.9,
   taxesAndCharges: 45,
   telephone: '+54 11 4321-1200',
-  email: 'catering.bue@fourseasons.com',
+  email: '',
+  website: 'www.fourseasons.com',
   checkInHour: '15:00',
   checkOutHour: '12:00',
   policiesAndRules:
@@ -43,6 +45,7 @@ const hotel = {
     name: 'fishing',
   })),
   features: {
+    __typename: 'Features',
     cancelationFree: true,
     accessible: true,
     familyFriendly: true,

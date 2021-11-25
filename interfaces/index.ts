@@ -12,12 +12,13 @@ export type Item = {
   name: string;
 };
 export type Features = {
-  accesible: string;
-  freeCancelation: string;
-  familyFriendly: string;
-  petFriendly: string;
-  smokerFriendly: string;
-  ecoFriendly: string;
+  __typename: string;
+  accesible: boolean;
+  freeCancelation: boolean;
+  familyFriendly: boolean;
+  petFriendly: boolean;
+  smokerFriendly: boolean;
+  ecoFriendly: boolean;
 };
 export type WithQuantityItem = {
   id: number;

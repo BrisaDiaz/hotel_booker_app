@@ -1,6 +1,7 @@
 import type { NextPage, GetServerSideProps, NextApiResponse } from 'next';
 import { client } from '@/lib/apollo';
 import { GET_HOTEL_BY_ID } from '@/queries/index';
+import { getFeaturesTags } from '@/utils/index';
 import Head from 'next/head';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -73,17 +74,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
       items: hotel.languages,
     },
   ];
-  const includedFeatures = Object.keys(hotel.features).filter(
-    (featureName) =>
-      hotel.features[featureName] !== true && featureName !== '__typename'
-  );
-
-  const formattedAdditonalFeatures = includedFeatures.map((featureName) =>
-    featureName
-      .split(/(?=[A-Z])/)
-      .join(' ')
-      .toLowerCase()
-  );
+  const includedFeatures = getFeaturesTags(hotel.features);
 
   return (
     <div>
@@ -336,7 +327,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
                   p: 0,
                 }}
               >
-                {formattedAdditonalFeatures.map((featureName) => (
+                {includedFeatures.map((featureName) => (
                   <Box component="li" sx={styles.list} key={featureName}>
                     <Box sx={styles.listItem}>
                       {DinamicFieldIcone(featureName)}
@@ -388,7 +379,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const { data, error, loading } = await client.query({
     query: GET_HOTEL_BY_ID,
-    variables: { id: query.id },
+    variables: { hotelId: query.id },
   });
   if (error) {
     return {
