@@ -203,14 +203,12 @@ export const GET_ROOM_MODEL_BY_ID = gql`
 export const GET_ADMIN_HOTELS = gql`
   query adminHotels {
     adminHotels {
-      adminHotels {
-        hotels {
-          id
-          name
-          frameImage
-          address {
-            holeAddress
-          }
+      hotels {
+        id
+        name
+        frameImage
+        address {
+          holeAddress
         }
       }
       hotelsCount

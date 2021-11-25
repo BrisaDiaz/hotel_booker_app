@@ -64,7 +64,6 @@ export const services = [
   'free snacks and drinks',
   'children activities',
   'wake-up service/Alarm clock',
-  'wake-up service',
 ];
 
 export const amenities = [
@@ -119,7 +118,6 @@ export const amenities = [
   'Soundproof',
   'suit press',
   'ironing facilities',
-  'iron',
   'heating',
   'carpeted',
   'coffee machine',
@@ -174,7 +172,7 @@ export const hotelCategories = [
   'airpost hotel',
   'motel',
   'flotel',
-  'Boutique hotel',
+  'boutique hotel',
   'trancient hotel',
   'casino hotel',
   'beach resort',
@@ -199,9 +197,8 @@ export const activities = [
   'tennis',
   'fishing',
   'squash',
-
   'paintball',
-  'downhill skiing',
+  'downhill sking',
   'indoor cycling',
   'bowling',
   'mountain climbing',
@@ -218,10 +215,10 @@ export const activities = [
   'chess',
   'crouise',
   'nordic walking',
-  'alleppey sight seeing',
+  'alleppey sightseeing',
   'fort cochin sight seeing',
-  'sightseeing balloon flights',
-  'sightseeing airplane flights',
+  'balloon sightseeing flights',
+  'airplane sightseeing flights',
 ];
 export const languages = [
   'english',
