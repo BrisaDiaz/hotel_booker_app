@@ -64,12 +64,14 @@ export const Query = extendType({
   definition(t) {
     t.field('adminHotels', {
       type: AdminHotels,
+      args: {
+        userId: nonNull(idArg()),
+      },
       resolve(root, args, ctx) {
-        const getAdimHotels = async (
-          req: NextApiRequest,
-          res: NextApiResponse
-        ) => {
-          const admin = await getAdminInfo(req, res);
+        console.log('----------');
+        console.log(ctx.req);
+        const getAdimHotels = async (userId: number) => {
+          const admin = await getAdminInfo(userId);
           const hotels = await prisma.hotel.findMany({
             where: {
               administratorId: admin.id,
@@ -77,21 +79,18 @@ export const Query = extendType({
           });
           return { hotels, hotelsCount: hotels.length };
         };
-        return getAdimHotels(ctx.req, ctx.res);
+        return getAdimHotels(parseInt(args.userId));
       },
     });
     t.field('hotelData', {
       type: HotelData,
       args: {
+        userId: nonNull(idArg()),
         hotelId: nonNull(idArg()),
       },
       resolve(root, args, ctx) {
-        const getAdimHotel = async (
-          hotelId: number,
-          req: NextApiRequest,
-          res: NextApiResponse
-        ) => {
-          await verifyIsHotelAdmin(req, res, hotelId);
+        const getAdimHotel = async (userId: number, hotelId: number) => {
+          await verifyIsHotelAdmin(userId, hotelId);
 
           const hotel = await prisma.hotel.findUnique({
             where: {
@@ -141,21 +140,18 @@ export const Query = extendType({
             guestsCount: guests.length,
           };
         };
-        return getAdimHotel(parseInt(args.hotelId), ctx.req, ctx.res);
+        return getAdimHotel(parseInt(args.userId), parseInt(args.hotelId));
       },
     });
     t.field('roomModelData', {
       type: RoomModelData,
       args: {
+        userId: nonNull(idArg()),
         roomModelId: nonNull(idArg()),
       },
       resolve(root, args, ctx) {
-        const getData = async (
-          roomModelId: number,
-          req: NextApiRequest,
-          res: NextApiResponse
-        ) => {
-          const admin = await getAdminInfo(req, res);
+        const getData = async (userId: number, roomModelId: number) => {
+          const admin = await getAdminInfo(userId);
 
           const roomModel = await prisma.roomModel.findUnique({
             where: {
@@ -200,20 +196,17 @@ export const Query = extendType({
             guestsCount: guests.length,
           };
         };
-        return getData(parseInt(args.roomModelId), ctx.req, ctx.res);
+        return getData(parseInt(args.userId), parseInt(args.roomModelId));
       },
     });
     t.field('bookingById', {
       type: 'Booking',
       args: {
-        id: nonNull(idArg()),
+        bookingId: nonNull(idArg()),
+        userId: nonNull(idArg()),
       },
       resolve(root, args, ctx) {
-        const getBooking = async (
-          req: NextApiRequest,
-          res: NextApiResponse,
-          bookingId: number
-        ) => {
+        const getBooking = async (userId: number, bookingId: number) => {
           const booking = await prisma.booking.findUnique({
             where: {
               id: bookingId,
@@ -225,13 +218,13 @@ export const Query = extendType({
             },
           });
           if (!booking) throw new UserInputError('Booking dose not exist');
-          const admin = await getAdminInfo(req, res);
+          const admin = await getAdminInfo(userId);
 
           if (!admin.hotels.includes(booking.hotelId))
             throw new ForbiddenError('Forbidden');
           return booking;
         };
-        return getBooking(ctx.req, ctx.res, args.id);
+        return getBooking(parseInt(args.userId), parseInt(args.bookingId));
       },
     });
   },
@@ -242,6 +235,7 @@ export const Mutation = extendType({
     t.field('makeBooking', {
       type: 'Booking',
       args: {
+        userId: nonNull(idArg()),
         hotelId: nonNull(idArg()),
         roomId: nonNull(idArg()),
         rooModelId: nonNull(idArg()),
@@ -257,12 +251,11 @@ export const Mutation = extendType({
         paymentMethod: stringArg(),
       },
       resolve(root, args, ctx) {
-        const makeBooking = async (
-          req: NextApiRequest,
-          res: NextApiResponse,
-          args: any
-        ) => {
-          const admin = await verifyIsHotelAdmin(req, res, args.hotelId);
+        const makeBooking = async (userId: number, args: any) => {
+          const admin = await verifyIsHotelAdmin(
+            userId,
+            parseInt(args.hotelId)
+          );
           return await prisma.booking.create({
             data: {
               clientId: args.clientId,
@@ -283,12 +276,13 @@ export const Mutation = extendType({
             },
           });
         };
-        return makeBooking(ctx.req, ctx.res, args);
+        return makeBooking(parseInt(args.userId), args);
       },
     });
     t.field('addNewClient', {
       type: 'Client',
       args: {
+        userId: nonNull(idArg()),
         firstName: nonNull(stringArg()),
         lastName: nonNull(stringArg()),
         email: nonNull(stringArg()),
@@ -297,11 +291,11 @@ export const Mutation = extendType({
       },
       resolve: (root, args, ctx) => {
         const createNewClient = async (
-          req: NextApiRequest,
-          res: NextApiResponse,
+          userId: number,
+          hotelId: number,
           args: any
         ) => {
-          await verifyIsHotelAdmin(req, res, args.hotelId);
+          await verifyIsHotelAdmin(userId, hotelId);
 
           return await prisma.client.create({
             data: {
@@ -313,7 +307,11 @@ export const Mutation = extendType({
             },
           });
         };
-        return createNewClient(ctx.req, ctx.res, args);
+        return createNewClient(
+          parseInt(args.userId),
+          parseInt(args.hotelId),
+          args
+        );
       },
     });
   },

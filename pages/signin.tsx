@@ -15,7 +15,7 @@ import Container from '@mui/material/Container';
 import { createTheme } from '@mui/material/styles';
 import validations from '@/utils/formValidations';
 import { SIGN_IN } from '@/queries/index';
-import {useAuth}from '../context/useAuth'
+import { useAuth } from '../context/useAuth';
 import Backdrop from '@/components/Backdrop';
 import SnackBar from '@/components/SnackBar';
 
@@ -40,8 +40,7 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
-
-  const {setSession} = useAuth()
+  const { setSession } = useAuth();
   const [errorMessage, setErrorMessage] = React.useState<string>('');
 
   const [signIn, { loading, error }] = useMutation(SIGN_IN, {
@@ -49,11 +48,9 @@ export default function SignIn() {
       setErrorMessage(graphError.message);
     },
     onCompleted: (data) => {
-      const {email,firstName,lastName,role} = data.signin.user
-setSession({email,firstName,lastName,role})
-      role === 'ADMIN'
-        ? router.push('/admin')
-        : router.push('/search');
+      const { email, firstName, lastName, role } = data.signin.user;
+      setSession({ email, firstName, lastName, role });
+      role === 'ADMIN' ? router.push('/admin') : router.push('/search');
     },
   });
   const {
@@ -62,7 +59,7 @@ setSession({email,firstName,lastName,role})
     formState: { errors },
   } = useForm({ mode: 'onBlur' });
   const router = useRouter();
-  const redirectToSignup = (data) => {
+  const redirectToSignup = () => {
     router.push('/signup');
   };
   const onSubmit = async (data: any, event: any) => {

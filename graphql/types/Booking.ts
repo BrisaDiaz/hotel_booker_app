@@ -10,13 +10,9 @@ import {
   inputObjectType,
 } from 'nexus';
 import { prisma } from '../../lib/prisma';
-import { checkRoomsAvailable, getUser } from '../utils/index';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import {
-  ForbiddenError,
-  UserInputError,
-  ValidationError,
-} from 'apollo-server-micro';
+import { checkRoomsAvailable } from '../utils/index';
+
+import { UserInputError, ValidationError } from 'apollo-server-micro';
 
 export const Client = objectType({
   name: 'Client',
@@ -231,9 +227,13 @@ export const Mutation = extendType({
       type: BookingRequest,
       args: {
         roomModelId: nonNull(idArg()),
-        guestsDistribution: nonNull(list(roomSpecifications)),
-        telephone: nonNull(intArg()),
+        firstName: nonNull(stringArg()),
+        lastName: nonNull(stringArg()),
         email: nonNull(stringArg()),
+        cellularNumber: nonNull(stringArg()),
+        homePhoneNumber: nonNull(stringArg()),
+        guestsDistribution: nonNull(list(roomSpecifications)),
+
         children: nonNull(intArg()),
         adults: nonNull(intArg()),
         checkInDate: nonNull(stringArg()),
@@ -241,12 +241,7 @@ export const Mutation = extendType({
         specifications: nonNull(stringArg()),
       },
       resolve(root, args, ctx) {
-        const makeRequest = async (
-          args,
-          req: NextApiRequest,
-          res: NextApiResponse
-        ) => {
-          const user = await getUser(req, res);
+        async function makeRequest(args) {
           const roomModel = await prisma.roomModel.findUnique({
             where: {
               id: args.roomModelId,
@@ -254,13 +249,20 @@ export const Mutation = extendType({
           });
           if (!roomModel) throw new UserInputError('Room type dose not exist.');
 
+          const client = await await prisma.client.create({
+            data: {
+              firstName: args.firstName,
+              lastName: args.lastName,
+              email: args.email,
+              cellularNumber: args.cellularNumber,
+              homePhoneNumber: args.homePhoneNumber,
+            },
+          });
           const request = await prisma.bookingRequest.create({
             data: {
-              userId: user.id,
+              clientId: client.id,
               roomModelId: roomModel.id,
               hotelId: roomModel.hotelId,
-              email: args.email,
-              telephone: args.telephone,
               checkInDate: new Date(args.checkInDate).toISOString(),
               checkOutDate: new Date(args.checkOutDate).toISOString(),
               specifications: args.specifications,
@@ -275,7 +277,8 @@ export const Mutation = extendType({
               })
             ),
           });
-        };
+        }
+        return makeRequest();
       },
     });
   },

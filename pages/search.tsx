@@ -6,7 +6,7 @@ import Head from 'next/head';
 import Typography from '@mui/material/Typography';
 import HotelsGrid from '@/components/HotelsGrid';
 import FilterMenu from '@/components/layouts/FilterMenu';
-import Pagination from '@/components/pagination';
+import Pagination from '@/components/Pagination';
 import Box from '@mui/material/Box';
 
 import {

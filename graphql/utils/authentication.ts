@@ -72,19 +72,18 @@ export async function getUser(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<User | ApolloError> {
+  console.log(req.cookies);
   const token = await verifyToken(req, res);
+  console.log(token);
   return token.user;
 }
 
 export async function getAdminInfo(
-  req: NextApiRequest,
-  res: NextApiResponse
+  userId: number
 ): Promise<AdminPayload | ApolloError> {
-  const user = await getUser(req, res);
-  if (!user || user?.role !== 'ADMIN') throw new ForbiddenError('Forbiden');
   const admin = await prisma.administrator.findUnique({
     where: {
-      userId: user.id,
+      userId: userId,
     },
     select: {
       id: true,
@@ -99,14 +98,11 @@ export async function getAdminInfo(
   return admin;
 }
 export async function getUserProfile(
-  req: NextApiRequest,
-  res: NextApiResponse
+  userId: number
 ): Promise<UserProfile | null> {
-  const user = await getUser(req, res);
-  if (!user) return null;
   const userProfile = await prisma.user.findUnique({
     where: {
-      userId: user.id,
+      userId: userId,
     },
     select: {
       id: true,
@@ -119,12 +115,8 @@ export async function getUserProfile(
   if (!userProfile) return null;
   return userProfile;
 }
-export async function verifyIsHotelAdmin(
-  req: NextApiRequest,
-  res: NextApiResponse,
-  hotelId: number
-) {
-  const admin = await getAdminInfo(req, res);
+export async function verifyIsHotelAdmin(userId: number, hotelId: number) {
+  const admin = await getAdminInfo(userId);
 
   const isHotelAdmin = admin.hotels.find(
     (hotel: { id: number }) => hotel.id === hotelId

@@ -37,6 +37,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/cookies": "^0.7.7",
     "@types/node": "16.11.6",
     "@types/react": "17.0.33",
     "esbuild": "^0.13.12",

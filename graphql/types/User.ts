@@ -1,7 +1,8 @@
 import { objectType, enumType, extendType, stringArg } from 'nexus';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { AuthenticationError } from 'apollo-server-micro';
 import { prisma } from '../../lib/prisma';
-import { getUser, hashPassword } from '../utils/index';
+import { getUser, hashPassword, User } from '../utils/index';
 
 export const User = objectType({
   name: 'User',
@@ -11,29 +12,10 @@ export const User = objectType({
     t.string('lastName');
     t.string('email');
     t.string('password');
-    t.field('role', { type: Role });
+    t.field('role', { type: 'Role' });
   },
 });
-export const Query = extendType({
-  type: 'Query',
-  definition(t) {
-    t.field('me', {
-      type: 'User',
-      resolve(root, args, ctx) {
-        async function getMyProfile(req: NextApiRequest, res: NextApiResponse) {
-          const user: { id: number } = await getUser(req, res);
 
-          return await prisma.user.findUnique({
-            where: {
-              id: user.id,
-            },
-          });
-        }
-        return getMyProfile(ctx.req, ctx.res);
-      },
-    });
-  },
-});
 export const Mutation = extendType({
   type: 'Mutetion',
   definition(t) {
@@ -46,12 +28,8 @@ export const Mutation = extendType({
         password: stringArg(),
       },
       resolve(_, args, ctx) {
-        async function updateAccount(
-          req: NextApiRequest,
-          res: NextApiResponse,
-          args
-        ) {
-          const user = await getUser(req, res);
+        async function updateAccount(user: User | null, args) {
+          if (!user) throw new AuthenticationError('Unauthenticated');
 
           const encryptedPasswod = args.password
             ? await hashPassword(args.password)
@@ -68,7 +46,7 @@ export const Mutation = extendType({
             },
           });
         }
-        return updateAccount(ctx.req, ctx.res, args);
+        return updateAccount(ctx.user, args);
       },
     });
   },

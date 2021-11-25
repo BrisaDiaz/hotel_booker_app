@@ -201,12 +201,14 @@ export const GET_ROOM_MODEL_BY_ID = gql`
   }
 `;
 export const GET_ADMIN_HOTELS = gql`
-  query adminHotels {
-    adminHotels {
+  query adminHotels($userId: ID!) {
+    adminHotels(userId: $userId) {
       hotels {
         id
         name
         frameImage
+        lowestPrice
+        taxesAndCharges
         address {
           holeAddress
         }

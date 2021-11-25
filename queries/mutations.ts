@@ -41,6 +41,7 @@ export const SIGN_UP = gql`
 `;
 export const CREATE_HOTEL = gql`
   mutation createHotel(
+    $userId: ID!
     $name: String!
     $brand: String!
     $category: String!
@@ -60,7 +61,7 @@ export const CREATE_HOTEL = gql`
     $services: [String]!
     $languages: [String]!
     $accessible: Boolean!
-    $cancelationFree: Boolean!
+    $freeCancelation: Boolean!
     $familyFriendly: Boolean!
     $petFriendly: Boolean!
     $smokerFriendly: Boolean!
@@ -73,6 +74,7 @@ export const CREATE_HOTEL = gql`
     $street: String!
   ) {
     createHotel(
+      userId: $userId
       name: $name
       telephone: $telephone
       email: $email
@@ -92,7 +94,7 @@ export const CREATE_HOTEL = gql`
       services: $services
       languages: $languages
       accessible: $accessible
-      cancelationFree: $cancelationFree
+      freeCancelation: $freeCancelation
       familyFriendly: $familyFriendly
       petFriendly: $petFriendly
       smokerFriendly: $smokerFriendly
@@ -111,6 +113,7 @@ export const CREATE_HOTEL = gql`
 
 export const EDIT_HOTEL_ADDRESS = gql`
   mutation editHotelAddress(
+    $userId: ID!
     $hotelId: ID!
     $holeAddress: String
     $country: String
@@ -120,6 +123,7 @@ export const EDIT_HOTEL_ADDRESS = gql`
     $street: String
   ) {
     editHotelAddress(
+      userId: $userId
       hotelId: $hotelId
       holeAddress: $holeAddress
       country: $country
@@ -134,6 +138,7 @@ export const EDIT_HOTEL_ADDRESS = gql`
 `;
 export const CREATE_ROOM_MODEL = gql`
   mutation creatHotelRoomModel(
+    $userId: ID!
     $hotelId: ID!
     $lowestPrice: Float!
     $taxesAndCharges: Float!
@@ -152,6 +157,7 @@ export const CREATE_ROOM_MODEL = gql`
     $amenities: [String]!
   ) {
     creatHotelRoomModel(
+      userId: $userId
       hotelId: $hotelId
       lowestPrice: $lowestPrice
       smooking: $smooking

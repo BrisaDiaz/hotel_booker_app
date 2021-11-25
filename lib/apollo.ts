@@ -6,8 +6,11 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
+const isBrowser = typeof window !== undefined;
 const httpLink = createHttpLink({
   uri: 'http://localhost:3000/api/graphql',
+
+  credentials: 'include',
 });
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
@@ -24,6 +27,8 @@ const authLink = setContext((_, { headers }) => {
 function createApolloClient() {
   return new ApolloClient({
     link: authLink.concat(httpLink),
+    ssrMode: !isBrowser,
+    connectToDevTools: isBrowser,
     cache: new InMemoryCache(),
   });
 }

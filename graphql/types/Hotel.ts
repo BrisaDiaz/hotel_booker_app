@@ -10,12 +10,12 @@ import {
   booleanArg,
 } from 'nexus';
 import { prisma } from '../../lib/prisma';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
 import {
   getAdminInfo,
   verifyIsHotelAdmin,
   hotelQueryConstructor,
+  User,
 } from '../utils/index';
 
 export const Address = objectType({
@@ -232,6 +232,7 @@ export const Mutation = extendType({
     t.field('createHotel', {
       type: 'Hotel',
       args: {
+        userId: nonNull(idArg()),
         name: nonNull(stringArg()),
         brand: stringArg(),
         category: stringArg(),
@@ -264,12 +265,8 @@ export const Mutation = extendType({
         street: stringArg(),
       },
       resolve(_, args, ctx) {
-        const createHotel = async (
-          req: NextApiRequest,
-          res: NextApiResponse,
-          args: any
-        ) => {
-          const admin = await getAdminInfo(req, res);
+        const createHotel = async (userId: number, args: any) => {
+          const admin = await getAdminInfo(userId);
 
           const hotel = await prisma.hotel.create({
             data: {
@@ -335,68 +332,74 @@ export const Mutation = extendType({
           return hotel;
         };
 
-        return createHotel(ctx.req, ctx.res, args);
+        return createHotel(parseInt(args.userId), args);
       },
     });
     t.field('updateHotelAddress', {
       type: 'Address',
       args: {
+        userId: nonNull(idArg()),
         hotelId: nonNull(idArg()),
-        holeAddress: nonNull(stringArg()),
+        holeAddress: stringArg(),
         country: stringArg(),
-        postalCode: nonNull(stringArg()),
-        administrativeArea: nonNull(stringArg()),
+        postalCode: stringArg(),
+        administrativeArea: stringArg(),
         city: stringArg(),
         street: stringArg(),
       },
       resolve(root, args, ctx) {
         const addHotelAddress = async (
-          req: NextApiRequest,
-          res: NextApiResponse,
+          userId: number,
+          hotelId: number,
           args: any
         ) => {
-          await verifyIsHotelAdmin(req, res, args.hotelId);
+          await verifyIsHotelAdmin(user, hotelId);
           return await prisma.address.update({
             where: {
-              hotelId: args.hotelId,
+              hotelId: hotelId,
             },
             data: {
               country: args.country,
               holeAddress: args.holeAddress,
-              stateOrRegion: args.stateOrRegion,
+              administrativeArea: args.administrativeArea,
               city: args.city,
-              street1: args.street1,
-              street2: args.street2,
+              postalCode: args.postalCode,
+              street: args.street,
             },
           });
         };
-        return addHotelAddress(ctx.req, ctx.res, args);
+        return addHotelAddress(parseInt(args.userId), parseInt(args.hotelId));
       },
     });
 
     t.field('updateHotelLowestPrice', {
       type: 'Hotel',
       args: {
+        userId: nonNull(idArg()),
         hotelId: nonNull(idArg()),
         lowestPrice: nonNull(floatArg()),
       },
       resolve(_, args, ctx) {
         const changeHotelPrice = async (
-          req: NextApiRequest,
-          res: NextApiResponse,
-          args: any
+          userId: number,
+          hotelId: number,
+          lowestPrice: number
         ) => {
-          await verifyIsHotelAdmin(req, res, args.hotelId);
+          await verifyIsHotelAdmin(userId, hotelId);
           return await prisma.hotel.update({
             where: {
-              id: args.hotelId,
+              id: hotelId,
             },
             data: {
-              lowestPrice: args.lowestPrice,
+              lowestPrice: lowestPrice,
             },
           });
         };
-        return changeHotelPrice(ctx.req, ctx.res, args);
+        return changeHotelPrice(
+          parseInt(args.userId),
+          parseInt(args.hotelId),
+          args.lowestPrice
+        );
       },
     });
   },

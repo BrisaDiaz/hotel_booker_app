@@ -1,7 +1,9 @@
 import Head from 'next/head';
 import React from 'react';
 import { WithLayoutPage } from '@/interfaces/index';
-import { GetServerSideProps } from 'next';
+import type { NextApiRequest, NextApiResponse, GetServerSideProps } from 'next';
+import { useAuth } from '@/context/useAuth';
+import { getUser } from '@/graphql/utils/index';
 import { useRouter } from 'next/router';
 import SnackBar from '@/components/SnackBar';
 import RoomForm from '@/components/RoomForm';
@@ -26,11 +28,13 @@ const RoomUploadPage: WithLayoutPage = ({
   servicesList,
   roomCategoriesList,
   bedTypesList,
+  userId,
 }: {
   amenitiesList: Option[];
   servicesList: Option[];
   roomCategoriesList: Option[];
   bedTypesList: Option[];
+  userId: number;
 }): JSX.Element => {
   const router = useRouter();
   const { hotelId } = router.query;
@@ -56,7 +60,7 @@ const RoomUploadPage: WithLayoutPage = ({
   const onSubmit = async (variables: RoomBuildierVariables) => {
     try {
       await createRoomUploadPageModel({
-        variables: { ...variables, hotelId: hotelId },
+        variables: { ...variables, hotelId: hotelId, userId: userId },
       });
     } catch (err) {
       console.log(err);
@@ -100,37 +104,64 @@ export default RoomUploadPage;
 RoomUploadPage.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="dashboard">{page}</AdminMenu>;
 };
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const servicesRequest = await client.query({
-    query: GET_ALL_SERVICES,
-  });
-  const amenitiesRequest = await client.query({
-    query: GET_ALL_AMENITIES,
-  });
-  const categoriesRequest = await client.query({
-    query: GET_ALL_ROOM_CATEGORIES,
-  });
-  const bedsRequest = await client.query({
-    query: GET_ALL_BEDS,
-  });
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+}: {
+  req: NextApiRequest;
+  res: NextApiResponse;
+}) => {
+  try {
+    const user = await getUser(req, res);
+    if (user.role === 'ADMIN') {
+      const servicesRequest = await client.query({
+        query: GET_ALL_SERVICES,
+      });
+      const amenitiesRequest = await client.query({
+        query: GET_ALL_AMENITIES,
+      });
+      const categoriesRequest = await client.query({
+        query: GET_ALL_ROOM_CATEGORIES,
+      });
+      const bedsRequest = await client.query({
+        query: GET_ALL_BEDS,
+      });
 
-  const response = await Promise.all([
-    servicesRequest,
-    categoriesRequest,
-    amenitiesRequest,
-    bedsRequest,
-  ]);
+      const response = await Promise.all([
+        servicesRequest,
+        categoriesRequest,
+        amenitiesRequest,
+        bedsRequest,
+      ]);
 
-  const props = {
-    ...amenitiesRequest.data,
-    ...servicesRequest.data,
-    ...categoriesRequest.data,
-    ...bedsRequest.data,
-  };
+      const props = {
+        ...amenitiesRequest.data,
+        ...servicesRequest.data,
+        ...categoriesRequest.data,
+        ...bedsRequest.data,
+        userId: user.id,
+      };
 
-  return {
-    props: {
-      ...props,
-    },
-  };
+      return {
+        props: {
+          ...props,
+        },
+      };
+    }
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
+      props: {},
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
+      props: {},
+    };
+  }
 };

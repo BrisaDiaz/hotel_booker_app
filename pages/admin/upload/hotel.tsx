@@ -1,9 +1,11 @@
 import Head from 'next/head';
 import React from 'react';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { WithLayoutPage } from '@/interfaces/index';
-import { GetStaticProps } from 'next';
-import AdminMenu from '@/components/layouts/AdminMenu';
+import { GetServerSideProps } from 'next';
 
+import AdminMenu from '@/components/layouts/AdminMenu';
+import { getUser } from '@/graphql/utils/index';
 import HotelForm from '@/components/HotelForm';
 import Backdrop from '@/components/Backdrop';
 
@@ -31,12 +33,14 @@ const HotelUploadPage: WithLayoutPage = ({
   servicesList,
   languagesList,
   hotelCategoriesList,
+  userId,
 }: {
   facilitiesList: Option[];
   activitiesList: Option[];
   servicesList: Option[];
   languagesList: Option[];
   hotelCategoriesList: Option[];
+  userId: number;
 }): JSX.Element => {
   const [createHotel, { error, loading, data }] = useMutation(CREATE_HOTEL, {
     onCompleted: () => {
@@ -55,7 +59,7 @@ const HotelUploadPage: WithLayoutPage = ({
   const onSubmit = async (hotelVariables: Hotel) => {
     try {
       await createHotel({
-        variables: hotelVariables,
+        variables: { ...hotelVariables, userId: userId },
       });
     } catch (err) {
       console.log(err);
@@ -102,42 +106,69 @@ HotelUploadPage.getLayout = function getLayout(page: React.ReactNode) {
 };
 export default HotelUploadPage;
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const activitiesRequest = await client.query({
-    query: GET_ALL_ACTIVITIES,
-  });
-  const servicesRequest = await client.query({
-    query: GET_ALL_SERVICES,
-  });
-  const facilitiesRequest = await client.query({
-    query: GET_ALL_FACILITIES,
-  });
-  const categoriesRequest = await client.query({
-    query: GET_ALL_HOTEL_CATEGORIES,
-  });
-  const languagesRequest = await client.query({
-    query: GET_ALL_LANGUAGES,
-  });
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+}: {
+  req: NextApiRequest;
+  res: NextApiResponse;
+}) => {
+  try {
+    const user = await getUser(req, res);
+    if (user.role === 'ADMIN') {
+      const activitiesRequest = await client.query({
+        query: GET_ALL_ACTIVITIES,
+      });
+      const servicesRequest = await client.query({
+        query: GET_ALL_SERVICES,
+      });
+      const facilitiesRequest = await client.query({
+        query: GET_ALL_FACILITIES,
+      });
+      const categoriesRequest = await client.query({
+        query: GET_ALL_HOTEL_CATEGORIES,
+      });
+      const languagesRequest = await client.query({
+        query: GET_ALL_LANGUAGES,
+      });
 
-  const response = await Promise.all([
-    activitiesRequest,
-    servicesRequest,
-    facilitiesRequest,
-    categoriesRequest,
-    languagesRequest,
-  ]);
+      const response = await Promise.all([
+        activitiesRequest,
+        servicesRequest,
+        facilitiesRequest,
+        categoriesRequest,
+        languagesRequest,
+      ]);
 
-  const props = {
-    ...facilitiesRequest.data,
-    ...activitiesRequest.data,
-    ...languagesRequest.data,
-    ...servicesRequest.data,
-    ...categoriesRequest.data,
-  };
+      const props = {
+        ...facilitiesRequest.data,
+        ...activitiesRequest.data,
+        ...languagesRequest.data,
+        ...servicesRequest.data,
+        ...categoriesRequest.data,
+        userId: user.id,
+      };
 
-  return {
-    props: {
-      ...props,
-    },
-  };
+      return {
+        props: {
+          ...props,
+        },
+      };
+    }
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
+      props: {},
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
+      props: {},
+    };
+  }
 };

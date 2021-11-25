@@ -7,7 +7,7 @@ import {
   signToken,
   setCookie,
   deleteCookie,
-  getUser,
+  User,
   getUserProfile,
 } from '../utils/index';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -35,7 +35,7 @@ export const Mutation = extendType({
         password: nonNull(stringArg()),
       },
       resolve(root, args, ctx) {
-        async function signIn(args) {
+        async function signIn(args, req: NextApiRequest, res: NextApiResponse) {
           const user = await prisma.user.findUnique({
             where: {
               email: args.email,
@@ -56,13 +56,13 @@ export const Mutation = extendType({
             throw new UserInputError('Invalid password');
           }
           const token = await signToken(user.id, user.role);
-          setCookie(ctx.req, ctx.res, token);
+          setCookie(req, res, token);
           return {
             user,
             token,
           };
         }
-        return signIn(args);
+        return signIn(args, ctx.req, ctx.res);
       },
     });
     t.field('signup', {
@@ -124,16 +124,11 @@ export const Query = extendType({
     t.field('authentication', {
       type: 'User',
       resolve(root, args, ctx) {
-        const getUserSession = async (
-          req: NextApiRequest,
-          res: NextApiResponse
-        ) => {
-          const userProfile = await getUserProfile(req, res);
-
-          if (!userProfile) return null;
-          return userProfile;
+        const getUserSession = async (user: User | null) => {
+          if (!user) throw new AuthenticationError('Unauthenticated');
+          return getUserProfile(user);
         };
-        return getUserSession(ctx.req, ctx.res);
+        return getUserSession(ctx.user);
       },
     });
   },

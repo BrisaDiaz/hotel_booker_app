@@ -161,7 +161,7 @@ export default function MultilineTextFields(props: {
       familyFriendly: data.familyFriendly,
       petFriendly: data.petFriendly,
       ecoFriendly: data.ecoFriendly,
-      cancelationFree: data.cancelationFree,
+      freeCancelation: data.freeCancelation,
       accessible: data.accessible,
       holeAddress: data.holeAddress,
       country: data.country,
@@ -311,7 +311,7 @@ export default function MultilineTextFields(props: {
               sx={styles.textField}
               id="taxesAndCharges"
               {...register('taxesAndCharges', {
-                required: 'The lowest price is required',
+                required: 'The taxes are required',
                 min: {
                   value: 0,
                   message: 'The ammount must be a positive number',
@@ -576,7 +576,6 @@ export default function MultilineTextFields(props: {
           onChange={(data: autocompliteData[]) => handleLanguagesField(data)}
           label="Languages"
           options={languages}
-          value={languagesSelected}
           sx={styles.textField}
         />
 
@@ -589,7 +588,7 @@ export default function MultilineTextFields(props: {
           <Grid item xs={12} sm={6}>
             <FormGroup sx={{ px: 1 }}>
               <FormControlLabel
-                control={<Checkbox {...register('cancelationFree')} />}
+                control={<Checkbox {...register('freeCancelation')} />}
                 label="Free Cancelation"
               />
               <FormControlLabel
@@ -749,7 +748,7 @@ export default function MultilineTextFields(props: {
               />
             </Card>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} md={6}>
             <Card>
               <CardMedia
                 component="img"

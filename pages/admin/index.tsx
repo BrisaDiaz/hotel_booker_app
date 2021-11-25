@@ -1,9 +1,10 @@
 import React from 'react';
-import type { NextPage, GetServerSideProps, NextApiResponse } from 'next';
+import type { GetServerSideProps, NextApiRequest, NextApiResponse } from 'next';
+
+import { getUser } from '../../graphql/utils';
 import { client } from '@/lib/apollo';
 import { GET_ADMIN_HOTELS } from '@/queries/index';
 import { WithLayoutPage } from '@/interfaces/index';
-import { getServerSideSession } from '@/utils/index';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
@@ -11,11 +12,26 @@ import Box from '@mui/material/Box';
 import ActionCard from '@/components/dashboard/ActionCard';
 import HotelCard from '@/components/dashboard/HotelCard';
 
-const Dashboard: WithLayoutPage = () => {
+const Dashboard: WithLayoutPage = ({
+  hotels,
+  hotelsCount,
+}: {
+  hotels: Array<{
+    id: number;
+    name: string;
+    frameImage: string;
+    lowestPrice: number;
+    taxesAndCharges: number;
+    address: {
+      holeAddress: string;
+    };
+  }>;
+  hotelsCount: number;
+}) => {
   const router = useRouter();
   const cardData = {
-    title: 'hotels',
-    count: 3,
+    title: hotelsCount === 1 ? 'hotel' : 'hotels',
+    count: hotelsCount,
     actions: [
       {
         name: 'add',
@@ -25,6 +41,7 @@ const Dashboard: WithLayoutPage = () => {
       },
     ],
   };
+  console.log(hotels);
   const handleRedirect = (hotelId: number) => {
     router.push({
       pathname: '/admin/hotel',
@@ -36,45 +53,7 @@ const Dashboard: WithLayoutPage = () => {
   const handleEdit = (fieldToEdit: string) => {
     alert('editing ' + fieldToEdit);
   };
-  const hotels = [
-    {
-      id: 1,
-      name: 'Four Seasons Hotel Buenos Aires',
-      frameImage:
-        'https://cf.bstatic.com/xdata/images/hotel/max1024x768/22113570.jpg?k=50944ce5e79a439a84781c80e40564ad174a0eb0955bcc5b5033469b4f44bfa7&o=&hp=1',
-      address: {
-        holeAddress:
-          'Posadas 1086/88, Buenos Aires, C1011 ABB, Capital Federal, Argentina',
-      },
-      lowestPrice: 546.9,
-      taxesAndCharges: 45,
-    },
 
-    {
-      id: 2,
-      name: 'Four Seasons Hotel Buenos Aires',
-      frameImage:
-        'https://cf.bstatic.com/xdata/images/hotel/max1024x768/22113570.jpg?k=50944ce5e79a439a84781c80e40564ad174a0eb0955bcc5b5033469b4f44bfa7&o=&hp=1',
-      address: {
-        holeAddress:
-          'Posadas 1086/88, Buenos Aires, C1011 ABB, Capital Federal, Argentina',
-      },
-      lowestPrice: 546.9,
-      taxesAndCharges: 45,
-    },
-    {
-      id: 3,
-      name: 'Four Seasons Hotel Buenos Aires',
-      frameImage:
-        'https://cf.bstatic.com/xdata/images/hotel/max1024x768/22113570.jpg?k=50944ce5e79a439a84781c80e40564ad174a0eb0955bcc5b5033469b4f44bfa7&o=&hp=1',
-      address: {
-        holeAddress:
-          'Posadas 1086/88, Buenos Aires, C1011 ABB, Capital Federal, Argentina',
-      },
-      lowestPrice: 546.9,
-      taxesAndCharges: 45,
-    },
-  ];
   return (
     <div>
       <Head>
@@ -113,29 +92,36 @@ Dashboard.getLayout = function getLayout(page: React.ReactNode) {
 };
 export default Dashboard;
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  // const { data, error, loading } = await client.query({
-  //   query: GET_ADMIN_HOTELS,
-  // });
-  // console.log(error);
-  // if (error) {
-  //   return {
-  //     redirect: {
-  //       permanent: false,
-  //       destination: '/search',
-  //     },
-  //     props: {},
-  //   };
-  // }
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+}: {
+  req: NextApiRequest;
+  res: NextApiResponse;
+}) => {
+  try {
+    const user = await getUser(req, res);
 
-  // return {
-  //   props: {
-  //     hotels: data?.adminHotels.hotels,
-  //     hotelsCount: data?.adminHotels.hotelsCount,
-  //   },
-  // };
+    const { data, error, loading } = await client.query({
+      query: GET_ADMIN_HOTELS,
+      variables: { userId: user.id },
+    });
 
-  return {
-    props: {},
-  };
+    return {
+      props: {
+        hotels: data?.adminHotels.hotels,
+        hotelsCount: data?.adminHotels.hotelsCount,
+      },
+    };
+  } catch (e) {
+    console.log(e);
+
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
+      props: {},
+    };
+  }
 };
