@@ -1,19 +1,16 @@
 import { SET_SESSION, RESET_SESSION } from './authActions';
-interface State {
-  user: {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    role?: string;
-  };
-}
+import { SessionPayload } from '@/interfaces/index';
+
 interface Action {
-  payload: State | {};
+  payload: SessionPayload | {};
   type: string;
 }
-export default function authReducer(state: State, action: Action) {
+export default function authReducer(
+  state: SessionPayload | {},
+  action: Action
+) {
   if (action.type === SET_SESSION) {
-    const { user } = action.payload;
+    const user = action.payload ? action.payload?.user : {};
 
     return { user };
   }

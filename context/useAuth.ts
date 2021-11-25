@@ -1,6 +1,12 @@
-import AuthContext from './AuthContext'
-import {useContext} from 'react'
+import AuthContext from './AuthContext';
+import { useContext } from 'react';
 
-export function useAuth(){
-  return  useContext(AuthContext)
+export function useAuth():
+  | {
+      setSession: Function;
+      getSession: Function;
+      session: object;
+    }
+  | {} {
+  return useContext(AuthContext);
 }

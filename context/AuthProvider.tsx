@@ -5,6 +5,7 @@ import authReducer from './authReducer';
 import { SET_SESSION, RESET_SESSION } from './authActions';
 import { GET_USER_SESSION } from '../queries';
 import { useLazyQuery } from '@apollo/client';
+import { SessionPayload } from '@/interfaces/index';
 export default function AuthProvider({
   children,
 }: {
@@ -28,7 +29,12 @@ export default function AuthProvider({
   };
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const setSession = (user) => {
+  const setSession = (user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: 'ADMIN' | 'USER';
+  }) => {
     dispatch({
       type: SET_SESSION,
       payload: { user },
@@ -40,11 +46,11 @@ export default function AuthProvider({
       payload: {},
     });
   };
-
+  let session: SessionPayload | {} = state;
   return (
     <AuthContext.Provider
       value={{
-        session: state,
+        session,
         resetSession,
         setSession,
       }}
