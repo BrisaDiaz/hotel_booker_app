@@ -14,8 +14,8 @@ const Guest: WithLayoutPage = () => {
       </Head>
 
       <Box
+        sx={{ p: { xs: '16px 0', sm: '20px 16px' }, maxWidth: 1200 }}
         component="main"
-        sx={{ p: { xs: '20px 0', sm: '20px 16px' }, maxWidth: 1200 }}
       >
         <Typography sx={{ m: '20px auto' }}>Guests List</Typography>
       </Box>

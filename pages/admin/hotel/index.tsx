@@ -10,6 +10,7 @@ import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import ActionCard from '@/components/dashboard/ActionCard';
+import RoomTypesTable from '@/components/dashboard/RoomTypesTable';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 
@@ -146,9 +147,13 @@ const HotelAdmin: WithLayoutPage = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box component="main" sx={{ p: { xs: '20px 0', sm: '20px 16px' } }}>
+      <Box
+        sx={{ p: { xs: '16px 0', sm: '20px 16px' }, maxWidth: 1200 }}
+        component="main"
+      >
         <ActionCardGrid cards={cardsData} />
       </Box>
+      <RoomTypesTable />
     </div>
   );
 };
@@ -199,10 +204,10 @@ export const getServerSideProps: GetServerSideProps = async ({
     console.log(e);
 
     return {
-      // redirect: {
-      //   permanent: false,
-      //   destination: '/signin',
-      // },
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
       props: {},
     };
   }

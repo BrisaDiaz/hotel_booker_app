@@ -78,7 +78,10 @@ const Dashboard: WithLayoutPage = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{ p: { xs: '20px 0', sm: '20px 16px' }, maxWidth: 1200 }}>
+      <Box
+        sx={{ p: { xs: '16px 0', sm: '20px 16px' }, maxWidth: 1200 }}
+        component="main"
+      >
         <Box sx={{ p: ' 20px 10px', maxWidth: 'fit-content' }}>
           <ActionCard card={cardData} />
         </Box>
