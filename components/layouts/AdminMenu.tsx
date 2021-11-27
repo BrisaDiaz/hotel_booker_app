@@ -19,13 +19,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Menu from '@mui/material/Menu';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { SIGN_OUT } from '../../queries/index';
-import {useAuth} from '../../context/useAuth'
+import { useAuth } from '../../context/useAuth';
 const drawerWidth = 240;
 interface Link {
   label: string;
@@ -48,7 +46,7 @@ interface Props {
 }
 function UserMenu() {
   const [signOut] = useMutation(SIGN_OUT);
-const {resetSession} =useAuth()
+  const { resetSession } = useAuth();
 
   const handdleSignOut = async () => {
     try {
@@ -56,7 +54,7 @@ const {resetSession} =useAuth()
       await signOut({
         variables: { date: new Date(Date.now()).toISOString() },
       });
-      resetSession()
+      resetSession();
     } catch (e) {
       console.log(e);
     }
@@ -152,15 +150,15 @@ export default function ResponsiveDrawer(props: Props) {
   const { activeLink } = props;
 
   interface Query {
-    hotelId?: number;
-    roomTypeId?: number;
+    hotelId: number;
+    roomTypeId: number;
   }
   const router: {
     push: Function;
-    query: Query;
+    query: Query | {};
   } = useRouter();
 
-  const { hotelId, roomTypeId } = router.query;
+  const { hotelId } = router.query;
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -231,8 +229,8 @@ export default function ResponsiveDrawer(props: Props) {
   const handdleRedirect = (link: Link) => {
     let buildLink: {
       pathname: string;
-      query?: Query;
-    } = { pathname: link.url, query: link?.query };
+      query: Query;
+    } = { pathname: link.url, query: link.query };
 
     router.push(buildLink);
   };
@@ -264,7 +262,11 @@ export default function ResponsiveDrawer(props: Props) {
           <NavLink link={links[0]} handdleRedirect={handdleRedirect} />
         ) : (
           links.map((link: Link) => (
-            <NavLink link={link} handdleRedirect={handdleRedirect} />
+            <NavLink
+              key={link.label}
+              link={link}
+              handdleRedirect={handdleRedirect}
+            />
           ))
         )}
       </List>

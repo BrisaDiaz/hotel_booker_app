@@ -228,6 +228,13 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
         mainImage
         lowestPrice
         taxesAndCharges
+        mts2
+        maximunGuests
+        beds {
+          id
+          type
+          quantity
+        }
         rooms {
           id
           number

@@ -6,6 +6,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import { createStyles, makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
@@ -13,7 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Paper from '@mui/material/Paper';
 import ImageSlider from '../ImageSlider';
-import { Theme } from '@mui/material/styles';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modal: {

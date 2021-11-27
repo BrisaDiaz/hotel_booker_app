@@ -10,10 +10,8 @@ import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import ActionCard from '@/components/dashboard/ActionCard';
-import RoomTypesTable from '@/components/dashboard/RoomTypesTable';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-
+import RoomTypesTable from '@/components/dashboard/tables/RoomTypesTable';
+import AddRoomModal from '@/components/dashboard/AddRoomModal';
 interface ActionCard {
   title: string;
   actions: Array<{ name: string; callback: Function }>;
@@ -53,11 +51,14 @@ function ActionCardGrid({ cards }: { cards: ActionCard[] }) {
 }
 interface PageProps {
   roomTypes: Array<{
+    __typename: string;
     id: number;
     name: string;
     mainImage: string;
     lowestPrice: number;
     taxesAndCharges: number;
+    maximunGuests: number;
+    beds: Array<{ id: number; type: string; number: number }>;
     rooms: Array<{ id: number; number: number }>;
   }>;
   roomTypesCount: number;
@@ -74,6 +75,12 @@ const HotelAdmin: WithLayoutPage = ({
   requestsCount,
   hotelId,
 }: PageProps) => {
+  const [modalsOpenState, setModelsOpenState] = React.useState({
+    addRoom: false,
+    edit: false,
+    addBooking: false,
+    displayRoomsStatus: false,
+  });
   const router = useRouter();
 
   const cardsData = [
@@ -138,7 +145,36 @@ const HotelAdmin: WithLayoutPage = ({
       ],
     },
   ];
-  console.log(roomTypes);
+
+  const [selectedRoomModelId, setSelectedRoomModelId] = React.useState<
+    number | null
+  >(null);
+  type RoomTypeActions =
+    | 'addRoom'
+    | 'edit'
+    | 'addBooking'
+    | 'displayRoomsStatus';
+
+  const handleActions = (roomModelId: number, action: RoomTypeActions) => {
+    setSelectedRoomModelId(roomModelId);
+    setModelsOpenState({
+      ...modalsOpenState,
+      [action]: true,
+    });
+  };
+  const handleCloseModal = (modalType: RoomTypeActions) => {
+    setModelsOpenState({
+      ...modalsOpenState,
+      [modalType]: false,
+    });
+  };
+  const roomNumbersUploaded = roomTypes
+    .map((roomType) => roomType.rooms.map((room) => room.number))
+    .flat();
+
+  const onAddNewRoom = (roomsNumbers: number[]) => {
+    console.log(roomsNumbers);
+  };
   return (
     <div>
       <Head>
@@ -153,7 +189,13 @@ const HotelAdmin: WithLayoutPage = ({
       >
         <ActionCardGrid cards={cardsData} />
       </Box>
-      <RoomTypesTable />
+      <AddRoomModal
+        onSubmit={onAddNewRoom}
+        isModalOpen={modalsOpenState.addRoom}
+        closeModal={() => handleCloseModal('addRoom')}
+        restrictedNumbers={roomNumbersUploaded}
+      />
+      <RoomTypesTable roomTypes={roomTypes} handleActions={handleActions} />
     </div>
   );
 };

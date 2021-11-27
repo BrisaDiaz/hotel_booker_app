@@ -4,12 +4,12 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { CardActionArea, CardActions } from '@mui/material';
+import { CardActionArea } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
 import Tooltip from '@mui/material/Tooltip';
-
+import Paper from '@mui/material/Paper';
 function EditButtom({ onClick }: { onClick: React.MouseEventHandler }) {
   return (
     <Box
@@ -22,7 +22,7 @@ function EditButtom({ onClick }: { onClick: React.MouseEventHandler }) {
         <Fab
           onClick={(e) => {
             e.stopPropagation();
-            onClick();
+            onClick(e);
           }}
           aria-label="edit"
           size="medium"
@@ -53,7 +53,7 @@ export default function HotelCard({
 }) {
   return (
     <div key={hotel.id} onClick={() => handleRedirect(hotel.id)}>
-      <Card sx={{ width: '300px', position: 'relative' }}>
+      <Card sx={{ width: '300px', position: 'relative' }} elevation={2}>
         <CardActionArea>
           <EditButtom onClick={() => toggleEditMode(hotel.id)} />
           <CardMedia
