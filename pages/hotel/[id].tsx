@@ -37,7 +37,7 @@ const styles = {
     minWidth: 'min-content',
     textTransform: 'capitalize',
     alignItems: 'center',
-    ':& p': {
+       '& > p': {
       m: '8px 0',
     },
   },
@@ -164,7 +164,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
               component="span"
               sx={{ color: 'primary.main', fontWeight: 700, ml: 1 }}
             >
-              USD${hotel.lowestPrice}
+              USD ${hotel.lowestPrice}
             </Typography>
           </Typography>
 
@@ -174,7 +174,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
             sx={{
               p: '0 10px ',
               fontWeight: 200,
-              width: 200,
+              width: 190,
 
               textAlign: 'end',
               m: { xs: '0 15px 30px auto', md: '0 15px 20px auto ' },
@@ -182,7 +182,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
           >
             Taxes and Charges{' '}
             <Typography component="span" sx={{ fontWeight: 200, ml: 0.5 }}>
-              USD${hotel.taxesAndCharges}
+              USD ${hotel.taxesAndCharges}
             </Typography>
           </Typography>
           <Box
@@ -307,7 +307,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
                                 fontSize="small"
                                 sx={{ color: theme.palette.secondary.main }}
                               />
-                              <p>{item.name}</p>
+                              <Typography>{item.name}</Typography>
                             </Box>
                           ))}
                         </Box>

@@ -158,7 +158,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
             component="span"
             sx={{ color: 'primary.main', fontWeight: 700, ml: 1 }}
           >
-            USD${room.lowestPrice}
+            USD ${room.lowestPrice}
           </Typography>
           /Night
         </Typography>
@@ -168,14 +168,14 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
           sx={{
             p: '0 10px ',
             fontWeight: 200,
-            width: 200,
+            width: 190,
             textAlign: 'end',
             m: '0 15px 30px auto',
           }}
         >
           Taxes and Charges{' '}
           <Typography component="span" sx={{ fontWeight: 200, ml: 0.5, mb: 0 }}>
-            USD${room.taxesAndCharges}
+            USD ${room.taxesAndCharges}
           </Typography>
         </Typography>
         <Box
@@ -186,6 +186,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
             flexWrap: 'wrap',
             alignItems: 'center',
             mx: '10px',
+            mt: { sm: '-50px' },
             p: 0,
           }}
         >

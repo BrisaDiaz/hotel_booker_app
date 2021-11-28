@@ -115,7 +115,7 @@ const Search = ({
             sx={{
               display: 'flex',
               justifyContent: 'center',
-              padding: '30px 0',
+              padding: { xs: '30px 0', md: '30px 16px' },
             }}
           >
             {displayHotels.length ? (

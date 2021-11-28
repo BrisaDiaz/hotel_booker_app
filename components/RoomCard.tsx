@@ -37,16 +37,16 @@ export default function RoomCard({
         sx={{
           maxWidth: '400px',
           minWidth: '310px',
-          p: '5px',
+          p: { xs: '5px', sm: 0 },
           pb: '10px',
-          borderRadius: 3,
+          borderRadius: 1,
         }}
       >
         <CardActionArea
           sx={{
             padding: '16px',
+            pb: 0,
             textTransform: 'capitalize',
-            borderRadius: 3,
           }}
         >
           <Box>
@@ -66,7 +66,7 @@ export default function RoomCard({
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                padding: '0 10px',
+                padding: '6px 10px',
               }}
             >
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -97,14 +97,32 @@ export default function RoomCard({
                 </Typography>
               </Box>
               {RoomBedsUI(room.beds, 'small')}
+              <Box sx={{ ml: 'auto', width: 'fit-content', textAlign: 'end' }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: '600',
+                    mb: 1,
+                    marginTop: '-10px',
+                    opacity: 0.8,
+                  }}
+                >
+                  USD ${room.lowestPrice}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontWeight: 200,
+
+                    marginTop: '-10px',
+                    opacity: 0.8,
+                  }}
+                >
+                  Taxes USD ${room.taxesAndCharges}
+                </Typography>
+              </Box>
             </CardContent>
           </Box>
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: '600', float: 'right', marginTop: '-10px' }}
-          >
-            USD${room.lowestPrice}
-          </Typography>
         </CardActionArea>
       </Card>
     </div>

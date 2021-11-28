@@ -156,6 +156,7 @@ export const GET_HOTEL_BY_ID = gql`
         name
         mts2
         lowestPrice
+        taxesAndCharges
         mainImage
         beds {
           id

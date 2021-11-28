@@ -18,20 +18,31 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
 
   return (
     <Card
-      elevation={matchesSize ? 3 : 1}
-      sx={{ flexWrap: 'wrap', maxWidth: '100vw' }}
+      elevation={matchesSize ? 2 : 1}
+      sx={{
+        flexWrap: 'wrap',
+        maxWidth: 740,
+        width: '100%',
+        m: { sm: '0 auto', lg: 0 },
+      }}
       key={hotel.id}
       onClick={() => handleRedirectToHotelPage(hotel.id)}
     >
-      <CardActionArea sx={matchesSize ? { display: 'flex', p: 0 } : {}}>
+      <CardActionArea
+        sx={{
+          display: { sm: 'flex' },
+          py: { sm: 1, lg: 0 },
+          px: { sm: 1, lg: 0 },
+        }}
+      >
         <CardMedia
-          sx={matchesSize ? { width: '30%', borderRadius: '10px' } : {}}
+          sx={{ width: { md: '35%', lg: '35%' }, borderRadius: { sm: '10px' } }}
           component="img"
           height="200"
           image={hotel.frameImage}
           alt={hotel.name}
         />
-        <CardContent sx={matchesSize ? { width: '65%', mx: 0 } : { m: 0.9 }}>
+        <CardContent sx={{ width: { md: '60%', lg: '60%' } }}>
           <Typography
             gutterBottom
             variant="h6"
@@ -49,29 +60,37 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
           <Typography
             variant="body2"
             sx={{
-              marginBottom: 1,
-              maxHeight: 100,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
               padding: '5px',
               fontWeight: 500,
               opacity: 0.75,
             }}
           >
-            {hotel.description}
+            {hotel.description.substring(0, 120).concat('...')}
           </Typography>
           <Typography
             variant="h5"
             sx={{
-              margin: ' 16px 0 10px auto',
+              margin: ' 0  0 0 auto',
               maxWidth: 'fit-content',
               fontWeight: 700,
               paddingRight: 2,
+              opacity: 0.8,
             }}
           >
-            USD${hotel.lowestPrice}
+            USD {'$' + hotel.lowestPrice}
           </Typography>
-
+          <Typography
+            variant="subtitle1"
+            sx={{
+              margin: ' 0  0 8px auto',
+              maxWidth: 'fit-content',
+              fontWeight: 200,
+              paddingRight: 2,
+              opacity: 0.8,
+            }}
+          >
+            Taxes USD {'$' + hotel.taxesAndCharges}
+          </Typography>
           <Box sx={{ marginTop: 'auto', display: 'flex' }}>
             <LocationOnIcon color="secondary" fontSize="small" />
             <Typography
