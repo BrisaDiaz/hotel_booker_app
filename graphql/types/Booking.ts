@@ -48,46 +48,54 @@ export const GuestsDistribution = objectType({
     t.int('children');
   },
 });
-export const ConsultMutation = extendType({
-  type: 'Mutation',
+export const ConsultQuery = extendType({
+  type: 'Query',
   definition(t) {
     t.field('checkRoomAvailability', {
       type: 'RoomConsultResponse',
       args: {
-        roomModelId: stringArg(),
-        checkOutDate: stringArg(),
-        checkInDate: stringArg(),
-        rooms: list(roomSpecifications),
+        roomModelId: nonNull(idArg()),
+        checkOutDate: nonNull(stringArg()),
+        checkInDate: nonNull(stringArg()),
+        rooms: nonNull(list(roomSpecifications)),
       },
       resolve: (root, args, ctx) => {
         type RoomSpecifications = {
           adults: number;
           children: number;
         };
-        const makeConsult = async (args: {
-          rooms: RoomSpecifications[];
-          roomModelId: number;
-          checkOutDate: string;
-          checkInDate: string;
-        }) => {
+        const makeConsult = async (
+          roomModelId: number,
+          args: {
+            rooms: RoomSpecifications[];
+            checkOutDate: string;
+            checkInDate: string;
+          }
+        ) => {
           const maximunNumerOfAdultsInARoom = Math.max(
             ...args.rooms.map((room) => room.adults)
           );
+          const maximunNumerOfChildren = Math.max(
+            ...args.rooms.map((room) => room.children)
+          );
           const roomDetails = await prisma.roomModel.findUnique({
             where: {
-              id: args.roomModelId,
+              id: roomModelId,
             },
           });
           if (!roomDetails)
             throw new ValidationError('Invalid room type identifier');
 
-          if (maximunNumerOfAdultsInARoom > roomDetails.maximunGuests)
+          if (
+            maximunNumerOfAdultsInARoom > roomDetails.maximunGuests ||
+            maximunNumerOfChildren > roomDetails.maximunGuests
+          )
             return {
               isAvailable: false,
-              message: `The number of adults in the room most be equeal or inferior to ${roomDetails.maximunGuests}`,
+              message: `The number of adults in the room most be equeal or inferior to ${roomDetails.maximunGuests}.`,
             };
           const areEnoughRooms = await checkRoomsAvailable({
-            roomModelId: args.roomModelId,
+            roomModelId: roomModelId,
             checkOutDate: args.checkOutDate,
             checkInDate: args.checkInDate,
             roomsRequired: args.rooms.length,
@@ -96,10 +104,14 @@ export const ConsultMutation = extendType({
             return {
               isAvailable: false,
               message:
-                'The number of rooms availables dose not match with the required',
+                'The number of rooms availables dose not match the required.',
             };
+          return {
+            isAvailable: true,
+            message: 'The rooms requests are available.',
+          };
         };
-        return makeConsult(args);
+        return makeConsult(parseInt(args.roomModelId), args);
       },
     });
   },

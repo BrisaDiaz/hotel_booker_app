@@ -13,15 +13,17 @@ import { useTheme } from '@mui/material/styles';
 import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import BedIcon from '@mui/icons-material/Bed';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
-import Modal from '@/components/AbailableRoomModal';
+import ConsultModal from '@/components/AbailableRoomModal';
+import Backdrop from '@/components/Backdrop';
 import RoomBedsUI from '@/components/RoomBedsUI';
 import DinamicFieldIcone from '@/components/DinamicFieldIcone';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import StraightenIcon from '@mui/icons-material/Straighten';
 import { RoomModel, Item } from '@/interfaces/index';
 import { useRouter } from 'next/router';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { MAKE_ROOM_CONSULT, GET_ROOM_MODEL_BY_ID } from '@/queries/index';
+
 const styles = {
   list: {
     display: 'flex',
@@ -53,8 +55,11 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
   const handleRedirectToHotel = (id: number) => {
     router.push(`/hotel/${id}`);
   };
-  const [makeRoomConsult, { data, loading, error }] =
-    useMutation(MAKE_ROOM_CONSULT);
+  const [consultResponce, setConsultResponce] = React.useState<{
+    isAvailable: boolean;
+    message: string;
+  }>({ isAvailable: false, message: '' });
+  const [makeRoomConsult, { data, loading }] = useLazyQuery(MAKE_ROOM_CONSULT);
   type Room = {
     childrens: number;
     adults: number;
@@ -70,12 +75,22 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
       await makeRoomConsult({ variables: { ...data, roomModelId: room.id } });
     } catch (err) {
       console.log(err);
-      console.log(error?.graphQLErrors);
     }
   };
   React.useEffect(() => {
-    if (!loading && data?.message) {
-      console.log(data);
+    if (!loading && data?.responce) {
+      const { isAvailable, message } = data.responce;
+      if (isAvailable) {
+        return setConsultResponce({
+          isAvailable: true,
+          message:
+            'There is availability, make your reservation before the quotas run out.',
+        });
+      }
+      return setConsultResponce({
+        isAvailable: false,
+        message,
+      });
     }
   }, [loading]);
   return (
@@ -210,15 +225,38 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
           {room.description}
         </Typography>
 
-        <Modal onSubmit={handleConsutlSubmit}>
+        <ConsultModal onSubmit={handleConsutlSubmit}>
+          {Boolean(consultResponce.message) && (
+            <Typography
+              color="secondary.main"
+              sx={{
+                textAlign: 'center',
+                m: '8px',
+                maxWidth: 'max-content',
+                py: 2,
+                px: 1,
+                borderRadius: 2,
+                backgroundColor: '#e9e9e9',
+              }}
+            >
+              {consultResponce.message}
+            </Typography>
+          )}
           <Button
-            sx={{ padding: '10px 20px', m: '10px' }}
+            sx={{ padding: '10px 20px', m: '10px', float: 'left' }}
             color="secondary"
-            variant="contained"
+            variant="outlined"
           >
             Check Diponibility
           </Button>
-        </Modal>
+        </ConsultModal>
+        <Button
+          sx={{ padding: '10px 20px', m: '10px' }}
+          color="secondary"
+          variant="contained"
+        >
+          Reserve
+        </Button>
         <Box
           sx={{
             m: '20px 10px 30px',
@@ -374,6 +412,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
             )}
           </Box>
         </Box>
+        <Backdrop loading={loading} />
       </Box>
     </div>
   );

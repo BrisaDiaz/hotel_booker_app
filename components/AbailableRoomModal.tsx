@@ -61,55 +61,42 @@ type Room = {
 
 function RoomField({
   room,
-
+  handleChange,
   index,
-  deleteItem,
-  register,
-  errors,
+  onDelete,
 }: {
   room: Room;
   index: number;
-  deleteItem: Function;
-  register: Function;
-  errors: any;
+  onDelete: Function;
+  handleChange: Function;
 }) {
   return (
     <div>
       <Typography component="div" sx={{ my: 2 }}>
         <Box sx={flexBox}>
           <Typography variant="body2" sx={{ minWidth: 'max-content' }}>
-            Room {index + 1}
+            Room {index}
           </Typography>
           <TextField
             type="number"
             label="Adults"
-            error={errors[`adults${index}`] && true}
-            {...register(`adults${index}`, {
-              require: true,
-              min: {
-                value: 0,
-              },
-              pattern: /^[0-9]*$/,
-            })}
+            onChange={(e) =>
+              handleChange(room.id, 'adults', parseInt(e.target.value) || 0)
+            }
+            defaultValue={room.adults}
+            InputProps={{ inputProps: { min: 0 } }}
           />
           <TextField
             type="number"
             label="Children"
-            error={errors[`children${index}`] && true}
-            {...register(`children${index}`, {
-              require: true,
-              min: {
-                value: 0,
-              },
-              pattern: /^[0-9]*$/,
-            })}
+            defaultValue={room.children}
+            InputProps={{ inputProps: { min: 0 } }}
+            onChange={(e) =>
+              handleChange(room.id, 'children', parseInt(e.target.value) || 0)
+            }
           />
           {index !== 0 ? (
-            <IconButton
-              aria-label="delete"
-              size="small"
-              onClick={() => deleteItem(room.id)}
-            >
+            <IconButton aria-label="delete" size="small" onClick={onDelete}>
               <DeleteIcon fontSize="inherit" />
             </IconButton>
           ) : (
@@ -145,48 +132,61 @@ export default function TransitionsModal({
   ]);
 
   const handdleAddRoom = () => {
-    setRooms([...rooms, { adults: 0, children: 0, id: uuidv4() }]);
+    // verify user is not adding emty rooms
+    if (
+      rooms[rooms.length - 1].children > 0 ||
+      rooms[rooms.length - 1].adults > 0
+    )
+      return setRooms([...rooms, { adults: 0, children: 0, id: uuidv4() }]);
   };
-
+  const handleRoomChanges = (
+    roomId: string,
+    fieldChanged: 'adults' | 'children',
+    value: number
+  ) => {
+    const actualizedRooms = rooms.map((room) =>
+      room.id === roomId ? { ...room, [fieldChanged]: value } : room
+    );
+    setRooms(actualizedRooms);
+  };
   const handleDeleteRoom = (id: string) => {
     const actualizedList = rooms.filter((current) => current.id !== id);
     setRooms(actualizedList);
   };
   const handleData = (data: any) => {
     const { checkInDate, checkOutDate } = data;
-
-    new Date(checkOutDate).getTime() < new Date(minDate).getTime() &&
+    let areErrors = false;
+    if (new Date(checkOutDate).getTime() < new Date(minDate).getTime()) {
       setError('checkOutDate', {
         type: 'manual',
         message: 'Invalid date',
       });
-    new Date(checkInDate).getTime() < new Date(minDate).getTime() &&
+      areErrors = true;
+    }
+
+    if (new Date(checkInDate).getTime() < new Date(minDate).getTime()) {
       setError('checkInDate', {
         type: 'manual',
         message: 'Invalid date',
       });
-    new Date(checkOutDate).getTime() < new Date(checkInDate).getTime() &&
+      areErrors = true;
+    }
+    if (new Date(checkOutDate).getTime() < new Date(checkInDate).getTime()) {
       setError('checkInDate', {
         type: 'manual',
         message: 'Invalid check out date',
       });
-    //// validates dates are corrected
-    if (Object.keys(errors).length) return false;
-    /// extract the quantity if rooms with data
-    const roomsQuantity = Object.keys(data)
-      .filter((field) => field.includes('adults'))
-      .filter((key) => Boolean(data[key])).length;
+      areErrors = true;
+    }
 
-    /// extract the data of each room
-    let roomsWithData = new Array(roomsQuantity)
-      .fill({ adults: 0, children: 0 })
-      .reduce((array, current, index) => {
-        let roomData = {
-          adults: data[`adults${index}`],
-          children: data[`children${index}`],
-        };
-        return [...array, roomData];
-      }, []);
+    if (areErrors) return false;
+
+    const roomsWithData = rooms
+      .filter((room) => Boolean(room.adults) || Boolean(room.children))
+      .map((room) => ({
+        adults: room.adults,
+        children: room.children,
+      }));
 
     const formattedData = {
       checkInDate: data.checkInDate,
@@ -284,10 +284,9 @@ export default function TransitionsModal({
                     <div key={room.id}>
                       <RoomField
                         room={room}
-                        index={index}
-                        deleteItem={handleDeleteRoom}
-                        register={register}
-                        errors={errors}
+                        handleChange={handleRoomChanges}
+                        index={index + 1}
+                        onDelete={() => handleDeleteRoom(room.id)}
                       />
                     </div>
                   ))}

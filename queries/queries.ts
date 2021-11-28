@@ -259,3 +259,21 @@ export const GET_USER_SESSION = gql`
     }
   }
 `;
+export const MAKE_ROOM_CONSULT = gql`
+  query checkRoomAvailability(
+    $roomModelId: ID!
+    $checkInDate: String!
+    $checkOutDate: String!
+    $rooms: [roomSpecifications!]!
+  ) {
+    responce: checkRoomAvailability(
+      roomModelId: $roomModelId
+      checkInDate: $checkInDate
+      checkOutDate: $checkOutDate
+      rooms: $rooms
+    ) {
+      isAvailable
+      message
+    }
+  }
+`;

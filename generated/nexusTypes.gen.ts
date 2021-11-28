@@ -426,7 +426,6 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     addNewClient: NexusGenRootTypes['Client'] | null; // Client
     addRoomToModel: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
-    checkRoomAvailability: NexusGenRootTypes['RoomConsultResponse'] | null; // RoomConsultResponse
     creatHotelRoomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     createHotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     deleteRoomOfModel: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
@@ -453,6 +452,7 @@ export interface NexusGenFieldTypes {
     authentication: NexusGenRootTypes['User'] | null; // User
     bedTypesList: Array<NexusGenRootTypes['BedType'] | null> | null; // [BedType]
     bookingById: NexusGenRootTypes['Booking'] | null; // Booking
+    checkRoomAvailability: NexusGenRootTypes['RoomConsultResponse'] | null; // RoomConsultResponse
     facilitiesList: Array<NexusGenRootTypes['Facility'] | null> | null; // [Facility]
     hotelById: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelCategoriesList: Array<NexusGenRootTypes['HotelCategory'] | null> | null; // [HotelCategory]
@@ -693,7 +693,6 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     addNewClient: 'Client'
     addRoomToModel: 'Room'
-    checkRoomAvailability: 'RoomConsultResponse'
     creatHotelRoomModel: 'RoomModel'
     createHotel: 'Hotel'
     deleteRoomOfModel: 'Room'
@@ -720,6 +719,7 @@ export interface NexusGenFieldTypeNames {
     authentication: 'User'
     bedTypesList: 'BedType'
     bookingById: 'Booking'
+    checkRoomAvailability: 'RoomConsultResponse'
     facilitiesList: 'Facility'
     hotelById: 'Hotel'
     hotelCategoriesList: 'HotelCategory'
@@ -813,12 +813,6 @@ export interface NexusGenArgTypes {
       roomModelId: string; // ID!
       roomNumbers: number[]; // [Int!]!
       userId: string; // ID!
-    }
-    checkRoomAvailability: { // args
-      checkInDate?: string | null; // String
-      checkOutDate?: string | null; // String
-      roomModelId?: string | null; // String
-      rooms?: Array<NexusGenInputs['roomSpecifications'] | null> | null; // [roomSpecifications]
     }
     creatHotelRoomModel: { // args
       amenities: Array<string | null>; // [String]!
@@ -964,6 +958,12 @@ export interface NexusGenArgTypes {
     bookingById: { // args
       bookingId: string; // ID!
       userId: string; // ID!
+    }
+    checkRoomAvailability: { // args
+      checkInDate: string; // String!
+      checkOutDate: string; // String!
+      roomModelId: string; // ID!
+      rooms: Array<NexusGenInputs['roomSpecifications'] | null>; // [roomSpecifications]!
     }
     hotelById: { // args
       hotelId: string; // ID!

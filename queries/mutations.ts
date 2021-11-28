@@ -217,21 +217,3 @@ export const DELETE_ROOMS_OF_MODEL = gql`
     }
   }
 `;
-export const MAKE_ROOM_CONSULT = gql`
-  mutation checkRoomAvailability(
-    $roomModelId: ID!
-    $checkInDate: String!
-    $checkOutDate: String!
-    $rooms: [roomSpecifications!]!
-  ) {
-    checkRoomAvailability(
-      roomModelId: $roomModelId
-      checkInDate: $checkInDate
-      checkOutDate: $checkOutDate
-      rooms: $rooms
-    ) {
-      isAvailable
-      message
-    }
-  }
-`;

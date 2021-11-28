@@ -12,25 +12,31 @@ export async function checkRoomsAvailable({
   roomsRequired: number;
 }) {
   const requiredDates = inBetweenDates([checkInDate, checkOutDate]);
-
-  const roomOfTheType = await prisma.room.findMany({
+  console.log('dates: ' + requiredDates);
+  const roomsWithRequiredDatesAvailables = await prisma.room.findMany({
     where: {
       roomModelId: roomModelId,
-    },
-    include: {
-      bookings: true,
+      NOT: [
+        {
+          bookings: {
+            some: {
+              checkInDate: { in: requiredDates },
+              status: { equals: 'ACTIVE' },
+            },
+          },
+        },
+        {
+          bookings: {
+            some: {
+              checkOutDate: { in: requiredDates },
+              status: { equals: 'ACTIVE' },
+            },
+          },
+        },
+      ],
     },
   });
-  /// filter rooms who's dates required are already reserved
-
-  const roomsWithRequiredDatesAvailables = roomOfTheType.filter((room) =>
-    room.bookings.some((booking) =>
-      requiredDates.includes(
-        new Date(booking.checkInDate) ||
-          requiredDates.includes(new Date(booking.checkOutDate))
-      )
-    )
-  );
+  console.log('rooms: ' + roomsWithRequiredDatesAvailables);
   /// check if there is the number of rooms required
   if (roomsWithRequiredDatesAvailables.length < roomsRequired) return false;
 
