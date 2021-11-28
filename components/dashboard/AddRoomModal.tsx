@@ -42,27 +42,35 @@ export default function KeepMountedModal({
   isModalOpen: boolean;
   restrictedNumbers: number[];
 }) {
+  const inputRef = React.useRef();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
+
   const handleClose = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+
     setOpen(false), closeModal();
+    setRoomNumbers([]);
+    setCurrentNumber(null);
   };
   React.useEffect(() => {
     if (isModalOpen) {
-      handleOpen();
+      return handleOpen();
     }
+    return handleClose();
   }, [isModalOpen]);
   const [roomNumbers, setRoomNumbers] = React.useState<number[] | []>([]);
   const [currentNumber, setCurrentNumber] = React.useState<number | null>(null);
   const [error, setError] = React.useState({ message: '' });
   const handleChange = (newNumber: number) => {
-    console.log(newNumber);
     if (!newNumber || newNumber < 1) {
       return setError({ message: 'Only positive numbers are allowed' });
     }
     if (restrictedNumbers.includes(newNumber)) {
       return setError({
-        message: 'A room with that identifier was already registred',
+        message: 'Room numeber already registred',
       });
     }
     setError({ message: '' });
@@ -71,17 +79,21 @@ export default function KeepMountedModal({
   const handleDeleteNumber = (toDeleteNumber: number) => {
     setRoomNumbers(roomNumbers.filter((number) => number !== toDeleteNumber));
   };
-  const handleAddMore = () => {
+  const handleAddMore = (): number[] | [] => {
     if (!error.message && currentNumber) {
-      const uniqueNumbers = new Set([...roomNumbers, currentNumber]);
-      return setRoomNumbers([...uniqueNumbers]);
+      const uniqueNumbers = [...new Set([...roomNumbers, currentNumber])];
+
+      setRoomNumbers(uniqueNumbers);
+      return uniqueNumbers;
     }
+    return roomNumbers;
   };
   const handleSubmit = (e: SubmitEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    handleAddMore();
-    onSubmit(roomNumbers);
+    const numbers = handleAddMore();
+
+    if (numbers.length) return onSubmit(numbers);
   };
 
   return (
@@ -116,6 +128,7 @@ export default function KeepMountedModal({
           <TextField
             type="number"
             id="country"
+            inputRef={inputRef}
             autoFocus={true}
             label={error.message ? error.message : 'Room Number Identifier'}
             variant="outlined"

@@ -179,7 +179,44 @@ export const CREATE_ROOM_MODEL = gql`
     }
   }
 `;
-
+export const ADD_ROOMS_TO_MODEL = gql`
+  mutation addRoomToModel(
+    $userId: ID!
+    $hotelId: ID!
+    $roomModelId: ID!
+    $roomNumbers: [Int!]!
+  ) {
+    addRoomToModel(
+      userId: $userId
+      hotelId: $hotelId
+      roomModelId: $roomModelId
+      roomNumbers: $roomNumbers
+    ) {
+      roomModelId
+      id
+      number
+    }
+  }
+`;
+export const DELETE_ROOMS_OF_MODEL = gql`
+  mutation deleteRoomOfModel(
+    $userId: ID!
+    $hotelId: ID!
+    $roomModelId: ID!
+    $roomsIds: [Int!]!
+  ) {
+    deleteRoomOfModel(
+      userId: $userId
+      hotelId: $hotelId
+      roomModelId: $roomModelId
+      roomsIds: $roomsIds
+    ) {
+      roomModelId
+      id
+      number
+    }
+  }
+`;
 export const MAKE_ROOM_CONSULT = gql`
   mutation checkRoomAvailability(
     $roomModelId: ID!

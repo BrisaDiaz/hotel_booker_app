@@ -20,7 +20,7 @@ export default function SimpleBackdrop({ loading }: { loading: Bolean }) {
   return (
     <div>
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.tooltip + 5 }}
         open={open}
       >
         <CircularProgress color="inherit" />

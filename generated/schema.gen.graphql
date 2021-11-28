@@ -193,10 +193,11 @@ type Language {
 
 type Mutation {
   addNewClient(cellularNumber: String!, email: String!, firstName: String!, homePhoneNumber: String!, hotelId: ID!, lastName: String!, userId: ID!): Client
-  addRoomToHotel(hotelId: ID!, number: Int!, roomModelId: Int!, userId: ID!): Room
+  addRoomToModel(hotelId: ID!, roomModelId: ID!, roomNumbers: [Int!]!, userId: ID!): [Room]
   checkRoomAvailability(checkInDate: String, checkOutDate: String, roomModelId: String, rooms: [roomSpecifications]): RoomConsultResponse
   creatHotelRoomModel(amenities: [String]!, beds: [bedsSpecifications]!, category: String!, description: String!, freeCancelation: Boolean!, hotelId: ID!, lowestPrice: Float!, mainImage: String!, maximunGuests: Int!, maximunStay: Int, minimunStay: Int!, mts2: Int!, name: String!, services: [String]!, smooking: Boolean!, taxesAndCharges: Float!, userId: ID!): RoomModel
   createHotel(accessible: Boolean!, activities: [String]!, administrativeArea: String!, brand: String, category: String, checkInHour: String!, checkOutHour: String!, city: String, country: String, description: String!, ecoFriendly: Boolean!, email: String, facilities: [String]!, familyFriendly: Boolean!, frameImage: String!, freeCancelation: Boolean!, holeAddress: String!, interiorImage: String!, languages: [String]!, lowestPrice: Float!, name: String!, petFriendly: Boolean!, policiesAndRules: String!, postalCode: String!, services: [String]!, smokerFriendly: Boolean!, street: String, taxesAndCharges: Float!, telephone: String!, userId: ID!, website: String): Hotel
+  deleteRoomOfModel(hotelId: ID!, roomModelId: ID!, roomsIds: [Int!]!, userId: ID!): [Room]
   editRoomModelVicibility(hotelId: Int!, public: Boolean!, roomModelId: ID!, userId: ID!): RoomModel
   makeBooking(adults: Int!, checkInDate: String!, checkOutDate: String!, children: Int!, clientId: ID!, guestsDistribution: [roomSpecifications], hotelId: ID!, nights: Int!, paymentMethod: String, rooModelId: ID!, roomId: ID!, rooms: Int!, totalCost: Float!, userId: ID!): Booking
   makeBookingRequest(adults: Int!, cellularNumber: String!, checkInDate: String!, checkOutDate: String!, children: Int!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications]!, homePhoneNumber: String!, lastName: String!, roomModelId: ID!, specifications: String!): BookingRequest
@@ -205,7 +206,7 @@ type Mutation {
   signup(email: String!, firstName: String!, lastName: String!, password: String!): User
   updateHotelAddress(administrativeArea: String, city: String, country: String, holeAddress: String, hotelId: ID!, postalCode: String, street: String, userId: ID!): Address
   updateHotelLowestPrice(hotelId: ID!, lowestPrice: Float!, userId: ID!): Hotel
-  updateRoomModelPrice(hotelId: Int!, id: ID!, lowestPrice: Float, taxesAndCharges: Float, userId: ID!): RoomModel
+  updateRoomModelPrice(hotelId: ID!, lowestPrice: Float, taxesAndCharges: Float, userId: ID!): RoomModel
 }
 
 type Mutetion {
@@ -291,7 +292,7 @@ type RoomModel {
   minimunStay: Int
   mts2: Int
   name: String
-  rooms: [[Room]]
+  rooms: [Room]
   services: [Service]
   smooking: Boolean
   taxesAndCharges: Float

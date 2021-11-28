@@ -28,7 +28,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
 import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined';
-
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     headerLabel: {
@@ -45,11 +45,13 @@ const useStyles = makeStyles((theme: Theme) =>
 export function ActionsMenu({
   children,
   handleActions,
-  roomModelId,
+  selectedRoomTypeId,
+  selectedRoomsIds,
 }: {
   children: React.ReactNode;
   handleActions: Function;
-  roomModelId: number;
+  selectedRoomTypeId: number;
+  selectedRoomsIds: number[];
 }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -60,8 +62,7 @@ export function ActionsMenu({
     setAnchorEl(null);
   };
   const handleMenuClick = (action: string) => {
-    handleActions(roomModelId, action);
-
+    handleActions(selectedRoomTypeId, action, selectedRoomsIds);
     handleClose();
   };
   return (
@@ -97,6 +98,17 @@ export function ActionsMenu({
           </ListItemIcon>
           <ListItemText>Add Room</ListItemText>
         </MenuItem>
+        {Boolean(selectedRoomsIds.length) ? (
+          <MenuItem
+            onClick={() => handleMenuClick('deleteRooms')}
+            sx={{ pr: 3 }}
+          >
+            <ListItemIcon>
+              <DeleteOutlineIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Delete Rooms</ListItemText>
+          </MenuItem>
+        ) : null}
         <MenuItem sx={{ pr: 3 }} onClick={() => handleMenuClick('addBooking')}>
           <ListItemIcon>
             <AddCircleOutlineIcon fontSize="small" />
@@ -129,8 +141,17 @@ interface RoomType {
   mainImage: string;
   lowestPrice: number;
   taxesAndCharges: number;
-  mts2: number;
   maximunGuests: number;
+  beds: Array<{ id: number; type: string; quantity: number }>;
+  rooms: Array<{ id: number; number: number }>;
+}
+interface Row {
+  id: number;
+  name: string;
+  caption: string;
+  lowestPrice: number;
+  taxes: number;
+  maxGuests: number;
   beds: Array<{ id: number; type: string; quantity: number }>;
   rooms: Array<{ id: number; number: number }>;
 }
@@ -151,41 +172,64 @@ function RoomsTable({
     taxes: number,
     maxGuests: number,
     beds: Array<{ id: number; type: string; quantity: number }>,
-    rooms: number[]
+    rooms: Array<{ number: number; id: number }>
   ) {
     return { id, name, caption, lowestPrice, taxes, maxGuests, beds, rooms };
   }
-  const rows = roomTypes.map((roomType) =>
-    createData(
-      roomType.id,
-      roomType.name,
-      roomType.mainImage,
-      roomType.lowestPrice,
-      roomType.taxesAndCharges,
-      roomType.maximunGuests,
-      roomType.beds,
-      roomType.rooms.map((room: { id: number; number: number }) => room.number)
-    )
-  );
-  //// pagination logic
-
+  const generateRows = (roomTypes: RoomType[]) => {
+    const rows = roomTypes.map((roomType) =>
+      createData(
+        roomType.id,
+        roomType.name,
+        roomType.mainImage,
+        roomType.lowestPrice,
+        roomType.taxesAndCharges,
+        roomType.maximunGuests,
+        roomType.beds,
+        roomType.rooms.map((room: { id: number; number: number }) => ({
+          id: room.id,
+          number: room.number,
+        }))
+      )
+    );
+    return rows;
+  };
+  const getRoomTypesToDisplay = (
+    rows: Row[],
+    page: number,
+    rowsPerPage: number
+  ) => {
+    return rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+  };
+  const [rows, setRows] = React.useState(generateRows(roomTypes));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
   const [displayedRows, setDisplayedRows] = React.useState(
-    rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+    getRoomTypesToDisplay(rows, page, rowsPerPage)
   );
+  React.useEffect(() => {
+    const actualizedRows = generateRows(roomTypes);
+    setRows(actualizedRows);
+    setDisplayedRows(getRoomTypesToDisplay(actualizedRows, page, rowsPerPage));
+  }, [roomTypes]);
+
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
     setPage(newPage);
-    setDisplayedRows(
-      rows.slice(newPage * rowsPerPage, (newPage + 1) * rowsPerPage)
-    );
+    setDisplayedRows(getRoomTypesToDisplay(rows, newPage, rowsPerPage));
+  };
+  const [selectedRooms, setSelectedRooms] = React.useState<number[] | []>([]);
+  const handleSelectedRooms = (roomId: number) => {
+    if (Boolean(selectedRooms.includes(roomId))) {
+      return setSelectedRooms(selectedRooms.filter((id) => id !== roomId));
+    }
+    return setSelectedRooms([...selectedRooms, roomId]);
   };
 
   return (
-    <TableContainer component={Paper} elevation={4} sx={{ borderRadius: 4 }}>
+    <TableContainer component={Paper} elevation={4}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table" size="medium">
         <TableHead sx={{ py: 2 }}>
           <TableRow>
@@ -221,7 +265,11 @@ function RoomsTable({
             >
               <TableCell component="th" scope="row">
                 {/* ACTION MENU */}
-                <ActionsMenu handleActions={handleActions} roomModelId={row.id}>
+                <ActionsMenu
+                  handleActions={handleActions}
+                  selectedRoomTypeId={row.id}
+                  selectedRoomsIds={selectedRooms}
+                >
                   <ActionsButton />
                 </ActionsMenu>
               </TableCell>
@@ -293,8 +341,17 @@ function RoomsTable({
                       gap: 1,
                     }}
                   >
-                    {row.rooms.map((number) => (
-                      <Chip key={number} label={number} />
+                    {row.rooms.map((room) => (
+                      <Chip
+                        key={room.number}
+                        label={room.number}
+                        color={
+                          Boolean(selectedRooms.includes(parseInt(room.id)))
+                            ? 'primary'
+                            : 'default'
+                        }
+                        onClick={() => handleSelectedRooms(parseInt(room.id))}
+                      />
                     ))}
                   </Stack>
                 </Box>

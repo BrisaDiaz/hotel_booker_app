@@ -96,7 +96,7 @@ export const RoomModel = objectType({
     t.list.field('services', { type: 'Service' });
     t.list.field('amenities', { type: 'Amenity' });
     t.list.field('rooms', {
-      type: list('Room'),
+      type: 'Room',
       resolve: (root) => {
         return prisma.room.findMany({
           where: {
@@ -267,9 +267,8 @@ export const Mutation = extendType({
     t.field('updateRoomModelPrice', {
       type: 'RoomModel',
       args: {
-        id: nonNull(idArg()),
         userId: nonNull(idArg()),
-        hotelId: nonNull(intArg()),
+        hotelId: nonNull(idArg()),
         lowestPrice: floatArg(),
         taxesAndCharges: floatArg(),
       },
@@ -295,43 +294,91 @@ export const Mutation = extendType({
       },
     });
 
-    t.field('addRoomToHotel', {
-      type: 'Room',
+    t.field('addRoomToModel', {
+      type: list('Room'),
       args: {
         userId: nonNull(idArg()),
         hotelId: nonNull(idArg()),
-        roomModelId: nonNull(intArg()),
-        number: nonNull(intArg()),
+        roomModelId: nonNull(idArg()),
+        roomNumbers: nonNull(list(nonNull(intArg()))),
       },
       resolve: (root, args, ctx) => {
         const userId = parseInt(args.userId);
         const hotelId = parseInt(args.hotelId);
         const roomModelId = parseInt(args.roomModelId);
 
-        const addNewRoom = async (
+        const deleteRooms = async (
           userId: number,
           hotelId: number,
           roomModelId: number,
-          roomNumber: number
+          roomNumbers: number[]
         ) => {
           await verifyIsHotelAdmin(userId, hotelId);
-          await prisma.roomModel.update({
+          const roomsInHotel = await prisma.room.findMany({
             where: {
-              id: roomModelId,
-            },
-            data: {
-              quantityInHotel: { increment: 1 },
+              hotelId: hotelId,
             },
           });
-          return await prisma.room.create({
-            data: {
-              hotelId: hotelId,
-              roomModelId: roomModelId,
-              number: roomNumber,
+
+          const roomsNumbersInHotel = roomsInHotel.map((room) => room.number);
+
+          const roomsAllowed = roomNumbers.filter(
+            (number) => !roomsNumbersInHotel.includes(number)
+          );
+
+          if (roomsAllowed.length) {
+            await prisma.room.createMany({
+              data: roomNumbers.map((number) => ({
+                hotelId,
+                number,
+                roomModelId,
+              })),
+            });
+
+            return prisma.room.findMany({
+              where: {
+                roomModelId,
+              },
+            });
+          }
+          return [];
+        };
+        return deleteRooms(userId, hotelId, roomModelId, args.roomNumbers);
+      },
+    });
+    t.field('deleteRoomOfModel', {
+      type: list('Room'),
+      args: {
+        userId: nonNull(idArg()),
+        hotelId: nonNull(idArg()),
+        roomModelId: nonNull(idArg()),
+        roomsIds: nonNull(list(nonNull(intArg()))),
+      },
+      resolve: (root, args, ctx) => {
+        const userId = parseInt(args.userId);
+        const hotelId = parseInt(args.hotelId);
+        const roomModelId = parseInt(args.roomModelId);
+
+        const deleteRooms = async (
+          userId: number,
+          hotelId: number,
+          roomModelId: number,
+          roomsIds: number[]
+        ) => {
+          await verifyIsHotelAdmin(userId, hotelId);
+          await prisma.room.deleteMany({
+            where: {
+              OR: roomsIds.map((id) => ({ id: id })),
+            },
+          });
+
+          return prisma.room.findMany({
+            where: {
+              roomModelId,
             },
           });
         };
-        return addNewRoom(userId, hotelId, roomModelId, args.number);
+        return deleteRooms(userId, hotelId, roomModelId, args.roomsIds);
       },
     });
   },

@@ -112,15 +112,15 @@ model RoomCategory {
 }
 
 model RoomModel {
-  id              Int          @id @default(autoincrement())
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  hotel           Hotel        @relation(fields: [hotelId], references: [id])
+  id              Int              @id @default(autoincrement())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  hotel           Hotel            @relation(fields: [hotelId], references: [id])
   name            String
   hotelId         Int
   mts2            Int
-  quantityInHotel Int          @default(0)
-  roomCategory    RoomCategory @relation(fields: [category], references: [name])
+  quantityInHotel Int              @default(0)
+  roomCategory    RoomCategory     @relation(fields: [category], references: [name])
   category        String
   lowestPrice     Float
   taxesAndCharges Float
@@ -128,18 +128,14 @@ model RoomModel {
   smooking        Boolean
   mainImage       String
   description     String?
-  maximunStay     Int          @default(0)
-  minimunStay     Int          @default(1)
+  maximunStay     Int              @default(0)
+  minimunStay     Int              @default(1)
   maximunGuests   Int
   amenities       Amenity[]
   services        Service[]
   rooms           Room[]
-
-
-  public Boolean @default(true)
-
-
-  BookingRequest BookingRequest[]
+  public          Boolean          @default(true)
+  BookingRequest  BookingRequest[]
 }
 
 model Features {

@@ -228,7 +228,7 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
         mainImage
         lowestPrice
         taxesAndCharges
-        mts2
+
         maximunGuests
         beds {
           id
@@ -237,6 +237,7 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
         }
         rooms {
           id
+          roomModelId
           number
         }
       }
