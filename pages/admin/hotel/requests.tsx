@@ -1,10 +1,15 @@
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextApiRequest, NextApiResponse } from 'next';
+import { WithLayoutPage } from '@/interfaces/index';
+import { GET_ROOM_MODEL_BOOKING_REQUESTS } from '@/queries/index';
+import { getUser } from '@/graphql/utils';
 import Typography from '@mui/material/Typography';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
-import { WithLayoutPage } from '@/interfaces/index';
-const RoomRequests: WithLayoutPage = () => {
+
+import { client } from '@/lib/apollo';
+const RoomRequests: WithLayoutPage = ({ hotelId, userId, requests }) => {
+  console.log(requests);
   return (
     <div>
       <Head>
@@ -26,3 +31,50 @@ RoomRequests.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="requests">{page}</AdminMenu>;
 };
 export default RoomRequests;
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  query,
+}: {
+  req: NextApiRequest;
+  res: NextApiResponse;
+  query: {
+    hotelId: number;
+  };
+}) => {
+  try {
+    const user = await getUser(req, res);
+    if (user.role === 'ADMIN') {
+      const { data, error } = await client.query({
+        query: GET_ROOM_MODEL_BOOKING_REQUESTS,
+        variables: { userId: user.id, hotelId: query.hotelId },
+      });
+
+      return {
+        props: {
+          hotelId: query.hotelId,
+          userId: user.id,
+          requests: data.requests,
+        },
+      };
+    }
+
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
+      props: {},
+    };
+  } catch (e) {
+    console.log(e);
+
+    return {
+      // redirect: {
+      //   permanent: false,
+      //   destination: '/signin',
+      // },
+      props: {},
+    };
+  }
+};

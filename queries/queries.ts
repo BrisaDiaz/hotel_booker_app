@@ -255,6 +255,9 @@ export const GET_ROOM_MODEL_BOOKING_REQUESTS = gql`
   query hotelRequestsById($userId: ID!, $hotelId: ID!) {
     requests: hotelRequestsById(userId: $userId, hotelId: $hotelId) {
       id
+      checkInDate
+      checkOutDate
+      specifications
       client {
         id
         firstName
@@ -263,13 +266,10 @@ export const GET_ROOM_MODEL_BOOKING_REQUESTS = gql`
         landlineNumber
         email
       }
-      guestDistribution {
+      guestsDistribution {
         children
         adults
       }
-      checkInDate
-      checkOutDate
-      specifications
       roomModel {
         id
         name

@@ -107,7 +107,7 @@ export const Booking = objectType({
     t.int('clientId');
     t.field('client', {
       type: 'Client',
-      resolve(root) {
+      resolve(root: { clientId: number }) {
         return prisma.client.findUnique({
           where: {
             id: root.clientId,
@@ -117,11 +117,20 @@ export const Booking = objectType({
     });
     t.int('children');
     t.int('adults');
-    t.int('rooms');
+    t.field('rooms', { type: 'Room' });
     t.int('checkInDate');
     t.int('checkOutDate');
     t.string('specifications');
-    t.field('guestsDistribution', { type: GuestsDistribution });
+    t.list.field('guestsDistribution', {
+      type: GuestsDistribution,
+      resolve(root: { id: number }) {
+        return prisma.guestsDistribution.findMany({
+          where: {
+            bookingId: root.id,
+          },
+        });
+      },
+    });
     t.field('status', { type: 'BookingStatus' });
     t.float('totalCost');
     t.field('paymentMethod', { type: 'PaymentMethod' });
@@ -132,7 +141,7 @@ export const BookingRequest = objectType({
   definition(t) {
     t.id('id');
     t.int('hotelId');
-    t.int('userId');
+    t.int('clientId');
     t.int('roomModelId');
     t.field('roomModel', {
       type: 'RoomModel',
@@ -144,23 +153,32 @@ export const BookingRequest = objectType({
         });
       },
     });
-    t.field('user', {
-      type: 'User',
-      resolve(root) {
-        return prisma.user.findUnique({
+    t.field('client', {
+      type: 'Client',
+      resolve(root: { clientId: number }) {
+        return prisma.client.findUnique({
           where: {
-            id: root.userId,
+            id: root.clientId,
           },
         });
       },
     });
-    t.field('guestsDistribution', { type: GuestsDistribution });
-    t.int('telephone');
+    t.list.field('guestsDistribution', {
+      type: GuestsDistribution,
+      resolve(root: { id: number }) {
+        return prisma.guestsDistribution.findMany({
+          where: {
+            bookingRequestId: root.id,
+          },
+        });
+      },
+    });
+    t.string('telephone');
     t.string('email');
     t.int('children');
     t.int('adults');
-    t.int('checkInDate');
-    t.int('checkOutDate');
+    t.string('checkInDate');
+    t.string('checkOutDate');
     t.string('specifications');
     t.field('status', { type: BookingRequestStatus });
   },
@@ -261,8 +279,8 @@ export const Mutation = extendType({
               clientId: client.id,
               roomModelId: roomModel.id,
               hotelId: roomModel.hotelId,
-              checkInDate: new Date(args.checkInDate),
-              checkOutDate: new Date(args.checkOutDate),
+              checkInDate: new Date(args.checkInDate).toISOString(),
+              checkOutDate: new Date(args.checkOutDate).toISOString(),
               specifications: args.specifications,
               nights,
               children,

@@ -249,7 +249,7 @@ export const Query = extendType({
       },
     });
     t.field('hotelRequestsById', {
-      type: 'Booking',
+      type: list('BookingRequest'),
       args: {
         hotelId: nonNull(idArg()),
         userId: nonNull(idArg()),
@@ -258,7 +258,7 @@ export const Query = extendType({
         const getRequests = async (userId: number, hotelId: number) => {
           await verifyIsHotelAdmin(userId, hotelId);
 
-          return prisma.bookingRequest.findMany({
+          const requests = await prisma.bookingRequest.findMany({
             where: {
               hotelId: hotelId,
               status: 'PENDING',
@@ -268,12 +268,14 @@ export const Query = extendType({
               guestsDistribution: true,
             },
           });
+
+          return requests;
         };
         return getRequests(parseInt(args.userId), parseInt(args.hotelId));
       },
     });
     t.field('hotelBookingsById', {
-      type: 'Booking',
+      type: list('Booking'),
       args: {
         hotelId: nonNull(idArg()),
         userId: nonNull(idArg()),
@@ -297,7 +299,7 @@ export const Query = extendType({
       },
     });
     t.field('hotelGuestsById', {
-      type: 'Booking',
+      type: list('Booking'),
       args: {
         hotelId: nonNull(idArg()),
         userId: nonNull(idArg()),

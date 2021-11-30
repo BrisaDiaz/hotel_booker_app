@@ -52,7 +52,7 @@ type Booking {
   children: Int
   client: Client
   clientId: Int
-  guestsDistribution: GuestsDistribution
+  guestsDistribution: [GuestsDistribution]
   hotel: Hotel
   hotelId: Int
   id: ID
@@ -61,7 +61,7 @@ type Booking {
   roomId: Int
   roomModel: RoomModel
   roomModelId: Int
-  rooms: Int
+  rooms: Room
   specifications: String
   status: BookingStatus
   totalCost: Float
@@ -69,20 +69,20 @@ type Booking {
 
 type BookingRequest {
   adults: Int
-  checkInDate: Int
-  checkOutDate: Int
+  checkInDate: String
+  checkOutDate: String
   children: Int
+  client: Client
+  clientId: Int
   email: String
-  guestsDistribution: GuestsDistribution
+  guestsDistribution: [GuestsDistribution]
   hotelId: Int
   id: ID
   roomModel: RoomModel
   roomModelId: Int
   specifications: String
   status: BookingRequestStatus
-  telephone: Int
-  user: User
-  userId: Int
+  telephone: String
 }
 
 enum BookingRequestStatus {
@@ -233,12 +233,12 @@ type Query {
   bookingById(bookingId: ID!, userId: ID!): Booking
   checkRoomAvailability(checkInDate: String!, checkOutDate: String!, roomModelId: ID!, rooms: [roomSpecifications]!): RoomConsultResponceResponce
   facilitiesList: [Facility]
-  hotelBookingsById(hotelId: ID!, userId: ID!): Booking
+  hotelBookingsById(hotelId: ID!, userId: ID!): [Booking]
   hotelById(hotelId: ID!): Hotel
   hotelCategoriesList: [HotelCategory]
   hotelData(hotelId: ID!, userId: ID!): HotelData
-  hotelGuestsById(hotelId: ID!, userId: ID!): Booking
-  hotelRequestsById(hotelId: ID!, userId: ID!): Booking
+  hotelGuestsById(hotelId: ID!, userId: ID!): [Booking]
+  hotelRequestsById(hotelId: ID!, userId: ID!): [BookingRequest]
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
   languagesList: [Language]
   roomCategoriesList: [RoomCategory]
