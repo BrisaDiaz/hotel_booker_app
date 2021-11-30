@@ -366,6 +366,7 @@ export const Mutation = extendType({
           roomsIds: number[]
         ) => {
           await verifyIsHotelAdmin(userId, hotelId);
+
           await prisma.room.deleteMany({
             where: {
               OR: roomsIds.map((id) => ({ id: id })),

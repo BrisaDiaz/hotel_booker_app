@@ -12,6 +12,9 @@
             ],
       "@/mocks/*": ["mocks/*"],
       "@/interfaces/*": ["interfaces/*"],
+            "@/hooks/*": [
+              "hooks/*"
+            ],
       "@/utils/*": ["utils/*"],
       "@/context/*": ["context/*"],
         "@/graphql/*": [

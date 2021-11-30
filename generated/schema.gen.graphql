@@ -98,12 +98,12 @@ enum BookingStatus {
 
 type Client {
   bookings: [Booking]
-  cellularNumber: String
   email: String
   firstName: String
-  homePhoneNumber: String
   id: ID
+  landlineNumber: String
   lastName: String
+  mobileNumber: String
 }
 
 type Facility {
@@ -192,14 +192,14 @@ type Language {
 }
 
 type Mutation {
-  addNewClient(cellularNumber: String!, email: String!, firstName: String!, homePhoneNumber: String!, hotelId: ID!, lastName: String!, userId: ID!): Client
+  addNewClient(email: String!, firstName: String!, hotelId: ID!, landlineNumber: String!, lastName: String!, mobileNumber: String!, userId: ID!): Client
   addRoomToModel(hotelId: ID!, roomModelId: ID!, roomNumbers: [Int!]!, userId: ID!): [Room]
   creatHotelRoomModel(amenities: [String]!, beds: [bedsSpecifications]!, category: String!, description: String!, freeCancelation: Boolean!, hotelId: ID!, lowestPrice: Float!, mainImage: String!, maximunGuests: Int!, maximunStay: Int, minimunStay: Int!, mts2: Int!, name: String!, services: [String]!, smooking: Boolean!, taxesAndCharges: Float!, userId: ID!): RoomModel
   createHotel(accessible: Boolean!, activities: [String]!, administrativeArea: String!, brand: String, category: String, checkInHour: String!, checkOutHour: String!, city: String, country: String, description: String!, ecoFriendly: Boolean!, email: String, facilities: [String]!, familyFriendly: Boolean!, frameImage: String!, freeCancelation: Boolean!, holeAddress: String!, interiorImage: String!, languages: [String]!, lowestPrice: Float!, name: String!, petFriendly: Boolean!, policiesAndRules: String!, postalCode: String!, services: [String]!, smokerFriendly: Boolean!, street: String, taxesAndCharges: Float!, telephone: String!, userId: ID!, website: String): Hotel
   deleteRoomOfModel(hotelId: ID!, roomModelId: ID!, roomsIds: [Int!]!, userId: ID!): [Room]
   editRoomModelVicibility(hotelId: Int!, public: Boolean!, roomModelId: ID!, userId: ID!): RoomModel
   makeBooking(adults: Int!, checkInDate: String!, checkOutDate: String!, children: Int!, clientId: ID!, guestsDistribution: [roomSpecifications], hotelId: ID!, nights: Int!, paymentMethod: String, rooModelId: ID!, roomId: ID!, rooms: Int!, totalCost: Float!, userId: ID!): Booking
-  makeBookingRequest(adults: Int!, cellularNumber: String!, checkInDate: String!, checkOutDate: String!, children: Int!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications]!, homePhoneNumber: String!, lastName: String!, roomModelId: ID!, specifications: String!): BookingRequest
+  makeBookingRequest(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications]!, landlineNumber: String!, lastName: String!, mobileNumber: String!, roomModelId: ID!, specifications: String): RoomConsultResponceResponce
   signin(email: String!, password: String!): AuthPayload
   signout(date: String): PlainResponse
   signup(email: String!, firstName: String!, lastName: String!, password: String!): User
@@ -231,7 +231,7 @@ type Query {
   authentication: User
   bedTypesList: [BedType]
   bookingById(bookingId: ID!, userId: ID!): Booking
-  checkRoomAvailability(checkInDate: String!, checkOutDate: String!, roomModelId: ID!, rooms: [roomSpecifications]!): RoomConsultResponse
+  checkRoomAvailability(checkInDate: String!, checkOutDate: String!, roomModelId: ID!, rooms: [roomSpecifications]!): RoomConsultResponceResponce
   facilitiesList: [Facility]
   hotelById(hotelId: ID!): Hotel
   hotelCategoriesList: [HotelCategory]
@@ -269,7 +269,7 @@ type RoomCategory {
   name: String
 }
 
-type RoomConsultResponse {
+type RoomConsultResponceResponce {
   isAvailable: Boolean
   message: String
 }

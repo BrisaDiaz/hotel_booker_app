@@ -53,7 +53,7 @@ export default function HotelCard({
 }) {
   return (
     <div key={hotel.id} onClick={() => handleRedirect(hotel.id)}>
-      <Card sx={{ width: '300px', position: 'relative' }} elevation={2}>
+      <Card sx={{ width: '300px', position: 'relative' }}>
         <CardActionArea>
           <EditButtom onClick={() => toggleEditMode(hotel.id)} />
           <CardMedia
@@ -103,10 +103,15 @@ export default function HotelCard({
               }}
             >
               <Typography
-                variant="subtitle2"
-                sx={{ width: '150px', opacity: 0.8 }}
+                variant="subtitle1"
+                sx={{
+                  width: 120,
+                  lineHeight: 1.3,
+                  fontWeight: 200,
+                  opacity: 0.8,
+                }}
               >
-                Taxes and Charges USD ${hotel.taxesAndCharges}
+                Taxes & Charges ${hotel.taxesAndCharges}
               </Typography>
               <Typography
                 variant="h6"

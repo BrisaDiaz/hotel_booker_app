@@ -182,16 +182,16 @@ model Service {
 }
 
 model Client {
-  id              Int              @id @default(autoincrement())
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  firstName       String
-  lastName        String
-  email           String
-  cellularNumber  String
-  homePhoneNumber String
-  bookings        Booking[]
-  BookingRequest  BookingRequest[]
+  id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  firstName      String
+  lastName       String
+  email          String
+  mobileNumber   String
+  landlineNumber String
+  bookings       Booking[]
+  BookingRequest BookingRequest[]
 }
 
 model Booking {
@@ -254,7 +254,7 @@ model BookingRequest {
   checkOutDate       DateTime
   specifications     String
   status             BookingRequestStatus @default(PENDING)
-  roomId             Int?
+
 }
 
 enum BookingStatus {

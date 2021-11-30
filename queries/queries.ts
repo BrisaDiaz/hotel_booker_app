@@ -174,6 +174,8 @@ export const GET_ROOM_MODEL_BY_ID = gql`
       hotelId
       hotel {
         name
+        checkInHour
+        checkOutHour
       }
       category
       name

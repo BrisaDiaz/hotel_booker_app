@@ -1,3 +1,4 @@
+import { array } from 'prop-types';
 import { prisma } from '../../lib/prisma';
 
 export async function checkRoomsAvailable({
@@ -12,7 +13,7 @@ export async function checkRoomsAvailable({
   roomsRequired: number;
 }) {
   const requiredDates = inBetweenDates([checkInDate, checkOutDate]);
-  console.log('dates: ' + requiredDates);
+
   const roomsWithRequiredDatesAvailables = await prisma.room.findMany({
     where: {
       roomModelId: roomModelId,
@@ -36,14 +37,98 @@ export async function checkRoomsAvailable({
       ],
     },
   });
-  console.log('rooms: ' + roomsWithRequiredDatesAvailables);
+
   /// check if there is the number of rooms required
-  if (roomsWithRequiredDatesAvailables.length < roomsRequired) return false;
+  if (roomsWithRequiredDatesAvailables.length < roomsRequired) return {};
 
-  return true;
+  return roomsWithRequiredDatesAvailables;
 }
+export async function checkIsValidRoomRequest({
+  roomDetails,
+  rooms,
+  checkOutDate,
+  checkInDate,
+}: {
+  roomDetails: any;
+  rooms: Array<{
+    children: number;
+    adults: number;
+  }>;
+  checkOutDate: string;
+  checkInDate: string;
+}) {
+  const totalNights = inBetweenDates([checkInDate, checkOutDate]).length;
 
-function inBetweenDates(range: string[]): Date[] {
+  const totalChildren = rooms.reduce(
+    (acum, room) => (acum += room.children),
+    0
+  );
+  const totalAdults = rooms.reduce((acum, room) => (acum += room.adults), 0);
+  const guestPerRoom = rooms.map((room) => room.adults + room.children);
+
+  if (roomDetails.maximunNights > 0 && totalNights > roomDetails.maximunNights)
+    return {
+      isAvailable: false,
+      message: `The limit of nights to reserve the room is ${roomDetails.maximunNights}.`,
+      requestData: {
+        nights: totalNights,
+        totalRooms: rooms.length,
+        guestsDistribution: rooms,
+        adults: totalAdults,
+        children: totalChildren,
+      },
+    };
+
+  if (guestPerRoom.some((guests: number) => guests > roomDetails.maximunGuests))
+    return {
+      isAvailable: false,
+      message: `The number of guest in a room most be equeal or inferior to ${roomDetails.maximunGuests}.`,
+      requestData: {
+        nights: totalNights,
+        checkInDate,
+        checkOutDate,
+        totalRooms: rooms.length,
+        guestsDistribution: rooms,
+        adults: totalAdults,
+        children: totalChildren,
+      },
+    };
+  const areEnoughRooms = await checkRoomsAvailable({
+    roomModelId: roomDetails.id,
+    checkOutDate: checkOutDate,
+    checkInDate: checkInDate,
+    roomsRequired: rooms.length,
+  });
+  if (!areEnoughRooms)
+    return {
+      isAvailable: false,
+      message: 'The number of rooms availables dose not match the required.',
+      requestData: {
+        nights: totalNights,
+        checkInDate,
+        checkOutDate,
+        totalRooms: rooms.length,
+        guestsDistribution: rooms,
+        adults: totalAdults,
+        children: totalChildren,
+      },
+    };
+
+  return {
+    isAvailable: true,
+    message: 'The rooms requests are available.',
+    requestData: {
+      nights: totalNights,
+      checkInDate,
+      checkOutDate,
+      totalRooms: rooms.length,
+      guestsDistribution: rooms,
+      adults: totalAdults,
+      children: totalChildren,
+    },
+  };
+}
+export function inBetweenDates(range: string[]): Date[] {
   const [startDate, endDate] = range;
   const startDateInMiliseconds = new Date(startDate).getTime();
   const endDateInMiliseconds = new Date(endDate).getTime();
@@ -78,7 +163,7 @@ export function hotelQueryConstructor(args: HotelQueryArgs) {
   }
 
   interface PropietyFilter {
-    [key: string]: { [key: string]: { equeals: string } };
+    [key: string]: { [key: string]: { equals: string } };
   }
   interface searchFilter {
     [key: string]: {

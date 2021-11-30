@@ -51,6 +51,7 @@ export default function ResponsiveDialog({
   return (
     <div>
       <Dialog
+        sx={{ border: '1px solid rgba(244,244,244,1)', borderRadius: 2 }}
         open={open}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"

@@ -5,7 +5,6 @@ import Head from 'next/head';
 import Box from '@mui/material/Box';
 import DoneIcon from '@mui/icons-material/Done';
 import Typography from '@mui/material/Typography';
-import TodayIcon from '@mui/icons-material/Today';
 import Button from '@mui/material/Button';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageList from '@mui/material/ImageList';
@@ -14,15 +13,21 @@ import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import BedIcon from '@mui/icons-material/Bed';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import ConsultModal from '@/components/AbailableRoomModal';
-import Backdrop from '@/components/Backdrop';
+import BookingRequestModal from '@/components/BookingRequestModal';
+import Backdrop from '@/components/BookingRequestModal';
 import RoomBedsUI from '@/components/RoomBedsUI';
 import DinamicFieldIcone from '@/components/DinamicFieldIcone';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import StraightenIcon from '@mui/icons-material/Straighten';
+
 import { RoomModel, Item } from '@/interfaces/index';
 import { useRouter } from 'next/router';
-import { useLazyQuery } from '@apollo/client';
-import { MAKE_ROOM_CONSULT, GET_ROOM_MODEL_BY_ID } from '@/queries/index';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import {
+  MAKE_ROOM_CONSULT,
+  GET_ROOM_MODEL_BY_ID,
+  MAKE_BOOKING_REQUEST,
+} from '@/queries/index';
 
 const styles = {
   list: {
@@ -49,50 +54,118 @@ const styles = {
     width: { xs: '250px', sm: '300px' },
   },
 };
-const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
+const RoomPage: NextPage = ({
+  room,
+  roomModelId,
+}: {
+  room: RoomModel;
+  roomModelId: number;
+}) => {
   const router = useRouter();
   const theme = useTheme();
   const handleRedirectToHotel = (id: number) => {
     router.push(`/hotel/${id}`);
   };
-  const [consultResponce, setConsultResponce] = React.useState<{
+  const [requestData, setRequestData] = React.useState<{
     isAvailable: boolean;
     message: string;
   }>({ isAvailable: false, message: '' });
-  const [makeRoomConsult, { data, loading }] = useLazyQuery(MAKE_ROOM_CONSULT);
+
+  const [makeRoomConsult, consultResponce] = useLazyQuery(MAKE_ROOM_CONSULT, {
+    fetchPolicy: 'network-only',
+  });
+
+  const [makeBookingRequest, boolkingResponce] = useMutation(
+    MAKE_BOOKING_REQUEST,
+    {
+      fetchPolicy: 'network-only',
+    }
+  );
+
+  const [loading, setLoading] = React.useState(false);
   type Room = {
     childrens: number;
     adults: number;
   };
-  type Data = {
-    checkInDate: string;
-    checkOutDate: string;
-    rooms: Room[];
-  };
-  const handleConsutlSubmit = async (data: Data) => {
-    console.log(data);
-    try {
-      await makeRoomConsult({ variables: { ...data, roomModelId: room.id } });
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
   React.useEffect(() => {
-    if (!loading && data?.responce) {
-      const { isAvailable, message } = data.responce;
+    if (consultResponce.loading || boolkingResponce.loading) {
+      return setLoading(true);
+    }
+    return setLoading(false);
+  }, [consultResponce.loading, boolkingResponce.loading]);
+
+  React.useEffect(() => {
+    if (consultResponce.data) {
+      const { isAvailable, message } = consultResponce.data.responce;
       if (isAvailable) {
-        return setConsultResponce({
+        return setRequestData({
           isAvailable: true,
           message:
             'There is availability, make your reservation before the quotas run out.',
         });
       }
-      return setConsultResponce({
+      return setRequestData({
         isAvailable: false,
         message,
       });
     }
-  }, [loading]);
+  }, [consultResponce.loading]);
+
+  React.useEffect(() => {
+    if (boolkingResponce.data) {
+      const { isAvailable, message } = boolkingResponce.data.responce;
+      return setRequestData({
+        isAvailable,
+        message,
+      });
+    }
+  }, [boolkingResponce.loading]);
+
+  const handleConsutlSubmit = async (data: {
+    checkInDate: string;
+    checkOutDate: string;
+    guestsDistribution: Room[];
+  }) => {
+    try {
+      const variables = {
+        checkInDate: data.checkInDate,
+        checkOutDate: data.checkOutDate,
+        rooms: data.guestsDistribution,
+        roomModelId: roomModelId,
+      };
+
+      await makeRoomConsult({ variables });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleBookingSubmit = async (bookingVaribles: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    mobileNumber: string;
+    landlineNumber: string;
+    guestsDistribution: Room[];
+    checkInDate: string;
+    checkOutDate: string;
+    specifications?: string;
+  }) => {
+    try {
+      await makeBookingRequest({
+        variables: { ...bookingVaribles, roomModelId: roomModelId },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const roomReservationData = {
+    price: room.lowestPrice,
+    taxes: room.taxesAndCharges,
+    maximunGuests: room.maximunGuests,
+    checkInHour: room.hotel.checkInHour,
+    checkOutHour: room.hotel.checkOutHour,
+  };
   return (
     <div>
       <Head>
@@ -122,6 +195,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
         >
           {room.hotel.name}
         </Typography>
+
         <Typography
           variant="h4"
           component="h2"
@@ -162,6 +236,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
           variant="h5"
           sx={{
             p: '10px',
+            pb: 0,
             fontWeight: 200,
             maxWidth: 'fit-content',
             m: '0 15px 0 auto',
@@ -171,7 +246,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
           <Typography
             variant="h5"
             component="span"
-            sx={{ color: 'primary.main', fontWeight: 700, ml: 1 }}
+            sx={{ color: 'primary.main', fontWeight: 700, ml: 1, mb: 1 }}
           >
             USD ${room.lowestPrice}
           </Typography>
@@ -186,6 +261,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
             width: 190,
             textAlign: 'end',
             m: '0 15px 30px auto',
+            lineHeight: 1.3,
           }}
         >
           Taxes and Charges{' '}
@@ -201,7 +277,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
             flexWrap: 'wrap',
             alignItems: 'center',
             mx: '10px',
-            mt: { sm: '-50px' },
+            mt: { sm: '-20px' },
             p: 0,
           }}
         >
@@ -224,42 +300,54 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
         >
           {room.description}
         </Typography>
-
-        <ConsultModal onSubmit={handleConsutlSubmit}>
-          {Boolean(consultResponce.message) && (
-            <Typography
-              color="secondary.main"
-              sx={{
-                textAlign: 'center',
-                m: '8px',
-                maxWidth: 'max-content',
-                py: 2,
-                px: 1,
-                borderRadius: 2,
-                backgroundColor: '#e9e9e9',
-              }}
-            >
-              {consultResponce.message}
-            </Typography>
-          )}
-          <Button
-            sx={{ padding: '10px 20px', m: '10px', float: 'left' }}
-            color="secondary"
-            variant="outlined"
+        {Boolean(requestData.message) && (
+          <Typography
+            color="secondary.main"
+            sx={{
+              textAlign: 'center',
+              m: '8px',
+              maxWidth: 'max-content',
+              py: 2,
+              px: 1,
+              borderRadius: 2,
+              backgroundColor: '#e9e9e9',
+            }}
           >
-            Check Diponibility
-          </Button>
-        </ConsultModal>
-        <Button
-          sx={{ padding: '10px 20px', m: '10px' }}
-          color="secondary"
-          variant="contained"
-        >
-          Reserve
-        </Button>
+            {requestData.message}
+          </Typography>
+        )}
+        <Box sx={{ display: 'flex' }}>
+          <ConsultModal onSubmit={handleConsutlSubmit}>
+            <Button
+              sx={{ padding: '10px 20px', m: '10px' }}
+              color="secondary"
+              variant="outlined"
+            >
+              Check Diponibility
+            </Button>
+          </ConsultModal>
+          <BookingRequestModal
+            onSubmit={handleBookingSubmit}
+            roomData={roomReservationData}
+          >
+            <Button
+              sx={{
+                padding: '10px 20px',
+                m: '10px 0',
+                maxWidth: 'fit-content',
+                mr: 'auto',
+              }}
+              color="secondary"
+              variant="contained"
+            >
+              Reserve
+            </Button>
+          </BookingRequestModal>
+        </Box>
         <Box
           sx={{
             m: '20px 10px 30px',
+            width: '100%',
           }}
         >
           <Box
@@ -412,6 +500,7 @@ const RoomPage: NextPage = ({ room }: { room: RoomModel }) => {
             )}
           </Box>
         </Box>
+
         <Backdrop loading={loading} />
       </Box>
     </div>
@@ -444,6 +533,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   return {
     props: {
       room: data?.roomModelById,
+      roomModelId: data?.roomModelById.id,
     },
   };
 };

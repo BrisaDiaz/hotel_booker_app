@@ -37,14 +37,15 @@ const styles = {
     minWidth: 'min-content',
     textTransform: 'capitalize',
     alignItems: 'center',
-       '& > p': {
+    '& > p': {
       m: '8px 0',
     },
   },
   contactInfo: {
     p: '10px',
+    pb: { sm: 0 },
     display: 'flex',
-    gap: '20px',
+    gap: { xs: 2, sm: 3 },
     flexWrap: 'wrap',
   },
 };
@@ -153,6 +154,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
             variant="h5"
             sx={{
               p: '10px',
+              pb: 0,
               fontWeight: 200,
               maxWidth: 'fit-content',
               m: '0 15px 0 auto',
@@ -162,7 +164,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
             <Typography
               variant="h5"
               component="span"
-              sx={{ color: 'primary.main', fontWeight: 700, ml: 1 }}
+              sx={{ color: 'primary.main', fontWeight: 700, ml: 1, mb: 1 }}
             >
               USD ${hotel.lowestPrice}
             </Typography>
@@ -175,7 +177,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
               p: '0 10px ',
               fontWeight: 200,
               width: 190,
-
+              lineHeight: 1.3,
               textAlign: 'end',
               m: { xs: '0 15px 30px auto', md: '0 15px 20px auto ' },
             }}
@@ -251,7 +253,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
 
           {/* HOTEL CHARACTERISTICS */}
 
-          <Box sx={{ margin: '20px 0' }} component="section">
+          <Box sx={{ mt: '20px' }} component="section">
             <Grid
               container
               alignItems="flex-start"
@@ -353,7 +355,7 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
             >
               Rooms
             </Typography>
-            <Box sx={{ margin: '20px auto' }}>
+            <Box sx={{ my: '20px', mx: { sm: 2 } }}>
               <Grid container spacing={3} justifyContent="start">
                 {hotel.roomModels.map((room) => (
                   <Grid item xs={12} sm={6} md={4}>

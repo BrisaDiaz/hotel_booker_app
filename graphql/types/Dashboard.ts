@@ -277,8 +277,8 @@ export const Mutation = extendType({
         firstName: nonNull(stringArg()),
         lastName: nonNull(stringArg()),
         email: nonNull(stringArg()),
-        cellularNumber: nonNull(stringArg()),
-        homePhoneNumber: nonNull(stringArg()),
+        mobileNumber: nonNull(stringArg()),
+        landlineNumber: nonNull(stringArg()),
       },
       resolve: (root, args, ctx) => {
         const createNewClient = async (
@@ -293,8 +293,8 @@ export const Mutation = extendType({
               firstName: args.firstName,
               lastName: args.lastName,
               email: args.email,
-              cellularNumber: args.cellularNumber,
-              homePhoneNumber: args.homePhoneNumber,
+              mobileNumber: args.mobileNumber,
+              landlineNumber: args.landlineNumber,
             },
           });
         };

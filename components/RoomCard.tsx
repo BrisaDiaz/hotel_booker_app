@@ -18,6 +18,7 @@ export default function RoomCard({
     category: string;
     lowestPrice: number;
     mts2: number;
+    taxesAndCharges: number;
     beds: {
       id: number;
       type: string;
@@ -33,13 +34,11 @@ export default function RoomCard({
   return (
     <div key={room.id} onClick={() => handleRedirectToRoomPage(room.id)}>
       <Card
-        elevation={2}
         sx={{
-          maxWidth: '400px',
           minWidth: '310px',
           p: { xs: '5px', sm: 0 },
           pb: '10px',
-          borderRadius: 1,
+          borderRadius: 2,
         }}
       >
         <CardActionArea
@@ -55,8 +54,10 @@ export default function RoomCard({
               height="160px"
               sx={{
                 borderRadius: '8px',
-                width: '100%',
+                width: { sm: '95%' },
                 mb: 1,
+                my: { sm: 1 },
+                mx: 'auto',
               }}
               image={room.mainImage}
               alt={room.category}
@@ -118,7 +119,7 @@ export default function RoomCard({
                     opacity: 0.8,
                   }}
                 >
-                  Taxes USD ${room.taxesAndCharges}
+                  taxes USD ${room.taxesAndCharges}
                 </Typography>
               </Box>
             </CardContent>

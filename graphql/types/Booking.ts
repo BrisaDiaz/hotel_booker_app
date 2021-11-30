@@ -10,7 +10,7 @@ import {
   inputObjectType,
 } from 'nexus';
 import { prisma } from '../../lib/prisma';
-import { checkRoomsAvailable } from '../utils/index';
+import { checkIsValidRoomRequest } from '../utils/index';
 
 import { UserInputError, ValidationError } from 'apollo-server-micro';
 
@@ -21,13 +21,13 @@ export const Client = objectType({
     t.string('firstName');
     t.string('lastName');
     t.string('email');
-    t.string('cellularNumber');
-    t.string('homePhoneNumber');
+    t.string('mobileNumber');
+    t.string('landlineNumber');
     t.list.field('bookings', { type: 'Booking' });
   },
 });
-export const RoomConsult = objectType({
-  name: 'RoomConsultResponse',
+export const RoomConsultResponce = objectType({
+  name: 'RoomConsultResponceResponce',
   definition(t) {
     t.string('message');
     t.boolean('isAvailable');
@@ -48,74 +48,7 @@ export const GuestsDistribution = objectType({
     t.int('children');
   },
 });
-export const ConsultQuery = extendType({
-  type: 'Query',
-  definition(t) {
-    t.field('checkRoomAvailability', {
-      type: 'RoomConsultResponse',
-      args: {
-        roomModelId: nonNull(idArg()),
-        checkOutDate: nonNull(stringArg()),
-        checkInDate: nonNull(stringArg()),
-        rooms: nonNull(list(roomSpecifications)),
-      },
-      resolve: (root, args, ctx) => {
-        type RoomSpecifications = {
-          adults: number;
-          children: number;
-        };
-        const makeConsult = async (
-          roomModelId: number,
-          args: {
-            rooms: RoomSpecifications[];
-            checkOutDate: string;
-            checkInDate: string;
-          }
-        ) => {
-          const maximunNumerOfAdultsInARoom = Math.max(
-            ...args.rooms.map((room) => room.adults)
-          );
-          const maximunNumerOfChildren = Math.max(
-            ...args.rooms.map((room) => room.children)
-          );
-          const roomDetails = await prisma.roomModel.findUnique({
-            where: {
-              id: roomModelId,
-            },
-          });
-          if (!roomDetails)
-            throw new ValidationError('Invalid room type identifier');
 
-          if (
-            maximunNumerOfAdultsInARoom > roomDetails.maximunGuests ||
-            maximunNumerOfChildren > roomDetails.maximunGuests
-          )
-            return {
-              isAvailable: false,
-              message: `The number of adults in the room most be equeal or inferior to ${roomDetails.maximunGuests}.`,
-            };
-          const areEnoughRooms = await checkRoomsAvailable({
-            roomModelId: roomModelId,
-            checkOutDate: args.checkOutDate,
-            checkInDate: args.checkInDate,
-            roomsRequired: args.rooms.length,
-          });
-          if (!areEnoughRooms)
-            return {
-              isAvailable: false,
-              message:
-                'The number of rooms availables dose not match the required.',
-            };
-          return {
-            isAvailable: true,
-            message: 'The rooms requests are available.',
-          };
-        };
-        return makeConsult(parseInt(args.roomModelId), args);
-      },
-    });
-  },
-});
 export const BookingStatus = enumType({
   name: 'BookingStatus',
   members: ['ACTIVE', 'CANCELED', 'FINISH'],
@@ -232,65 +165,125 @@ export const BookingRequest = objectType({
     t.field('status', { type: BookingRequestStatus });
   },
 });
+export const ConsultQuery = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('checkRoomAvailability', {
+      type: RoomConsultResponce,
+      args: {
+        roomModelId: nonNull(idArg()),
+        checkOutDate: nonNull(stringArg()),
+        checkInDate: nonNull(stringArg()),
+        rooms: nonNull(list(roomSpecifications)),
+      },
+      resolve: (root, args, ctx) => {
+        type RoomSpecifications = {
+          adults: number;
+          children: number;
+        };
+        const makeConsult = async (
+          roomModelId: number,
+          args: {
+            rooms: RoomSpecifications[];
+            checkOutDate: string;
+            checkInDate: string;
+          }
+        ) => {
+          const roomModel = await prisma.roomModel.findUnique({
+            where: {
+              id: roomModelId,
+            },
+          });
+          if (!roomModel)
+            throw new ValidationError('Invalid room type identifier');
+          const result = await checkIsValidRoomRequest({
+            roomDetails: roomModel,
+            rooms: args.rooms,
+            checkOutDate: args.checkOutDate,
+            checkInDate: args.checkInDate,
+          });
+
+          return { isAvailable: result.isAvailable, message: result.message };
+        };
+        return makeConsult(parseInt(args.roomModelId), args);
+      },
+    });
+  },
+});
 export const Mutation = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('makeBookingRequest', {
-      type: BookingRequest,
+      type: RoomConsultResponce,
       args: {
         roomModelId: nonNull(idArg()),
         firstName: nonNull(stringArg()),
         lastName: nonNull(stringArg()),
         email: nonNull(stringArg()),
-        cellularNumber: nonNull(stringArg()),
-        homePhoneNumber: nonNull(stringArg()),
+        mobileNumber: nonNull(stringArg()),
+        landlineNumber: nonNull(stringArg()),
         guestsDistribution: nonNull(list(roomSpecifications)),
-
-        children: nonNull(intArg()),
-        adults: nonNull(intArg()),
         checkInDate: nonNull(stringArg()),
         checkOutDate: nonNull(stringArg()),
-        specifications: nonNull(stringArg()),
+        specifications: stringArg(),
       },
       resolve(root, args, ctx) {
-        async function makeRequest(args) {
+        async function makeRequest(roomModelId, args) {
           const roomModel = await prisma.roomModel.findUnique({
             where: {
-              id: args.roomModelId,
+              id: roomModelId,
             },
           });
           if (!roomModel) throw new UserInputError('Room type dose not exist.');
+          const result = await checkIsValidRoomRequest({
+            roomDetails: roomModel,
+            rooms: args.guestsDistribution,
+            checkOutDate: args.checkOutDate,
+            checkInDate: args.checkInDate,
+          });
+          if (!result.isAvailable)
+            return { isAvailtable: false, message: result.message };
 
           const client = await await prisma.client.create({
             data: {
               firstName: args.firstName,
               lastName: args.lastName,
               email: args.email,
-              cellularNumber: args.cellularNumber,
-              homePhoneNumber: args.homePhoneNumber,
+              mobileNumber: args.mobileNumber,
+              landlineNumber: args.landlineNumber,
             },
           });
-          const request = await prisma.bookingRequest.create({
+          const { children, adults, nights, guestsDistribution } =
+            result.requestData;
+
+          const booking = await prisma.bookingRequest.create({
             data: {
               clientId: client.id,
               roomModelId: roomModel.id,
               hotelId: roomModel.hotelId,
-              checkInDate: new Date(args.checkInDate).toISOString(),
-              checkOutDate: new Date(args.checkOutDate).toISOString(),
+              checkInDate: new Date(args.checkInDate),
+              checkOutDate: new Date(args.checkOutDate),
               specifications: args.specifications,
+              nights,
+              children,
+              adults,
             },
           });
           await prisma.guestsDistribution.createMany({
-            data: args.guestsDistribution.map(
+            data: guestsDistribution.map(
               (room: { children: number; adults: number }) => ({
                 children: room.children,
                 adults: room.adults,
-                bookingRequest: { connect: { id: request.id } },
+                bookingRequestId: booking.id,
               })
             ),
           });
+          return {
+            isAvailable: true,
+            message: 'Your reservation request was sent successfully.',
+          };
         }
-        return makeRequest();
+        return makeRequest(parseInt(args.roomModelId), args);
       },
     });
   },

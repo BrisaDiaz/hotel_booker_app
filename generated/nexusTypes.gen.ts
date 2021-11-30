@@ -108,12 +108,12 @@ export interface NexusGenObjects {
   }
   Client: { // root type
     bookings?: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
-    cellularNumber?: string | null; // String
     email?: string | null; // String
     firstName?: string | null; // String
-    homePhoneNumber?: string | null; // String
     id?: string | null; // ID
+    landlineNumber?: string | null; // String
     lastName?: string | null; // String
+    mobileNumber?: string | null; // String
   }
   Facility: { // root type
     id: string; // ID!
@@ -208,7 +208,7 @@ export interface NexusGenObjects {
     id?: string | null; // ID
     name?: string | null; // String
   }
-  RoomConsultResponse: { // root type
+  RoomConsultResponceResponce: { // root type
     isAvailable?: boolean | null; // Boolean
     message?: string | null; // String
   }
@@ -340,12 +340,12 @@ export interface NexusGenFieldTypes {
   }
   Client: { // field return type
     bookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
-    cellularNumber: string | null; // String
     email: string | null; // String
     firstName: string | null; // String
-    homePhoneNumber: string | null; // String
     id: string | null; // ID
+    landlineNumber: string | null; // String
     lastName: string | null; // String
+    mobileNumber: string | null; // String
   }
   Facility: { // field return type
     id: string; // ID!
@@ -431,7 +431,7 @@ export interface NexusGenFieldTypes {
     deleteRoomOfModel: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
     editRoomModelVicibility: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     makeBooking: NexusGenRootTypes['Booking'] | null; // Booking
-    makeBookingRequest: NexusGenRootTypes['BookingRequest'] | null; // BookingRequest
+    makeBookingRequest: NexusGenRootTypes['RoomConsultResponceResponce'] | null; // RoomConsultResponceResponce
     signin: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
     signout: NexusGenRootTypes['PlainResponse'] | null; // PlainResponse
     signup: NexusGenRootTypes['User'] | null; // User
@@ -452,7 +452,7 @@ export interface NexusGenFieldTypes {
     authentication: NexusGenRootTypes['User'] | null; // User
     bedTypesList: Array<NexusGenRootTypes['BedType'] | null> | null; // [BedType]
     bookingById: NexusGenRootTypes['Booking'] | null; // Booking
-    checkRoomAvailability: NexusGenRootTypes['RoomConsultResponse'] | null; // RoomConsultResponse
+    checkRoomAvailability: NexusGenRootTypes['RoomConsultResponceResponce'] | null; // RoomConsultResponceResponce
     facilitiesList: Array<NexusGenRootTypes['Facility'] | null> | null; // [Facility]
     hotelById: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelCategoriesList: Array<NexusGenRootTypes['HotelCategory'] | null> | null; // [HotelCategory]
@@ -481,7 +481,7 @@ export interface NexusGenFieldTypes {
     id: string | null; // ID
     name: string | null; // String
   }
-  RoomConsultResponse: { // field return type
+  RoomConsultResponceResponce: { // field return type
     isAvailable: boolean | null; // Boolean
     message: string | null; // String
   }
@@ -607,12 +607,12 @@ export interface NexusGenFieldTypeNames {
   }
   Client: { // field return type name
     bookings: 'Booking'
-    cellularNumber: 'String'
     email: 'String'
     firstName: 'String'
-    homePhoneNumber: 'String'
     id: 'ID'
+    landlineNumber: 'String'
     lastName: 'String'
+    mobileNumber: 'String'
   }
   Facility: { // field return type name
     id: 'ID'
@@ -698,7 +698,7 @@ export interface NexusGenFieldTypeNames {
     deleteRoomOfModel: 'Room'
     editRoomModelVicibility: 'RoomModel'
     makeBooking: 'Booking'
-    makeBookingRequest: 'BookingRequest'
+    makeBookingRequest: 'RoomConsultResponceResponce'
     signin: 'AuthPayload'
     signout: 'PlainResponse'
     signup: 'User'
@@ -719,7 +719,7 @@ export interface NexusGenFieldTypeNames {
     authentication: 'User'
     bedTypesList: 'BedType'
     bookingById: 'Booking'
-    checkRoomAvailability: 'RoomConsultResponse'
+    checkRoomAvailability: 'RoomConsultResponceResponce'
     facilitiesList: 'Facility'
     hotelById: 'Hotel'
     hotelCategoriesList: 'HotelCategory'
@@ -748,7 +748,7 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     name: 'String'
   }
-  RoomConsultResponse: { // field return type name
+  RoomConsultResponceResponce: { // field return type name
     isAvailable: 'Boolean'
     message: 'String'
   }
@@ -800,12 +800,12 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Mutation: {
     addNewClient: { // args
-      cellularNumber: string; // String!
       email: string; // String!
       firstName: string; // String!
-      homePhoneNumber: string; // String!
       hotelId: string; // ID!
+      landlineNumber: string; // String!
       lastName: string; // String!
+      mobileNumber: string; // String!
       userId: string; // ID!
     }
     addRoomToModel: { // args
@@ -895,18 +895,16 @@ export interface NexusGenArgTypes {
       userId: string; // ID!
     }
     makeBookingRequest: { // args
-      adults: number; // Int!
-      cellularNumber: string; // String!
       checkInDate: string; // String!
       checkOutDate: string; // String!
-      children: number; // Int!
       email: string; // String!
       firstName: string; // String!
       guestsDistribution: Array<NexusGenInputs['roomSpecifications'] | null>; // [roomSpecifications]!
-      homePhoneNumber: string; // String!
+      landlineNumber: string; // String!
       lastName: string; // String!
+      mobileNumber: string; // String!
       roomModelId: string; // ID!
-      specifications: string; // String!
+      specifications?: string | null; // String
     }
     signin: { // args
       email: string; // String!
