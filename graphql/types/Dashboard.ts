@@ -34,9 +34,50 @@ export const HotelData = objectType({
     t.int('guestsCount');
     t.field('hotel', { type: 'Hotel' });
     t.list.field('roomModels', { type: 'RoomModel' });
-    t.list.field('requests', { type: 'BookingRequest' });
-    t.list.field('bookings', { type: 'Booking' });
-    t.list.field('guests', { type: 'Client' });
+    t.list.field('requests', {
+      type: 'BookingRequest',
+      resolve(root: { id: number }, args, ctx) {
+        return prisma.bookingRequest.findMany({
+          where: {
+            hotelId: root.id,
+            status: 'PENDING',
+          },
+          include: {
+            roomModel: true,
+            guestsDistribution: true,
+          },
+        });
+      },
+    });
+    t.list.field('bookings', {
+      type: 'Booking',
+      resolve(root: { id: number }) {
+        return prisma.booking.findMany({
+          where: {
+            hotelId: root.id,
+            OR: [{ status: 'ACTIVE' }, { status: 'FINISH' }],
+          },
+          include: {
+            client: true,
+          },
+        });
+      },
+    });
+    t.list.field('guests', {
+      type: 'Client',
+      resolve(root: { id: number }) {
+        return prisma.client.findMany({
+          where: {
+            bookings: {
+              some: {
+                hotelId: root.id,
+                status: 'ACTIVE',
+              },
+            },
+          },
+        });
+      },
+    });
   },
 });
 export const RoomModelData = objectType({
@@ -98,36 +139,26 @@ export const Query = extendType({
             throw new UserInputError(
               'The hotel dose not exist or not belong to this account.'
             );
-          const bookings = await prisma.booking.findMany({
+          const bookingsCount = await prisma.booking.count({
             where: {
               hotelId: hotelId,
               OR: [{ status: 'ACTIVE' }, { status: 'FINISH' }],
             },
-            include: {
-              client: true,
-            },
           });
-          const guests = bookings.map((booking) => booking.client);
-          const requests = await prisma.bookingRequest.findMany({
+
+          const requestsCount = await prisma.bookingRequest.count({
             where: {
               hotelId: hotelId,
               status: 'PENDING',
-            },
-            include: {
-              roomModel: true,
-              guestsDistribution: true,
             },
           });
           return {
             hotel,
             roomModels: hotel.roomModels,
             roomModelsCount: hotel.roomModels.length,
-            requests,
-            requestsCount: requests.length,
-            bookings,
-            bookingsCount: bookings.length,
-            guests,
-            guestsCount: guests.length,
+            requestsCount,
+            bookingsCount,
+            guestsCount: bookingsCount,
           };
         };
         return getAdimHotel(parseInt(args.userId), parseInt(args.hotelId));
@@ -215,6 +246,78 @@ export const Query = extendType({
           return booking;
         };
         return getBooking(parseInt(args.userId), parseInt(args.bookingId));
+      },
+    });
+    t.field('hotelRequestsById', {
+      type: 'Booking',
+      args: {
+        hotelId: nonNull(idArg()),
+        userId: nonNull(idArg()),
+      },
+      resolve(root, args, ctx) {
+        const getRequests = async (userId: number, hotelId: number) => {
+          await verifyIsHotelAdmin(userId, hotelId);
+
+          return prisma.bookingRequest.findMany({
+            where: {
+              hotelId: hotelId,
+              status: 'PENDING',
+            },
+            include: {
+              roomModel: true,
+              guestsDistribution: true,
+            },
+          });
+        };
+        return getRequests(parseInt(args.userId), parseInt(args.hotelId));
+      },
+    });
+    t.field('hotelBookingsById', {
+      type: 'Booking',
+      args: {
+        hotelId: nonNull(idArg()),
+        userId: nonNull(idArg()),
+      },
+      resolve(root, args, ctx) {
+        const getBookings = async (userId: number, hotelId: number) => {
+          await verifyIsHotelAdmin(userId, hotelId);
+
+          return prisma.bookingRequest.findMany({
+            where: {
+              hotelId: hotelId,
+              status: 'ACTIVE',
+            },
+            include: {
+              roomModel: true,
+              guestsDistribution: true,
+            },
+          });
+        };
+        return getBookings(parseInt(args.userId), parseInt(args.hotelId));
+      },
+    });
+    t.field('hotelGuestsById', {
+      type: 'Booking',
+      args: {
+        hotelId: nonNull(idArg()),
+        userId: nonNull(idArg()),
+      },
+      resolve(root, args, ctx) {
+        const getBookings = async (userId: number, hotelId: number) => {
+          await verifyIsHotelAdmin(userId, hotelId);
+
+          return prisma.client.findMany({
+            where: {
+              bookings: {
+                some: {
+                  hotelId: root.id,
+                  status: 'ACTIVE',
+                },
+              },
+            },
+          });
+        };
+        return getBookings(parseInt(args.userId), parseInt(args.hotelId));
       },
     });
   },

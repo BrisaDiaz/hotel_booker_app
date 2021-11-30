@@ -233,9 +233,12 @@ type Query {
   bookingById(bookingId: ID!, userId: ID!): Booking
   checkRoomAvailability(checkInDate: String!, checkOutDate: String!, roomModelId: ID!, rooms: [roomSpecifications]!): RoomConsultResponceResponce
   facilitiesList: [Facility]
+  hotelBookingsById(hotelId: ID!, userId: ID!): Booking
   hotelById(hotelId: ID!): Hotel
   hotelCategoriesList: [HotelCategory]
   hotelData(hotelId: ID!, userId: ID!): HotelData
+  hotelGuestsById(hotelId: ID!, userId: ID!): Booking
+  hotelRequestsById(hotelId: ID!, userId: ID!): Booking
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
   languagesList: [Language]
   roomCategoriesList: [RoomCategory]

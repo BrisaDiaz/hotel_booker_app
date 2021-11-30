@@ -251,6 +251,32 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
     }
   }
 `;
+export const GET_ROOM_MODEL_BOOKING_REQUESTS = gql`
+  query hotelRequestsById($userId: ID!, $hotelId: ID!) {
+    requests: hotelRequestsById(userId: $userId, hotelId: $hotelId) {
+      id
+      client {
+        id
+        firstName
+        lastName
+        mobileNumber
+        landlineNumber
+        email
+      }
+      guestDistribution {
+        children
+        adults
+      }
+      checkInDate
+      checkOutDate
+      specifications
+      roomModel {
+        id
+        name
+      }
+    }
+  }
+`;
 
 export const GET_USER_SESSION = gql`
   query authentication {
