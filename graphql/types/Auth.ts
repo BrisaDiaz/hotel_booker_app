@@ -7,7 +7,7 @@ import {
   signToken,
   setCookie,
   deleteCookie,
-  User,
+  getUser,
   getUserProfile,
 } from '../utils/index';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -124,11 +124,16 @@ export const Query = extendType({
     t.field('authentication', {
       type: 'User',
       resolve(root, args, ctx) {
-        const getUserSession = async (user: User | null) => {
+        const getUserSession = async (
+          req: NextApiRequest,
+          res: NextApiResponse
+        ) => {
+          const user = await getUser(req, res);
           if (!user) throw new AuthenticationError('Unauthenticated');
-          return getUserProfile(user);
+
+          return getUserProfile(user.id);
         };
-        return getUserSession(ctx.user);
+        return getUserSession(ctx.req, ctx.res);
       },
     });
   },
