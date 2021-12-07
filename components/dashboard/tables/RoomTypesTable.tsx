@@ -235,6 +235,9 @@ function RoomsTable({
           <TableRow>
             <TableCell align="right"></TableCell>
             <TableCell>
+              <Typography className={classes.headerLabel}>id</Typography>
+            </TableCell>
+            <TableCell>
               <Typography className={classes.headerLabel}>Room Type</Typography>
             </TableCell>
 
@@ -272,6 +275,9 @@ function RoomsTable({
                 >
                   <ActionsButton />
                 </ActionsMenu>
+              </TableCell>
+              <TableCell align="center" sx={{ borderRight: 'none' }}>
+                <Typography>{row.id}</Typography>
               </TableCell>
               <TableCell align="right">
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>

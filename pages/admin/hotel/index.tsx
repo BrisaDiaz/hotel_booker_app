@@ -14,7 +14,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import ActionCard from '@/components/dashboard/ActionCard';
 import RoomTypesTable from '@/components/dashboard/tables/RoomTypesTable';
-import AddRoomModal from '@/components/dashboard/AddRoomModal';
+import AddRoomModal from '@/components/modals/AddRoomModal';
 import SnackBar from '@/components/SnackBar';
 import Dialog from '@/components/Dialog';
 

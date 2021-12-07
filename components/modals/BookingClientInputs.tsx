@@ -12,6 +12,9 @@ const withIconLabel = {
   gap: '10px',
   width: '100%',
   alignItems: 'center',
+  '& > *': {
+    color: 'primary.main',
+  },
 };
 
 export default function BookingClientInputs({

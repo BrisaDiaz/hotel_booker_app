@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { createStyles, makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
@@ -40,7 +39,7 @@ export default function KeepMountedModal({
   onSubmit: Function;
   closeModal: Function;
   isModalOpen: boolean;
-  restrictedNumbers: number[];
+  restrictedNumbers?: number[];
 }) {
   const inputRef = React.useRef();
   const [open, setOpen] = React.useState(false);
@@ -68,11 +67,12 @@ export default function KeepMountedModal({
     if (!newNumber || newNumber < 1) {
       return setError({ message: 'Only positive numbers are allowed' });
     }
-    if (restrictedNumbers.includes(newNumber)) {
+    if (restrictedNumbers?.length && restrictedNumbers.includes(newNumber)) {
       return setError({
-        message: 'Room numeber already registred',
+        message: 'The room is not available.',
       });
     }
+
     setError({ message: '' });
     setCurrentNumber(newNumber);
   };
@@ -105,57 +105,59 @@ export default function KeepMountedModal({
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Box sx={styles.modal} component="form" onSubmit={handleSubmit}>
-          <Typography
-            id="transition-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ textTransform: 'capitalize' }}
-          >
-            Add a new room
-          </Typography>
-          {roomNumbers.length > 0 && (
-            <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '6px' }}>
-              {roomNumbers.map((roomNumber) => (
-                <Chip
-                  label={roomNumber}
-                  key={roomNumber}
-                  onDelete={() => handleDeleteNumber(roomNumber)}
-                />
-              ))}
-            </Stack>
-          )}
-          <TextField
-            type="number"
-            id="country"
-            inputRef={inputRef}
-            autoFocus={true}
-            label={error.message ? error.message : 'Room Number Identifier'}
-            variant="outlined"
-            error={error.message ? true : false}
-            onChange={(e) => handleChange(parseInt(e.target.value))}
-          />
-
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {' '}
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              style={{ color: '#fff', textTransform: 'capitalize' }}
-              type="submit"
+        <Box sx={styles.modal}>
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <Typography
+              id="transition-modal-title"
+              variant="h6"
+              component="h2"
+              sx={{ textTransform: 'capitalize' }}
             >
-              {`Add ${roomNumbers.length ? 'Rooms' : 'Room'}`}
-            </Button>
-            <Button
+              Add a new room
+            </Typography>
+            {roomNumbers.length > 0 && (
+              <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '6px' }}>
+                {roomNumbers.map((roomNumber) => (
+                  <Chip
+                    label={roomNumber}
+                    key={roomNumber}
+                    onDelete={() => handleDeleteNumber(roomNumber)}
+                  />
+                ))}
+              </Stack>
+            )}
+            <TextField
+              type="number"
+              id="country"
+              inputRef={inputRef}
+              autoFocus={true}
+              label={error.message ? error.message : 'Room Number Identifier'}
               variant="outlined"
-              size="large"
-              style={{ textTransform: 'capitalize' }}
-              onClick={handleAddMore}
-            >
-              {'save & add another'}
-            </Button>
-          </Box>
+              error={error.message ? true : false}
+              onChange={(e) => handleChange(parseInt(e.target.value))}
+            />
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {' '}
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                style={{ color: '#fff', textTransform: 'capitalize' }}
+                type="submit"
+              >
+                {`Add ${roomNumbers.length ? 'Rooms' : 'Room'}`}
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                style={{ textTransform: 'capitalize' }}
+                onClick={handleAddMore}
+              >
+                {'save & add another'}
+              </Button>
+            </Box>
+          </form>
         </Box>
       </Modal>
     </Box>

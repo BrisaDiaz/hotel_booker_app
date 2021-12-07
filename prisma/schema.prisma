@@ -191,7 +191,7 @@ model Client {
   mobileNumber   String
   landlineNumber String
   bookings       Booking[]
-  BookingRequest BookingRequest[]
+  bookingRequest BookingRequest[]
 }
 
 model Booking {
@@ -214,7 +214,7 @@ model Booking {
   status             BookingStatus        @default(ACTIVE)
   client             Client               @relation(fields: [clientId], references: [id])
   rooms              Room[]
-  roomId             Int?
+
 }
 
 enum PaymentMethod {
@@ -233,7 +233,7 @@ model GuestsDistribution {
   adults           Int
   bookingRequest   BookingRequest? @relation(fields: [bookingRequestId], references: [id])
   bookingRequestId Int?
-  Booking          Booking?        @relation(fields: [bookingId], references: [id])
+  booking          Booking?        @relation(fields: [bookingId], references: [id])
   bookingId        Int?
 }
 
@@ -266,6 +266,7 @@ enum BookingStatus {
 enum BookingRequestStatus {
   PENDING
   DECLINED
+  ACEPTED
 }
 
 model RoomBed {

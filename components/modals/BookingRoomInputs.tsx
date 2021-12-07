@@ -22,6 +22,9 @@ const withIconLabel = {
   gap: '10px',
   width: '100%',
   alignItems: 'center',
+  '& > *': {
+    color: 'primary.main',
+  },
 };
 const roomsContainer = {
   maxHeight: '190px',

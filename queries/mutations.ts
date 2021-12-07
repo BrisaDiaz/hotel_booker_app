@@ -217,33 +217,33 @@ export const DELETE_ROOMS_OF_MODEL = gql`
     }
   }
 `;
-export const MAKE_BOOKING_REQUEST = gql`
-  mutation makeBookingRequest(
-    $roomModelId: ID!
-    $firstName: String!
-    $lastName: String!
-    $email: String!
-    $mobileNumber: String!
-    $landlineNumber: String!
-    $guestsDistribution: [roomSpecifications!]!
-    $checkInDate: String!
-    $checkOutDate: String!
-    $specifications: String
+export const CONFIRM_BOOKING_REQUEST = gql`
+  mutation confirmBookingRequest(
+    $userId: ID!
+    $bookingRequestId: ID!
+    $totalCost: Float!
+    $paymentMethod: String!
+    $roomsIds: [Int!]!
   ) {
-    responce: makeBookingRequest(
-      roomModelId: $roomModelId
-      firstName: $firstName
-      lastName: $lastName
-      email: $email
-      mobileNumber: $mobileNumber
-      landlineNumber: $landlineNumber
-      guestsDistribution: $guestsDistribution
-      checkInDate: $checkInDate
-      checkOutDate: $checkOutDate
-      specifications: $specifications
+    responce: confirmBookingRequest(
+      userId: $userId
+      bookingRequestId: $bookingRequestId
+      totalCost: $totalCost
+      paymentMethod: $paymentMethod
+      roomsIds: $roomsIds
     ) {
-      isAvailable
-      message
+      id
+    }
+  }
+`;
+
+export const DECLINE_BOOKING_REQUEST = gql`
+  mutation declineBookingRequest($userId: ID!, $bookingRequestId: ID!) {
+    bookingRequest: declineBookingRequest(
+      userId: $userId
+      bookingRequestId: $bookingRequestId
+    ) {
+      id
     }
   }
 `;

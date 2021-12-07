@@ -52,10 +52,12 @@ type Booking {
   children: Int
   client: Client
   clientId: Int
+  createdAt: String
   guestsDistribution: [GuestsDistribution]
   hotel: Hotel
   hotelId: Int
   id: ID
+  nights: Int
   paymentMethod: PaymentMethod
   room: Room
   roomId: Int
@@ -69,15 +71,18 @@ type Booking {
 
 type BookingRequest {
   adults: Int
+  availableRooms: [Room]
   checkInDate: String
   checkOutDate: String
   children: Int
   client: Client
   clientId: Int
+  createdAt: String
   email: String
   guestsDistribution: [GuestsDistribution]
   hotelId: Int
   id: ID
+  nights: Int
   roomModel: RoomModel
   roomModelId: Int
   specifications: String
@@ -86,6 +91,7 @@ type BookingRequest {
 }
 
 enum BookingRequestStatus {
+  ACEPTED
   DECLINED
   PENDING
 }
@@ -192,13 +198,14 @@ type Language {
 }
 
 type Mutation {
-  addNewClient(email: String!, firstName: String!, hotelId: ID!, landlineNumber: String!, lastName: String!, mobileNumber: String!, userId: ID!): Client
   addRoomToModel(hotelId: ID!, roomModelId: ID!, roomNumbers: [Int!]!, userId: ID!): [Room]
+  confirmBookingRequest(bookingRequestId: ID!, paymentMethod: String, roomsIds: [Int!]!, totalCost: Float!, userId: ID!): Booking
   creatHotelRoomModel(amenities: [String]!, beds: [bedsSpecifications]!, category: String!, description: String!, freeCancelation: Boolean!, hotelId: ID!, lowestPrice: Float!, mainImage: String!, maximunGuests: Int!, maximunStay: Int, minimunStay: Int!, mts2: Int!, name: String!, services: [String]!, smooking: Boolean!, taxesAndCharges: Float!, userId: ID!): RoomModel
   createHotel(accessible: Boolean!, activities: [String]!, administrativeArea: String!, brand: String, category: String, checkInHour: String!, checkOutHour: String!, city: String, country: String, description: String!, ecoFriendly: Boolean!, email: String, facilities: [String]!, familyFriendly: Boolean!, frameImage: String!, freeCancelation: Boolean!, holeAddress: String!, interiorImage: String!, languages: [String]!, lowestPrice: Float!, name: String!, petFriendly: Boolean!, policiesAndRules: String!, postalCode: String!, services: [String]!, smokerFriendly: Boolean!, street: String, taxesAndCharges: Float!, telephone: String!, userId: ID!, website: String): Hotel
+  declineBookingRequest(bookingRequestId: ID!, userId: ID!): BookingRequest
   deleteRoomOfModel(hotelId: ID!, roomModelId: ID!, roomsIds: [Int!]!, userId: ID!): [Room]
   editRoomModelVicibility(hotelId: Int!, public: Boolean!, roomModelId: ID!, userId: ID!): RoomModel
-  makeBooking(adults: Int!, checkInDate: String!, checkOutDate: String!, children: Int!, clientId: ID!, guestsDistribution: [roomSpecifications], hotelId: ID!, nights: Int!, paymentMethod: String, rooModelId: ID!, roomId: ID!, rooms: Int!, totalCost: Float!, userId: ID!): Booking
+  makeBooking(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications], landlineNumber: String!, lastName: String!, mobileNumber: String!, paymentMethod: String, roomModelId: ID!, roomsIds: [Int!]!, totalCost: Float!, userId: ID!): Booking
   makeBookingRequest(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications]!, landlineNumber: String!, lastName: String!, mobileNumber: String!, roomModelId: ID!, specifications: String): RoomConsultResponceResponce
   signin(email: String!, password: String!): AuthPayload
   signout(date: String): PlainResponse

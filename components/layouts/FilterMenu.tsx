@@ -22,6 +22,8 @@ import CheckboxGroup from '../CheckboxGroup';
 import Accordion from '../Acconrdion';
 import SortIcon from '@mui/icons-material/Sort';
 import { toCamelCase } from '../../utils/index';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 const drawerWidth = 240;
 
 const Search = styled('div')(({ theme }) => ({
@@ -172,9 +174,15 @@ export default function PersistentDrawerLeft({
   hotelCategories: Data[];
   handleSubmit: Function;
 }) {
+  const matchesSize = useMediaQuery('(min-width:900px)');
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-
+  const [open, setOpen] = React.useState(matchesSize ? true : false);
+  React.useEffect(() => {
+    if (matchesSize) {
+      return handleDrawerOpen();
+    }
+    handleDrawerClose();
+  }, [matchesSize]);
   const handleDrawerOpen = () => {
     setOpen(true);
   };

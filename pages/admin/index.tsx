@@ -14,7 +14,7 @@ import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
 import ActionCard from '@/components/dashboard/ActionCard';
 import HotelCard from '@/components/dashboard/HotelCard';
-import HotelModal from '@/components/dashboard/HotelModal';
+import HotelModal from '@/components/modals/HotelModal';
 const Dashboard: WithLayoutPage = ({
   hotels,
   hotelsCount,

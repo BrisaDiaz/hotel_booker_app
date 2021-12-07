@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
+import { BookingRequest } from '@/interfaces/index';
 import useBookingInputsController from '@/hooks/useBookingInputsController';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import BookingRoomInputs from '@/components/BookingRoomInputs';
-import CancelIcon from '@mui/icons-material/Cancel';
-import BookingClientInputs from '@/components/BookingClientInputs';
+import BookingRoomInputs from '@/components/modals/BookingRoomInputs';
+import CloseButton from '@/components/modals/CloseButton';
+import BookingClientInputs from '@/components/modals/BookingClientInputs';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  minwidth: 360,
+  minWidth: 360,
   maxWidth: 500,
   width: '100%',
   bgcolor: 'background.paper',
@@ -44,9 +44,19 @@ const title = {
 };
 const list = {
   display: 'flex',
-  '& p': { width: '70%', color: 'text.secondary', fontStyle: 'oblique' },
+  textTransform: 'capitalize',
+  flexWrap: 'wrap',
   mb: 1,
   ml: 1,
+  '& > *': {
+    fontSize: '14px',
+  },
+};
+const leyend = {
+  width: { xs: '50%' },
+  color: 'text.secondary',
+  fontStyle: 'oblique',
+  fontSize: '14px',
 };
 export default function BasicModal({
   children,
@@ -127,16 +137,7 @@ export default function BasicModal({
           noValidate
           onSubmit={handleSubmit(dataFormatter)}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <IconButton
-              sx={{ margin: '-25px -10px -10px 0' }}
-              aria-label="delete"
-              color="secondary"
-              onClick={handleClose}
-            >
-              <CancelIcon fontSize="inherit" />
-            </IconButton>
-          </Box>
+          <CloseButton handleClose={handleClose} />
           <Typography
             id="modal-modal-title"
             variant="h5"
@@ -154,26 +155,26 @@ export default function BasicModal({
           <Box component="ul" sx={{ mb: 2, px: 0 }}>
             {' '}
             <Box component="li" sx={list}>
-              <Typography>Price:</Typography>
+              <Typography sx={leyend}>Price:</Typography>
               <Typography component="span">USD ${roomData?.price}</Typography>
             </Box>
             <Box component="li" sx={list}>
-              <Typography>Taxes and Charges: </Typography>
+              <Typography sx={leyend}>Taxes and Charges: </Typography>
               <Typography component="span">USD ${roomData?.taxes}</Typography>
             </Box>
             <Box component="li" sx={list}>
-              <Typography>Maximun Guests:</Typography>
+              <Typography sx={leyend}>Maximun Guests:</Typography>
               <Typography component="span">
                 {' '}
                 {roomData?.maximunGuests}
               </Typography>
             </Box>
             <Box component="li" sx={list}>
-              <Typography>Check In Hour:</Typography>
+              <Typography sx={leyend}>Check In Hour:</Typography>
               <time>{roomData?.checkInHour}</time>
             </Box>
             <Box component="li" sx={list}>
-              <Typography>Check Out Hour:</Typography>
+              <Typography sx={leyend}>Check Out Hour:</Typography>
               <time>{roomData?.checkOutHour}</time>
             </Box>
           </Box>

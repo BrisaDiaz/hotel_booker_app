@@ -1,15 +1,175 @@
 import type { GetServerSideProps, NextApiRequest, NextApiResponse } from 'next';
+import React from 'react';
 import { WithLayoutPage } from '@/interfaces/index';
-import { GET_ROOM_MODEL_BOOKING_REQUESTS } from '@/queries/index';
+import {
+  GET_ROOM_MODEL_BOOKING_REQUESTS,
+  DECLINE_BOOKING_REQUEST,
+  CONFIRM_BOOKING_REQUEST,
+} from '@/queries/index';
 import { getUser } from '@/graphql/utils';
-import Typography from '@mui/material/Typography';
+import { BookingRequest } from '@/interfaces/index';
+import { useMutation } from '@apollo/client';
+import { client } from '@/lib/apollo';
+import ConfimBookingModal from '@/components/modals/ConfimBookingModal';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
+import RequestsTable from '@/components/dashboard/tables/RequestsTable';
+import Dialog from '@/components/Dialog';
+import SnackBar from '@/components/SnackBar';
+import Backdrop from '@/components/Backdrop';
 
-import { client } from '@/lib/apollo';
-const RoomRequests: WithLayoutPage = ({ hotelId, userId, requests }) => {
-  console.log(requests);
+const RoomRequests: WithLayoutPage = (props: {
+  requests: BookingRequest[];
+  userId: number;
+}) => {
+  const [requests, setRequests] = React.useState<BookingRequest[] | []>(
+    props.requests
+  );
+  const [resultMessage, setResultMessage] = React.useState<{
+    type: 'success' | 'error';
+    content: string;
+  }>({
+    type: 'success',
+    content: '',
+  });
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const [modalsState, setModalsState] = React.useState<{
+    decline: boolean;
+    ['show/confirm']: boolean;
+  }>({
+    decline: false,
+    ['show/confirm']: false,
+  });
+  const [requestSelected, setRequestSelected] = React.useState<
+    BookingRequest | {}
+  >({});
+
+  const [declineRequest, declineRequestResponce] = useMutation(
+    DECLINE_BOOKING_REQUEST,
+    {
+      onCompleted: ({ bookingRequest }) => {
+        const acutalizePendingRequests = requests.filter(
+          (request) => request.id !== bookingRequest.id
+        );
+        setRequests(acutalizePendingRequests);
+        setResultMessage({
+          type: 'success',
+          content: 'The request was declined successfully.',
+        });
+        setTimeout(() => {
+          setResultMessage({
+            type: 'success',
+            content: '',
+          });
+        }, 6000);
+      },
+      onError: ({ message }) => {
+        setResultMessage({
+          type: 'error',
+          content: message,
+        });
+        setTimeout(() => {
+          setResultMessage({
+            type: 'success',
+            content: '',
+          });
+        }, 6000);
+      },
+    }
+  );
+  const [confirmBookingRequest, confirmBookingRequestResponce] = useMutation(
+    CONFIRM_BOOKING_REQUEST,
+    {
+      onCompleted: ({ bookingRequest }) => {
+        const acutalizePendingRequests = requests.filter(
+          (request) => request.id !== bookingRequest.id
+        );
+        setRequests(acutalizePendingRequests);
+        setResultMessage({
+          type: 'success',
+          content: 'The request has been booked successfully.',
+        });
+        setTimeout(() => {
+          setResultMessage({
+            type: 'success',
+            content: '',
+          });
+        }, 6000);
+      },
+      onError: ({ message }) => {
+        setResultMessage({
+          type: 'error',
+          content: message,
+        });
+        setTimeout(() => {
+          setResultMessage({
+            type: 'success',
+            content: '',
+          });
+        }, 6000);
+      },
+    }
+  );
+
+  const onDeclineRequest = async () => {
+    if (!Boolean(requestSelected)) return null;
+
+    try {
+      await declineRequest({
+        variables: {
+          bookingRequestId: requestSelected.id,
+          userId: props.userId,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const onConfirmBooking = async (data: {
+    totalCost: number;
+    roomsIds: number[];
+    paymentMethod: string;
+  }) => {
+    if (!Boolean(requestSelected)) return null;
+    const variables = {
+      ...data,
+      userId: props.userId,
+      bookingRequestId: requestSelected.id,
+    };
+    try {
+      await confirmBookingRequest({ variables });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleCloseModal = (modalName: string) => {
+    setModalsState({ ...modalsState, [modalName]: false });
+  };
+  const handleOpenModal = (modalName: string) => {
+    setModalsState({ ...modalsState, [modalName]: true });
+  };
+  const handleAcctions = (
+    actionName: 'show/confirm' | 'decline',
+    requestId: number
+  ) => {
+    const selected = requests.find((request) => request.id === requestId);
+
+    if (!selected) return null;
+    setRequestSelected(selected);
+    handleOpenModal(actionName);
+  };
+  React.useEffect(() => {
+    if (
+      declineRequestResponce.loading ||
+      confirmBookingRequestResponce.loading
+    ) {
+      return setLoading(true);
+    }
+    return setLoading(false);
+  }, [declineRequestResponce.loading, confirmBookingRequestResponce.loading]);
+
   return (
     <div>
       <Head>
@@ -18,11 +178,34 @@ const RoomRequests: WithLayoutPage = ({ hotelId, userId, requests }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box
-        sx={{ p: { xs: '16px 0', sm: '20px 16px' }, maxWidth: 1200 }}
-        component="main"
-      >
-        <Typography sx={{ m: '20px auto' }}>Room Requests</Typography>
+      <Box sx={{ maxWidth: 1200 }} component="main">
+        <RequestsTable data={requests} handleAcctions={handleAcctions} />
+
+        {modalsState['show/confirm'] && (
+          <ConfimBookingModal
+            closeModal={() => handleCloseModal('show/confirm')}
+            requestInfo={requestSelected}
+            isModalOpen={modalsState['show/confirm']}
+            onSubmit={onConfirmBooking}
+          />
+        )}
+        <Dialog
+          acceptLabel={'Procced'}
+          rejectLabel={'Avort'}
+          title={'Are you sure?'}
+          text={
+            'If procced the request will be no longer visible in the request queue.'
+          }
+          isDialogOpen={modalsState['decline']}
+          onAccept={onDeclineRequest}
+        />
+        <Backdrop loading={loading} />
+        {resultMessage.content && (
+          <SnackBar
+            severity={resultMessage.type}
+            message={resultMessage.content || 'Oparation succesfully complited'}
+          />
+        )}
       </Box>
     </div>
   );
@@ -31,6 +214,7 @@ RoomRequests.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="requests">{page}</AdminMenu>;
 };
 export default RoomRequests;
+
 export const getServerSideProps: GetServerSideProps = async ({
   req,
   res,

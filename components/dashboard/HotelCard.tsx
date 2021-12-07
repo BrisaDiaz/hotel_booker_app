@@ -95,29 +95,31 @@ export default function HotelCard({
             </Box>
             <Box
               sx={{
-                display: 'flex',
-                gap: 1,
-                mt: 2,
+                display: 'grid',
+
+                mt: 1,
                 px: 1,
-                justifyContent: 'space-between',
+                justifyContent: 'flex-end',
+                textAlign: 'right',
               }}
             >
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  width: 120,
-                  lineHeight: 1.3,
-                  fontWeight: 200,
-                  opacity: 0.8,
-                }}
-              >
-                Taxes & Charges ${hotel.taxesAndCharges}
-              </Typography>
               <Typography
                 variant="h6"
                 sx={{ fontWeight: 700, minWidth: 'max-content' }}
               >
                 USD ${hotel.lowestPrice}
+              </Typography>
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  width: 120,
+                  lineHeight: 1.3,
+                  fontWeight: 200,
+                  opacity: 0.8,
+                  alignSelf: 'center',
+                }}
+              >
+                Taxes USD ${hotel.taxesAndCharges}
               </Typography>
             </Box>
           </CardContent>

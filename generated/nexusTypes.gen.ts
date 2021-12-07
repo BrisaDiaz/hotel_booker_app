@@ -25,7 +25,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  BookingRequestStatus: "DECLINED" | "PENDING"
+  BookingRequestStatus: "ACEPTED" | "DECLINED" | "PENDING"
   BookingStatus: "ACTIVE" | "CANCELED" | "FINISH"
   PaymentMethod: "BILL_TO_ACCOUNT" | "CASH" | "CREDIT_CARD" | "DEBIT_CARD" | "TRAVELER_CHECK"
   Role: "ADMIN" | "USER"
@@ -80,8 +80,10 @@ export interface NexusGenObjects {
     checkOutDate?: number | null; // Int
     children?: number | null; // Int
     clientId?: number | null; // Int
+    createdAt?: string | null; // String
     hotelId?: number | null; // Int
     id?: string | null; // ID
+    nights?: number | null; // Int
     paymentMethod?: NexusGenEnums['PaymentMethod'] | null; // PaymentMethod
     roomId?: number | null; // Int
     roomModelId?: number | null; // Int
@@ -96,9 +98,12 @@ export interface NexusGenObjects {
     checkOutDate?: string | null; // String
     children?: number | null; // Int
     clientId?: number | null; // Int
+    createdAt?: string | null; // String
     email?: string | null; // String
+    guestsDistribution?: Array<NexusGenRootTypes['GuestsDistribution'] | null> | null; // [GuestsDistribution]
     hotelId?: number | null; // Int
     id?: string | null; // ID
+    nights?: number | null; // Int
     roomModelId?: number | null; // Int
     specifications?: string | null; // String
     status?: NexusGenEnums['BookingRequestStatus'] | null; // BookingRequestStatus
@@ -302,10 +307,12 @@ export interface NexusGenFieldTypes {
     children: number | null; // Int
     client: NexusGenRootTypes['Client'] | null; // Client
     clientId: number | null; // Int
+    createdAt: string | null; // String
     guestsDistribution: Array<NexusGenRootTypes['GuestsDistribution'] | null> | null; // [GuestsDistribution]
     hotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelId: number | null; // Int
     id: string | null; // ID
+    nights: number | null; // Int
     paymentMethod: NexusGenEnums['PaymentMethod'] | null; // PaymentMethod
     room: NexusGenRootTypes['Room'] | null; // Room
     roomId: number | null; // Int
@@ -318,15 +325,18 @@ export interface NexusGenFieldTypes {
   }
   BookingRequest: { // field return type
     adults: number | null; // Int
+    availableRooms: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
     checkInDate: string | null; // String
     checkOutDate: string | null; // String
     children: number | null; // Int
     client: NexusGenRootTypes['Client'] | null; // Client
     clientId: number | null; // Int
+    createdAt: string | null; // String
     email: string | null; // String
     guestsDistribution: Array<NexusGenRootTypes['GuestsDistribution'] | null> | null; // [GuestsDistribution]
     hotelId: number | null; // Int
     id: string | null; // ID
+    nights: number | null; // Int
     roomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     roomModelId: number | null; // Int
     specifications: string | null; // String
@@ -419,10 +429,11 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
   }
   Mutation: { // field return type
-    addNewClient: NexusGenRootTypes['Client'] | null; // Client
     addRoomToModel: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
+    confirmBookingRequest: NexusGenRootTypes['Booking'] | null; // Booking
     creatHotelRoomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     createHotel: NexusGenRootTypes['Hotel'] | null; // Hotel
+    declineBookingRequest: NexusGenRootTypes['BookingRequest'] | null; // BookingRequest
     deleteRoomOfModel: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
     editRoomModelVicibility: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     makeBooking: NexusGenRootTypes['Booking'] | null; // Booking
@@ -572,10 +583,12 @@ export interface NexusGenFieldTypeNames {
     children: 'Int'
     client: 'Client'
     clientId: 'Int'
+    createdAt: 'String'
     guestsDistribution: 'GuestsDistribution'
     hotel: 'Hotel'
     hotelId: 'Int'
     id: 'ID'
+    nights: 'Int'
     paymentMethod: 'PaymentMethod'
     room: 'Room'
     roomId: 'Int'
@@ -588,15 +601,18 @@ export interface NexusGenFieldTypeNames {
   }
   BookingRequest: { // field return type name
     adults: 'Int'
+    availableRooms: 'Room'
     checkInDate: 'String'
     checkOutDate: 'String'
     children: 'Int'
     client: 'Client'
     clientId: 'Int'
+    createdAt: 'String'
     email: 'String'
     guestsDistribution: 'GuestsDistribution'
     hotelId: 'Int'
     id: 'ID'
+    nights: 'Int'
     roomModel: 'RoomModel'
     roomModelId: 'Int'
     specifications: 'String'
@@ -689,10 +705,11 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
   }
   Mutation: { // field return type name
-    addNewClient: 'Client'
     addRoomToModel: 'Room'
+    confirmBookingRequest: 'Booking'
     creatHotelRoomModel: 'RoomModel'
     createHotel: 'Hotel'
+    declineBookingRequest: 'BookingRequest'
     deleteRoomOfModel: 'Room'
     editRoomModelVicibility: 'RoomModel'
     makeBooking: 'Booking'
@@ -800,19 +817,17 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    addNewClient: { // args
-      email: string; // String!
-      firstName: string; // String!
-      hotelId: string; // ID!
-      landlineNumber: string; // String!
-      lastName: string; // String!
-      mobileNumber: string; // String!
-      userId: string; // ID!
-    }
     addRoomToModel: { // args
       hotelId: string; // ID!
       roomModelId: string; // ID!
       roomNumbers: number[]; // [Int!]!
+      userId: string; // ID!
+    }
+    confirmBookingRequest: { // args
+      bookingRequestId: string; // ID!
+      paymentMethod?: string | null; // String
+      roomsIds: number[]; // [Int!]!
+      totalCost: number; // Float!
       userId: string; // ID!
     }
     creatHotelRoomModel: { // args
@@ -867,6 +882,10 @@ export interface NexusGenArgTypes {
       userId: string; // ID!
       website?: string | null; // String
     }
+    declineBookingRequest: { // args
+      bookingRequestId: string; // ID!
+      userId: string; // ID!
+    }
     deleteRoomOfModel: { // args
       hotelId: string; // ID!
       roomModelId: string; // ID!
@@ -880,18 +899,17 @@ export interface NexusGenArgTypes {
       userId: string; // ID!
     }
     makeBooking: { // args
-      adults: number; // Int!
       checkInDate: string; // String!
       checkOutDate: string; // String!
-      children: number; // Int!
-      clientId: string; // ID!
+      email: string; // String!
+      firstName: string; // String!
       guestsDistribution?: Array<NexusGenInputs['roomSpecifications'] | null> | null; // [roomSpecifications]
-      hotelId: string; // ID!
-      nights: number; // Int!
+      landlineNumber: string; // String!
+      lastName: string; // String!
+      mobileNumber: string; // String!
       paymentMethod?: string | null; // String
-      rooModelId: string; // ID!
-      roomId: string; // ID!
-      rooms: number; // Int!
+      roomModelId: string; // ID!
+      roomsIds: number[]; // [Int!]!
       totalCost: number; // Float!
       userId: string; // ID!
     }

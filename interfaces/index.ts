@@ -96,6 +96,33 @@ export interface SessionPayload {
     role: string;
   };
 }
+export interface BookingRequest {
+  id: number;
+  checkInDate: string;
+  checkOutDate: string;
+  specifications: string;
+  createdAt: string;
+  nights: number;
+  client: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    mobileNumber: string;
+    landlineNumber: string;
+    email: string;
+  };
+  guestsDistribution: Array<{ id: number; children: number; adults: number }>;
+  roomModel: {
+    id: number;
+    name: string;
+    lowestPrice: number;
+    taxesAndPrices: number;
+  };
+  availableRooms: Array<{
+    id: number;
+    number: number;
+  }>;
+}
 export type WithLayoutPage<P = {}> = NextPage<P> & {
   getLayout?: (page: React.ReactNode) => React.ReactNode;
 };

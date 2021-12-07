@@ -10,7 +10,7 @@ import {
   inputObjectType,
 } from 'nexus';
 import { prisma } from '../../lib/prisma';
-import { checkIsValidRoomRequest } from '../utils/index';
+import { checkIsValidRoomRequest, checkRoomsAvailable } from '../utils/index';
 
 import { UserInputError, ValidationError } from 'apollo-server-micro';
 
@@ -55,7 +55,7 @@ export const BookingStatus = enumType({
 });
 export const BookingRequestStatus = enumType({
   name: 'BookingRequestStatus',
-  members: ['PENDING', 'DECLINED'],
+  members: ['PENDING', 'DECLINED', 'ACEPTED'],
 });
 export const PaymentMethod = enumType({
   name: 'PaymentMethod',
@@ -120,6 +120,7 @@ export const Booking = objectType({
     t.field('rooms', { type: 'Room' });
     t.int('checkInDate');
     t.int('checkOutDate');
+    t.int('nights');
     t.string('specifications');
     t.list.field('guestsDistribution', {
       type: GuestsDistribution,
@@ -134,6 +135,7 @@ export const Booking = objectType({
     t.field('status', { type: 'BookingStatus' });
     t.float('totalCost');
     t.field('paymentMethod', { type: 'PaymentMethod' });
+    t.string('createdAt');
   },
 });
 export const BookingRequest = objectType({
@@ -165,13 +167,6 @@ export const BookingRequest = objectType({
     });
     t.list.field('guestsDistribution', {
       type: GuestsDistribution,
-      resolve(root: { id: number }) {
-        return prisma.guestsDistribution.findMany({
-          where: {
-            bookingRequestId: root.id,
-          },
-        });
-      },
     });
     t.string('telephone');
     t.string('email');
@@ -179,8 +174,26 @@ export const BookingRequest = objectType({
     t.int('adults');
     t.string('checkInDate');
     t.string('checkOutDate');
+    t.int('nights');
     t.string('specifications');
     t.field('status', { type: BookingRequestStatus });
+    t.field('availableRooms', {
+      type: list('Room'),
+      resolve(root: {
+        roomModelId: number;
+        checkInDate: string;
+        checkOutDate: string;
+        guestsDistribution: Array<{ children: number; adults: number }>;
+      }) {
+        return checkRoomsAvailable({
+          roomModelId: root.roomModelId,
+          checkInDate: root.checkInDate,
+          checkOutDate: root.checkOutDate,
+          roomsRequired: root.guestsDistribution.length,
+        });
+      },
+    });
+    t.string('createdAt');
   },
 });
 export const ConsultQuery = extendType({
@@ -246,7 +259,7 @@ export const Mutation = extendType({
         specifications: stringArg(),
       },
       resolve(root, args, ctx) {
-        async function makeRequest(roomModelId, args) {
+        async function makeRequest(roomModelId: number, args) {
           const roomModel = await prisma.roomModel.findUnique({
             where: {
               id: roomModelId,

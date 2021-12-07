@@ -6,16 +6,15 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import BookingRoomInputs from './BookingRoomInputs';
-import IconButton from '@mui/material/IconButton';
-import CancelIcon from '@mui/icons-material/Cancel';
-import useBookingInputsController from '../hooks/useBookingInputsController';
+import CloseButton from '@/components/modals/CloseButton';
+import useBookingInputsController from '../../hooks/useBookingInputsController';
 import { useForm } from 'react-hook-form';
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  minwidth: 360,
+  minWidth: 360,
   maxWidth: 420,
   width: '100%',
   bgcolor: 'background.paper',
@@ -90,16 +89,7 @@ export default function TransitionsModal({
       >
         <Fade in={open}>
           <Box sx={style}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <IconButton
-                sx={{ margin: '-25px -10px -10px 0' }}
-                aria-label="delete"
-                color="secondary"
-                onClick={handleClose}
-              >
-                <CancelIcon fontSize="inherit" />
-              </IconButton>
-            </Box>
+            <CloseButton handleClose={handleClose} />
 
             <form onSubmit={handleSubmit(submitHandler)}>
               <Typography variant="h5" component="h2" sx={title}>

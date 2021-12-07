@@ -6,7 +6,7 @@ import { GetServerSideProps } from 'next';
 
 import AdminMenu from '@/components/layouts/AdminMenu';
 import { getUser } from '@/graphql/utils/index';
-import HotelForm from '@/components/HotelForm';
+import HotelForm from '@/components/dashboard/Forms/Hotel/index';
 import Backdrop from '@/components/Backdrop';
 
 import SnackBar from '@/components/SnackBar';

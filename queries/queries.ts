@@ -93,6 +93,7 @@ export const GET_HOTELS = gql`
         id
         name
         lowestPrice
+        taxesAndCharges
         frameImage
         description
         address {
@@ -258,6 +259,12 @@ export const GET_ROOM_MODEL_BOOKING_REQUESTS = gql`
       checkInDate
       checkOutDate
       specifications
+      createdAt
+      nights
+      availableRooms {
+        id
+        number
+      }
       client {
         id
         firstName
@@ -273,6 +280,8 @@ export const GET_ROOM_MODEL_BOOKING_REQUESTS = gql`
       roomModel {
         id
         name
+        lowestPrice
+        taxesAndCharges
       }
     }
   }

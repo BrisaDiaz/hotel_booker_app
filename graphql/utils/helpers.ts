@@ -8,8 +8,8 @@ export async function checkRoomsAvailable({
   roomsRequired,
 }: {
   roomModelId: number;
-  checkInDate: string;
-  checkOutDate: string;
+  checkInDate: string | Date;
+  checkOutDate: string | Date;
   roomsRequired: number;
 }) {
   const requiredDates = inBetweenDates([checkInDate, checkOutDate]);
@@ -39,7 +39,7 @@ export async function checkRoomsAvailable({
   });
 
   /// check if there is the number of rooms required
-  if (roomsWithRequiredDatesAvailables.length < roomsRequired) return {};
+  if (roomsWithRequiredDatesAvailables.length < roomsRequired) return [];
 
   return roomsWithRequiredDatesAvailables;
 }
@@ -93,13 +93,13 @@ export async function checkIsValidRoomRequest({
         children: totalChildren,
       },
     };
-  const areEnoughRooms = await checkRoomsAvailable({
+  const availableRooms = await checkRoomsAvailable({
     roomModelId: roomDetails.id,
     checkOutDate: checkOutDate,
     checkInDate: checkInDate,
     roomsRequired: rooms.length,
   });
-  if (!areEnoughRooms)
+  if (!availableRooms.length)
     return {
       isAvailable: false,
       message: 'The number of rooms availables dose not match the required.',
@@ -128,7 +128,7 @@ export async function checkIsValidRoomRequest({
     },
   };
 }
-export function inBetweenDates(range: string[]): Date[] {
+export function inBetweenDates(range: string[] | Dates[]): Date[] {
   const [startDate, endDate] = range;
   const startDateInMiliseconds = new Date(startDate).getTime();
   const endDateInMiliseconds = new Date(endDate).getTime();
