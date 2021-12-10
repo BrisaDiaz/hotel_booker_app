@@ -18,12 +18,12 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
-import CheckboxGroup from '../CheckboxGroup';
-import Accordion from '../Acconrdion';
+import CheckboxGroup from '@/components/CheckboxGroup';
+import Accordion from '@/components/Acconrdion';
 import SortIcon from '@mui/icons-material/Sort';
-import { toCamelCase } from '../../utils/index';
+import { toCamelCase } from '@/utils/index';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
+import Logo from '@/components/layouts/Logo';
 const drawerWidth = 240;
 
 const Search = styled('div')(({ theme }) => ({
@@ -35,8 +35,8 @@ const Search = styled('div')(({ theme }) => ({
   },
   marginLeft: 0,
   width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
+  [theme.breakpoints.up('xs')]: {
+    marginLeft: 'auto',
     width: 'auto',
   },
 }));
@@ -331,20 +331,16 @@ export default function PersistentDrawerLeft({
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
+            sx={{ ...(open && { display: 'none' }) }}
           >
             <Tooltip disableFocusListener title="Filter">
               <ManageSearchIcon fontSize="large" />
             </Tooltip>
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-            Hotel Booker
-          </Typography>
+          <Box sx={{ mr: 2, display: { xs: 'none', sm: 'flex' } }}>
+            <Logo />
+          </Box>
+
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -373,7 +369,10 @@ export default function PersistentDrawerLeft({
         open={open}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton
+            onClick={handleDrawerClose}
+            sx={{ display: { xs: 'block', md: 'none' } }}
+          >
             {theme.direction === 'ltr' ? (
               <ChevronLeftIcon />
             ) : (

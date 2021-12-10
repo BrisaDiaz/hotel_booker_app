@@ -79,7 +79,7 @@ const Dashboard: WithLayoutPage = ({
       </Head>
 
       <Box
-        sx={{ p: { xs: '16px 0', sm: '20px 16px' }, maxWidth: 1200 }}
+        sx={{ p: { xs: '16px 0', sm: '16px 16px' }, maxWidth: 1200 }}
         component="main"
       >
         <Box sx={{ p: ' 20px 10px', maxWidth: 'fit-content' }}>

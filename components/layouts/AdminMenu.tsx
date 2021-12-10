@@ -1,5 +1,6 @@
 import * as React from 'react';
 import NextLink from 'next/link';
+import Link from 'next/link';
 import { useMutation } from '@apollo/client';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -22,8 +23,10 @@ import Menu from '@mui/material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import { SIGN_OUT } from '../../queries/index';
-import { useAuth } from '../../context/useAuth';
+import { SIGN_OUT } from '@/queries/index';
+import { useAuth } from '@/context/useAuth';
+import Logo from '@/components/layouts/Logo';
+
 const drawerWidth = 240;
 interface Link {
   label: string;
@@ -95,53 +98,56 @@ function UserMenu() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={() => handdleSignOut()}>Logout</MenuItem>
       </Menu>
     </>
   );
 }
 
-function NavLink({
-  link,
-  handdleRedirect,
-}: {
-  link: Link;
-  handdleRedirect: Function;
-}) {
+function NavLink({ link }: { link: Link }) {
   return (
-    <ListItem
-      button
-      onClick={() => handdleRedirect(link)}
-      key={link.label}
-      selected={link.selected}
-      sx={{
-        borderRadius: '10px',
-        height: '65px',
-        border: `${
-          link.selected
-            ? '2px solid rgba(255,255,255,0.8)'
-            : '1px solid rgba(255,255,255,0.3)'
-        }`,
-
-        m: '10px 0 10px 0',
-        width: `${link.level === 1 ? '90%' : '100%'}`,
+    <Box
+      component={Link}
+      href={{
+        pathname: link.url,
+        query: link.query,
       }}
+      passHref
+      sx={{ cursor: 'pointer' }}
     >
-      <ListItemIcon
+      <ListItem
+        component="a"
+        key={link.label}
+        selected={link.selected}
         sx={{
-          minWidth: '40px',
+          cursor: 'pointer',
+          borderRadius: '10px',
+          height: '65px',
+          border: `${
+            link.selected
+              ? '2px solid rgba(255,255,255,0.8)'
+              : '1px solid rgba(255,255,255,0.3)'
+          }`,
 
-          color: '#fff',
+          m: '10px 0 10px 0',
+          width: `${link.level === 1 ? '90%' : '100%'}`,
         }}
       >
-        {link.icone}
-      </ListItemIcon>
-      <ListItemText
-        primary={link.label}
-        sx={{ mr: 2, textTransform: 'capitalize' }}
-      />
-    </ListItem>
+        <ListItemIcon
+          sx={{
+            minWidth: '40px',
+
+            color: '#fff',
+          }}
+        >
+          {link.icone}
+        </ListItemIcon>
+        <ListItemText
+          primary={link.label}
+          sx={{ mr: 2, textTransform: 'capitalize' }}
+        />
+      </ListItem>
+    </Box>
   );
 }
 export default function ResponsiveDrawer(props: Props) {
@@ -226,48 +232,24 @@ export default function ResponsiveDrawer(props: Props) {
     },
   ];
 
-  const handdleRedirect = (link: Link) => {
-    let buildLink: {
-      pathname: string;
-      query: Query;
-    } = { pathname: link.url, query: link.query };
-
-    router.push(buildLink);
-  };
   const drawer = (
     <Box sx={{ backgroundColor: '#435b9c', color: '#fff', height: '100%' }}>
-      <Typography
+      <Box sx={{ mx: 3 }}>
+        <Logo />
+      </Box>
+      <Box
         sx={{
-          height: '62px',
-          backgroundColor: '#435b9c',
-          fontWeight: 700,
-          display: 'flex',
-          p: 1.6,
-          color: '#fff',
           boxShadow:
-            '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
-          pl: 3,
+            '0px 2px 4px -1px rgb(0 0 0 / 54%), 0px 4px 5px 0px rgb(0 0 0 / 54%), 0px 1px 10px 0px rgb(0 0 0 / 54%)',
+          height: '1px',
+          mt: '-1px',
         }}
-        variant="h5"
-        component="h4"
-      >
-        Booker{' '}
-        <Typography variant="h5" sx={{ px: '5px', fontWeight: 300 }}>
-          App
-        </Typography>
-      </Typography>
-
-      <List sx={{ mx: '10px' }}>
+      />
+      <List sx={{ mx: '10px' }} component="nav">
         {activeLink === 'dashboard' ? (
-          <NavLink link={links[0]} handdleRedirect={handdleRedirect} />
+          <NavLink link={links[0]} />
         ) : (
-          links.map((link: Link) => (
-            <NavLink
-              key={link.label}
-              link={link}
-              handdleRedirect={handdleRedirect}
-            />
-          ))
+          links.map((link: Link) => <NavLink key={link.label} link={link} />)
         )}
       </List>
     </Box>

@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -26,13 +26,8 @@ export default function RoomCard({
     };
   };
 }) {
-  const router = useRouter();
-  const handleRedirectToRoomPage = (roomId: number) => {
-    router.push(`/room/${roomId}`);
-  };
-
   return (
-    <div key={room.id} onClick={() => handleRedirectToRoomPage(room.id)}>
+    <Box component={Link} href={`/room/${room.id}`} passHref>
       <Card
         sx={{
           minWidth: '310px',
@@ -126,6 +121,6 @@ export default function RoomCard({
           </Box>
         </CardActionArea>
       </Card>
-    </div>
+    </Box>
   );
 }

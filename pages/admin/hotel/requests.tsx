@@ -178,7 +178,10 @@ const RoomRequests: WithLayoutPage = (props: {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{ maxWidth: 1200 }} component="main">
+      <Box
+        sx={{ p: { xs: '16px 0', sm: '16px 16px' }, maxWidth: 1200 }}
+        component="main"
+      >
         <RequestsTable data={requests} handleAcctions={handleAcctions} />
 
         {modalsState['show/confirm'] && (

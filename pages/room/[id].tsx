@@ -1,6 +1,9 @@
 import type { NextPage, GetServerSideProps, NextApiResponse } from 'next';
+import { WithLayoutPage } from '@/interfaces/index';
+
 import React from 'react';
 import { client } from '@/lib/apollo';
+import Link from 'next/link';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
 import DoneIcon from '@mui/icons-material/Done';
@@ -19,9 +22,9 @@ import RoomBedsUI from '@/components/RoomBedsUI';
 import DinamicFieldIcone from '@/components/DinamicFieldIcone';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import StraightenIcon from '@mui/icons-material/Straighten';
-
+import AppBar from '@/components/layouts/AppBar';
 import { RoomModel, Item } from '@/interfaces/index';
-import { useRouter } from 'next/router';
+
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   MAKE_ROOM_CONSULT,
@@ -54,18 +57,15 @@ const styles = {
     width: { xs: '250px', sm: '300px' },
   },
 };
-const RoomPage: NextPage = ({
+const RoomPage: WithLayoutPage = ({
   room,
   roomModelId,
 }: {
   room: RoomModel;
   roomModelId: number;
 }) => {
-  const router = useRouter();
   const theme = useTheme();
-  const handleRedirectToHotel = (id: number) => {
-    router.push(`/hotel/${id}`);
-  };
+
   const [requestData, setRequestData] = React.useState<{
     isAvailable: boolean;
     message: string;
@@ -178,7 +178,8 @@ const RoomPage: NextPage = ({
         <Typography
           variant="h3"
           component="h1"
-          onClick={() => handleRedirectToHotel(room.hotelId)}
+          component={Link}
+          href={`/hotel/${room.hotelId}`}
           sx={{
             fontWeight: 700,
             margin: { xs: '0 10px', md: 0 },
@@ -506,7 +507,12 @@ const RoomPage: NextPage = ({
     </div>
   );
 };
-
+RoomPage.getLayout = (page: React.ReactNode) => (
+  <>
+    <AppBar />
+    <>{page}</>
+  </>
+);
 export default RoomPage;
 export const getServerSideProps: GetServerSideProps = async ({
   query,

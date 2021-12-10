@@ -17,10 +17,31 @@ interface typeProps {
 }
 export default function ResponsiveGrid(props: typeProps) {
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 1200, minHeight: '65vh' }}>
-      <Grid container spacing={{ xs: 2 }} justifyContent="flex-start">
+    <Box
+      sx={{
+        flexGrow: 1,
+        width: { xs: '100%', md: '90%', lg: '100%' },
+        maxWidth: 1200,
+        minHeight: '65vh',
+        margin: '0 auto',
+      }}
+    >
+      <Grid
+        container
+        spacing={{ xs: 2 }}
+        justifyContent="center"
+        sx={{ maxWidth: '100vw' }}
+      >
         {props.hotels.map((hotel, index) => (
-          <Grid item xs={12} sm={12} lg={6} key={index}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={11}
+            lg={10}
+            key={index}
+            alignContent="center"
+          >
             <HotelCard hotel={hotel} />
           </Grid>
         ))}

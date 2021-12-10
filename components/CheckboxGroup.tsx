@@ -18,7 +18,12 @@ export default function CheckboxLabels({
     <FormGroup>
       {items.map((item) => (
         <FormControlLabel
-          sx={{ textTransform: 'capitalize', fontSize: '14px' }}
+          sx={{
+            textTransform: 'capitalize',
+            ':& >  label span': {
+              fontSize: '14px',
+            },
+          }}
           key={`${item.name}-${item.id}`}
           label={item.name}
           control={

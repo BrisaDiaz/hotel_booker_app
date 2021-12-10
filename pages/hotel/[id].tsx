@@ -1,5 +1,7 @@
-import type { NextPage, GetServerSideProps, NextApiResponse } from 'next';
+import type { GetServerSideProps, NextApiResponse } from 'next';
+import { WithLayoutPage } from '@/interfaces/index';
 import { client } from '@/lib/apollo';
+import AppBar from '@/components/layouts/AppBar';
 import { GET_HOTEL_BY_ID } from '@/queries/index';
 import { getFeaturesTags } from '@/utils/index';
 import Head from 'next/head';
@@ -42,14 +44,17 @@ const styles = {
     },
   },
   contactInfo: {
-    p: '10px',
+    pt: { xs: 2, sm: 1 },
+    px: '10px',
+    pl: { sm: 0 },
     pb: { sm: 0 },
     display: 'flex',
-    gap: { xs: 2, sm: 3 },
+    columnGap: { xs: 2, sm: 3 },
+    rowGap: 1,
     flexWrap: 'wrap',
   },
 };
-const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
+const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
   const theme = useTheme();
 
   const images = [
@@ -370,7 +375,12 @@ const HotelPage: NextPage = ({ hotel }: { hotel: Hotel }) => {
     </div>
   );
 };
-
+HotelPage.getLayout = (page: React.ReactNode) => (
+  <>
+    <AppBar />
+    <>{page}</>
+  </>
+);
 export default HotelPage;
 export const getServerSideProps: GetServerSideProps = async ({
   query,

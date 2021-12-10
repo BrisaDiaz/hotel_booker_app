@@ -11,7 +11,8 @@ import createEmotionCache from '../styles/createEmotionCache';
 import { client } from '../lib/apollo';
 import { ApolloProvider } from '@apollo/client';
 import { WithLayoutPage } from '@/interfaces/index';
-import AuthProvider from '../context/AuthProvider'
+import AuthProvider from '../context/AuthProvider';
+
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
@@ -28,17 +29,20 @@ function MyApp(props: MyAppProps) {
   return (
     <ApolloProvider client={client}>
       <CacheProvider value={emotionCache}>
-      <AuthProvider>
-        <Head>
-          <title>My page</title>
-          <meta name="viewport" content="initial-scale=1, width=device-width" />
-        </Head>
-        <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          {getLayout(<Component {...pageProps} />)}
-        </ThemeProvider>
-            </AuthProvider>
+        <AuthProvider>
+          <Head>
+            <title>My page</title>
+            <meta
+              name="viewport"
+              content="initial-scale=1, width=device-width"
+            />
+          </Head>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            {getLayout(<Component {...pageProps} />)}
+          </ThemeProvider>
+        </AuthProvider>
       </CacheProvider>
     </ApolloProvider>
   );

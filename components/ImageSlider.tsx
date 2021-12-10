@@ -25,15 +25,16 @@ export default function ImageSlider({ images }: { images: ImageObj[] }) {
                 maxHeight: '500px',
                 overflow: 'hidden',
                 objectFit: 'cover',
-                objectPosition: 'center',
+                alignItems: 'center',
               }}
               rowHeight={500}
               cols={1}
             >
               <ImageListItem cols={1}>
                 <img
-                  src={`${item.image}?w=248&fit=crop&auto=format`}
-                  srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                  sx={{ alignItems: 'center' }}
+                  src={`${item.image}`}
+                  srcSet={`${item.image}`}
                   alt={item.title}
                   loading="lazy"
                 />
