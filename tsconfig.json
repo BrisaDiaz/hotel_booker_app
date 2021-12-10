@@ -24,7 +24,9 @@
               "lib/*"
             ],
 
-
+  "@/env": [
+    "env.ts"
+  ],
     },
 
     "allowJs": true,

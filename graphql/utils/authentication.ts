@@ -2,17 +2,13 @@ import { verify, sign } from 'jsonwebtoken';
 import Cookies from 'cookies';
 import { compare, hash, genSalt } from 'bcryptjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import getConfig from 'next/config';
+import env from '@/env';
 import {
   AuthenticationError,
   ForbiddenError,
   ApolloError,
 } from 'apollo-server-micro';
-import { prisma } from '../../lib/prisma';
-
-const { publicRuntimeConfig } = getConfig();
-
-const APP_SECRET = publicRuntimeConfig.APP_SECRET || process.env.APP_SECRET;
+import { prisma } from '@/lib/prisma';
 
 export interface User {
   id: Number;
@@ -63,7 +59,7 @@ async function verifyToken(
 ): Promise<Token | ApolloError> {
   const token = getCookie(req, res);
   if (!token) throw new AuthenticationError('Unauthenticated');
-  const verifiedToken: any = await verify(token, APP_SECRET);
+  const verifiedToken: any = await verify(token, env.APP_SECRET);
   if (!verifiedToken || !verifiedToken?.user)
     throw new ForbiddenError('Forbidden');
   return verifiedToken;
@@ -143,7 +139,7 @@ export async function compirePassword({
   return match;
 }
 export async function signToken(id: number, role: string) {
-  const token = await sign({ user: { id: id, role: role } }, APP_SECRET);
+  const token = await sign({ user: { id: id, role: role } }, env.APP_SECRET);
 
   return token;
 }

@@ -53,17 +53,13 @@ export default function ({
 }) {
   const defaultImage =
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU';
-  const [frameImage, setFrameImage] = useState<string>(defaultImage);
-  const [interiorImage, setInteriorImage] = useState<string>(defaultImage);
+  const [mainImage, setMainImage] = useState<string>(defaultImage);
+
   function handleOnChange(changeEvent: ChangeEvent) {
     const reader = new FileReader();
 
     reader.onload = function (onLoadEvent: any) {
-      if (changeEvent.target.name === 'frameImage') {
-        setFrameImage(onLoadEvent.target.result);
-      } else {
-        setInteriorImage(onLoadEvent.target.result);
-      }
+      setMainImage(onLoadEvent.target.result);
     };
 
     reader.readAsDataURL(changeEvent.target.files[0]);
@@ -77,42 +73,18 @@ export default function ({
       <Grid container spacing={{ sm: 2 }} alignItems="center">
         <Grid item xs={12} sm={6}>
           <TextField
-            id="frame-image"
+            id="main-image"
+            {...register('mainImage')}
             label={
-              errors['frameImage']
-                ? errors['frameImage'].message
-                : 'Frame image url'
+              errors['mainImage']
+                ? errors['mainImage'].message
+                : 'Main image url'
             }
-            type="file"
-            error={errors['frameImage'] ? true : false}
-            {...register('frameImage', {
-              required: 'The frame image is required',
+            error={errors['mainImage'] ? true : false}
+            {...register('mainImage', {
+              required: 'The Main image is required',
             })}
-            onChange={handleOnChange}
-            variant="outlined"
-            sx={styles.textField}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <FileUploadOutlinedIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="interior-image"
-            label={
-              errors['interiorImage']
-                ? errors['interiorImage'].message
-                : 'Interior image url'
-            }
             type="file"
-            error={errors['interiorImage'] ? true : false}
-            {...register('interiorImage', {
-              required: 'The interior image is required',
-            })}
             onChange={handleOnChange}
             variant="outlined"
             sx={styles.textField}
@@ -133,21 +105,9 @@ export default function ({
               component="img"
               alt="frame image"
               height="250"
-              image={frameImage}
+              image={mainImage}
               title="frame image"
-              onError={() => setFrameImage(defaultImage)}
-            />
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardMedia
-              component="img"
-              alt="Interior image"
-              height="250"
-              image={interiorImage}
-              title="interior image"
-              onError={() => setInteriorImage(defaultImage)}
+              onError={() => setMainImage(defaultImage)}
             />
           </Card>
         </Grid>

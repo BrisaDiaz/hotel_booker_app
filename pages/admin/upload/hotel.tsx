@@ -6,12 +6,13 @@ import { GetServerSideProps } from 'next';
 
 import AdminMenu from '@/components/layouts/AdminMenu';
 import { getUser } from '@/graphql/utils/index';
-import HotelForm from '@/components/dashboard/Forms/Hotel/index';
+import HotelForm from '@/components/dashboard/forms/Hotel/index';
 import Backdrop from '@/components/Backdrop';
 
 import SnackBar from '@/components/SnackBar';
 import { client } from '@/lib/apollo';
 import { useMutation } from '@apollo/client';
+import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import {
   GET_ALL_SERVICES,
   GET_ALL_FACILITIES,
@@ -42,26 +43,51 @@ const HotelUploadPage: WithLayoutPage = ({
   hotelCategoriesList: Option[];
   userId: number;
 }): JSX.Element => {
+  const [isLoading, setIsLoading] = React.useState(false);
   const [createHotel, { error, loading, data }] = useMutation(CREATE_HOTEL, {
     onCompleted: () => {
+      setIsLoading(false);
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
       }, 5000);
     },
     onError: (graphError) => {
+      setIsLoading(false);
       setErrorMessage(graphError.message);
     },
   });
-
+  interface HotelVariables extends Hotel {
+    frameImage: File;
+    interiorImage: File;
+  }
   const [success, setSuccess] = React.useState<Boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
-  const onSubmit = async (hotelVariables: Hotel) => {
+  const onSubmit = async (hotelVariables: HotelVariables) => {
+    const toUploadImages = [
+      hotelVariables.interiorImage,
+      hotelVariables.frameImage,
+    ];
+
+    setIsLoading(true);
+
     try {
+      const images = await uploadToCloudinary(toUploadImages);
+      if (!images.length) {
+        setIsLoading(false);
+        return setErrorMessage('There was an error on the images upload.');
+      }
       await createHotel({
-        variables: { ...hotelVariables, userId: userId },
+        variables: {
+          ...hotelVariables,
+          interiorImage: images[0].secure_url,
+          frameImage: images[1].secure_url,
+          userId: userId,
+        },
       });
-    } catch (err) {
+    } catch (err: any) {
+      setIsLoading(false);
+
       console.log(err);
     }
   };
@@ -97,7 +123,7 @@ const HotelUploadPage: WithLayoutPage = ({
           submitHandler={onSubmit}
         />
       </main>
-      <Backdrop loading={loading} />
+      <Backdrop loading={isLoading} />
     </div>
   );
 };
@@ -115,6 +141,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   try {
     const user = await getUser(req, res);
+
     if (user.role === 'ADMIN') {
       const activitiesRequest = await client.query({
         query: GET_ALL_ACTIVITIES,
@@ -132,7 +159,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         query: GET_ALL_LANGUAGES,
       });
 
-      const response = await Promise.all([
+      await Promise.all([
         activitiesRequest,
         servicesRequest,
         facilitiesRequest,

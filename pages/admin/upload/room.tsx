@@ -6,7 +6,7 @@ import { useAuth } from '@/context/useAuth';
 import { getUser } from '@/graphql/utils/index';
 import { useRouter } from 'next/router';
 import SnackBar from '@/components/SnackBar';
-import RoomForm from '@/components/RoomForm';
+import RoomForm from '@/components/dashboard/forms/Room/index';
 import Backdrop from '@/components/Backdrop';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import { client } from '@/lib/apollo';
