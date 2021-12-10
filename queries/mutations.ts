@@ -217,6 +217,37 @@ export const DELETE_ROOMS_OF_MODEL = gql`
     }
   }
 `;
+export const MAKE_BOOKING_REQUEST = gql`
+  mutation makeBookingRequest(
+    $roomModelId: ID!
+    $firstName: String!
+    $lastName: String!
+    $email: String!
+    $mobileNumber: String!
+    $landlineNumber: String!
+    $guestsDistribution: [roomSpecifications!]!
+    $checkInDate: String!
+    $checkOutDate: String!
+    $specifications: String
+  ) {
+    responce: makeBookingRequest(
+      roomModelId: $roomModelId
+      firstName: $firstName
+      lastName: $lastName
+      email: $email
+      mobileNumber: $mobileNumber
+      landlineNumber: $landlineNumber
+      guestsDistribution: $guestsDistribution
+      checkInDate: $checkInDate
+      checkOutDate: $checkOutDate
+      specifications: $specifications
+    ) {
+      isAvailable
+      message
+    }
+  }
+`;
+
 export const CONFIRM_BOOKING_REQUEST = gql`
   mutation confirmBookingRequest(
     $userId: ID!

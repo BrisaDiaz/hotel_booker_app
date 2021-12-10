@@ -175,28 +175,27 @@ const RoomPage: WithLayoutPage = ({
       </Head>
 
       <Box component="main" sx={{ maxWidth: '1000px', m: '20px auto 30px' }}>
-        <Typography
-          variant="h3"
-          component="h1"
-          component={Link}
-          href={`/hotel/${room.hotelId}`}
-          sx={{
-            fontWeight: 700,
-            margin: { xs: '0 10px', md: 0 },
-            width: 'fit-content',
-            textTransform: 'capitalize',
+        <Box component={Link} href={`/hotel/${room.hotelId}`} passHref>
+          <Typography
+            variant="h3"
+            component="a"
+            sx={{
+              fontWeight: 700,
+              margin: { xs: '0 10px', md: 0 },
+              width: 'fit-content',
+              textTransform: 'capitalize',
 
-            cursor: 'pointer',
-            '&:hover': {
-              color: 'rgb(0 0 0 / 70%)',
-              textDecoration: 'underline',
-              textUnderlineOffset: '5px',
-            },
-          }}
-        >
-          {room.hotel.name}
-        </Typography>
-
+              cursor: 'pointer',
+              '&:hover': {
+                color: 'rgb(0 0 0 / 70%)',
+                textDecoration: 'underline',
+                textUnderlineOffset: '5px',
+              },
+            }}
+          >
+            {room.hotel.name}
+          </Typography>
+        </Box>
         <Typography
           variant="h4"
           component="h2"
@@ -225,8 +224,8 @@ const RoomPage: WithLayoutPage = ({
         >
           <ImageListItem cols={1}>
             <img
-              src={`${room.mainImage}?w=248&fit=crop&auto=format`}
-              srcSet={`${room.mainImage}?w=248&fit=crop&auto=format&dpr=2 2x`}
+              src={`${room.mainImage}`}
+              srcSet={`${room.mainImage}`}
               alt={`${room.hotel.name} ${room.category}`}
               loading="lazy"
             />
