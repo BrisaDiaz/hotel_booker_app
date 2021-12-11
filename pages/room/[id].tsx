@@ -1,4 +1,4 @@
-import type { NextPage, GetServerSideProps, NextApiResponse } from 'next';
+import type { GetServerSideProps, NextApiResponse } from 'next';
 import { WithLayoutPage } from '@/interfaces/index';
 
 import React from 'react';

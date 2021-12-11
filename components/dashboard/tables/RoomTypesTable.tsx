@@ -257,113 +257,142 @@ function RoomsTable({
           </TableRow>
         </TableHead>
         <TableBody>
-          {displayedRows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{
-                '& td': { borderRight: '1px solid rgba(224, 224, 224, 1)' },
-
-                '& th': { borderRight: '1px solid rgba(224, 224, 224, 1)' },
-              }}
-            >
-              <TableCell component="th" scope="row">
-                {/* ACTION MENU */}
-                <ActionsMenu
-                  handleActions={handleActions}
-                  selectedRoomTypeId={row.id}
-                  selectedRoomsIds={selectedRooms}
-                >
-                  <ActionsButton />
-                </ActionsMenu>
-              </TableCell>
-              <TableCell align="center" sx={{ borderRight: 'none' }}>
-                <Typography>{row.id}</Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Card sx={{ width: '200px', position: 'relative' }}>
-                    <CardMedia
-                      component="img"
-                      height="150px"
-                      image={row.caption}
-                      alt={row.name}
-                    />
-                  </Card>
-                  <Typography
-                    sx={{
-                      minWidth: 150,
-                      textAlign: 'start',
-                      padding: '0 16px',
-                      fontStyle: 'italic',
-                      fontWeight: 500,
-                      opacity: 0.8,
-                    }}
-                  >
-                    {row.name}
-                  </Typography>
-                </Box>
-              </TableCell>
-
-              <TableCell align="right">
-                {' '}
-                <Typography sx={{ minWidth: 'max-content' }}>
-                  USD ${row.lowestPrice}
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography sx={{ minWidth: 'max-content' }}>
-                  USD ${row.taxes}
-                </Typography>
-              </TableCell>
-
-              <TableCell align="right">
+          {!Boolean(displayedRows.length) ? (
+            <TableRow>
+              <TableCell component="th" scope="row" colSpan={7}>
                 <Box
                   sx={{
-                    minWidth: 'max-content',
+                    minHeight: '40vh',
                     display: 'flex',
-                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
                   }}
                 >
-                  <Typography sx={{ minWidth: 'max-content' }}>
-                    {`${row.maxGuests} ${
-                      row.maxGuests === 1 ? 'guest' : 'guests'
-                    } max.`}
-                  </Typography>
-                  {row.beds.map((bed) => (
-                    <Typography sx={{ minWidth: 'max-content' }} key={bed.type}>
-                      {`${bed.quantity} ${bed.type} ${
-                        bed.quantity === 1 ? 'bed' : 'beds'
-                      }`}
-                    </Typography>
-                  ))}
-                </Box>
-              </TableCell>
-              <TableCell align="right">
-                <Box sx={{ width: 200 }}>
-                  <Stack
-                    direction="row"
+                  <Typography
+                    variant="subtitle1"
                     sx={{
-                      flexWrap: 'wrap',
-                      gap: 1,
+                      textTransform: 'capitalize',
+                      textAlign: 'center',
                     }}
                   >
-                    {row.rooms.map((room) => (
-                      <Chip
-                        key={room.number}
-                        label={room.number}
-                        color={
-                          Boolean(selectedRooms.includes(parseInt(room.id)))
-                            ? 'primary'
-                            : 'default'
-                        }
-                        onClick={() => handleSelectedRooms(parseInt(room.id))}
-                      />
-                    ))}
-                  </Stack>
+                    No data to display
+                  </Typography>
                 </Box>
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            displayedRows.map((row) => (
+              <TableRow
+                key={row.name}
+                sx={{
+                  '& td': { borderRight: '1px solid rgba(224, 224, 224, 1)' },
+
+                  '& th': { borderRight: '1px solid rgba(224, 224, 224, 1)' },
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {/* ACTION MENU */}
+                  <ActionsMenu
+                    handleActions={handleActions}
+                    selectedRoomTypeId={row.id}
+                    selectedRoomsIds={selectedRooms}
+                  >
+                    <ActionsButton />
+                  </ActionsMenu>
+                </TableCell>
+                <TableCell align="center" sx={{ borderRight: 'none' }}>
+                  <Typography>{row.id}</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Card sx={{ width: '200px', position: 'relative' }}>
+                      <CardMedia
+                        component="img"
+                        height="150px"
+                        image={row.caption}
+                        alt={row.name}
+                      />
+                    </Card>
+                    <Typography
+                      sx={{
+                        minWidth: 150,
+                        textAlign: 'start',
+                        padding: '0 16px',
+                        fontStyle: 'italic',
+                        fontWeight: 500,
+                        opacity: 0.8,
+                      }}
+                    >
+                      {row.name}
+                    </Typography>
+                  </Box>
+                </TableCell>
+
+                <TableCell align="right">
+                  {' '}
+                  <Typography sx={{ minWidth: 'max-content' }}>
+                    USD ${row.lowestPrice}
+                  </Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography sx={{ minWidth: 'max-content' }}>
+                    USD ${row.taxes}
+                  </Typography>
+                </TableCell>
+
+                <TableCell align="right">
+                  <Box
+                    sx={{
+                      minWidth: 'max-content',
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <Typography sx={{ minWidth: 'max-content' }}>
+                      {`${row.maxGuests} ${
+                        row.maxGuests === 1 ? 'guest' : 'guests'
+                      } max.`}
+                    </Typography>
+                    {row.beds.map((bed) => (
+                      <Typography
+                        sx={{ minWidth: 'max-content' }}
+                        key={bed.type}
+                      >
+                        {`${bed.quantity} ${bed.type} ${
+                          bed.quantity === 1 ? 'bed' : 'beds'
+                        }`}
+                      </Typography>
+                    ))}
+                  </Box>
+                </TableCell>
+                <TableCell align="right">
+                  <Box sx={{ width: 200 }}>
+                    <Stack
+                      direction="row"
+                      sx={{
+                        flexWrap: 'wrap',
+                        gap: 1,
+                      }}
+                    >
+                      {row.rooms.map((room) => (
+                        <Chip
+                          key={room.number}
+                          label={room.number}
+                          color={
+                            Boolean(selectedRooms.includes(parseInt(room.id)))
+                              ? 'primary'
+                              : 'default'
+                          }
+                          onClick={() => handleSelectedRooms(parseInt(room.id))}
+                        />
+                      ))}
+                    </Stack>
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
         <TableFooter>
           <TableRow>

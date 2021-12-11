@@ -87,7 +87,7 @@ const HotelUploadPage: WithLayoutPage = ({
       });
     } catch (err: any) {
       setIsLoading(false);
-
+      setErrorMessage(JSON.stringify(err));
       console.log(err);
     }
   };

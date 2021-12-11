@@ -1,5 +1,4 @@
 import '../styles/globals.css';
-import { NextPage } from 'next';
 import { ReactNode } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -12,7 +11,7 @@ import { client } from '../lib/apollo';
 import { ApolloProvider } from '@apollo/client';
 import { WithLayoutPage } from '@/interfaces/index';
 import AuthProvider from '../context/AuthProvider';
-
+import ProgresBar from '@/components/ProgresBar';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
@@ -40,7 +39,10 @@ function MyApp(props: MyAppProps) {
           <ThemeProvider theme={theme}>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
-            {getLayout(<Component {...pageProps} />)}
+            <>
+              {getLayout(<Component {...pageProps} />)}
+              <ProgresBar />
+            </>
           </ThemeProvider>
         </AuthProvider>
       </CacheProvider>

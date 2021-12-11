@@ -140,7 +140,7 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
               <Box sx={styles.listItem}>
                 <LanguageIcon color="primary" />
                 <Typography
-                  sx={{ fontSize: '14px' }}
+                  sx={{ fontSize: '14px', textTransform: 'lowercase' }}
                   color="primary"
                   component="a"
                   href={'https://' + hotel.website}

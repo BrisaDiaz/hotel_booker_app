@@ -70,8 +70,8 @@ export default function ({
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
         Aspect
       </Typography>
-      <Grid container spacing={{ sm: 2 }} alignItems="center">
-        <Grid item xs={12} sm={6}>
+      <Grid container spacing={{ sm: 2 }} justifyContent="center">
+        <Grid item xs={12}>
           <TextField
             id="main-image"
             {...register('mainImage')}
@@ -98,7 +98,7 @@ export default function ({
           />
         </Grid>
       </Grid>
-      <Grid container spacing={2} alignItems="center" sx={{ mt: 0, mb: 2 }}>
+      <Grid container spacing={2} justifyContent="center" sx={{ mt: 0, mb: 2 }}>
         <Grid item xs={12} md={6}>
           <Card>
             <CardMedia

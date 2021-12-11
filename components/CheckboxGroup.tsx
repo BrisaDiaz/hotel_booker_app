@@ -28,6 +28,7 @@ export default function CheckboxLabels({
           label={item.name}
           control={
             <Checkbox
+              color="secondary"
               onChange={(e) => handleChanges(e.target.checked, item.name)}
             />
           }

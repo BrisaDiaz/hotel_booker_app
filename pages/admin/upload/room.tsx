@@ -12,6 +12,7 @@ import AdminMenu from '@/components/layouts/AdminMenu';
 import { client } from '@/lib/apollo';
 import { useMutation } from '@apollo/client';
 import { RoomBuildierVariables } from '@/interfaces/index';
+import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import {
   GET_ALL_SERVICES,
   GET_ALL_ROOM_CATEGORIES,
@@ -38,19 +39,20 @@ const RoomUploadPage: WithLayoutPage = ({
 }): JSX.Element => {
   const router = useRouter();
   const { hotelId } = router.query;
-
+  const [isLoading, setIsLoading] = React.useState(false);
   const [createRoomUploadPageModel, { error, loading, data }] = useMutation(
     CREATE_ROOM_MODEL,
     {
       onCompleted: () => {
+        setIsLoading(false);
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
         }, 5000);
       },
       onError: (graphError) => {
-        console.log(graphError.message);
-        console.log(graphError);
+        setIsLoading(false);
+
         setErrorMessage(graphError.message);
       },
     }
@@ -58,12 +60,21 @@ const RoomUploadPage: WithLayoutPage = ({
   const [success, setSuccess] = React.useState<Boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const onSubmit = async (variables: RoomBuildierVariables) => {
+    setIsLoading(true);
     try {
+      const [mainImageData] = await uploadToCloudinary([variables.mainImage]);
       await createRoomUploadPageModel({
-        variables: { ...variables, hotelId: hotelId, userId: userId },
+        variables: {
+          ...variables,
+          hotelId: hotelId,
+          userId: userId,
+          mainImage: mainImageData.secure_id,
+        },
       });
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
+      setIsLoading(false);
+      setErrorMessage(JSON.stringify(err));
     }
   };
 

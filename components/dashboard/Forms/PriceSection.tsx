@@ -62,6 +62,7 @@ export default function ({
             type="number"
             error={errors['lowestPrice'] ? true : false}
             InputProps={{
+              min: 0,
               startAdornment: (
                 <InputAdornment position="start">$</InputAdornment>
               ),
@@ -88,6 +89,7 @@ export default function ({
             type="number"
             error={errors['lowestPrice'] ? true : false}
             InputProps={{
+              min: 0,
               startAdornment: (
                 <InputAdornment position="start">$</InputAdornment>
               ),

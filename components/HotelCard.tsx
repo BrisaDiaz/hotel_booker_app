@@ -38,6 +38,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
         >
           <CardMedia
             sx={{
+              minWidth: '220px',
               width: { sm: '50%' },
               overflow: 'hidden',
               borderRadius: { sm: '10px' },

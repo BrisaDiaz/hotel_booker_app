@@ -110,7 +110,7 @@ const EditButton = ({ onClick }: { onClick: React.MouseEventHandler }) => {
 };
 
 type ComponentProps = {
-  isModalOpend: Function;
+  isModalOpend: Boolean;
   closeModal: Function;
   onEdit: Function;
   hotel: Hotel;

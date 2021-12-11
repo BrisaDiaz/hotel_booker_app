@@ -384,71 +384,101 @@ export default function EnhancedTable({
               onRequestSort={handleRequestSort}
             />
             <TableBody sx={{ minWidth: '70vh' }}>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-              rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.id)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
+              {!Boolean(rows.length) ? (
+                <TableRow>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    colSpan={headCells.length + 1}
+                  >
+                    <Box
+                      sx={{
+                        minHeight: '50vh',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                      }}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          textTransform: 'capitalize',
+                          textAlign: 'center',
+                        }}
                       >
-                        {row.id}
-                      </TableCell>
+                        No data to display
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                stableSort(rows, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                      <TableCell align="center" sx={{ minWidth: 120 }}>
-                        {row.sentIn}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        sx={{ minWidth: 200, textTransform: 'capitalize' }}
+                    return (
+                      <TableRow
+                        hover
+                        onClick={(event) => handleClick(event, row.id)}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.id}
+                        selected={isItemSelected}
                       >
-                        {row.roomType.name}
-                      </TableCell>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              'aria-labelledby': labelId,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                        >
+                          {row.id}
+                        </TableCell>
 
-                      <TableCell align="center">{row.roomsQuantity}</TableCell>
+                        <TableCell align="center" sx={{ minWidth: 120 }}>
+                          {row.sentIn}
+                        </TableCell>
+                        <TableCell
+                          align="left"
+                          sx={{ minWidth: 200, textTransform: 'capitalize' }}
+                        >
+                          {row.roomType.name}
+                        </TableCell>
 
-                      <TableCell align="center">{row.nights}</TableCell>
+                        <TableCell align="center">
+                          {row.roomsQuantity}
+                        </TableCell>
 
-                      <TableCell align="center" sx={{ minWidth: 120 }}>
-                        {row.checkInDate}
-                      </TableCell>
-                      <TableCell align="center" sx={{ minWidth: 130 }}>
-                        {row.checkOutDate}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{ minWidth: 150, textTransform: 'capitalize' }}
-                      >
-                        {row.client.name}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                        <TableCell align="center">{row.nights}</TableCell>
+
+                        <TableCell align="center" sx={{ minWidth: 120 }}>
+                          {row.checkInDate}
+                        </TableCell>
+                        <TableCell align="center" sx={{ minWidth: 130 }}>
+                          {row.checkOutDate}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          sx={{ minWidth: 150, textTransform: 'capitalize' }}
+                        >
+                          {row.client.name}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+              )}
               {emptyRows > 0 && (
                 <TableRow
                   style={{

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -8,7 +8,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import AboutSection from './AboutSection';
 import ContactSection from './ContactSection';
 import AddressSection from './AddressSection';
-import PriceSection from './PriceSection';
+import PriceSection from '../PriceSectionection';
 import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';

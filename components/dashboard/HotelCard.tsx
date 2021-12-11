@@ -8,28 +8,26 @@ import { CardActionArea } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
-import Tooltip from '@mui/material/Tooltip';
-import Paper from '@mui/material/Paper';
-function EditButtom({ onClick }: { onClick: React.MouseEventHandler }) {
+
+function EditButtom({ onEdit }: { onEdit: Function }) {
   return (
     <Box
-      sx={{ position: 'absolute', zIndex: 10, m: 1 }}
+      sx={{ position: 'absolute', zIndex: 30, m: 1 }}
       onClick={(e) => {
         e.stopPropagation();
       }}
     >
-      <Tooltip disableFocusListener title="Edit">
-        <Fab
-          onClick={(e) => {
-            e.stopPropagation();
-            onClick(e);
-          }}
-          aria-label="edit"
-          size="medium"
-        >
-          <EditIcon />
-        </Fab>
-      </Tooltip>
+      <Fab
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit();
+        }}
+        aria-label="edit"
+        size="medium"
+        title="Edit"
+      >
+        <EditIcon />
+      </Fab>
     </Box>
   );
 }
@@ -52,10 +50,10 @@ export default function HotelCard({
   toggleEditMode: Function;
 }) {
   return (
-    <div key={hotel.id} onClick={() => handleRedirect(hotel.id)}>
-      <Card sx={{ width: '300px', position: 'relative' }}>
-        <CardActionArea>
-          <EditButtom onClick={() => toggleEditMode(hotel.id)} />
+    <div onClick={() => handleRedirect(hotel.id)}>
+      <Card sx={{ width: '300px', position: 'relative' }} component="article">
+        <CardActionArea component="div">
+          <EditButtom onEdit={() => toggleEditMode(hotel.id)} />
           <CardMedia
             component="img"
             height="150px"

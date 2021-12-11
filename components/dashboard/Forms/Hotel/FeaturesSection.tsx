@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import AutocompleteCheckbox from '@/components/AutocompleteCheckbox';
+import AutocompleteCheckbox  color="secondary"
+from '@/components/AutocompleteCheckbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox  color="secondary"
+from '@mui/material/Checkbox';
 
 const styles = {
   groupTitle: {
@@ -119,15 +121,18 @@ export default function ({
         <Grid item xs={12} sm={6}>
           <FormGroup sx={{ px: 1 }}>
             <FormControlLabel
-              control={<Checkbox {...register('freeCancelation')} />}
+              control={<Checkbox  color="secondary"
+{...register('freeCancelation')} />}
               label="Free Cancelation"
             />
             <FormControlLabel
-              control={<Checkbox {...register('accessible')} />}
+              control={<Checkbox  color="secondary"
+{...register('accessible')} />}
               label="Accessible"
             />
             <FormControlLabel
-              control={<Checkbox {...register('familyFriendly')} />}
+              control={<Checkbox  color="secondary"
+{...register('familyFriendly')} />}
               label="Family Friendly"
             />
           </FormGroup>
@@ -135,15 +140,18 @@ export default function ({
         <Grid item xs={12} sm={6}>
           <FormGroup sx={{ px: 1 }}>
             <FormControlLabel
-              control={<Checkbox {...register('petFriendly')} />}
+              control={<Checkbox  color="secondary"
+{...register('petFriendly')} />}
               label="Pet Friendly"
             />
             <FormControlLabel
-              control={<Checkbox {...register('smokerFriendly')} />}
+              control={<Checkbox  color="secondary"
+{...register('smokerFriendly')} />}
               label="Smoker Friendly"
             />
             <FormControlLabel
-              control={<Checkbox {...register('ecoFriendly')} />}
+              control={<Checkbox  color="secondary"
+{...register('ecoFriendly')} />}
               label="Eco Friendly"
             />
           </FormGroup>

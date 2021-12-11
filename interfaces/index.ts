@@ -81,7 +81,7 @@ export interface RoomBuildierVariables {
   freeCancelation: boolean;
   category: string;
   mts2: number;
-  mainImage: string;
+  mainImage: File;
   maximunGuests: number;
   maximunNights?: number;
   minimunNights: number;

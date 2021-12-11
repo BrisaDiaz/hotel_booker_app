@@ -69,7 +69,7 @@ const Dashboard: WithLayoutPage = ({
   const closeEditingMode = () => {
     setIsInEditMode(false);
   };
-
+  console.log(isInEditMode);
   return (
     <div>
       <Head>
@@ -96,6 +96,7 @@ const Dashboard: WithLayoutPage = ({
         >
           {hotels.map((hotel) => (
             <HotelCard
+              key={hotel.id}
               hotel={hotel}
               handleRedirect={handleRedirect}
               toggleEditMode={toggleEditMode}
