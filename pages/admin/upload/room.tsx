@@ -68,7 +68,7 @@ const RoomUploadPage: WithLayoutPage = ({
           ...variables,
           hotelId: hotelId,
           userId: userId,
-          mainImage: mainImageData.secure_id,
+          mainImage: mainImageData.secure_url,
         },
       });
     } catch (err: any) {

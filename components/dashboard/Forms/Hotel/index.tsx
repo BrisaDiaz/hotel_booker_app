@@ -8,7 +8,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import AboutSection from './AboutSection';
 import ContactSection from './ContactSection';
 import AddressSection from './AddressSection';
-import PriceSection from '../PriceSectionection';
+import PriceSection from '../PriceSection';
 import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';

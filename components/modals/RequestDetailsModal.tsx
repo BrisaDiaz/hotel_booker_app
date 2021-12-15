@@ -50,7 +50,7 @@ const list = {
 const leyend = {
   width: { xs: '50%', sm: '40%' },
   color: 'text.secondary',
-  fontStyle: 'oblique',
+
   fontSize: '14px',
 };
 export default function BookingModal({

@@ -20,14 +20,16 @@ export default function CheckboxLabels({
         <FormControlLabel
           sx={{
             textTransform: 'capitalize',
-            ':& >  label span': {
+            '& >  * ': {
               fontSize: '14px',
             },
+            mb: '4px',
           }}
           key={`${item.name}-${item.id}`}
           label={item.name}
           control={
             <Checkbox
+              size="small"
               color="secondary"
               onChange={(e) => handleChanges(e.target.checked, item.name)}
             />

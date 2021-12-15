@@ -368,10 +368,10 @@ export default function PersistentDrawerLeft({
         anchor="left"
         open={open}
       >
-        <DrawerHeader>
+        <DrawerHeader sx={{ background: 'primary' }}>
           <IconButton
             onClick={handleDrawerClose}
-            sx={{ display: { xs: 'block', md: 'none' } }}
+            sx={{ display: { xs: 'flex', md: 'none' } }}
           >
             {theme.direction === 'ltr' ? (
               <ChevronLeftIcon />
@@ -382,7 +382,20 @@ export default function PersistentDrawerLeft({
         </DrawerHeader>
 
         <Divider />
+        <Typography
+          variant="subtitle2"
+          color="primary"
+          sx={{
+            fontWeight: 500,
+            padding: '10px 20px',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+          }}
+        >
+          Sort By:
+        </Typography>
 
+        <Divider />
         <SortSelect handdleChange={handleSort} />
 
         <Divider />
@@ -419,13 +432,15 @@ export default function PersistentDrawerLeft({
         <Accordion title={'Activities'}>
           <CheckboxGroup items={activities} handleChanges={handdleActivities} />
         </Accordion>
-        <Divider />
-        <Accordion title={'Other Features'}>
-          <CheckboxGroup items={features} handleChanges={handdleFeatures} />
-        </Accordion>
+
         <Divider />
         <Accordion title={'Languages'}>
           <CheckboxGroup items={languages} handleChanges={handdleLanguages} />
+        </Accordion>
+        <Divider />
+
+        <Accordion title={'Other Features'}>
+          <CheckboxGroup items={features} handleChanges={handdleFeatures} />
         </Accordion>
         <Divider />
         <Button
@@ -444,7 +459,7 @@ export default function PersistentDrawerLeft({
         </Button>
       </Drawer>
 
-      <Main open={open}>
+      <Main open={open} sx={{ mt: { sm: 0 } }}>
         <DrawerHeader />
         {children}
       </Main>

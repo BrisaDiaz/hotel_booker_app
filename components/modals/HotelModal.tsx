@@ -11,7 +11,8 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
+
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Paper from '@mui/material/Paper';
 import ImageSlider from '@/components/ImageSlider';
 import CloseButton from '@/components/modals/CloseButton';
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modal: {
       position: 'absolute' as 'absolute',
-      borderRadius: theme.spacing(2),
+      borderRadius: theme.spacing(1),
       top: '50%',
       left: '50%',
       fontWeight: 200,
@@ -29,8 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       maxWidth: '800px',
 
-      padding: theme.spacing(4),
-
+      padding: theme.spacing(3),
+      apddingTop: theme.spacing(4),
       backgroundColor: 'background.paper',
 
       maxHeight: '90%',
@@ -39,9 +40,13 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
     },
+    modalContent: {
+      '& > section': {
+        marginLeft: theme.spacing(1),
+      },
+    },
     legend: {
       minWidth: '50%',
-      fontStyle: 'italic',
 
       color: theme.palette.text.secondary,
       [theme.breakpoints.up('sm')]: {
@@ -75,6 +80,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paragraph: {
       whiteSpace: 'break-spaces',
+
       paddingTop: theme.spacing(2),
 
       lineHeight: 1.3,
@@ -82,15 +88,18 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '14px',
     },
     titleBox: {
-      '&:first-child': { marginBottom: 0, paddingTop: theme.spacing(2) },
+      '&:first-child': { marginBottom: 0, marginTop: theme.spacing(2) },
       display: 'flex',
       alignItems: 'center',
-      gap: theme.spacing(1),
+
       backgroundColor: theme.palette.grey[100],
       marginBottom: theme.spacing(2),
-      padding: theme.spacing(2),
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
+      padding: theme.spacing(1),
+      paddingTop: theme.spacing(0),
+      paddingBottom: theme.spacing(0),
+      '& > *': {
+        fontWeight: 400,
+      },
     },
   })
 );
@@ -102,8 +111,9 @@ const EditButton = ({ onClick }: { onClick: React.MouseEventHandler }) => {
         size="small"
         color="primary"
         onClick={onClick}
+        sx={{ pb: 1 }}
       >
-        <EditIcon fontSize="small" />
+        <EditOutlinedIcon fontSize="small" />
       </IconButton>
     </Tooltip>
   );
@@ -163,11 +173,14 @@ function TransitionsModal(props: ComponentProps) {
       >
         <Fade in={open}>
           <Paper elevation={4} className={classes.modal}>
-            <CloseButton handleClose={handleClose} />
+            <Box sx={{ mt: 0.5 }}>
+              <CloseButton handleClose={handleClose} />
+            </Box>
+
             {hotel && (
-              <Box sx={{ mt: 2 }}>
+              <Box className={classes.modalContent}>
                 <Box className={classes.titleBox}>
-                  <Typography variant="h6" color="primary">
+                  <Typography variant="subtitle1" color="primary">
                     Aspect{' '}
                   </Typography>
                   <EditButton onClick={() => onEdit('aspect')} />
@@ -175,173 +188,191 @@ function TransitionsModal(props: ComponentProps) {
                 <ImageSlider images={images} />
 
                 <Box className={classes.titleBox}>
-                  <Typography variant="h6" color="primary">
+                  <Typography variant="subtitle1" color="primary">
                     About{' '}
                   </Typography>
                   <EditButton onClick={() => onEdit('about')} />
                 </Box>
-
-                <Box className={classes.rowField}>
-                  <Typography className={classes.legend}>Name</Typography>
-                  <Typography>{hotel.name}</Typography>
-                </Box>
-                {hotel?.brand && (
+                <Box component="section">
                   <Box className={classes.rowField}>
-                    <Typography className={classes.legend}>Brand</Typography>
-                    <Typography>{hotel.brand}</Typography>
+                    <Typography className={classes.legend}>Name</Typography>
+                    <Typography>{hotel.name}</Typography>
                   </Box>
-                )}
-                <Box className={classes.rowField}>
-                  <Typography className={classes.legend}>Category</Typography>
-                  <Typography>{hotel.category}</Typography>
+                  {hotel?.brand && (
+                    <Box className={classes.rowField}>
+                      <Typography className={classes.legend}>Brand</Typography>
+                      <Typography>{hotel.brand}</Typography>
+                    </Box>
+                  )}
+                  <Box className={classes.rowField}>
+                    <Typography className={classes.legend}>Category</Typography>
+                    <Typography>{hotel.category}</Typography>
+                  </Box>
+                  <Box className={classes.columnField}>
+                    <Typography className={classes.legend}>
+                      Description
+                    </Typography>
+                    <Typography component="pre" className={classes.paragraph}>
+                      {hotel.description}
+                    </Typography>
+                  </Box>
                 </Box>
-                <Box className={classes.columnField}>
-                  <Typography className={classes.legend}>
-                    Description
-                  </Typography>
-                  <Typography component="pre" className={classes.paragraph}>
-                    {hotel.description}
-                  </Typography>
-                </Box>
+
                 <Box className={classes.titleBox}>
-                  <Typography variant="h6" color="primary">
-                    Policies And Rules{' '}
+                  <Typography variant="subtitle1" color="primary">
+                    Policies And Rules
                   </Typography>
                   <EditButton onClick={() => onEdit('policies')} />
                 </Box>
-                <Box className={classes.rowField}>
-                  <Typography className={classes.legend}>
-                    Check In Hour
-                  </Typography>
-                  <Typography>{hotel.checkInHour}</Typography>
-                </Box>
-                <Box className={classes.rowField}>
-                  <Typography className={classes.legend}>
-                    Check Out Hour
-                  </Typography>
-                  <Typography>{hotel.checkOutHour}</Typography>
-                </Box>
-                <Box className={classes.columnField}>
-                  <Typography className={classes.legend}>Policies</Typography>
-                  <Typography component="pre" className={classes.paragraph}>
-                    {hotel.policiesAndRules}
-                  </Typography>
+
+                <Box component="section">
+                  <Box className={classes.rowField}>
+                    <Typography className={classes.legend}>
+                      Check In Hour
+                    </Typography>
+                    <Typography>{hotel.checkInHour}</Typography>
+                  </Box>
+                  <Box className={classes.rowField}>
+                    <Typography className={classes.legend}>
+                      Check Out Hour
+                    </Typography>
+                    <Typography>{hotel.checkOutHour}</Typography>
+                  </Box>
+                  <Box className={classes.columnField}>
+                    <Typography className={classes.legend}>Policies</Typography>
+                    <Typography component="pre" className={classes.paragraph}>
+                      {hotel.policiesAndRules}
+                    </Typography>
+                  </Box>
                 </Box>
                 <Box className={classes.titleBox}>
-                  <Typography variant="h6" color="primary">
+                  <Typography variant="subtitle1" color="primary">
                     Prices
                   </Typography>
                   <EditButton onClick={() => onEdit('prices')} />
                 </Box>
+                <Box component="section">
+                  <Box className={classes.rowField}>
+                    <Typography className={classes.legend}>
+                      Lowest price
+                    </Typography>
+                    <Typography>USD${hotel.lowestPrice}</Typography>
+                  </Box>
+                  <Box component="section">
+                    <Box className={classes.rowField}>
+                      <Typography className={classes.legend}>
+                        Taxes and Charges
+                      </Typography>
+                      <Typography>USD${hotel.taxesAndCharges}</Typography>
+                    </Box>
+                  </Box>
+                </Box>
 
-                <Box className={classes.rowField}>
-                  <Typography className={classes.legend}>
-                    Lowest price
-                  </Typography>
-                  <Typography>USD${hotel.lowestPrice}</Typography>
-                </Box>
-                <Box className={classes.rowField}>
-                  <Typography className={classes.legend}>
-                    Taxes and Charges
-                  </Typography>
-                  <Typography>USD${hotel.taxesAndCharges}</Typography>
-                </Box>
                 <Box className={classes.titleBox}>
-                  <Typography variant="h6" color="primary">
+                  <Typography variant="subtitle1" color="primary">
                     Address
                   </Typography>
                   <EditButton onClick={() => onEdit('address')} />
                 </Box>
-
-                <Box>
-                  <Typography sx={{ mb: 2, fontSize: '14px' }}>
-                    {hotel.address.holeAddress}
-                  </Typography>
+                <Box component="section">
+                  <Box>
+                    <Typography sx={{ mb: 2, fontSize: '14px' }}>
+                      {hotel.address.holeAddress}
+                    </Typography>
+                  </Box>
                 </Box>
+
                 <Box className={classes.titleBox}>
-                  <Typography variant="h6" color="primary">
+                  <Typography variant="subtitle1" color="primary">
                     Contact
                   </Typography>
                   <EditButton onClick={() => onEdit('contact')} />
                 </Box>
-                <Box className={classes.rowField}>
-                  <Typography className={classes.legend}>Telephone</Typography>
-                  <Typography>{hotel.telephone}</Typography>
-                </Box>
-                {hotel?.email && (
+                <Box component="section">
                   <Box className={classes.rowField}>
-                    <Typography className={classes.legend}>Email</Typography>
-                    <Typography>{hotel.email}</Typography>
-                  </Box>
-                )}
-                {hotel?.website && (
-                  <Box className={classes.rowField}>
-                    <Typography className={classes.legend}>Website</Typography>
-                    <Typography sx={{ textTransform: 'initial' }}>
-                      {hotel.website}
+                    <Typography className={classes.legend}>
+                      Telephone
                     </Typography>
+                    <Typography>{hotel.telephone}</Typography>
                   </Box>
-                )}
+                  {hotel?.email && (
+                    <Box className={classes.rowField}>
+                      <Typography className={classes.legend}>Email</Typography>
+                      <Typography>{hotel.email}</Typography>
+                    </Box>
+                  )}
+                  {hotel?.website && (
+                    <Box className={classes.rowField}>
+                      <Typography className={classes.legend}>
+                        Website
+                      </Typography>
+                      <Typography sx={{ textTransform: 'initial' }}>
+                        {hotel.website}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
 
                 <Box className={classes.titleBox}>
-                  <Typography variant="h6" color="primary">
+                  <Typography variant="subtitle1" color="primary">
                     Features
                   </Typography>
                   <EditButton onClick={() => onEdit('features')} />
                 </Box>
+                <Box component="section">
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      columnGap: 4,
+                      mb: 2,
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    {features.map(
+                      (feature) =>
+                        feature.items &&
+                        feature.items.length > 0 && (
+                          <Box
+                            key={feature.title}
+                            sx={{
+                              py: 2,
 
-                <Box
-                  sx={{
-                    display: 'flex',
-                    columnGap: 4,
-                    mb: 2,
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  {features.map(
-                    (feature) =>
-                      feature.items &&
-                      feature.items.length > 0 && (
-                        <Box
-                          key={feature.title}
-                          sx={{
-                            py: 2,
-
-                            height: 'fit-content',
-                            overflow: 'hidden',
-                            flexWrap: 'wrap',
-                          }}
-                        >
-                          <Typography
-                            variant="subtitle1"
-                            sx={{ mb: 2, fontWeight: 600, opacity: 0.8 }}
+                              height: 'fit-content',
+                              overflow: 'hidden',
+                              flexWrap: 'wrap',
+                            }}
                           >
-                            {feature.title}
                             <Typography
-                              component="span"
-                              sx={{ opacity: 0.8, fontSize: '16px' }}
+                              variant="subtitle1"
+                              sx={{ mb: 2, fontWeight: 600, opacity: 0.8 }}
                             >
-                              {`(${feature.items.length})`}{' '}
-                            </Typography>
-                          </Typography>
-                          {feature.items.map((item) => (
-                            <Box
-                              key={item.id}
-                              sx={{ display: 'flex', gap: 3, mb: 2 }}
-                            >
+                              {feature.title}
                               <Typography
-                                sx={{
-                                  textTransform: 'capitalize',
-                                  fontSize: '14px',
-                                }}
+                                component="span"
+                                sx={{ opacity: 0.8, fontSize: '16px' }}
                               >
-                                {item.name}
+                                {`(${feature.items.length})`}{' '}
                               </Typography>
-                            </Box>
-                          ))}
-                        </Box>
-                      )
-                  )}
+                            </Typography>
+                            {feature.items.map((item) => (
+                              <Box
+                                key={item.id}
+                                sx={{ display: 'flex', gap: 3, mb: 2 }}
+                              >
+                                <Typography
+                                  sx={{
+                                    textTransform: 'capitalize',
+                                    fontSize: '14px',
+                                  }}
+                                >
+                                  {item.name}
+                                </Typography>
+                              </Box>
+                            ))}
+                          </Box>
+                        )
+                    )}
+                  </Box>
                 </Box>
               </Box>
             )}

@@ -93,7 +93,14 @@ export default function RoomCard({
                 </Typography>
               </Box>
               {RoomBedsUI(room.beds, 'small')}
-              <Box sx={{ ml: 'auto', width: 'fit-content', textAlign: 'end' }}>
+              <Box
+                sx={{
+                  ml: 'auto',
+                  mt: 1,
+                  width: 'fit-content',
+                  textAlign: 'end',
+                }}
+              >
                 <Typography
                   variant="h6"
                   sx={{

@@ -18,6 +18,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
       <Card
         elevation={matchesSize ? 2 : 1}
         sx={{
+          borderRadius: { sm: 2 },
           flexWrap: 'wrap',
           height: 'min-content',
           width: '100% ',
@@ -30,8 +31,8 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
           sx={{
             width: '100% ',
             display: { sm: 'flex' },
-            py: { sm: 1 },
-            px: { sm: 2 },
+            py: { sm: 0 },
+            px: { sm: 0 },
             m: '0 auto',
             height: '100%',
           }}
@@ -41,23 +42,22 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
               minWidth: '220px',
               width: { sm: '50%' },
               overflow: 'hidden',
-              borderRadius: { sm: '10px' },
             }}
             component="img"
             height={200}
             image={hotel.frameImage}
             alt={hotel.name}
           />
-          <CardContent>
+          <CardContent sx={{ py: { sm: 0 }, pr: { sm: 3 } }}>
             <Typography
               gutterBottom
-              variant="h6"
+              variant="subtitle1"
               sx={{
                 mb: 0,
+                fontWeight: 500,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'pre',
-                color: '#212121',
               }}
             >
               {hotel.name}
@@ -66,8 +66,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
             <Typography
               variant="body2"
               sx={{
-                padding: '5px',
-                mb: 1,
+                mt: 1,
                 fontWeight: 500,
                 opacity: 0.75,
               }}
@@ -81,8 +80,6 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
                 mb: 0,
                 maxWidth: 'fit-content',
                 fontWeight: 700,
-
-                opacity: 0.8,
               }}
             >
               USD {'$' + hotel.lowestPrice}
@@ -92,8 +89,9 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
               sx={{
                 margin: ' 0  0 8px auto',
                 maxWidth: 'fit-content',
+
+                lineHeight: 1.3,
                 fontWeight: 200,
-                mt: '-4px',
                 opacity: 0.8,
               }}
             >

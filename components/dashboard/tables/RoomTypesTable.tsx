@@ -306,16 +306,22 @@ function RoomsTable({
                 </TableCell>
                 <TableCell align="right">
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Card sx={{ width: '200px', position: 'relative' }}>
+                    <Card
+                      sx={{
+                        maxWidth: '150px',
+                        minWidth: '150px',
+                        height: '100px',
+                      }}
+                    >
                       <CardMedia
                         component="img"
-                        height="150px"
                         image={row.caption}
                         alt={row.name}
                       />
                     </Card>
                     <Typography
                       sx={{
+                        fontSize: '14px',
                         minWidth: 150,
                         textAlign: 'start',
                         padding: '0 16px',
@@ -331,12 +337,16 @@ function RoomsTable({
 
                 <TableCell align="right">
                   {' '}
-                  <Typography sx={{ minWidth: 'max-content' }}>
+                  <Typography
+                    sx={{ fontSize: '14px', minWidth: 'max-content' }}
+                  >
                     USD ${row.lowestPrice}
                   </Typography>
                 </TableCell>
                 <TableCell align="right">
-                  <Typography sx={{ minWidth: 'max-content' }}>
+                  <Typography
+                    sx={{ fontSize: '14px', minWidth: 'max-content' }}
+                  >
                     USD ${row.taxes}
                   </Typography>
                 </TableCell>
@@ -349,14 +359,16 @@ function RoomsTable({
                       flexDirection: 'column',
                     }}
                   >
-                    <Typography sx={{ minWidth: 'max-content' }}>
+                    <Typography
+                      sx={{ minWidth: 'max-content', fontSize: '14px' }}
+                    >
                       {`${row.maxGuests} ${
                         row.maxGuests === 1 ? 'guest' : 'guests'
                       } max.`}
                     </Typography>
                     {row.beds.map((bed) => (
                       <Typography
-                        sx={{ minWidth: 'max-content' }}
+                        sx={{ minWidth: 'max-content', fontSize: '14px' }}
                         key={bed.type}
                       >
                         {`${bed.quantity} ${bed.type} ${

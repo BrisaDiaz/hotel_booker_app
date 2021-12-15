@@ -14,18 +14,11 @@ function EditButtom({ onEdit }: { onEdit: Function }) {
     <Box
       sx={{ position: 'absolute', zIndex: 30, m: 1 }}
       onClick={(e) => {
+        onEdit();
         e.stopPropagation();
       }}
     >
-      <Fab
-        onClick={(e) => {
-          e.stopPropagation();
-          onEdit();
-        }}
-        aria-label="edit"
-        size="medium"
-        title="Edit"
-      >
+      <Fab aria-label="edit" size="medium" title="Edit">
         <EditIcon />
       </Fab>
     </Box>

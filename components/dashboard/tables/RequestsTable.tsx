@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getFormatedDate } from '@/utils/index';
+import { toDateAndHourFormat } from '@/utils/index';
 import { alpha } from '@mui/material/styles';
 import { BookingRequest } from '@/interfaces/index';
 import Box from '@mui/material/Box';
@@ -18,7 +18,7 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import ClearIcon from '@mui/icons-material/Clear';
-import AddTaskIcon from '@mui/icons-material/AddTask';
+
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
@@ -52,10 +52,10 @@ function createData({
 }: BookingRequest): Data {
   return {
     id,
-    checkInDate: getFormatedDate(parseInt(checkInDate)),
-    checkOutDate: getFormatedDate(parseInt(checkOutDate)),
+    checkInDate: toDateAndHourFormat(parseInt(checkInDate)).split(' ')[0],
+    checkOutDate: toDateAndHourFormat(parseInt(checkOutDate)).split(' ')[0],
     roomsQuantity: guestsDistribution.length,
-    sentIn: getFormatedDate(parseInt(createdAt)),
+    sentIn: toDateAndHourFormat(parseInt(createdAt)),
     roomType: roomModel,
     nights,
     client: {
@@ -162,7 +162,7 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Check Out',
-    sortable: false,
+    sortable: true,
   },
   {
     id: 'client',
@@ -204,6 +204,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           >
             {headCell.sortable ? (
               <TableSortLabel
+                sx={{ minWidth: 'max-content' }}
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={createSortHandler(headCell.id)}
@@ -218,7 +219,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                 ) : null}
               </TableSortLabel>
             ) : (
-              <Typography variant="body2" sx={{ fontWeight: 500 }}>
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 500, minWidth: 'max-content' }}
+              >
                 {headCell.label}
               </Typography>
             )}
@@ -325,7 +329,7 @@ export default function EnhancedTable({
   const rows = data?.length ? data.map((record) => createData(record)) : [];
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('sentIn');
-  const [selected, setSelected] = React.useState<number | null>(null);
+  const [selected, setSelected] = React.useState<number | string | null>(null);
   const [page, setPage] = React.useState(0);
 
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -428,6 +432,11 @@ export default function EnhancedTable({
                         tabIndex={-1}
                         key={row.id}
                         selected={isItemSelected}
+                        sx={{
+                          '&  td >*': {
+                            fontSize: '14px',
+                          },
+                        }}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox

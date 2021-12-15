@@ -82,7 +82,7 @@ const Dashboard: WithLayoutPage = ({
         sx={{ p: { xs: '16px 0', sm: '16px 16px' }, maxWidth: 1200 }}
         component="main"
       >
-        <Box sx={{ p: ' 20px 10px', maxWidth: 'fit-content' }}>
+        <Box sx={{ p: ' 20px 10px 10px', maxWidth: 'fit-content' }}>
           <ActionCard card={cardData} />
         </Box>
         <Box

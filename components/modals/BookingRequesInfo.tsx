@@ -4,7 +4,7 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import Typography from '@mui/material/Typography';
-import { getFormatedDate } from '@/utils/index';
+import { toDateAndHourFormat } from '@/utils/index';
 import { BookingRequest } from '@/interfaces/index';
 const withIconLabel = {
   marginBottom: '10px',
@@ -37,7 +37,6 @@ const list = {
 const leyend = {
   width: { xs: '50%', sm: '45%' },
   color: 'text.secondary',
-  fontStyle: 'oblique',
 };
 
 export default function RequestInfo({
@@ -81,11 +80,21 @@ export default function RequestInfo({
         </Box>
         <Box component="li" sx={list}>
           <Typography sx={leyend}>Check In Date:</Typography>
-          <time>{getFormatedDate(parseInt(requestInfo?.checkInDate))}</time>
+          <time>
+            {
+              toDateAndHourFormat(parseInt(requestInfo?.checkInDate))?.split(
+                ' '
+              )[0]
+            }
+          </time>
         </Box>
         <Box component="li" sx={list}>
           <Typography sx={leyend}>Check Out Date:</Typography>
-          <time>{getFormatedDate(parseInt(requestInfo?.checkOutDate))}</time>
+          <time>
+            {toDateAndHourFormat(
+              parseInt(requestInfo?.checkOutDate)?.split(' ')[0]
+            )}
+          </time>
         </Box>
         <Box component="li" sx={list}>
           <Typography sx={leyend}>Quantity: </Typography>
