@@ -1,56 +1,8 @@
 import React from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import uploadToCloudinary from '@/utils/uploadToCloudinary';
 
 const Home: NextPage = () => {
-  const [imageSrc, setImageSrc] = React.useState(
-    'https://www.grancapitan.com.ar/wp-content/uploads/2014/10/default-img.gif'
-  );
-  const [otherImageSrc, setOtherImageSrc] = React.useState(
-    'https://www.grancapitan.com.ar/wp-content/uploads/2014/10/default-img.gif'
-  );
-  const [uploadData, setUploadData] = React.useState();
-
-  /**
-   * handleOnChange
-   * @description Triggers when the file input changes (ex: when a file is selected)
-   */
-
-  function handleOnChange(changeEvent) {
-    const reader = new FileReader();
-
-    reader.onload = function (onLoadEvent) {
-      if (changeEvent.target.name === 'image1') {
-        setImageSrc(onLoadEvent.target.result);
-      } else {
-        setOtherImageSrc(onLoadEvent.target.result);
-      }
-
-      setUploadData(undefined);
-    };
-
-    reader.readAsDataURL(changeEvent.target.files[0]);
-  }
-  const onSubmit = async (e) => {
-    e.preventDefault();
-
-    const imagesToUpload = Array.from(e.currentTarget.elements)
-      .filter(({ name }) => name.includes('image'))
-      .map((image) => image.files[0]);
-
-    try {
-      const ImagesData = await uploadToCloudinary(imagesToUpload);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  /**
-   * handleOnSubmit
-   * @description Triggers when the main form is submitted
-   */
-
-  async function handleOnSubmit(event) {}
   return (
     <div>
       <Head>
@@ -59,35 +11,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1>Image Uploader</h1>
-
-        <p>Upload your image to Cloudinary!</p>
-
-        <form method="post" onSubmit={onSubmit}>
-          <p>
-            <input type="file" name="image1" onChange={handleOnChange} />
-          </p>
-
-          <img src={imageSrc} />
-          <p>
-            <input type="file" name="image2" onChange={handleOnChange} />
-          </p>
-          <img src={otherImageSrc} />
-
-          {imageSrc && otherImageSrc && !uploadData && (
-            <p>
-              <button type="submit">Upload Files</button>
-            </p>
-          )}
-
-          {uploadData && (
-            <code>
-              <pre>{JSON.stringify(uploadData, null, 2)}</pre>
-            </code>
-          )}
-        </form>
-      </main>
+      <main></main>
     </div>
   );
 };
