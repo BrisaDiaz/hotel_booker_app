@@ -26,7 +26,7 @@ function EditButtom({ onEdit }: { onEdit: Function }) {
 }
 export default function HotelCard({
   hotel,
-  toggleEditMode,
+  onEdit,
   handleRedirect,
 }: {
   hotel: {
@@ -40,13 +40,13 @@ export default function HotelCard({
     };
   };
   handleRedirect: Function;
-  toggleEditMode: Function;
+  onEdit: Function;
 }) {
   return (
     <div onClick={() => handleRedirect(hotel.id)}>
       <Card sx={{ width: '300px', position: 'relative' }} component="article">
         <CardActionArea component="div">
-          <EditButtom onEdit={() => toggleEditMode(hotel.id)} />
+          <EditButtom onEdit={() => onEdit(hotel.id)} />
           <CardMedia
             component="img"
             height="150px"

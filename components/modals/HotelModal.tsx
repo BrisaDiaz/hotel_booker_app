@@ -125,8 +125,10 @@ type ComponentProps = {
   onEdit: Function;
   hotel: Hotel;
 };
+
 function TransitionsModal(props: ComponentProps) {
   const { isModalOpend, closeModal, onEdit, hotel } = props;
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -249,21 +251,21 @@ function TransitionsModal(props: ComponentProps) {
                   <Typography variant="subtitle1" color="primary">
                     Prices
                   </Typography>
-                  <EditButton onClick={() => onEdit('prices')} />
+                  <EditButton onClick={() => onEdit('price')} />
                 </Box>
                 <Box component="section">
                   <Box className={classes.rowField}>
                     <Typography className={classes.legend}>
                       Lowest price
                     </Typography>
-                    <Typography>USD${hotel.lowestPrice}</Typography>
+                    <Typography>USD ${hotel.lowestPrice}</Typography>
                   </Box>
                   <Box component="section">
                     <Box className={classes.rowField}>
                       <Typography className={classes.legend}>
                         Taxes and Charges
                       </Typography>
-                      <Typography>USD${hotel.taxesAndCharges}</Typography>
+                      <Typography>USD ${hotel.taxesAndCharges}</Typography>
                     </Box>
                   </Box>
                 </Box>

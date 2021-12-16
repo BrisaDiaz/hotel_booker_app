@@ -33,9 +33,11 @@ const styles = {
 export default function ({
   register,
   errors,
+  defaultData
 }: {
   register: Function;
   errors: any;
+  defaultData?: any;
 }) {
   return (
     <Grid component="fieldset" sx={styles.fieldset}>

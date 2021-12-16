@@ -32,9 +32,11 @@ const styles = {
 export default function ({
   register,
   errors,
+  defaultData,
 }: {
   register: Function;
   errors: any;
+  defaultData?: any;
 }) {
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
@@ -54,7 +56,7 @@ export default function ({
             InputLabelProps={{
               shrink: true,
             }}
-            defaultValue="00:00"
+            defaultValue={defaultData?.checkInHour || '00:00'}
             inputProps={{
               step: 300, // 5 min
             }}
@@ -71,7 +73,7 @@ export default function ({
             InputLabelProps={{
               shrink: true,
             }}
-            defaultValue="00:00"
+            defaultValue={defaultData?.checkOutHour || '00:00'}
             inputProps={{
               step: 300, // 5 min
             }}
@@ -92,6 +94,7 @@ export default function ({
         error={errors['policiesAndRules'] && true}
         multiline
         rows={8}
+        defaultValue={defaultData?.policiesAndRules || ''}
         variant="outlined"
         sx={styles.textField}
       />

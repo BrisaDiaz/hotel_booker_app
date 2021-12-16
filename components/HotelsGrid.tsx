@@ -37,7 +37,7 @@ export default function ResponsiveGrid(props: typeProps) {
             item
             xs={12}
             sm={12}
-            md={11}
+            md={10}
             lg={10}
             key={index}
             alignContent="center"

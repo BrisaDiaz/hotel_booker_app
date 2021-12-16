@@ -39,9 +39,11 @@ const styles = {
 export default function ({
   register,
   errors,
+  defaultData,
 }: {
   register: Function;
   errors: any;
+  defaultData?: any;
 }) {
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
@@ -53,6 +55,7 @@ export default function ({
           <TextField
             id="telephone"
             type="tel"
+            defaultValue={defaultData?.telephone || ''}
             label={
               errors['telephone'] ? errors['telephone'].message : 'Telephone'
             }
@@ -81,6 +84,7 @@ export default function ({
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
+            defaultValue={defaultData?.email || ''}
             sx={styles.textField}
             id="email"
             type="email"
@@ -109,6 +113,7 @@ export default function ({
           <TextField
             sx={styles.textField}
             id="website"
+            defaultValue={defaultData?.website || ''}
             variant="outlined"
             label={errors['website'] ? errors['website'].message : 'Website'}
             error={errors['website'] && true}

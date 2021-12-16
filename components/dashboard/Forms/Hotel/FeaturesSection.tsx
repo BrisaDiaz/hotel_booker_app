@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import AutocompleteCheckbox  color="secondary"
-from '@/components/AutocompleteCheckbox';
+import AutocompleteCheckbox from '@/components/AutocompleteCheckbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox  color="secondary"
-from '@mui/material/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
 
 const styles = {
   groupTitle: {
@@ -43,6 +41,7 @@ export default function ({
   services,
   activities,
   languages,
+  defaultData,
 }: {
   register: Function;
   setValue: Function;
@@ -50,11 +49,24 @@ export default function ({
   activities: Feature[];
   facilities: Feature[];
   languages: Feature[];
+  defaultData?: any;
 }) {
-  const [servicesSelected, setServicesSelected] = useState<string[]>([]);
-  const [facilitiesSelected, setFacilitiesSelected] = useState<string[]>([]);
-  const [activitiesSelected, setActivitiesSelected] = useState<string[]>([]);
-  const [languagesSelected, setLanguageSelected] = useState<string[]>([]);
+  const getOptionsNames = (data: autocompliteData[]): string[] => {
+    return data.map((option) => option.name);
+  };
+
+  const [servicesSelected, setServicesSelected] = useState<string[]>(
+    defaultData?.sevices ? getOptionsNames(defaultData?.sevices) : []
+  );
+  const [facilitiesSelected, setFacilitiesSelected] = useState<string[]>(
+    defaultData?.facilities ? getOptionsNames(defaultData?.facilities) : []
+  );
+  const [activitiesSelected, setActivitiesSelected] = useState<string[]>(
+    defaultData?.activities ? getOptionsNames(defaultData?.activities) : []
+  );
+  const [languagesSelected, setLanguageSelected] = useState<string[]>(
+    defaultData?.languages ? getOptionsNames(defaultData?.languages) : []
+  );
 
   type autocompliteData = { name: string };
 
@@ -70,9 +82,7 @@ export default function ({
   const handleLanguagesField = (data: autocompliteData[]) => {
     setLanguageSelected(getOptionsNames(data));
   };
-  const getOptionsNames = (data: autocompliteData[]): string[] => {
-    return data.map((option) => option.name);
-  };
+
   useEffect(() => {
     setValue('services', servicesSelected);
   }, [servicesSelected]);
@@ -95,6 +105,7 @@ export default function ({
         onChange={(data: autocompliteData[]) => handleFacilitiesField(data)}
         label="Facilities"
         options={facilities}
+        defaultValue={defaultData?.facilities || []}
         sx={styles.textField}
       />
       <AutocompleteCheckbox
@@ -102,12 +113,14 @@ export default function ({
         label="Services"
         options={services}
         sx={styles.textField}
+        defaultValue={defaultData?.services || []}
       />
       <AutocompleteCheckbox
         onChange={(data: autocompliteData[]) => handleActivitiesField(data)}
         label="Activities"
         options={activities}
         sx={styles.textField}
+        defaultValue={defaultData?.activities || []}
       />
 
       <AutocompleteCheckbox
@@ -115,24 +128,39 @@ export default function ({
         label="Languages"
         options={languages}
         sx={styles.textField}
+        defaultValue={defaultData?.languages || []}
       />
 
       <Grid container spacing={{ sm: 2 }} alignItems="center" sx={{ mb: 1.5 }}>
         <Grid item xs={12} sm={6}>
           <FormGroup sx={{ px: 1 }}>
             <FormControlLabel
-              control={<Checkbox  color="secondary"
-{...register('freeCancelation')} />}
+              control={
+                <Checkbox
+                  color="secondary"
+                  checked={
+                    defaultData?.features?.freeCancelation ? true : false
+                  }
+                  {...register('freeCancelation')}
+                />
+              }
               label="Free Cancelation"
             />
             <FormControlLabel
-              control={<Checkbox  color="secondary"
-{...register('accessible')} />}
+              control={
+                <Checkbox color="secondary" {...register('accessible')} />
+              }
+              checked={defaultData?.features?.accessible ? true : false}
               label="Accessible"
             />
             <FormControlLabel
-              control={<Checkbox  color="secondary"
-{...register('familyFriendly')} />}
+              control={
+                <Checkbox
+                  color="secondary"
+                  checked={defaultData?.features?.familyFriendly ? true : false}
+                  {...register('familyFriendly')}
+                />
+              }
               label="Family Friendly"
             />
           </FormGroup>
@@ -140,18 +168,33 @@ export default function ({
         <Grid item xs={12} sm={6}>
           <FormGroup sx={{ px: 1 }}>
             <FormControlLabel
-              control={<Checkbox  color="secondary"
-{...register('petFriendly')} />}
+              control={
+                <Checkbox
+                  checked={defaultData?.features?.petFriendly ? true : false}
+                  color="secondary"
+                  {...register('petFriendly')}
+                />
+              }
               label="Pet Friendly"
             />
             <FormControlLabel
-              control={<Checkbox  color="secondary"
-{...register('smokerFriendly')} />}
+              control={
+                <Checkbox
+                  checked={defaultData?.features?.smokerFriendly ? true : false}
+                  color="secondary"
+                  {...register('smokerFriendly')}
+                />
+              }
               label="Smoker Friendly"
             />
             <FormControlLabel
-              control={<Checkbox  color="secondary"
-{...register('ecoFriendly')} />}
+              control={
+                <Checkbox
+                  checked={defaultData?.features?.ecoFriendly ? true : false}
+                  color="secondary"
+                  {...register('ecoFriendly')}
+                />
+              }
               label="Eco Friendly"
             />
           </FormGroup>

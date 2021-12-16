@@ -17,7 +17,9 @@ export default function CheckboxesTags({
   options,
   label,
   onChange,
+  defaultValue,
 }: {
+  defaultValue: Option[] | [];
   options: Option[];
   label: string;
   onChange: Function;
@@ -30,6 +32,7 @@ export default function CheckboxesTags({
       id={label}
       options={options}
       key={label}
+      defaultValue={defaultValue}
       disableCloseOnSelect
       sx={{ textTransform: 'capitalize' }}
       getOptionLabel={(option) => option.name}

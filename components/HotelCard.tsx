@@ -22,7 +22,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
           flexWrap: 'wrap',
           height: 'min-content',
           width: '100% ',
-          maxWidth: '750px',
+          maxWidth: '700px',
           m: '0 auto',
         }}
         key={hotel.id}
@@ -37,18 +37,31 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
             height: '100%',
           }}
         >
-          <CardMedia
+          <Box
             sx={{
-              minWidth: '220px',
-              width: { sm: '50%' },
+              maxWidth: '240px',
+              width: { sm: '30%' },
               overflow: 'hidden',
             }}
-            component="img"
-            height={200}
-            image={hotel.frameImage}
-            alt={hotel.name}
-          />
-          <CardContent sx={{ py: { sm: 0 }, pr: { sm: 3 } }}>
+          >
+            <CardMedia
+              sx={{
+                overflow: 'hidden',
+                objectFit: 'cover',
+                '&:hover': {
+                  transform: 'scale(1.15)',
+                  transition: 'ease-in-out 0.5s',
+                },
+              }}
+              component="img"
+              height={200}
+              image={hotel.frameImage}
+              alt={hotel.name}
+            />
+          </Box>
+          <CardContent
+            sx={{ py: { sm: 0 }, pr: { sm: 3 }, width: { sm: '70%' } }}
+          >
             <Typography
               gutterBottom
               variant="subtitle1"
@@ -66,7 +79,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
             <Typography
               variant="body2"
               sx={{
-                mt: 1,
+                my: 1,
                 fontWeight: 500,
                 opacity: 0.75,
               }}

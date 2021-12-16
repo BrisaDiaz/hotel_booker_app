@@ -36,14 +36,16 @@ export default function ({
   errors,
   setValue,
   hotelCategories,
+  defaultData,
 }: {
   register: Function;
   setValue: Function;
   errors: any;
+  defaultData?: any;
   hotelCategories: Array<{ id: number; name: string }>;
 }) {
   const [categorySelected, setCategorieSelected] = useState<string>(
-    hotelCategories[0].name
+    defaultData?.category || hotelCategories[0]?.name
   );
   const handleCategoryField = (event: SelectChangeEvent) => {
     setCategorieSelected(event.target.value as string);
@@ -72,6 +74,7 @@ export default function ({
             })}
             variant="outlined"
             sx={styles.textField}
+            defaultValue={defaultData.name || ''}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -85,6 +88,7 @@ export default function ({
                 message: 'The brand name must not exced the 50 character',
               },
             })}
+            defaultValue={defaultData.brand || ''}
             variant="outlined"
             label={errors['brand'] ? errors['brand'].message : 'Brand'}
             type="text"
@@ -125,6 +129,7 @@ export default function ({
         {...register('description', {
           required: 'A description is require',
         })}
+        defaultValue={defaultData.description || ''}
         rows={8}
         label={
           errors['description'] ? errors['description'].message : 'Description'

@@ -12,7 +12,7 @@ import PriceSection from '../PriceSection';
 import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
-
+import { Hotel } from '@/interfaces/index';
 const styles = {
   root: {
     maxWidth: '900px',
@@ -48,31 +48,37 @@ type Feature = {
   id: number;
   name: string;
 };
+type FieldToEdit =
+  | 'about'
+  | 'contact'
+  | 'price'
+  | 'aspect'
+  | 'features'
+  | 'policies'
+  | 'address'
+  | '';
 export default function MultilineTextFields(props: {
-  selectedField:
-    | 'about'
-    | 'contanct'
-    | 'price'
-    | 'aspect'
-    | 'features'
-    | 'policies'
-    | 'address';
-  services?: Feature[];
-  activities?: Feature[];
-  facilities?: Feature[];
-  languages?: Feature[];
-  hotelCategories?: Feature[];
+  hotel: Hotel | {};
+  toEditField: FieldToEdit;
+  services: Feature[] | [];
+  activities: Feature[] | [];
+  facilities: Feature[] | [];
+  languages: Feature[] | [];
+  hotelCategories: Feature[] | [];
   submitHandler: Function;
+  abortHandler: Function;
 }) {
   const {
-    selectedField,
+    hotel,
+    toEditField,
     services,
     activities,
     facilities,
     languages,
     hotelCategories,
+    abortHandler,
   } = props;
-
+  if (hotel === {}) return <></>;
   const matchesSize = useMediaQuery('(min-width:600px)');
   const {
     register,
@@ -96,8 +102,8 @@ export default function MultilineTextFields(props: {
       taxesAndCharges: data?.taxesAndCharges * 1,
       description: data?.description,
       policiesAndRules: data?.policiesAndRules,
-      frameImage: data?.frameImage[0],
-      interiorImage: data?.interiorImage[0],
+      frameImage: data?.frameImage ? data?.frameImage[0] : null,
+      interiorImage: data?.interiorImage ? data?.interiorImage[0] : null,
       facilities: data?.facilities,
       services: data?.services,
       activities: data?.activities,
@@ -128,41 +134,57 @@ export default function MultilineTextFields(props: {
       autoComplete="off"
       onSubmit={handleSubmit(submitMiddleware)}
     >
-      {selectedField === 'about' && hotelCategories && (
+      <Typography component="h1" variant="h4" align="center" sx={styles.title}>
+        Edit {hotel.name}
+      </Typography>
+
+      {toEditField === 'about' && (
         <AboutSection
           register={register}
           setValue={setValue}
           hotelCategories={hotelCategories}
           errors={errors}
+          defaultData={hotel}
         />
       )}
-      {selectedField === 'price' && (
-        <PriceSection register={register} errors={errors} />
+      {toEditField === 'price' && (
+        <PriceSection register={register} errors={errors} defaultData={hotel} />
       )}
-
-      <ContactSection register={register} errors={errors} />
-      <AddressSection register={register} errors={errors} />
-      {selectedField === 'features' &&
-        services &&
-        languages &&
-        activities &&
-        facilities && (
-          <FeaturesSection
-            register={register}
-            setValue={setValue}
-            services={services}
-            languages={languages}
-            activities={activities}
-            facilities={facilities}
-          />
-        )}
-      {selectedField === 'policies' && (
-        <PoliciesSection register={register} errors={errors} />
+      {toEditField === 'contact' && (
+        <ContactSection
+          register={register}
+          errors={errors}
+          defaultData={hotel}
+        />
       )}
-      {selectedField === 'aspect' && (
+      {toEditField === 'address' && (
+        <AddressSection
+          register={register}
+          errors={errors}
+          defaultData={hotel}
+        />
+      )}
+      {toEditField === 'features' && (
+        <FeaturesSection
+          register={register}
+          setValue={setValue}
+          services={services}
+          languages={languages}
+          activities={activities}
+          facilities={facilities}
+          defaultData={hotel}
+        />
+      )}
+      {toEditField === 'policies' && (
+        <PoliciesSection
+          register={register}
+          errors={errors}
+          defaultData={hotel}
+        />
+      )}
+      {toEditField === 'aspect' && (
         <AspectSection register={register} errors={errors} />
       )}
-
       <Box sx={styles.formBottons}>
         <Button
           variant="contained"
@@ -179,10 +201,10 @@ export default function MultilineTextFields(props: {
           sx={styles.bottons}
           variant="outlined"
           color="primary"
-          type="reset"
+          onClick={() => abortHandler()}
           size={matchesSize ? 'large' : 'medium'}
         >
-          Reset
+          Cancel
         </Button>
       </Box>
     </Box>
