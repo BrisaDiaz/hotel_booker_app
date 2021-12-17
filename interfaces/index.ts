@@ -47,28 +47,28 @@ export interface RoomModel {
 }
 
 export interface Hotel {
-  id?: number;
+  id: number;
   name: string;
-  brand?: string;
-  category?: string;
+  brand: string;
+  category: string;
   lowestPrice: number;
   address: Address;
   checkInHour: string;
   checkOutHour: string;
-  taxesAndCharges?: number;
-  telephone?: string;
+  taxesAndCharges: number;
+  telephone: string;
   email?: string;
   website?: string;
-  description?: string;
-  policiesAndRules?: string;
+  description: string;
+  policiesAndRules: string;
   frameImage: string;
-  interiorImage?: string;
-  features?: Features;
-  activities?: Item[];
-  facilities?: Item[];
-  services?: Item[];
-  languages?: Item[];
-  roomModels?: RoomModel[];
+  interiorImage: string;
+  features: Features;
+  activities: Item[];
+  facilities: Item[];
+  services: Item[];
+  languages: Item[];
+  roomModels: RoomModel[];
 }
 export interface RoomBuildierVariables {
   hotelId?: number;
@@ -123,6 +123,13 @@ export interface BookingRequest {
     number: number;
   }>;
 }
+export type FileUploadEvent = {
+  target: {
+    files: File[];
+    name: string;
+  };
+};
 export type WithLayoutPage<P = {}> = NextPage<P> & {
   getLayout?: (page: React.ReactNode) => React.ReactNode;
 };
+export type Modify<T, R> = Omit<T, keyof R> & R;

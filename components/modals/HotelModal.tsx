@@ -35,7 +35,8 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: 'background.paper',
 
       maxHeight: '90%',
-      overflowY: 'auto',
+
+      overflowY: 'scroll',
       '&::-webkit-scrollbar': {
         display: 'none',
       },
@@ -47,12 +48,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     legend: {
       minWidth: '50%',
-
-      color: theme.palette.text.secondary,
-      [theme.breakpoints.up('sm')]: {
-        minWidth: '45%',
-      },
-      fontSize: '14px',
       '&:after': {
         content: ':',
       },
@@ -65,10 +60,12 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '14px',
       marginBottom: theme.spacing(2),
       textTransform: 'capitalize',
+      overflowX: 'hidden',
       'nth-child(2)': {
-        width: '60%',
+        textOverflow: 'ellipsis',
+        width: '50%',
       },
-      '& > p': {
+      '& > *': {
         fontSize: '14px',
       },
     },
@@ -123,7 +120,7 @@ type ComponentProps = {
   isModalOpend: Boolean;
   closeModal: Function;
   onEdit: Function;
-  hotel: Hotel;
+  hotel: Partial<Hotel>;
 };
 
 function TransitionsModal(props: ComponentProps) {
@@ -155,9 +152,9 @@ function TransitionsModal(props: ComponentProps) {
     { title: 'Languages', items: hotel?.languages },
     { title: 'Others Qualities', items: TagsWithKeys },
   ];
-  const images = [
-    { title: 'Hotel frame', image: hotel?.frameImage },
-    { title: 'Hotel Interior', image: hotel?.interiorImage },
+  const images: { title: string; image: string }[] = [
+    { title: 'Hotel frame', image: hotel?.frameImage || '' },
+    { title: 'Hotel Interior', image: hotel?.interiorImage || '' },
   ];
 
   return (
@@ -187,6 +184,7 @@ function TransitionsModal(props: ComponentProps) {
                   </Typography>
                   <EditButton onClick={() => onEdit('aspect')} />
                 </Box>
+
                 <ImageSlider images={images} />
 
                 <Box className={classes.titleBox}>
@@ -197,21 +195,43 @@ function TransitionsModal(props: ComponentProps) {
                 </Box>
                 <Box component="section">
                   <Box className={classes.rowField}>
-                    <Typography className={classes.legend}>Name</Typography>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
+                      Name
+                    </Typography>
                     <Typography>{hotel.name}</Typography>
                   </Box>
                   {hotel?.brand && (
                     <Box className={classes.rowField}>
-                      <Typography className={classes.legend}>Brand</Typography>
+                      <Typography
+                        className={classes.legend}
+                        variant="subtitle2"
+                        color="text.secondary"
+                      >
+                        Brand
+                      </Typography>
                       <Typography>{hotel.brand}</Typography>
                     </Box>
                   )}
                   <Box className={classes.rowField}>
-                    <Typography className={classes.legend}>Category</Typography>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
+                      Category
+                    </Typography>
                     <Typography>{hotel.category}</Typography>
                   </Box>
                   <Box className={classes.columnField}>
-                    <Typography className={classes.legend}>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
                       Description
                     </Typography>
                     <Typography component="pre" className={classes.paragraph}>
@@ -229,19 +249,33 @@ function TransitionsModal(props: ComponentProps) {
 
                 <Box component="section">
                   <Box className={classes.rowField}>
-                    <Typography className={classes.legend}>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
                       Check In Hour
                     </Typography>
-                    <Typography>{hotel.checkInHour}</Typography>
+                    <time>{hotel.checkInHour}</time>
                   </Box>
                   <Box className={classes.rowField}>
-                    <Typography className={classes.legend}>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
                       Check Out Hour
                     </Typography>
-                    <Typography>{hotel.checkOutHour}</Typography>
+                    <time>{hotel.checkOutHour}</time>
                   </Box>
                   <Box className={classes.columnField}>
-                    <Typography className={classes.legend}>Policies</Typography>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
+                      Policies
+                    </Typography>
                     <Typography component="pre" className={classes.paragraph}>
                       {hotel.policiesAndRules}
                     </Typography>
@@ -255,14 +289,22 @@ function TransitionsModal(props: ComponentProps) {
                 </Box>
                 <Box component="section">
                   <Box className={classes.rowField}>
-                    <Typography className={classes.legend}>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
                       Lowest price
                     </Typography>
                     <Typography>USD ${hotel.lowestPrice}</Typography>
                   </Box>
                   <Box component="section">
                     <Box className={classes.rowField}>
-                      <Typography className={classes.legend}>
+                      <Typography
+                        className={classes.legend}
+                        variant="subtitle2"
+                        color="text.secondary"
+                      >
                         Taxes and Charges
                       </Typography>
                       <Typography>USD ${hotel.taxesAndCharges}</Typography>
@@ -292,20 +334,34 @@ function TransitionsModal(props: ComponentProps) {
                 </Box>
                 <Box component="section">
                   <Box className={classes.rowField}>
-                    <Typography className={classes.legend}>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
                       Telephone
                     </Typography>
                     <Typography>{hotel.telephone}</Typography>
                   </Box>
                   {hotel?.email && (
                     <Box className={classes.rowField}>
-                      <Typography className={classes.legend}>Email</Typography>
+                      <Typography
+                        className={classes.legend}
+                        variant="subtitle2"
+                        color="text.secondary"
+                      >
+                        Email
+                      </Typography>
                       <Typography>{hotel.email}</Typography>
                     </Box>
                   )}
                   {hotel?.website && (
                     <Box className={classes.rowField}>
-                      <Typography className={classes.legend}>
+                      <Typography
+                        className={classes.legend}
+                        variant="subtitle2"
+                        color="text.secondary"
+                      >
                         Website
                       </Typography>
                       <Typography sx={{ textTransform: 'initial' }}>
@@ -345,8 +401,9 @@ function TransitionsModal(props: ComponentProps) {
                             }}
                           >
                             <Typography
-                              variant="subtitle1"
-                              sx={{ mb: 2, fontWeight: 600, opacity: 0.8 }}
+                              variant="subtitle2"
+                              color="text.secondary"
+                              sx={{ mb: 2 }}
                             >
                               {feature.title}
                               <Typography

@@ -137,7 +137,7 @@ export interface NexusGenObjects {
   }
   Hotel: { // root type
     activities?: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
-    administratorId?: number | null; // Int
+    administratorId: number; // Int!
     brand?: string | null; // String
     category?: string | null; // String
     checkInHour?: string | null; // String
@@ -372,7 +372,7 @@ export interface NexusGenFieldTypes {
   Hotel: { // field return type
     activities: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
     address: NexusGenRootTypes['Address'] | null; // Address
-    administratorId: number | null; // Int
+    administratorId: number; // Int!
     adminstrator: NexusGenRootTypes['Administrator'] | null; // Administrator
     brand: string | null; // String
     category: string | null; // String
@@ -441,8 +441,7 @@ export interface NexusGenFieldTypes {
     signin: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
     signout: NexusGenRootTypes['PlainResponse'] | null; // PlainResponse
     signup: NexusGenRootTypes['User'] | null; // User
-    updateHotelAddress: NexusGenRootTypes['Address'] | null; // Address
-    updateHotelLowestPrice: NexusGenRootTypes['Hotel'] | null; // Hotel
+    updateHotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     updateRoomModelPrice: NexusGenRootTypes['RoomModel'] | null; // RoomModel
   }
   Mutetion: { // field return type
@@ -717,8 +716,7 @@ export interface NexusGenFieldTypeNames {
     signin: 'AuthPayload'
     signout: 'PlainResponse'
     signup: 'User'
-    updateHotelAddress: 'Address'
-    updateHotelLowestPrice: 'Hotel'
+    updateHotel: 'Hotel'
     updateRoomModelPrice: 'RoomModel'
   }
   Mutetion: { // field return type name
@@ -938,20 +936,39 @@ export interface NexusGenArgTypes {
       lastName: string; // String!
       password: string; // String!
     }
-    updateHotelAddress: { // args
+    updateHotel: { // args
+      accessible?: boolean | null; // Boolean
+      activities?: Array<string | null> | null; // [String]
       administrativeArea?: string | null; // String
+      brand?: string | null; // String
+      category?: string | null; // String
+      checkInHour?: string | null; // String
+      checkOutHour?: string | null; // String
       city?: string | null; // String
       country?: string | null; // String
+      description?: string | null; // String
+      ecoFriendly?: boolean | null; // Boolean
+      email?: string | null; // String
+      facilities?: Array<string | null> | null; // [String]
+      familyFriendly?: boolean | null; // Boolean
+      frameImage?: string | null; // String
+      freeCancelation?: boolean | null; // Boolean
       holeAddress?: string | null; // String
       hotelId: string; // ID!
+      interiorImage?: string | null; // String
+      languages?: Array<string | null> | null; // [String]
+      lowestPrice?: number | null; // Float
+      name?: string | null; // String
+      petFriendly?: boolean | null; // Boolean
+      policiesAndRules?: string | null; // String
       postalCode?: string | null; // String
+      services?: Array<string | null> | null; // [String]
+      smokerFriendly?: boolean | null; // Boolean
       street?: string | null; // String
+      taxesAndCharges?: number | null; // Float
+      telephone?: string | null; // String
       userId: string; // ID!
-    }
-    updateHotelLowestPrice: { // args
-      hotelId: string; // ID!
-      lowestPrice: number; // Float!
-      userId: string; // ID!
+      website?: string | null; // String
     }
     updateRoomModelPrice: { // args
       hotelId: string; // ID!

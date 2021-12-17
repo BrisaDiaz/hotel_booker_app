@@ -1,40 +1,18 @@
 import React from 'react';
-
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Grid from '@mui/material/Grid';
+import { styles } from '@/components/dashboard/forms/styles';
 
-const styles = {
-  groupTitle: {
-    fontWeight: 500,
-    color: '#484848',
-    background: '#fff',
-    mb: '10px',
-    px: '10px',
-    width: 'max-content',
-  },
-  fieldset: {
-    my: 4,
-    pt: 1.5,
-    borderRadius: 5,
-    border: '1px solid  rgb(0 0 0 / 10%)',
-    padding: { xs: '15px', sm: '20px', md: '25px ' },
-    background: '#fff',
-    boxShadow: '1px 5px 32px -12px rgb(0 0 0 / 30%)',
-  },
-
-  textField: {
-    width: '100%',
-    my: 1,
-  },
-};
 export default function ({
   register,
   errors,
+  defaultData,
 }: {
   register: Function;
   errors: any;
+  defaultData?: any;
 }) {
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
@@ -54,6 +32,9 @@ export default function ({
               },
             })}
             variant="outlined"
+            defaultValue={
+              defaultData?.lowestPrice ? defaultData.lowestPrice : 0
+            }
             label={
               errors['lowestPrice']
                 ? errors['lowestPrice'].message
@@ -73,6 +54,9 @@ export default function ({
           <TextField
             sx={styles.textField}
             id="taxesAndCharges"
+            defaultValue={
+              defaultData?.taxesAndCharges ? defaultData.taxesAndCharges : 0
+            }
             {...register('taxesAndCharges', {
               required: 'The taxes are required',
               min: {

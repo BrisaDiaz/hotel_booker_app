@@ -110,11 +110,34 @@ export const CREATE_HOTEL = gql`
     }
   }
 `;
-
-export const EDIT_HOTEL_ADDRESS = gql`
-  mutation editHotelAddress(
+export const UPDATE_HOTEL = gql`
+  mutation updateHotel(
     $userId: ID!
     $hotelId: ID!
+    $name: String
+    $brand: String
+    $category: String
+    $telephone: String
+    $email: String
+    $website: String
+    $lowestPrice: Float
+    $taxesAndCharges: Float
+    $checkInHour: String
+    $checkOutHour: String
+    $policiesAndRules: String
+    $description: String
+    $frameImage: String
+    $interiorImage: String
+    $activities: [String]
+    $facilities: [String]
+    $services: [String]
+    $languages: [String]
+    $accessible: Boolean
+    $freeCancelation: Boolean
+    $familyFriendly: Boolean
+    $petFriendly: Boolean
+    $smokerFriendly: Boolean
+    $ecoFriendly: Boolean
     $holeAddress: String
     $country: String
     $postalCode: String
@@ -122,9 +145,33 @@ export const EDIT_HOTEL_ADDRESS = gql`
     $city: String
     $street: String
   ) {
-    editHotelAddress(
+    hotel: updateHotel(
       userId: $userId
       hotelId: $hotelId
+      name: $name
+      telephone: $telephone
+      email: $email
+      website: $website
+      brand: $brand
+      category: $category
+      lowestPrice: $lowestPrice
+      taxesAndCharges: $taxesAndCharges
+      checkInHour: $checkInHour
+      checkOutHour: $checkOutHour
+      policiesAndRules: $policiesAndRules
+      description: $description
+      frameImage: $frameImage
+      interiorImage: $interiorImage
+      activities: $activities
+      facilities: $facilities
+      services: $services
+      languages: $languages
+      accessible: $accessible
+      freeCancelation: $freeCancelation
+      familyFriendly: $familyFriendly
+      petFriendly: $petFriendly
+      smokerFriendly: $smokerFriendly
+      ecoFriendly: $ecoFriendly
       holeAddress: $holeAddress
       country: $country
       postalCode: $postalCode
@@ -133,9 +180,51 @@ export const EDIT_HOTEL_ADDRESS = gql`
       street: $street
     ) {
       id
+      name
+      brand
+      category
+      lowestPrice
+      taxesAndCharges
+      frameImage
+      interiorImage
+      description
+      policiesAndRules
+      checkInHour
+      checkOutHour
+      telephone
+      email
+      website
+      address {
+        holeAddress
+      }
+      services {
+        id
+        name
+      }
+      activities {
+        id
+        name
+      }
+      languages {
+        id
+        name
+      }
+      facilities {
+        id
+        name
+      }
+      features {
+        freeCancelation
+        accessible
+        familyFriendly
+        petFriendly
+        smokerFriendly
+        ecoFriendly
+      }
     }
   }
 `;
+
 export const CREATE_ROOM_MODEL = gql`
   mutation creatHotelRoomModel(
     $userId: ID!

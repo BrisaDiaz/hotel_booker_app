@@ -162,7 +162,7 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
               pb: 0,
               fontWeight: 200,
               maxWidth: 'fit-content',
-              m: '0 15px 0 auto',
+              m: '0 8px 0 auto',
             }}
           >
             Prices from{' '}
@@ -197,9 +197,9 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
               display: 'flex',
               alignItems: 'center',
               columnGap: '20px',
-              rowGap: '10px',
+
               flexWrap: 'wrap',
-              mx: '5px',
+              mx: 1,
             }}
           >
             <Box sx={styles.listItem}>

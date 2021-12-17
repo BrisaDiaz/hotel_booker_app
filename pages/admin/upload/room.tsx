@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import React from 'react';
 import { WithLayoutPage } from '@/interfaces/index';
-import type { NextApiRequest, NextApiResponse, GetServerSideProps } from 'next';
-import { useAuth } from '@/context/useAuth';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { getUser } from '@/graphql/utils/index';
 import { useRouter } from 'next/router';
 import SnackBar from '@/components/SnackBar';
@@ -24,23 +24,24 @@ type Option = {
   id: number;
   name: string;
 };
-const RoomUploadPage: WithLayoutPage = ({
-  amenitiesList,
-  servicesList,
-  roomCategoriesList,
-  bedTypesList,
-  userId,
-}: {
+type PageProps = {
   amenitiesList: Option[];
   servicesList: Option[];
   roomCategoriesList: Option[];
   bedTypesList: Option[];
   userId: number;
-}): JSX.Element => {
+};
+const RoomUploadPage: WithLayoutPage<PageProps> = ({
+  amenitiesList,
+  servicesList,
+  roomCategoriesList,
+  bedTypesList,
+  userId,
+}) => {
   const router = useRouter();
   const { hotelId } = router.query;
   const [isLoading, setIsLoading] = React.useState(false);
-  const [createRoomUploadPageModel, { error, loading, data }] = useMutation(
+  const [createRoomUploadPageModel, { error }] = useMutation(
     CREATE_ROOM_MODEL,
     {
       onCompleted: () => {
@@ -106,7 +107,7 @@ const RoomUploadPage: WithLayoutPage = ({
           bedTypes={bedTypesList}
           submitHandler={onSubmit}
         />
-        <Backdrop loading={loading} />
+        <Backdrop loading={isLoading} />
       </main>
     </div>
   );
@@ -115,7 +116,7 @@ export default RoomUploadPage;
 RoomUploadPage.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="dashboard">{page}</AdminMenu>;
 };
-export const getServerSideProps: GetServerSideProps = async ({
+export const getServerSideProps = async ({
   req,
   res,
 }: {
@@ -138,7 +139,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         query: GET_ALL_BEDS,
       });
 
-      const response = await Promise.all([
+      await Promise.all([
         servicesRequest,
         categoriesRequest,
         amenitiesRequest,

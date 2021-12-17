@@ -96,7 +96,7 @@ export default function RoomCard({
               <Box
                 sx={{
                   ml: 'auto',
-                  mt: 1,
+                  mt: 2,
                   width: 'fit-content',
                   textAlign: 'end',
                 }}

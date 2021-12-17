@@ -128,7 +128,7 @@ export async function checkIsValidRoomRequest({
     },
   };
 }
-export function inBetweenDates(range: string[] | Dates[]): Date[] {
+export function inBetweenDates(range: string[] | Date[]): Date[] {
   const [startDate, endDate] = range;
   const startDateInMiliseconds = new Date(startDate).getTime();
   const endDateInMiliseconds = new Date(endDate).getTime();
@@ -231,7 +231,7 @@ export function hotelQueryConstructor(args: HotelQueryArgs) {
   args.categories?.length &&
     ORconditionals.push(
       ...args.categories.map((category: string) => ({
-        category: { equals: category },
+        ['category']: { equals: category },
       }))
     );
   args.search &&
@@ -265,4 +265,58 @@ export function hotelQueryConstructor(args: HotelQueryArgs) {
 
   console.log(query);
   return query;
+}
+type ToEditHotelField =
+  | 'address'
+  | 'aspect'
+  | 'staticFeatures'
+  | 'dinamicFeatures'
+  | 'genericData';
+
+export function getHotelFieldsToEdit(args: any): ToEditHotelField[] {
+  let fields: ToEditHotelField[] = [];
+  if (
+    args.holeAddress ||
+    args.postalCode ||
+    args.holeAddress ||
+    args.country ||
+    args.administrativeArea ||
+    args.city ||
+    args.street
+  ) {
+    fields.push('address');
+  }
+  if (args.frameImage || args.interiorImage) {
+    fields.push('aspect');
+  }
+  if (
+    args.freeCancelation ||
+    args.accessible ||
+    args.familyFriendly ||
+    args.petFriendly ||
+    args.smokerFriendly
+  ) {
+    fields.push('staticFeatures');
+  }
+  if (args.facilities || args.services || args.activities || args.languages) {
+    fields.push('dinamicFeatures');
+  }
+  if (
+    args.name ||
+    args.brand ||
+    args.category ||
+    args.email ||
+    args.website ||
+    args.toUpdateFields ||
+    args.telephone ||
+    args.lowestPrice ||
+    args.taxesAndCharges ||
+    args.checkInHour ||
+    args.checkOutHour ||
+    args.policiesAndRules ||
+    args.description
+  ) {
+    fields.push('genericData');
+  }
+  return fields;
 }

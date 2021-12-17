@@ -21,6 +21,6 @@ export default async function upload(files: File[]): Promise<UploadInfo[]> {
     return filesUploaded;
   } catch (error) {
     console.log(error);
-    return [];
+    throw new Error('Error: Image upload failed.');
   }
 }

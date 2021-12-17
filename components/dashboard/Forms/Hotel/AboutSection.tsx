@@ -6,31 +6,8 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
+import { styles } from '@/components/dashboard/forms/styles';
 
-const styles = {
-  groupTitle: {
-    fontWeight: 500,
-    color: '#484848',
-    background: '#fff',
-    mb: '10px',
-    px: '10px',
-    width: 'max-content',
-  },
-  fieldset: {
-    my: 4,
-    pt: 1.5,
-    borderRadius: 5,
-    border: '1px solid  rgb(0 0 0 / 10%)',
-    padding: { xs: '15px', sm: '20px', md: '25px ' },
-    background: '#fff',
-    boxShadow: '1px 5px 32px -12px rgb(0 0 0 / 30%)',
-  },
-
-  textField: {
-    width: '100%',
-    my: 1,
-  },
-};
 export default function ({
   register,
   errors,
@@ -74,7 +51,7 @@ export default function ({
             })}
             variant="outlined"
             sx={styles.textField}
-            defaultValue={defaultData.name || ''}
+            defaultValue={defaultData?.name || ''}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -88,7 +65,7 @@ export default function ({
                 message: 'The brand name must not exced the 50 character',
               },
             })}
-            defaultValue={defaultData.brand || ''}
+            defaultValue={defaultData?.brand || ''}
             variant="outlined"
             label={errors['brand'] ? errors['brand'].message : 'Brand'}
             type="text"
@@ -129,7 +106,7 @@ export default function ({
         {...register('description', {
           required: 'A description is require',
         })}
-        defaultValue={defaultData.description || ''}
+        defaultValue={defaultData?.description || ''}
         rows={8}
         label={
           errors['description'] ? errors['description'].message : 'Description'

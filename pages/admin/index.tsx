@@ -14,7 +14,7 @@ import {
   GET_ALL_ACTIVITIES,
   GET_ALL_LANGUAGES,
   GET_ALL_HOTEL_CATEGORIES,
-  CREATE_HOTEL,
+  UPDATE_HOTEL,
 } from '@/queries/index';
 import { WithLayoutPage } from '@/interfaces/index';
 import { useRouter } from 'next/router';
@@ -26,6 +26,7 @@ import Box from '@mui/material/Box';
 import ActionCard from '@/components/dashboard/ActionCard';
 import HotelCard from '@/components/dashboard/HotelCard';
 import HotelModal from '@/components/modals/HotelModal';
+
 type FieldToEdit =
   | 'about'
   | 'contact'
@@ -35,10 +36,7 @@ type FieldToEdit =
   | 'policies'
   | 'address'
   | '';
-const Dashboard: WithLayoutPage = ({
-  hotels,
-  hotelsCount,
-}: {
+type PageProps = {
   hotels: Array<{
     id: number;
     name: string;
@@ -50,6 +48,13 @@ const Dashboard: WithLayoutPage = ({
     };
   }>;
   hotelsCount: number;
+  userId: number;
+};
+
+const Dashboard: WithLayoutPage<PageProps> = ({
+  hotels,
+  hotelsCount,
+  userId,
 }) => {
   const router = useRouter();
   const cardData = {
@@ -75,12 +80,22 @@ const Dashboard: WithLayoutPage = ({
   };
   const [isHotelModalOpen, setIsHotelModalOpen] =
     React.useState<boolean>(false);
+  const [hotelCards, setHotelCards] =
+    React.useState<PageProps['hotels']>(hotels);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [toEditHotelData, setToEditHotelData] = React.useState<Hotel | null>(
+    null
+  );
 
-  const [isLoading, setLoading] = React.useState<boolean>(false);
-  const [toEditHotelData, setToEditHotelData] = React.useState<Hotel | {}>({});
   const [toEditField, setToEditField] = React.useState<FieldToEdit>('');
+  const [notification, setNotification] = React.useState<{
+    content: string;
+    type: 'success' | 'error';
+  }>({ content: '', type: 'success' });
   const formRef = React.useRef(null);
-  const [getHotelToEdit, hotelDataRequest] = useLazyQuery(GET_HOTEL_BY_ID);
+  const [getHotelToEdit, hotelDataRequest] = useLazyQuery(GET_HOTEL_BY_ID, {
+    fetchPolicy: 'no-cache',
+  });
 
   const [getCategries, categoriesRequest] = useLazyQuery(
     GET_ALL_HOTEL_CATEGORIES
@@ -89,6 +104,47 @@ const Dashboard: WithLayoutPage = ({
   const [getFacilities, facilitiesRequest] = useLazyQuery(GET_ALL_FACILITIES);
   const [getActivities, activitiesRequest] = useLazyQuery(GET_ALL_ACTIVITIES);
   const [getLanguages, languagesRequest] = useLazyQuery(GET_ALL_LANGUAGES);
+  const [updateHotel, hotelUpdateRequest] = useMutation(UPDATE_HOTEL, {
+    onCompleted: ({ hotel }: { hotel: Hotel }) => {
+      setToEditHotelData(hotel);
+      ///// update hotel card data
+      if (
+        toEditField === 'about' ||
+        toEditField === 'address' ||
+        toEditField === 'price' ||
+        toEditField === 'aspect'
+      ) {
+        const updatedHotelsCards = hotelCards.map((hotelCard) => {
+          if (hotelCard.id === hotel.id) {
+            return {
+              id: hotel.id,
+              name: hotel.name,
+              frameImage: hotel.frameImage,
+              lowestPrice: hotel.lowestPrice,
+              taxesAndCharges: hotel.taxesAndCharges,
+              address: {
+                holeAddress: hotel.address.holeAddress,
+              },
+            };
+          }
+          return hotelCard;
+        });
+        setHotelCards(updatedHotelsCards);
+      }
+      setIsLoading(false);
+      setNotification({
+        content: 'Hotel updated successfully',
+        type: 'success',
+      });
+      setToEditField('');
+      cleanNotification();
+    },
+    onError: (graphError) => {
+      setIsLoading(false);
+      // setNotification({ content: graphError.message, type: 'error' });
+      // cleanNotification();
+    },
+  });
 
   React.useEffect(() => {
     if (
@@ -99,9 +155,9 @@ const Dashboard: WithLayoutPage = ({
       activitiesRequest.loading ||
       languagesRequest.loading
     ) {
-      return setLoading(true);
+      return setIsLoading(true);
     }
-    setLoading(false);
+    setIsLoading(false);
   }, [
     hotelDataRequest,
     categoriesRequest,
@@ -110,9 +166,14 @@ const Dashboard: WithLayoutPage = ({
     activitiesRequest,
     languagesRequest,
   ]);
+
   const openHotelModal = (hotelId: number) => {
-    getHotelToEdit({ variables: { hotelId: hotelId } });
+    if (!toEditHotelData || hotelId !== toEditHotelData?.id) {
+      return getHotelToEdit({ variables: { hotelId: hotelId } });
+    }
+    setIsHotelModalOpen(true);
   };
+
   React.useEffect(() => {
     if (hotelDataRequest.data?.hotelById) {
       setToEditHotelData(hotelDataRequest.data?.hotelById);
@@ -126,9 +187,57 @@ const Dashboard: WithLayoutPage = ({
   const closeHotelModal = () => {
     setIsHotelModalOpen(false);
   };
-  const handleSubmit = (data: any) => {
-    console.log(data);
+  const cleanNotification = () => {
+    setTimeout(() => {
+      setNotification({
+        content: '',
+        type: 'success',
+      });
+    }, 3000);
   };
+
+  const handleSubmit = async (hotelVariables: any) => {
+    if (!toEditHotelData) return false;
+
+    try {
+      setIsLoading(true);
+      if (toEditField === 'aspect') {
+        const toUploadImages = [
+          hotelVariables.frameImage,
+          hotelVariables.interiorImage,
+        ];
+
+        const images = await uploadToCloudinary(toUploadImages);
+        if (
+          images?.length === 2 &&
+          images[1]?.secure_url &&
+          images[0]?.secure_url
+        ) {
+          await updateHotel({
+            variables: {
+              hotelId: toEditHotelData.id,
+              interiorImage: images[1].secure_url,
+              frameImage: images[0].secure_url,
+              userId: userId,
+            },
+          });
+        }
+      }
+      return await updateHotel({
+        variables: {
+          hotelId: toEditHotelData.id,
+          ...hotelVariables,
+          userId: userId,
+        },
+      });
+    } catch (err: any) {
+      setIsLoading(false);
+      setNotification({ type: 'error', content: JSON.stringify(err) });
+      cleanNotification();
+      console.log(err);
+    }
+  };
+
   const handleEditSelected = async (fieldSelected: FieldToEdit) => {
     if (fieldSelected === 'features') {
       await Promise.all([
@@ -143,10 +252,12 @@ const Dashboard: WithLayoutPage = ({
     }
     setToEditField(fieldSelected);
     closeHotelModal();
-    window.scrollTo({
-      top: formRef.current.offsetTop,
-      behavior: 'smooth',
-    });
+    if (formRef && formRef.current) {
+      window.scrollTo({
+        top: formRef.current.offsetTop - 100,
+        behavior: 'smooth',
+      });
+    }
   };
 
   return (
@@ -172,7 +283,7 @@ const Dashboard: WithLayoutPage = ({
             gap: { xs: '20px', lg: '30px' },
           }}
         >
-          {hotels.map((hotel) => (
+          {hotelCards.map((hotel) => (
             <HotelCard
               key={hotel.id}
               hotel={hotel}
@@ -181,7 +292,7 @@ const Dashboard: WithLayoutPage = ({
             />
           ))}
         </Box>
-        {!isLoading && toEditHotelData !== {} && isHotelModalOpen && (
+        {!isLoading && toEditHotelData && isHotelModalOpen && (
           <HotelModal
             isModalOpend={isHotelModalOpen}
             closeModal={closeHotelModal}
@@ -190,7 +301,7 @@ const Dashboard: WithLayoutPage = ({
           />
         )}
       </Box>
-      {!isLoading && toEditField && toEditHotelData !== {} && (
+      {!isLoading && toEditField && toEditHotelData && (
         <DinamicForm
           toEditField={toEditField}
           hotel={toEditHotelData}
@@ -205,6 +316,12 @@ const Dashboard: WithLayoutPage = ({
       )}{' '}
       <div ref={formRef} />
       <Backdrop loading={isLoading} />
+      {notification?.content && (
+        <SnackBar
+          severity={notification?.type}
+          message={notification?.content}
+        />
+      )}
     </div>
   );
 };
@@ -213,7 +330,7 @@ Dashboard.getLayout = function getLayout(page: React.ReactNode) {
 };
 export default Dashboard;
 
-export const getServerSideProps: GetServerSideProps = async ({
+export const getServerSideProps = async ({
   req,
   res,
 }: {
@@ -232,6 +349,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       props: {
         hotels: data?.adminHotels.hotels,
         hotelsCount: data?.adminHotels.hotelsCount,
+        userId: user.id,
       },
     };
   } catch (e) {

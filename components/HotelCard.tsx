@@ -20,6 +20,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
         sx={{
           borderRadius: { sm: 2 },
           flexWrap: 'wrap',
+          justifyContent: 'center',
           height: 'min-content',
           width: '100% ',
           maxWidth: '700px',
@@ -39,8 +40,9 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
         >
           <Box
             sx={{
-              maxWidth: '240px',
-              width: { sm: '30%' },
+              maxWidth: { sm: '250px' },
+              minHeight: { sm: '100%' },
+              width: { sm: '35%' },
               overflow: 'hidden',
             }}
           >
@@ -52,21 +54,26 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
                   transform: 'scale(1.15)',
                   transition: 'ease-in-out 0.5s',
                 },
+                height: { xs: 250, sm: 220 },
               }}
               component="img"
-              height={200}
               image={hotel.frameImage}
               alt={hotel.name}
             />
           </Box>
           <CardContent
-            sx={{ py: { sm: 0 }, pr: { sm: 3 }, width: { sm: '70%' } }}
+            sx={{
+              pt: { sm: 2 },
+              px: { sm: 3 },
+              width: { sm: '65%' },
+            }}
           >
             <Typography
               gutterBottom
-              variant="subtitle1"
+              variant="h6"
               sx={{
                 mb: 0,
+                fontSize: { sm: '1rem' },
                 fontWeight: 500,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -100,7 +107,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
             <Typography
               variant="subtitle1"
               sx={{
-                margin: ' 0  0 8px auto',
+                margin: ' 0  0 10px auto',
                 maxWidth: 'fit-content',
 
                 lineHeight: 1.3,
@@ -118,7 +125,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
                   overflow: 'hidden',
                   whiteSpace: 'pre',
                   textOverflow: 'ellipsis',
-                  paddingTop: '2px',
+
                   opacity: '0.8',
                   fontWeight: 200,
                 }}

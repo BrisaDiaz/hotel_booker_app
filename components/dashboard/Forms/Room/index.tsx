@@ -10,38 +10,8 @@ import AboutSection from './AboutSection';
 import CapacitySection from './CapacitySection';
 import FeaturesSection from './FeaturesSection';
 import PriceSection from '../PriceSection';
+import { styles } from '@/components/dashboard/forms/styles';
 
-const styles = {
-  root: {
-    maxWidth: '900px',
-    width: '100%',
-    margin: '0 auto',
-    pb: 4,
-    pt: 2,
-    px: { sm: 1 },
-  },
-  title: {
-    mt: { sm: 2 },
-    mb: 5,
-    fontWeight: 600,
-    opacity: 0.8,
-  },
-
-  formBottons: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '10px',
-    padding: 2,
-    mt: 1.5,
-  },
-  bottons: {
-    padding: '10px 40px',
-    margin: 0,
-  },
-  paper: {
-    padding: '10px',
-  },
-};
 interface Feature {
   id: number;
   name: string;
@@ -63,7 +33,7 @@ export default function MultilineTextFields(props: {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm({ mode: 'onBlur' });
+  } = useForm({ mode: 'onChange' });
 
   const submitMiddleware = (data: any) => {
     let pickedBedQuantities = bedTypes

@@ -220,7 +220,9 @@ function RoomsTable({
     setPage(newPage);
     setDisplayedRows(getRoomTypesToDisplay(rows, newPage, rowsPerPage));
   };
-  const [selectedRooms, setSelectedRooms] = React.useState<number[] | []>([]);
+  const [selectedRooms, setSelectedRooms] = React.useState<
+    number[] | string[] | []
+  >([]);
   const handleSelectedRooms = (roomId: number) => {
     if (Boolean(selectedRooms.includes(roomId))) {
       return setSelectedRooms(selectedRooms.filter((id) => id !== roomId));
@@ -229,7 +231,11 @@ function RoomsTable({
   };
 
   return (
-    <TableContainer component={Paper} elevation={4}>
+    <TableContainer
+      component={Paper}
+      elevation={4}
+      sx={{ maxWidth: '100%', overflowX: 'auto' }}
+    >
       <Table sx={{ minWidth: 650 }} aria-label="simple table" size="medium">
         <TableHead sx={{ py: 2 }}>
           <TableRow>

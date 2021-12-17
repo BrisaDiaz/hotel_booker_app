@@ -33,7 +33,7 @@ const styles = {
 export default function ({
   register,
   errors,
-  defaultData
+  defaultData,
 }: {
   register: Function;
   errors: any;
@@ -49,6 +49,7 @@ export default function ({
           <TextField
             id="hole-address"
             type="text"
+            defaultValue={defaultData?.address?.holeAddress || ''}
             {...register('holeAddress', {
               required: 'The hole address is required',
               maxLength: {
@@ -70,6 +71,7 @@ export default function ({
           <TextField
             type="text"
             id="country"
+            defaultValue={defaultData?.address?.country || ''}
             label={errors['country'] ? errors['country'].message : 'Country'}
             error={errors['country'] ? true : false}
             {...register('country', {
@@ -86,6 +88,7 @@ export default function ({
       <Grid container spacing={{ sm: 2 }} alignItems="center">
         <Grid item xs={12} sm={6}>
           <TextField
+            defaultValue={defaultData?.address?.postalCode || ''}
             sx={styles.textField}
             id="postalCode"
             type="text"
@@ -114,6 +117,7 @@ export default function ({
                 ? errors['administrativeArea'].message
                 : 'State/Region/Province'
             }
+            defaultValue={defaultData?.address?.administrativeArea || ''}
             error={errors['administrativeArea'] ? true : false}
             {...register('administrativeArea', {
               required: 'The field is required',
@@ -135,6 +139,7 @@ export default function ({
             id="city"
             label={errors['city'] ? errors['city'].message : 'City'}
             error={errors['city'] ? true : false}
+            defaultValue={defaultData?.address?.city || ''}
             {...register('city', {
               maxLength: {
                 value: 25,
@@ -150,6 +155,7 @@ export default function ({
             sx={styles.textField}
             id="street"
             type="text"
+            defaultValue={defaultData?.address?.street || ''}
             label={errors['street'] ? errors['street'].message : 'Street'}
             error={errors['street'] ? true : false}
             {...register('street', {

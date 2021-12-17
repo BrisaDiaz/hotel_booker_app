@@ -55,7 +55,7 @@ const list = {
 const leyend = {
   width: { xs: '50%' },
   color: 'text.secondary',
-  fontStyle: 'oblique',
+
   fontSize: '14px',
 };
 export default function BasicModal({

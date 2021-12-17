@@ -4,12 +4,15 @@ import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import ImageList from '@mui/material/ImageList';
 import Box from '@mui/material/Box';
-interface ImageObj {
-  title: string;
-  image: string;
-}
 
-export default function ImageSlider({ images }: { images: ImageObj[] }) {
+export default function ImageSlider({
+  images,
+}: {
+  images: {
+    title: string;
+    image: string;
+  }[];
+}) {
   return (
     <Box
       sx={{

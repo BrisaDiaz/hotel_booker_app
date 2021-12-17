@@ -12,38 +12,7 @@ import PriceSection from '../PriceSection';
 import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
-
-const styles = {
-  root: {
-    maxWidth: '900px',
-    width: '100%',
-    margin: '0 auto',
-    pb: 4,
-    pt: 2,
-    px: { sm: 1 },
-  },
-  title: {
-    mt: { sm: 2 },
-    mb: 5,
-    fontWeight: 600,
-    opacity: 0.8,
-  },
-
-  formBottons: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '10px',
-    padding: 2,
-    mt: 1.5,
-  },
-  bottons: {
-    padding: '10px 40px',
-    margin: 0,
-  },
-  paper: {
-    padding: '10px',
-  },
-};
+import { styles } from '@/components/dashboard/forms/styles';
 type Feature = {
   id: number;
   name: string;
@@ -65,7 +34,7 @@ export default function MultilineTextFields(props: {
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm({ mode: 'onBlur' });
+  } = useForm({ mode: 'onChange' });
 
   const submitMiddleware = async (data: any, e: any) => {
     e.preventDefault();

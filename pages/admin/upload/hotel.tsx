@@ -2,8 +2,7 @@ import Head from 'next/head';
 import React from 'react';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { WithLayoutPage } from '@/interfaces/index';
-import { GetServerSideProps } from 'next';
-
+import type { Modify } from '@/interfaces/index';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import { getUser } from '@/graphql/utils/index';
 import HotelForm from '@/components/dashboard/forms/Hotel/index';
@@ -27,22 +26,22 @@ type Option = {
   id: number;
   name: string;
 };
-
-const HotelUploadPage: WithLayoutPage = ({
-  facilitiesList,
-  activitiesList,
-  servicesList,
-  languagesList,
-  hotelCategoriesList,
-  userId,
-}: {
+type PageProps = {
   facilitiesList: Option[];
   activitiesList: Option[];
   servicesList: Option[];
   languagesList: Option[];
   hotelCategoriesList: Option[];
   userId: number;
-}): JSX.Element => {
+};
+const HotelUploadPage: WithLayoutPage<PageProps> = ({
+  facilitiesList,
+  activitiesList,
+  servicesList,
+  languagesList,
+  hotelCategoriesList,
+  userId,
+}) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [createHotel, { error, loading, data }] = useMutation(CREATE_HOTEL, {
     onCompleted: () => {
@@ -57,10 +56,15 @@ const HotelUploadPage: WithLayoutPage = ({
       setErrorMessage(graphError.message);
     },
   });
-  interface HotelVariables extends Hotel {
-    frameImage: File;
-    interiorImage: File;
-  }
+
+  type HotelVariables = Modify<
+    Hotel,
+    {
+      frameImage: File;
+      interiorImage: File;
+    }
+  >;
+
   const [success, setSuccess] = React.useState<Boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const onSubmit = async (hotelVariables: HotelVariables) => {
@@ -132,13 +136,19 @@ HotelUploadPage.getLayout = function getLayout(page: React.ReactNode) {
 };
 export default HotelUploadPage;
 
-export const getServerSideProps: GetServerSideProps = async ({
+export const getServerSideProps = async ({
   req,
   res,
 }: {
   req: NextApiRequest;
   res: NextApiResponse;
-}) => {
+}): Promise<{
+  props: PageProps | {};
+  redirect?: {
+    permanent: Boolean;
+    destination: string;
+  };
+}> => {
   try {
     const user = await getUser(req, res);
 

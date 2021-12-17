@@ -135,7 +135,7 @@ type GuestsDistribution {
 type Hotel {
   activities: [Activity]
   address: Address
-  administratorId: Int
+  administratorId: Int!
   adminstrator: Administrator
   brand: String
   category: String
@@ -210,8 +210,7 @@ type Mutation {
   signin(email: String!, password: String!): AuthPayload
   signout(date: String): PlainResponse
   signup(email: String!, firstName: String!, lastName: String!, password: String!): User
-  updateHotelAddress(administrativeArea: String, city: String, country: String, holeAddress: String, hotelId: ID!, postalCode: String, street: String, userId: ID!): Address
-  updateHotelLowestPrice(hotelId: ID!, lowestPrice: Float!, userId: ID!): Hotel
+  updateHotel(accessible: Boolean, activities: [String], administrativeArea: String, brand: String, category: String, checkInHour: String, checkOutHour: String, city: String, country: String, description: String, ecoFriendly: Boolean, email: String, facilities: [String], familyFriendly: Boolean, frameImage: String, freeCancelation: Boolean, holeAddress: String, hotelId: ID!, interiorImage: String, languages: [String], lowestPrice: Float, name: String, petFriendly: Boolean, policiesAndRules: String, postalCode: String, services: [String], smokerFriendly: Boolean, street: String, taxesAndCharges: Float, telephone: String, userId: ID!, website: String): Hotel
   updateRoomModelPrice(hotelId: ID!, lowestPrice: Float, taxesAndCharges: Float, userId: ID!): RoomModel
 }
 

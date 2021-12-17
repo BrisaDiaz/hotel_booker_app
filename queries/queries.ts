@@ -127,6 +127,11 @@ export const GET_HOTEL_BY_ID = gql`
       website
       address {
         holeAddress
+        country
+        postalCode
+        city
+        administrativeArea
+        street
       }
       services {
         id

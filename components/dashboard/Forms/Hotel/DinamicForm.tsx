@@ -13,37 +13,7 @@ import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
 import { Hotel } from '@/interfaces/index';
-const styles = {
-  root: {
-    maxWidth: '900px',
-    width: '100%',
-    margin: '0 auto',
-    pb: 4,
-    pt: 2,
-    px: { sm: 1 },
-  },
-  title: {
-    mt: { sm: 2 },
-    mb: 5,
-    fontWeight: 600,
-    opacity: 0.8,
-  },
-
-  formBottons: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '10px',
-    padding: 2,
-    mt: 1.5,
-  },
-  bottons: {
-    padding: '10px 40px',
-    margin: 0,
-  },
-  paper: {
-    padding: '10px',
-  },
-};
+import { styles } from '@/components/dashboard/forms/styles';
 type Feature = {
   id: number;
   name: string;
@@ -58,7 +28,7 @@ type FieldToEdit =
   | 'address'
   | '';
 export default function MultilineTextFields(props: {
-  hotel: Hotel | {};
+  hotel: Hotel;
   toEditField: FieldToEdit;
   services: Feature[] | [];
   activities: Feature[] | [];
@@ -78,52 +48,86 @@ export default function MultilineTextFields(props: {
     hotelCategories,
     abortHandler,
   } = props;
-  if (hotel === {}) return <></>;
+
   const matchesSize = useMediaQuery('(min-width:600px)');
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm({ mode: 'onBlur' });
+  } = useForm({ mode: 'onChange' });
 
-  const submitMiddleware = async (data: any, e: any) => {
-    e.preventDefault();
+  const submitMiddleware = (data: any, e: any) => {
+    let variables: { [key: string]: number | string | File };
 
-    const hotelVariables = {
-      name: data?.name,
-      telephone: data?.telephone,
-      email: data?.email,
-      website: data?.website,
-      brand: data?.brand,
-      checkInHour: data?.checkInHour,
-      checkOutHour: data?.checkOutHour,
-      lowestPrice: data?.lowestPrice * 1,
-      taxesAndCharges: data?.taxesAndCharges * 1,
-      description: data?.description,
-      policiesAndRules: data?.policiesAndRules,
-      frameImage: data?.frameImage ? data?.frameImage[0] : null,
-      interiorImage: data?.interiorImage ? data?.interiorImage[0] : null,
-      facilities: data?.facilities,
-      services: data?.services,
-      activities: data?.activities,
-      languages: data?.languages,
-      category: data?.category,
-      smokerFriendly: data?.smokerFriendly,
-      familyFriendly: data?.familyFriendly,
-      petFriendly: data?.petFriendly,
-      ecoFriendly: data?.ecoFriendly,
-      freeCancelation: data?.freeCancelation,
-      accessible: data?.accessible,
-      holeAddress: data?.holeAddress,
-      country: data?.country,
-      city: data?.city,
-      postalCode: data?.postalCode,
-      administrativeArea: data?.administrativeArea,
-      street: data?.street,
-    };
+    if (toEditField === 'policies') {
+      variables = {
+        checkInHour: data?.checkInHour,
+        checkOutHour: data?.checkOutHour,
+        policiesAndRules: data?.policiesAndRules,
+      };
+      return props.submitHandler(variables);
+    }
+    if (toEditField === 'address') {
+      variables = {
+        holeAddress: data?.holeAddress,
+        country: data?.country,
+        city: data?.city,
+        postalCode: data?.postalCode,
+        administrativeArea: data?.administrativeArea,
+        street: data?.street,
+      };
+      return props.submitHandler(variables);
+    }
+    if (toEditField === 'about') {
+      variables = {
+        name: data?.name,
 
-    props.submitHandler(hotelVariables);
+        brand: data?.brand,
+
+        description: data?.description,
+
+        category: data?.category,
+      };
+      return props.submitHandler(variables);
+    }
+    if (toEditField === 'contact') {
+      variables = {
+        telephone: data?.telephone,
+        email: data?.email,
+        website: data?.website,
+      };
+      return props.submitHandler(variables);
+    }
+    if (toEditField === 'price') {
+      variables = {
+        lowestPrice: data?.lowestPrice * 1,
+        taxesAndCharges: data?.taxesAndCharges * 1,
+      };
+      return props.submitHandler(variables);
+    }
+    if (toEditField === 'aspect') {
+      variables = {
+        frameImage: data?.frameImage ? data?.frameImage[0] : null,
+        interiorImage: data?.interiorImage ? data?.interiorImage[0] : null,
+      };
+      return props.submitHandler(variables);
+    }
+    if (toEditField === 'features') {
+      variables = {
+        facilities: data?.facilities,
+        services: data?.services,
+        activities: data?.activities,
+        languages: data?.languages,
+        smokerFriendly: data?.smokerFriendly,
+        familyFriendly: data?.familyFriendly,
+        petFriendly: data?.petFriendly,
+        ecoFriendly: data?.ecoFriendly,
+        freeCancelation: data?.freeCancelation,
+        accessible: data?.accessible,
+      };
+      return props.submitHandler(variables);
+    }
   };
 
   return (
@@ -201,7 +205,10 @@ export default function MultilineTextFields(props: {
           sx={styles.bottons}
           variant="outlined"
           color="primary"
-          onClick={() => abortHandler()}
+          onClick={(e) => {
+            e.preventDefault();
+            abortHandler();
+          }}
           size={matchesSize ? 'large' : 'medium'}
         >
           Cancel

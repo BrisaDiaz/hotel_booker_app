@@ -26,12 +26,7 @@ export default function ResponsiveGrid(props: typeProps) {
         margin: '0 auto',
       }}
     >
-      <Grid
-        container
-        spacing={{ xs: 2 }}
-        justifyContent="center"
-        sx={{ maxWidth: '100vw' }}
-      >
+      <Grid container spacing={{ xs: 2 }} justifyContent="center">
         {props.hotels.map((hotel, index) => (
           <Grid
             item

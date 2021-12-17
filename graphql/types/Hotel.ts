@@ -15,7 +15,8 @@ import {
   getAdminInfo,
   verifyIsHotelAdmin,
   hotelQueryConstructor,
-  User,
+  deleteImage,
+  getHotelFieldsToEdit,
 } from '../utils/index';
 
 export const Address = objectType({
@@ -79,14 +80,16 @@ export const HotelCategory = objectType({
     t.string('name');
   },
 });
+
 export const Hotel = objectType({
   name: 'Hotel',
   definition(t) {
     t.nonNull.id('id');
-    t.int('administratorId');
+    t.nonNull.int('administratorId');
     t.field('adminstrator', {
       type: 'Administrator',
-      resolve: (root) => {
+
+      resolve: (root: { administratorId: number }) => {
         return prisma.administrator.findUnique({
           where: {
             id: root.administratorId,
@@ -148,7 +151,7 @@ export const Hotel = objectType({
 
     t.field('address', {
       type: 'Address',
-      resolve(root, args, ctx) {
+      resolve(root: { id: number }, args, ctx) {
         return prisma.address.findUnique({
           where: {
             hotelId: root.id,
@@ -158,7 +161,7 @@ export const Hotel = objectType({
     });
   },
 });
-export const HotelSearchResponse = objectType({
+export const HotelSearch = objectType({
   name: 'HotelSearch',
   definition(t) {
     t.list.field('hotels', {
@@ -186,7 +189,7 @@ export const Query = extendType({
         languages: list(stringArg()),
       },
 
-      resolve(root, args, ctx) {
+      resolve(root, args: any, ctx) {
         const query = hotelQueryConstructor(args);
         const searchHotels = async (query: { where: any; take: number }) => {
           const hotels = await prisma.hotel.findMany(query);
@@ -205,7 +208,7 @@ export const Query = extendType({
         hotelId: nonNull(idArg()),
       },
       resolve(_, args, ctx) {
-        const searchHote = async (hotelId: number) => {
+        const searchHotel = async (hotelId: number) => {
           const hotel = await prisma.hotel.findUnique({
             where: {
               id: hotelId,
@@ -219,7 +222,7 @@ export const Query = extendType({
           });
           return hotel;
         };
-        return searchHote(parseInt(args.hotelId));
+        return searchHotel(parseInt(args.hotelId));
       },
     });
   },
@@ -334,11 +337,35 @@ export const Mutation = extendType({
         return createHotel(parseInt(args.userId), args);
       },
     });
-    t.field('updateHotelAddress', {
-      type: 'Address',
+    t.field('updateHotel', {
+      type: 'Hotel',
       args: {
         userId: nonNull(idArg()),
         hotelId: nonNull(idArg()),
+        name: stringArg(),
+        brand: stringArg(),
+        category: stringArg(),
+        email: stringArg(),
+        website: stringArg(),
+        telephone: stringArg(),
+        lowestPrice: floatArg(),
+        taxesAndCharges: floatArg(),
+        frameImage: stringArg(),
+        interiorImage: stringArg(),
+        checkInHour: stringArg(),
+        checkOutHour: stringArg(),
+        policiesAndRules: stringArg(),
+        description: stringArg(),
+        facilities: list(stringArg()),
+        services: list(stringArg()),
+        activities: list(stringArg()),
+        languages: list(stringArg()),
+        freeCancelation: booleanArg(),
+        accessible: booleanArg(),
+        familyFriendly: booleanArg(),
+        petFriendly: booleanArg(),
+        smokerFriendly: booleanArg(),
+        ecoFriendly: booleanArg(),
         holeAddress: stringArg(),
         country: stringArg(),
         postalCode: stringArg(),
@@ -346,14 +373,38 @@ export const Mutation = extendType({
         city: stringArg(),
         street: stringArg(),
       },
-      resolve(root, args, ctx) {
-        const addHotelAddress = async (
-          userId: number,
-          hotelId: number,
-          args: any
-        ) => {
-          await verifyIsHotelAdmin(userId, hotelId);
-          return await prisma.address.update({
+      resolve(_, args, ctx) {
+        const update = async (userId: number, hotelId: number, args: any) => {
+          verifyIsHotelAdmin(userId, hotelId);
+          const toEditFields = getHotelFieldsToEdit(args);
+          let hotelUpdated;
+          console.log(toEditFields);
+          if (toEditFields.includes('address')) {
+            await updateAddress(hotelId, args);
+          }
+          if (toEditFields.includes('staticFeatures')) {
+            await updateStaticFeatures(hotelId, args);
+          }
+          if (toEditFields.includes('dinamicFeatures')) {
+            hotelUpdated = await updateDinamicFeatures(hotelId, args);
+          }
+          if (toEditFields.includes('genericData')) {
+            hotelUpdated = await updateGenericData(hotelId, args);
+          }
+          if (toEditFields.includes('aspect')) {
+            hotelUpdated = await updateAspect(hotelId, args);
+          }
+          if (hotelUpdated) {
+            hotelUpdated = await prisma.hotel.findUnique({
+              where: {
+                id: hotelId,
+              },
+            });
+          }
+          return hotelUpdated;
+        };
+        const updateAddress = async (hotelId: number, args: any) => {
+          await prisma.address.update({
             where: {
               hotelId: hotelId,
             },
@@ -367,38 +418,141 @@ export const Mutation = extendType({
             },
           });
         };
-        return addHotelAddress(parseInt(args.userId), parseInt(args.hotelId));
-      },
-    });
-
-    t.field('updateHotelLowestPrice', {
-      type: 'Hotel',
-      args: {
-        userId: nonNull(idArg()),
-        hotelId: nonNull(idArg()),
-        lowestPrice: nonNull(floatArg()),
-      },
-      resolve(_, args, ctx) {
-        const changeHotelPrice = async (
-          userId: number,
-          hotelId: number,
-          lowestPrice: number
-        ) => {
-          await verifyIsHotelAdmin(userId, hotelId);
+        const updateStaticFeatures = async (hotelId: number, args: any) => {
+          await prisma.features.update({
+            where: {
+              id: hotelId,
+            },
+            data: {
+              freeCancelation: args.freeCancelation,
+              accessible: args.accessible,
+              familyFriendly: args.familyFriendly,
+              petFriendly: args.petFriendly,
+              smokerFriendly: args.smokerFriendly,
+              ecoFriendly: args.ecoFriendly,
+            },
+          });
+          await prisma.hotel.update({
+            where: {
+              id: hotelId,
+            },
+            data: {
+              facilities: args.facilities.length
+                ? {
+                    connect: args.facilities.map((facility: string) => ({
+                      name: facility,
+                    })),
+                  }
+                : undefined,
+              services: args.services.length
+                ? {
+                    connect: args.services.map((service: string) => ({
+                      name: service,
+                    })),
+                  }
+                : undefined,
+              activities: args.activities.length
+                ? {
+                    connect: args.activities.map((activity: string) => ({
+                      name: activity,
+                    })),
+                  }
+                : undefined,
+              languages: args.languages.length
+                ? {
+                    connect: args.languages.map((language: string) => ({
+                      name: language,
+                    })),
+                  }
+                : undefined,
+            },
+          });
+        };
+        const updateDinamicFeatures = async (hotelId: number, args: any) => {
           return await prisma.hotel.update({
             where: {
               id: hotelId,
             },
             data: {
-              lowestPrice: lowestPrice,
+              facilities: args.facilities
+                ? {
+                    connect: args.facilities.map((facility: string) => ({
+                      name: facility,
+                    })),
+                  }
+                : undefined,
+              services: args.services
+                ? {
+                    connect: args.services.map((service: string) => ({
+                      name: service,
+                    })),
+                  }
+                : undefined,
+              activities: args.activities
+                ? {
+                    connect: args.activities.map((activity: string) => ({
+                      name: activity,
+                    })),
+                  }
+                : undefined,
+              languages: args.languages
+                ? {
+                    connect: args.languages.map((language: string) => ({
+                      name: language,
+                    })),
+                  }
+                : undefined,
             },
           });
         };
-        return changeHotelPrice(
-          parseInt(args.userId),
-          parseInt(args.hotelId),
-          args.lowestPrice
-        );
+        const updateGenericData = async (hotelId: number, args: any) => {
+          return await prisma.hotel.update({
+            where: {
+              id: hotelId,
+            },
+            data: {
+              name: args.name,
+              hotelCategory: args.category
+                ? { connect: { name: args.category } }
+                : undefined,
+              brand: args.brand,
+              website: args.website,
+              email: args.email,
+              telephone: args.telephone,
+              lowestPrice: args.lowestPrice,
+              taxesAndCharges: args.taxesAndCharges,
+              description: args.description,
+              checkInHour: args.checkInHour,
+              checkOutHour: args.checkOutHour,
+              policiesAndRules: args.policiesAndRules,
+            },
+          });
+        };
+        const updateAspect = async (hotelId: number, args: any) => {
+          const hotelData = await prisma.hotel.findUnique({
+            where: {
+              id: hotelId,
+            },
+          });
+          if (!hotelData) return;
+          //// delete change images from the cloud
+          if (args.frameImage) {
+            await deleteImage(hotelData.frameImage);
+          }
+          if (args.interiorImage) {
+            await deleteImage(hotelData.interiorImage);
+          }
+          return await prisma.hotel.update({
+            where: {
+              id: hotelId,
+            },
+            data: {
+              frameImage: args.frameImage,
+              interiorImage: args.interiorImage,
+            },
+          });
+        };
+        return update(parseInt(args.userId), parseInt(args.hotelId), args);
       },
     });
   },
