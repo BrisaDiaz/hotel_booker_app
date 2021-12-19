@@ -116,7 +116,7 @@ export interface BookingRequest {
     id: number;
     name: string;
     lowestPrice: number;
-    taxesAndPrices: number;
+    taxesAndCharges: number;
   };
   availableRooms: Array<{
     id: number;
@@ -129,6 +129,23 @@ export type FileUploadEvent = {
     name: string;
   };
 };
+export interface HotelGuest {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobileNumber: string;
+  landlineNumber: string;
+  bookings: {
+    id: number;
+    roomModel: {
+      name: string;
+    };
+    reservedRooms: {
+      number: number;
+    }[];
+  }[];
+}
 export type WithLayoutPage<P = {}> = NextPage<P> & {
   getLayout?: (page: React.ReactNode) => React.ReactNode;
 };

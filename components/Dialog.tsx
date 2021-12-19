@@ -12,7 +12,7 @@ export default function ResponsiveDialog({
   title,
   text,
   onAccept,
-  onReject,
+  onCancel,
   isDialogOpen,
   acceptLabel,
   rejectLabel,
@@ -22,7 +22,7 @@ export default function ResponsiveDialog({
   rejectLabel: string;
   text: string;
   onAccept: Function;
-  onReject?: Function;
+  onCancel?: Function;
   isDialogOpen: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -31,6 +31,9 @@ export default function ResponsiveDialog({
 
   const handleClose = () => {
     setOpen(false);
+    if (onCancel) {
+      onCancel();
+    }
   };
   React.useEffect(() => {
     if (isDialogOpen) {
@@ -43,8 +46,8 @@ export default function ResponsiveDialog({
       onAccept();
       return handleClose();
     }
-    if (onReject) {
-      onReject();
+    if (onCancel) {
+      onCancel();
     }
     handleClose();
   };

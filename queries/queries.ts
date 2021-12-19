@@ -291,7 +291,42 @@ export const GET_ROOM_MODEL_BOOKING_REQUESTS = gql`
     }
   }
 `;
-
+export const GET_HOTEL_GUESTS = gql`
+  query hotelGuests(
+    $hotelId: ID!
+    $userId: ID!
+    $skip: Int
+    $take: Int
+    $search: searchFilter
+  ) {
+    results: hotelGuests(
+      hotelId: $hotelId
+      userId: $userId
+      skip: $skip
+      take: $take
+      search: $search
+    ) {
+      guests {
+        id
+        firstName
+        lastName
+        mobileNumber
+        landlineNumber
+        email
+        bookings {
+          roomModel {
+            name
+          }
+          reservedRooms {
+            number
+          }
+        }
+      }
+      totalResults
+      pageCount
+    }
+  }
+`;
 export const GET_USER_SESSION = gql`
   query authentication {
     authentication {

@@ -345,7 +345,7 @@ export const CONFIRM_BOOKING_REQUEST = gql`
     $paymentMethod: String!
     $roomsIds: [Int!]!
   ) {
-    responce: confirmBookingRequest(
+    booking: confirmBookingRequest(
       userId: $userId
       bookingRequestId: $bookingRequestId
       totalCost: $totalCost

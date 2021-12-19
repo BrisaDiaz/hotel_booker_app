@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { toDateAndHourFormat } from '@/utils/index';
 import { alpha } from '@mui/material/styles';
-import { BookingRequest } from '@/interfaces/index';
+import { HotelGuest } from '@/interfaces/index';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,57 +16,17 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import ClearIcon from '@mui/icons-material/Clear';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+
+import TableFilter from './TableFilter';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import { visuallyHidden } from '@mui/utils';
 import { getComparator, stableSort } from './sort';
 import type { Order } from './sort';
-interface Data {
-  id: number;
-  checkInDate: string;
-  checkOutDate: string;
-  sentIn: string;
-  nights: number;
-  roomsQuantity: number;
-  roomType: {
-    id: number;
-    name: string;
-  };
-  client: {
-    id: number;
-    name: string;
-  };
-}
-
-function createData({
-  id,
-  createdAt,
-  checkInDate,
-  checkOutDate,
-  nights,
-  client,
-  guestsDistribution,
-  roomModel,
-}: BookingRequest): Data {
-  return {
-    id,
-    checkInDate: toDateAndHourFormat(parseInt(checkInDate)).split(' ')[0],
-    checkOutDate: toDateAndHourFormat(parseInt(checkOutDate)).split(' ')[0],
-    roomsQuantity: guestsDistribution.length,
-    sentIn: toDateAndHourFormat(parseInt(createdAt)),
-    roomType: roomModel,
-    nights,
-    client: {
-      id: client.id,
-      name: `${client.firstName} ${client.lastName}`,
-    },
-  };
-}
-
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Data;
+  id: keyof HotelGuest;
   label: string;
   numeric: boolean;
   sortable: boolean;
@@ -77,57 +36,50 @@ const headCells: readonly HeadCell[] = [
   {
     id: 'id',
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     label: 'ID',
     sortable: false,
   },
   {
-    id: 'sentIn',
+    id: 'firstName',
     numeric: false,
     disablePadding: false,
-    label: 'Sent In',
+    label: 'Name',
     sortable: true,
   },
   {
-    id: 'roomType',
+    id: 'lastName',
     numeric: false,
-    disablePadding: false,
-    label: 'Room Type',
-    sortable: false,
-  },
-  {
-    id: 'roomsQuantity',
-    numeric: true,
-    disablePadding: false,
-    label: 'Quantity',
+    disablePadding: true,
+    label: 'Last Name',
     sortable: true,
   },
   {
-    id: 'nights',
-    numeric: true,
+    id: 'mobileNumber',
+    numeric: false,
     disablePadding: false,
-    label: 'Nights',
+    label: 'Mobile',
     sortable: true,
   },
   {
-    id: 'checkInDate',
+    id: 'landlineNumber',
     numeric: false,
     disablePadding: false,
-    label: 'Check In',
+    label: 'Landline',
     sortable: true,
   },
   {
-    id: 'checkOutDate',
+    id: 'email',
     numeric: false,
     disablePadding: false,
-    label: 'Check Out',
+    label: 'Email',
     sortable: true,
   },
   {
-    id: 'client',
+    id: 'bookings',
     numeric: false,
     disablePadding: false,
-    label: 'Client',
+    label: 'Reserve rooms',
     sortable: false,
   },
 ];
@@ -136,7 +88,7 @@ interface EnhancedTableProps {
   numSelected: number | null;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: keyof HotelGuest
   ) => void;
   order: Order;
   orderBy: string;
@@ -145,7 +97,7 @@ interface EnhancedTableProps {
 function EnhancedTableHead(props: EnhancedTableProps) {
   const { order, orderBy, onRequestSort } = props;
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof HotelGuest) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
 
@@ -156,7 +108,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={'center'}
+            align={'left'}
             sx={{ minWidth: 'max-content' }}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
@@ -195,14 +147,16 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 interface EnhancedTableToolbarProps {
   numSelected: number | null;
   handleAcctions: Function;
-
-  resetSelection: Function;
 }
 ///// TOGGLE ON CHECK
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
+  const [isSearching, setIsSearching] = React.useState(false);
   const { numSelected, handleAcctions } = props;
-  const handleActionClick = (actionName: string) => {
-    handleAcctions(actionName, numSelected);
+  const handleSearch = (field: string, value: string) => {
+    handleAcctions('search', [field, value]);
+  };
+  const toggleSearchMode = () => {
+    setIsSearching(!isSearching);
   };
   return (
     <Toolbar
@@ -225,53 +179,45 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           alignItems: 'center',
           width: '100%',
           justifyContent: 'space-between',
+          position: 'relative',
         }}
       >
-        {numSelected ? (
-          <Typography
-            sx={{ flex: '1 1 100%' }}
-            color="inherit"
-            variant="subtitle1"
-            component="div"
-          >
-            Request selected: {numSelected}
-          </Typography>
-        ) : (
-          <Typography
-            sx={{ flex: '1 1 100%' }}
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            Room Requests
-          </Typography>
-        )}
-        {numSelected ? (
-          <Box sx={{ display: 'flex' }}>
-            <Tooltip
-              title="show/confirm"
-              onClick={() => handleActionClick('show/confirm')}
-            >
-              <IconButton>
-                <VisibilityOutlinedIcon color="primary" fontSize="small" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              title="decline and remove from the queue"
-              onClick={() => handleActionClick('decline')}
-            >
-              <IconButton>
-                <ClearIcon color="primary" fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        ) : (
-          <Tooltip title="Filter list">
-            <IconButton>
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
-        )}
+        <Typography
+          sx={{ flex: '1 1 100%' }}
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
+          Guest
+        </Typography>
+
+        <Tooltip title="Filter list" onClick={toggleSearchMode}>
+          <IconButton>
+            <FilterListIcon />
+          </IconButton>
+        </Tooltip>
+        <Box
+          sx={{
+            position: 'absolute',
+            zIndex: 100,
+            top: '30px',
+            right: { xs: 0, sm: '50px' },
+          }}
+        >
+          {isSearching && (
+            <TableFilter
+              onSearch={handleSearch}
+              searchFields={[
+                { label: 'ID', value: 'id' },
+                { label: 'Email', value: 'email' },
+                { label: 'Last Name', value: 'lastName' },
+                { label: 'First Name', value: 'firstName' },
+                { label: 'Mobile', value: 'mobileNumber' },
+                { label: 'Landline', value: 'landlineNumber' },
+              ]}
+            />
+          )}
+        </Box>
       </Box>
     </Toolbar>
   );
@@ -280,23 +226,23 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 export default function EnhancedTable({
   data,
   handleAcctions,
+  totalResults,
+  currentPage,
 }: {
-  data?: Array<BookingRequest>;
+  data?: Array<HotelGuest>;
   handleAcctions: Function;
+  totalResults: number;
+  currentPage: number;
 }) {
-  const rows: Data[] = data?.length
-    ? data.map((record) => createData(record))
-    : [];
+  const rows: HotelGuest[] = data || [];
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('sentIn');
+  const [orderBy, setOrderBy] = React.useState<keyof HotelGuest>('firstName');
   const [selected, setSelected] = React.useState<number | null>(null);
-  const [page, setPage] = React.useState(0);
-
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: keyof HotelGuest
   ) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -311,21 +257,16 @@ export default function EnhancedTable({
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    handleAcctions('pageChange', newPage);
   };
 
   const isSelected = (id: number) => selected === id;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    currentPage > 0
+      ? Math.max(0, (1 + currentPage) * rowsPerPage - rows.length)
+      : 0;
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -333,7 +274,6 @@ export default function EnhancedTable({
         <EnhancedTableToolbar
           numSelected={selected}
           handleAcctions={handleAcctions}
-          resetSelection={() => setSelected(null)}
         />
         <TableContainer>
           <Table
@@ -378,7 +318,10 @@ export default function EnhancedTable({
                 </TableRow>
               ) : (
                 stableSort(rows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .slice(
+                    currentPage * rowsPerPage,
+                    currentPage * rowsPerPage + rowsPerPage
+                  )
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
@@ -401,10 +344,18 @@ export default function EnhancedTable({
                           },
                         }}
                       >
-                        <TableCell padding="checkbox">
+                        <TableCell
+                          padding="checkbox"
+                          sx={{
+                            borderRight: 'none',
+                          }}
+                        >
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
+                            sx={{
+                              borderRight: 'none',
+                            }}
                             inputProps={{
                               'aria-labelledby': labelId,
                             }}
@@ -414,38 +365,77 @@ export default function EnhancedTable({
                           component="th"
                           id={labelId}
                           scope="row"
-                          padding="none"
+                          padding="normal"
                         >
                           {row.id}
                         </TableCell>
 
-                        <TableCell align="center" sx={{ minWidth: 120 }}>
-                          {row.sentIn}
+                        <TableCell
+                          align="left"
+                          sx={{
+                            minWidth: 'max-content',
+                            textTransform: 'capitalize',
+                          }}
+                        >
+                          {row.firstName}
                         </TableCell>
                         <TableCell
                           align="left"
-                          sx={{ minWidth: 200, textTransform: 'capitalize' }}
+                          sx={{
+                            minWidth: 'max-content',
+                            textTransform: 'capitalize',
+                          }}
                         >
-                          {row.roomType.name}
+                          {row.lastName}
                         </TableCell>
 
-                        <TableCell align="center">
-                          {row.roomsQuantity}
+                        <TableCell
+                          align="left"
+                          sx={{ minWidth: 'max-content' }}
+                        >
+                          {row.mobileNumber}
                         </TableCell>
 
-                        <TableCell align="center">{row.nights}</TableCell>
-
-                        <TableCell align="center" sx={{ minWidth: 120 }}>
-                          {row.checkInDate}
+                        <TableCell
+                          align="left"
+                          sx={{ minWidth: 'max-content' }}
+                        >
+                          {row.landlineNumber}
                         </TableCell>
-                        <TableCell align="center" sx={{ minWidth: 130 }}>
-                          {row.checkOutDate}
+
+                        <TableCell
+                          align="left"
+                          sx={{ minWidth: 'max-content' }}
+                        >
+                          {row.email}
                         </TableCell>
                         <TableCell
-                          align="center"
-                          sx={{ minWidth: 150, textTransform: 'capitalize' }}
+                          align="left"
+                          sx={{ minWidth: 'max-content' }}
                         >
-                          {row.client.name}
+                          {row.bookings.map((booking) => (
+                            <Box key={booking.id} sx={{ display: 'gird' }}>
+                              <Typography
+                                sx={{
+                                  minWidth: 'max-content',
+                                  fontSize: 'inherit',
+                                  fontStyle: 'italic',
+                                  fontWeight: 500,
+                                  opacity: 0.8,
+                                }}
+                              >
+                                {booking.roomModel.name}
+                              </Typography>
+                              <Stack
+                                direction="row"
+                                sx={{ flexWrap: 'wrap', gap: '6px', py: 1 }}
+                              >
+                                {booking.reservedRooms.map((room) => (
+                                  <Chip label={room.number} key={room.number} />
+                                ))}
+                              </Stack>
+                            </Box>
+                          ))}
                         </TableCell>
                       </TableRow>
                     );
@@ -466,11 +456,10 @@ export default function EnhancedTable({
         <TablePagination
           rowsPerPageOptions={[]}
           component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
+          count={totalResults}
+          rowsPerPage={6}
+          page={currentPage}
           onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </Box>

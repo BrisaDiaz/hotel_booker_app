@@ -94,15 +94,16 @@ model Address {
 }
 
 model Room {
-  id          Int        @id @default(autoincrement())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  number      Int
-  hotelId     Int
-  bookings    Booking[]
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  number    Int
+  hotelId   Int
+
   hotel       Hotel      @relation(fields: [hotelId], references: [id])
   roomModel   RoomModel? @relation(fields: [roomModelId], references: [id])
   roomModelId Int?
+  bookings    Booking[]
 }
 
 model RoomCategory {
@@ -135,7 +136,7 @@ model RoomModel {
   services        Service[]
   rooms           Room[]
   public          Boolean          @default(true)
-  BookingRequest  BookingRequest[]
+  bookingRequests BookingRequest[]
 }
 
 model Features {
@@ -214,7 +215,6 @@ model Booking {
   status             BookingStatus        @default(ACTIVE)
   client             Client               @relation(fields: [clientId], references: [id])
   rooms              Room[]
-
 }
 
 enum PaymentMethod {
@@ -266,7 +266,7 @@ enum BookingStatus {
 enum BookingRequestStatus {
   PENDING
   DECLINED
-  ACEPTED
+  ACCEPTED
 }
 
 model RoomBed {

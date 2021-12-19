@@ -1,4 +1,4 @@
-import { extendType, objectType, list } from 'nexus';
+import { extendType, objectType, list, inputObjectType } from 'nexus';
 import { prisma } from '../../lib/prisma';
 import { Activity } from './Hotel';
 export const Service = objectType({
@@ -120,5 +120,12 @@ export const Query = extendType({
         });
       },
     });
+  },
+});
+export const searchFilter = inputObjectType({
+  name: 'searchFilter',
+  definition(t) {
+    t.string('field');
+    t.string('value');
   },
 });

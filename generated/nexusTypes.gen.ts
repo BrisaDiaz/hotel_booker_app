@@ -22,10 +22,14 @@ export interface NexusGenInputs {
     adults?: number | null; // Int
     children?: number | null; // Int
   }
+  searchFilter: { // input type
+    field?: string | null; // String
+    value?: string | null; // String
+  }
 }
 
 export interface NexusGenEnums {
-  BookingRequestStatus: "ACEPTED" | "DECLINED" | "PENDING"
+  BookingRequestStatus: "ACCEPTED" | "DECLINED" | "PENDING"
   BookingStatus: "ACTIVE" | "CANCELED" | "FINISH"
   PaymentMethod: "BILL_TO_ACCOUNT" | "CASH" | "CREDIT_CARD" | "DEBIT_CARD" | "TRAVELER_CHECK"
   Role: "ADMIN" | "USER"
@@ -85,9 +89,7 @@ export interface NexusGenObjects {
     id?: string | null; // ID
     nights?: number | null; // Int
     paymentMethod?: NexusGenEnums['PaymentMethod'] | null; // PaymentMethod
-    roomId?: number | null; // Int
     roomModelId?: number | null; // Int
-    rooms?: NexusGenRootTypes['Room'] | null; // Room
     specifications?: string | null; // String
     status?: NexusGenEnums['BookingStatus'] | null; // BookingStatus
     totalCost?: number | null; // Float
@@ -130,10 +132,18 @@ export interface NexusGenObjects {
     petFriendly?: boolean | null; // Boolean
     smokerFriendly?: boolean | null; // Boolean
   }
+  GuestSearch: { // root type
+    guests?: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
+    pageCount?: number | null; // Int
+    totalResults?: number | null; // Int
+  }
   GuestsDistribution: { // root type
     adults?: number | null; // Int
     children?: number | null; // Int
     id?: string | null; // ID
+  }
+  GuestsSearchResult: { // root type
+    guests?: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
   }
   Hotel: { // root type
     activities?: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
@@ -314,11 +324,9 @@ export interface NexusGenFieldTypes {
     id: string | null; // ID
     nights: number | null; // Int
     paymentMethod: NexusGenEnums['PaymentMethod'] | null; // PaymentMethod
-    room: NexusGenRootTypes['Room'] | null; // Room
-    roomId: number | null; // Int
+    reservedRooms: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
     roomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     roomModelId: number | null; // Int
-    rooms: NexusGenRootTypes['Room'] | null; // Room
     specifications: string | null; // String
     status: NexusGenEnums['BookingStatus'] | null; // BookingStatus
     totalCost: number | null; // Float
@@ -364,10 +372,18 @@ export interface NexusGenFieldTypes {
     petFriendly: boolean | null; // Boolean
     smokerFriendly: boolean | null; // Boolean
   }
+  GuestSearch: { // field return type
+    guests: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
+    pageCount: number | null; // Int
+    totalResults: number | null; // Int
+  }
   GuestsDistribution: { // field return type
     adults: number | null; // Int
     children: number | null; // Int
     id: string | null; // ID
+  }
+  GuestsSearchResult: { // field return type
+    guests: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
   }
   Hotel: { // field return type
     activities: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
@@ -404,7 +420,7 @@ export interface NexusGenFieldTypes {
   HotelData: { // field return type
     bookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     bookingsCount: number | null; // Int
-    guests: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
+    guests: Array<Array<NexusGenRootTypes['Client'] | null> | null> | null; // [[Client]]
     guestsCount: number | null; // Int
     hotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     requests: Array<NexusGenRootTypes['BookingRequest'] | null> | null; // [BookingRequest]
@@ -463,7 +479,7 @@ export interface NexusGenFieldTypes {
     hotelById: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelCategoriesList: Array<NexusGenRootTypes['HotelCategory'] | null> | null; // [HotelCategory]
     hotelData: NexusGenRootTypes['HotelData'] | null; // HotelData
-    hotelGuestsById: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
+    hotelGuests: NexusGenRootTypes['GuestSearch'] | null; // GuestSearch
     hotelRequestsById: Array<NexusGenRootTypes['BookingRequest'] | null> | null; // [BookingRequest]
     hotelSearch: NexusGenRootTypes['HotelSearch'] | null; // HotelSearch
     languagesList: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
@@ -589,11 +605,9 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     nights: 'Int'
     paymentMethod: 'PaymentMethod'
-    room: 'Room'
-    roomId: 'Int'
+    reservedRooms: 'Room'
     roomModel: 'RoomModel'
     roomModelId: 'Int'
-    rooms: 'Room'
     specifications: 'String'
     status: 'BookingStatus'
     totalCost: 'Float'
@@ -639,10 +653,18 @@ export interface NexusGenFieldTypeNames {
     petFriendly: 'Boolean'
     smokerFriendly: 'Boolean'
   }
+  GuestSearch: { // field return type name
+    guests: 'Client'
+    pageCount: 'Int'
+    totalResults: 'Int'
+  }
   GuestsDistribution: { // field return type name
     adults: 'Int'
     children: 'Int'
     id: 'ID'
+  }
+  GuestsSearchResult: { // field return type name
+    guests: 'Client'
   }
   Hotel: { // field return type name
     activities: 'Activity'
@@ -738,7 +760,7 @@ export interface NexusGenFieldTypeNames {
     hotelById: 'Hotel'
     hotelCategoriesList: 'HotelCategory'
     hotelData: 'HotelData'
-    hotelGuestsById: 'Booking'
+    hotelGuests: 'GuestSearch'
     hotelRequestsById: 'BookingRequest'
     hotelSearch: 'HotelSearch'
     languagesList: 'Language'
@@ -1010,8 +1032,12 @@ export interface NexusGenArgTypes {
       hotelId: string; // ID!
       userId: string; // ID!
     }
-    hotelGuestsById: { // args
+    hotelGuests: { // args
       hotelId: string; // ID!
+      search?: NexusGenInputs['searchFilter'] | null; // searchFilter
+      skip?: number | null; // Int
+      sort?: string | null; // String
+      take: number | null; // Int
       userId: string; // ID!
     }
     hotelRequestsById: { // args

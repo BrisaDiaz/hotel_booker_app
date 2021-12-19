@@ -55,7 +55,7 @@ export const BookingStatus = enumType({
 });
 export const BookingRequestStatus = enumType({
   name: 'BookingRequestStatus',
-  members: ['PENDING', 'DECLINED', 'ACEPTED'],
+  members: ['PENDING', 'DECLINED', 'ACCEPTED'],
 });
 export const PaymentMethod = enumType({
   name: 'PaymentMethod',
@@ -67,6 +67,7 @@ export const PaymentMethod = enumType({
     'TRAVELER_CHECK',
   ],
 });
+
 export const Booking = objectType({
   name: 'Booking',
   definition(t) {
@@ -74,7 +75,7 @@ export const Booking = objectType({
     t.int('hotelId');
     t.field('hotel', {
       type: 'Hotel',
-      resolve(root) {
+      resolve(root: { hotelId: number }) {
         return prisma.hotel.findUnique({
           where: {
             id: root.hotelId,
@@ -82,7 +83,7 @@ export const Booking = objectType({
         });
       },
     });
-    t.int('roomId');
+
     t.int('roomModelId');
     t.field('roomModel', {
       type: 'RoomModel',
@@ -94,14 +95,19 @@ export const Booking = objectType({
         });
       },
     });
-    t.field('room', {
-      type: 'Room',
-      resolve(root) {
-        return prisma.room.findUnique({
-          where: {
-            id: root.roomId,
-          },
-        });
+    t.field('reservedRooms', {
+      type: list('Room'),
+      resolve(root: { id: number }) {
+        async function getRooms(bookingId: number) {
+          const booking = await prisma.booking.findUnique({
+            where: {
+              id: bookingId,
+            },
+            include: { rooms: true },
+          });
+          return booking ? booking.rooms : booking;
+        }
+        return getRooms(root.id);
       },
     });
     t.int('clientId');
@@ -117,7 +123,6 @@ export const Booking = objectType({
     });
     t.int('children');
     t.int('adults');
-    t.field('rooms', { type: 'Room' });
     t.int('checkInDate');
     t.int('checkOutDate');
     t.int('nights');

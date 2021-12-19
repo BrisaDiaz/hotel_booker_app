@@ -45,6 +45,7 @@ export const RoomCategory = objectType({
     t.string('name');
   },
 });
+
 export const RoomModel = objectType({
   name: 'RoomModel',
   definition(t) {

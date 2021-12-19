@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { hash, genSalt } from 'bcryptjs';
 

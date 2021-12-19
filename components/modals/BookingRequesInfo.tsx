@@ -42,8 +42,9 @@ const leyend = {
 export default function RequestInfo({
   requestInfo,
 }: {
-  requestInfo: BookingRequest;
+  requestInfo?: BookingRequest;
 }) {
+  if (!requestInfo) return null;
   return (
     <div>
       <Box sx={withIconLabel}>
@@ -55,31 +56,41 @@ export default function RequestInfo({
       <Box component="ul" sx={{ mb: 2, px: 0 }}>
         {' '}
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Room Type:</Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Room Type:
+          </Typography>
           <Typography component="span" sx={{ textAlign: 'right' }}>
             {requestInfo?.roomModel?.name}
           </Typography>
         </Box>
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Price:</Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Price:
+          </Typography>
           <Typography component="span">
             {' '}
             USD ${requestInfo?.roomModel?.lowestPrice}
           </Typography>
         </Box>
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Taxes And Charges:</Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Taxes And Charges:
+          </Typography>
           <Typography component="span">
             {' '}
             USD $ {requestInfo?.roomModel?.taxesAndCharges}
           </Typography>
         </Box>
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Nights:</Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Nights:
+          </Typography>
           <Typography component="span"> {requestInfo?.nights}</Typography>
         </Box>
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Check In Date:</Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Check In Date:
+          </Typography>
           <time>
             {
               toDateAndHourFormat(parseInt(requestInfo?.checkInDate))?.split(
@@ -89,21 +100,29 @@ export default function RequestInfo({
           </time>
         </Box>
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Check Out Date:</Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Check Out Date:
+          </Typography>
           <time>
-            {toDateAndHourFormat(
-              parseInt(requestInfo?.checkOutDate)?.split(' ')[0]
-            )}
+            {
+              toDateAndHourFormat(parseInt(requestInfo?.checkOutDate))?.split(
+                ' '
+              )[0]
+            }
           </time>
         </Box>
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Quantity: </Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Quantity:{' '}
+          </Typography>
           <Typography component="span">
             {requestInfo?.guestsDistribution?.length}
           </Typography>
         </Box>
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Guest/Room: </Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Guest/Room:{' '}
+          </Typography>
           <Box sx={{ p: 0, gap: 1, display: 'grid' }}>
             {requestInfo?.guestsDistribution?.map((room, index) => (
               <Box
@@ -135,27 +154,35 @@ export default function RequestInfo({
       <Box component="ul" sx={{ mb: 2, px: 0 }}>
         {' '}
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Name:</Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Name:
+          </Typography>
           <Typography component="span">
             {requestInfo?.client?.firstName} {requestInfo?.client?.lastName}
           </Typography>
         </Box>
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Mobile:</Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Mobile:
+          </Typography>
           <Typography component="span">
             {' '}
             {requestInfo?.client?.mobileNumber}
           </Typography>
         </Box>
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Landline:</Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Landline:
+          </Typography>
           <Typography component="span">
             {' '}
             {requestInfo?.client?.landlineNumber}
           </Typography>
         </Box>
         <Box component="li" sx={list}>
-          <Typography sx={leyend}>Email: </Typography>
+          <Typography sx={leyend} variant="subtitle2">
+            Email:{' '}
+          </Typography>
           <Typography
             component="span"
             sx={{ textTransform: 'none', fontSize: '14px' }}

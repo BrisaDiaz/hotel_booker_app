@@ -46,19 +46,20 @@ export default function BasicModal({
   isModalOpen: boolean;
   onSubmit: Function;
   closeModal: Function;
-  requestInfo: BookingRequest;
+  requestInfo?: BookingRequest;
 }) {
+  if (!requestInfo) return null;
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false), closeModal();
   };
   React.useEffect(() => {
-    if (isModalOpen) {
+    if (isModalOpen && requestInfo) {
       return handleOpen();
     }
     return handleClose();
-  }, [isModalOpen]);
+  }, [isModalOpen, requestInfo]);
   const {
     register,
     handleSubmit,
@@ -117,7 +118,6 @@ export default function BasicModal({
             setValue={setValue}
             requiredRooms={requestInfo?.guestsDistribution?.length}
             availableRooms={requestInfo?.availableRooms}
-            errors={errors}
           />
 
           <Button

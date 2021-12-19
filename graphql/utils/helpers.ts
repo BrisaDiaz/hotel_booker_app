@@ -1,3 +1,4 @@
+import { keys } from '@mui/system';
 import { array } from 'prop-types';
 import { prisma } from '../../lib/prisma';
 
@@ -8,8 +9,8 @@ export async function checkRoomsAvailable({
   roomsRequired,
 }: {
   roomModelId: number;
-  checkInDate: string | Date;
-  checkOutDate: string | Date;
+  checkInDate: string;
+  checkOutDate: string;
   roomsRequired: number;
 }) {
   const requiredDates = inBetweenDates([checkInDate, checkOutDate]);
@@ -163,12 +164,22 @@ export function hotelQueryConstructor(args: HotelQueryArgs) {
   }
 
   interface PropietyFilter {
-    [key: string]: { [key: string]: { equals: string } };
+    [key: string]: { equals: string };
   }
-  interface searchFilter {
+
+  type searchFilter = OneLevelSearch | TwoLevelsSearch;
+  interface OneLevelSearch {
     [key: string]: {
       contains: string;
       mode: 'insensitive';
+    };
+  }
+  interface TwoLevelsSearch {
+    [key: string]: {
+      [key: string]: {
+        contains: string;
+        mode: 'insensitive';
+      };
     };
   }
   interface BooleanFilter {
@@ -179,7 +190,7 @@ export function hotelQueryConstructor(args: HotelQueryArgs) {
     [key: string]: 'desc' | 'asc';
   }
 
-  type OR = (PropietyFilter | searchFilter | { [key: string]: searchFilter })[];
+  type OR = (PropietyFilter | searchFilter)[];
   type AND = (ArrayFilter | BooleanFilter)[];
 
   interface Query {
@@ -263,7 +274,6 @@ export function hotelQueryConstructor(args: HotelQueryArgs) {
     query.where['OR'] = ORconditionals;
   }
 
-  console.log(query);
   return query;
 }
 type ToEditHotelField =
@@ -319,4 +329,117 @@ export function getHotelFieldsToEdit(args: any): ToEditHotelField[] {
     fields.push('genericData');
   }
   return fields;
+}
+
+type ClientWhere = {
+  id?: number;
+  bookings: {
+    some: {
+      hotelId: number;
+      status: 'ACTIVE';
+    };
+  };
+  AND?: [
+    | { email?: string }
+    | { mobileNumber?: string }
+    | { landlineNumber?: string }
+    | {
+        lastName?: {
+          contains: string;
+          mode: 'insensitive';
+        };
+      }
+    | {
+        firstName?: {
+          contains: string;
+          mode: 'insensitive';
+        };
+      }
+  ];
+};
+type ClientField =
+  | 'firstName'
+  | 'lastName'
+  | 'email'
+  | 'mobileNumber'
+  | 'landlineNumber'
+  | 'id';
+type ClientQuery = {
+  orderBy: { [key: string]: string };
+  take: number;
+  skip: number;
+  where: ClientWhere;
+  include: {
+    bookings: {
+      where: {
+        hotelId: number;
+        status: string;
+      };
+    };
+  };
+};
+export function clientQueryConstructor(
+  hotelId: number,
+  args: {
+    skip: number;
+    take: number;
+
+    search?: {
+      field: ClientField;
+      value: string;
+    };
+  }
+): ClientQuery {
+  let where: ClientWhere = {
+    bookings: {
+      some: {
+        hotelId: hotelId,
+        status: 'ACTIVE',
+      },
+    },
+  };
+  let orderBy = { createdAt: 'desc' };
+
+  if (args.search) {
+    aplayDinamicFilters(args.search.field, args.search.value);
+  }
+
+  function aplayDinamicFilters(field: ClientField, value: string) {
+    if (field === 'id') {
+      return (where['id'] = parseInt(value));
+    }
+
+    if (field === 'firstName' || field === 'lastName') {
+      return (where['AND'] = [
+        {
+          [field]: {
+            contains: value,
+            mode: 'insensitive',
+          },
+        },
+      ]);
+    }
+    return (where['AND'] = [
+      {
+        [field]: value,
+      },
+    ]);
+  }
+
+  const query = {
+    orderBy: orderBy,
+    take: args.take,
+    skip: args.skip,
+    where: where,
+    include: {
+      bookings: {
+        where: {
+          hotelId: hotelId,
+          status: 'ACTIVE',
+        },
+      },
+    },
+  };
+
+  return query;
 }

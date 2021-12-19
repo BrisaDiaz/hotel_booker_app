@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import React from 'react';
 import { WithLayoutPage } from '@/interfaces/index';
 import {
@@ -18,15 +18,15 @@ import RequestsTable from '@/components/dashboard/tables/RequestsTable';
 import Dialog from '@/components/Dialog';
 import SnackBar from '@/components/SnackBar';
 import Backdrop from '@/components/Backdrop';
-
-const RoomRequests: WithLayoutPage = (props: {
+type PagePromps = {
   requests: BookingRequest[];
   userId: number;
-}) => {
+};
+const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
   const [requests, setRequests] = React.useState<BookingRequest[] | []>(
     props.requests
   );
-  const [resultMessage, setResultMessage] = React.useState<{
+  const [notification, setNotification] = React.useState<{
     type: 'success' | 'error';
     content: string;
   }>({
@@ -42,9 +42,8 @@ const RoomRequests: WithLayoutPage = (props: {
     decline: false,
     ['show/confirm']: false,
   });
-  const [requestSelected, setRequestSelected] = React.useState<
-    BookingRequest | {}
-  >({});
+  const [requestSelected, setRequestSelected] =
+    React.useState<BookingRequest | null>(null);
 
   const [declineRequest, declineRequestResponce] = useMutation(
     DECLINE_BOOKING_REQUEST,
@@ -54,67 +53,48 @@ const RoomRequests: WithLayoutPage = (props: {
           (request) => request.id !== bookingRequest.id
         );
         setRequests(acutalizePendingRequests);
-        setResultMessage({
+        setNotification({
           type: 'success',
           content: 'The request was declined successfully.',
         });
-        setTimeout(() => {
-          setResultMessage({
-            type: 'success',
-            content: '',
-          });
-        }, 6000);
+        cleanNotification();
       },
       onError: ({ message }) => {
-        setResultMessage({
+        setNotification({
           type: 'error',
           content: message,
         });
-        setTimeout(() => {
-          setResultMessage({
-            type: 'success',
-            content: '',
-          });
-        }, 6000);
+        cleanNotification();
       },
     }
   );
   const [confirmBookingRequest, confirmBookingRequestResponce] = useMutation(
     CONFIRM_BOOKING_REQUEST,
     {
-      onCompleted: ({ bookingRequest }) => {
+      onCompleted: ({ booking }) => {
         const acutalizePendingRequests = requests.filter(
-          (request) => request.id !== bookingRequest.id
+          (request) => request.id !== booking.id
         );
         setRequests(acutalizePendingRequests);
-        setResultMessage({
+        setNotification({
           type: 'success',
           content: 'The request has been booked successfully.',
         });
-        setTimeout(() => {
-          setResultMessage({
-            type: 'success',
-            content: '',
-          });
-        }, 6000);
+        cleanNotification();
       },
-      onError: ({ message }) => {
-        setResultMessage({
+      onError: (graphqlError) => {
+        console.log(graphqlError);
+        setNotification({
           type: 'error',
-          content: message,
+          content: graphqlError.message,
         });
-        setTimeout(() => {
-          setResultMessage({
-            type: 'success',
-            content: '',
-          });
-        }, 6000);
+        cleanNotification();
       },
     }
   );
 
   const onDeclineRequest = async () => {
-    if (!Boolean(requestSelected)) return null;
+    if (requestSelected === null) return null;
 
     try {
       await declineRequest({
@@ -132,7 +112,7 @@ const RoomRequests: WithLayoutPage = (props: {
     roomsIds: number[];
     paymentMethod: string;
   }) => {
-    if (!Boolean(requestSelected)) return null;
+    if (requestSelected === null) return null;
     const variables = {
       ...data,
       userId: props.userId,
@@ -169,7 +149,14 @@ const RoomRequests: WithLayoutPage = (props: {
     }
     return setLoading(false);
   }, [declineRequestResponce.loading, confirmBookingRequestResponce.loading]);
-
+  const cleanNotification = () => {
+    setTimeout(() => {
+      setNotification({
+        type: 'success',
+        content: '',
+      });
+    }, 6000);
+  };
   return (
     <div>
       <Head>
@@ -178,13 +165,10 @@ const RoomRequests: WithLayoutPage = (props: {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box
-        sx={{ p: { xs: '16px 0', sm: '16px 16px' }, maxWidth: 1200 }}
-        component="main"
-      >
+      <Box sx={{ maxWidth: 1200 }} component="main">
         <RequestsTable data={requests} handleAcctions={handleAcctions} />
 
-        {modalsState['show/confirm'] && (
+        {modalsState['show/confirm'] && requestSelected && (
           <ConfimBookingModal
             closeModal={() => handleCloseModal('show/confirm')}
             requestInfo={requestSelected}
@@ -201,12 +185,13 @@ const RoomRequests: WithLayoutPage = (props: {
           }
           isDialogOpen={modalsState['decline']}
           onAccept={onDeclineRequest}
+          onCancel={() => handleCloseModal('decline')}
         />
         <Backdrop loading={loading} />
-        {resultMessage.content && (
+        {notification.content && (
           <SnackBar
-            severity={resultMessage.type}
-            message={resultMessage.content || 'Oparation succesfully complited'}
+            severity={notification.type}
+            message={notification.content || 'Oparation succesfully complited'}
           />
         )}
       </Box>
@@ -217,18 +202,14 @@ RoomRequests.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="requests">{page}</AdminMenu>;
 };
 export default RoomRequests;
-
-export const getServerSideProps: GetServerSideProps = async ({
-  req,
-  res,
-  query,
-}: {
+type PageContext = {
   req: NextApiRequest;
   res: NextApiResponse;
   query: {
     hotelId: number;
   };
-}) => {
+};
+export const getServerSideProps = async ({ req, res, query }: PageContext) => {
   try {
     const user = await getUser(req, res);
     if (user.role === 'ADMIN') {
@@ -257,10 +238,10 @@ export const getServerSideProps: GetServerSideProps = async ({
     console.log(e);
 
     return {
-      // redirect: {
-      //   permanent: false,
-      //   destination: '/signin',
-      // },
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
       props: {},
     };
   }

@@ -59,11 +59,9 @@ type Booking {
   id: ID
   nights: Int
   paymentMethod: PaymentMethod
-  room: Room
-  roomId: Int
+  reservedRooms: [Room]
   roomModel: RoomModel
   roomModelId: Int
-  rooms: Room
   specifications: String
   status: BookingStatus
   totalCost: Float
@@ -91,7 +89,7 @@ type BookingRequest {
 }
 
 enum BookingRequestStatus {
-  ACEPTED
+  ACCEPTED
   DECLINED
   PENDING
 }
@@ -126,10 +124,20 @@ type Features {
   smokerFriendly: Boolean
 }
 
+type GuestSearch {
+  guests: [Client]
+  pageCount: Int
+  totalResults: Int
+}
+
 type GuestsDistribution {
   adults: Int
   children: Int
   id: ID
+}
+
+type GuestsSearchResult {
+  guests: [Client]
 }
 
 type Hotel {
@@ -169,7 +177,7 @@ type HotelCategory {
 type HotelData {
   bookings: [Booking]
   bookingsCount: Int
-  guests: [Client]
+  guests: [[Client]]
   guestsCount: Int
   hotel: Hotel
   requests: [BookingRequest]
@@ -243,7 +251,7 @@ type Query {
   hotelById(hotelId: ID!): Hotel
   hotelCategoriesList: [HotelCategory]
   hotelData(hotelId: ID!, userId: ID!): HotelData
-  hotelGuestsById(hotelId: ID!, userId: ID!): [Booking]
+  hotelGuests(hotelId: ID!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 6, userId: ID!): GuestSearch
   hotelRequestsById(hotelId: ID!, userId: ID!): [BookingRequest]
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
   languagesList: [Language]
@@ -338,4 +346,9 @@ input bedsSpecifications {
 input roomSpecifications {
   adults: Int
   children: Int
+}
+
+input searchFilter {
+  field: String
+  value: String
 }

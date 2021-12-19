@@ -8,16 +8,17 @@ import {
   nonNull,
   floatArg,
 } from 'nexus';
-import { prisma } from '../../lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { UserInputError, ForbiddenError } from 'apollo-server-micro';
 import {
   getAdminInfo,
   verifyIsHotelAdmin,
   checkRoomsAvailable,
   checkIsValidRoomRequest,
+  clientQueryConstructor,
 } from '../utils/index';
-import { roomSpecifications } from './Booking';
-
+import { roomSpecifications, Client } from './Booking';
+import { searchFilter } from './Commun';
 export const AdminHotels = objectType({
   name: 'AdminHotels',
   definition(t) {
@@ -27,7 +28,16 @@ export const AdminHotels = objectType({
     t.int('hotelsCount');
   },
 });
-
+export const GuestSearch = objectType({
+  name: 'GuestSearch',
+  definition(t) {
+    t.list.field('guests', {
+      type: 'Client',
+    });
+    t.int('totalResults');
+    t.int('pageCount');
+  },
+});
 export const HotelData = objectType({
   name: 'HotelData',
   definition(t) {
@@ -68,7 +78,7 @@ export const HotelData = objectType({
       },
     });
     t.list.field('guests', {
-      type: 'Client',
+      type: list(Client),
       resolve(root: { id: number }) {
         return prisma.client.findMany({
           where: {
@@ -95,7 +105,12 @@ export const RoomModelData = objectType({
     t.list.field('guests', { type: 'Client' });
   },
 });
-
+export const GuestsSearchResult = objectType({
+  name: 'GuestsSearchResult',
+  definition(t) {
+    t.list.field('guests', { type: 'Client' });
+  },
+});
 export const Query = extendType({
   type: 'Query',
   definition(t) {
@@ -246,6 +261,7 @@ export const Query = extendType({
 
           if (!admin.hotels.includes(booking.hotelId))
             throw new ForbiddenError('Forbidden');
+
           return booking;
         };
         return getBooking(parseInt(args.userId), parseInt(args.bookingId));
@@ -282,6 +298,7 @@ export const Query = extendType({
     });
     t.field('hotelBookingsById', {
       type: list('Booking'),
+
       args: {
         hotelId: nonNull(idArg()),
         userId: nonNull(idArg()),
@@ -290,13 +307,12 @@ export const Query = extendType({
         const getBookings = async (userId: number, hotelId: number) => {
           await verifyIsHotelAdmin(userId, hotelId);
 
-          return prisma.bookingRequest.findMany({
+          return prisma.booking.findMany({
             where: {
               hotelId: hotelId,
               status: 'ACTIVE',
             },
             include: {
-              roomModel: true,
               guestsDistribution: true,
             },
           });
@@ -304,28 +320,35 @@ export const Query = extendType({
         return getBookings(parseInt(args.userId), parseInt(args.hotelId));
       },
     });
-    t.field('hotelGuestsById', {
-      type: list('Booking'),
+    t.field('hotelGuests', {
+      type: GuestSearch,
       args: {
         hotelId: nonNull(idArg()),
         userId: nonNull(idArg()),
+        sort: stringArg(),
+        search: searchFilter,
+        take: intArg({ default: 6 }),
+        skip: intArg({ default: 0 }),
       },
       resolve(root, args, ctx) {
-        const getBookings = async (userId: number, hotelId: number) => {
+        const getGuests = async (
+          userId: number,
+          hotelId: number,
+          args: any
+        ) => {
           await verifyIsHotelAdmin(userId, hotelId);
 
-          return prisma.client.findMany({
-            where: {
-              bookings: {
-                some: {
-                  hotelId: root.id,
-                  status: 'ACTIVE',
-                },
-              },
-            },
+          const query = clientQueryConstructor(hotelId, args);
+          const totalResults = await prisma.client.count({
+            where: query.where,
           });
+
+          const guests = await prisma.client.findMany(query);
+
+          const pageCount: number = Math.floor(totalResults / query.take);
+          return { guests, totalResults, pageCount };
         };
-        return getBookings(parseInt(args.userId), parseInt(args.hotelId));
+        return getGuests(parseInt(args.userId), parseInt(args.hotelId), args);
       },
     });
   },
@@ -353,18 +376,17 @@ export const Mutation = extendType({
       resolve(root, args, ctx) {
         const makeBooking = async (
           userId: number,
-          hotelId: number,
           roomModelId: number,
           args: any
         ) => {
-          const admin = await verifyIsHotelAdmin(userId, hotelId);
           const roomModel = await prisma.roomModel.findUnique({
             where: {
               id: roomModelId,
             },
           });
           if (!roomModel) throw new UserInputError('Room type dose not exist.');
-
+          const hotelId = roomModel.hotelId;
+          const admin = await verifyIsHotelAdmin(userId, hotelId);
           const availabilityResponce = await checkIsValidRoomRequest({
             roomDetails: roomModel,
             rooms: args.guestsDistribution,
@@ -401,14 +423,22 @@ export const Mutation = extendType({
               checkOutDate: new Date(args.checkOutDate),
               paymentMethod: args.paymentMethod,
               totalCost: args.totalCost,
-              rooms: {
-                connect: args.roomsIds.map((roomId: number) => ({
-                  id: roomId,
-                })),
-              },
               status: 'ACTIVE',
             },
           });
+          const roomPromises = args.roomsIds.map((id: number) =>
+            prisma.room.update({
+              where: {
+                id: id,
+              },
+              data: {
+                bookings: {
+                  connect: { id: booking.id },
+                },
+              },
+            })
+          );
+          await Promise.all(roomPromises);
           await prisma.guestsDistribution.createMany({
             data: guestsDistribution.map(
               (room: { children: number; adults: number }) => ({
@@ -418,11 +448,11 @@ export const Mutation = extendType({
               })
             ),
           });
+
           return booking;
         };
         return makeBooking(
           parseInt(args.userId),
-          parseInt(args.hotelId),
           parseInt(args.roomModelId),
           args
         );
@@ -460,8 +490,8 @@ export const Mutation = extendType({
 
           const roomsAvailables = await checkRoomsAvailable({
             roomModelId: bookingRequest.roomModelId,
-            checkInDate: bookingRequest.checkInDate,
-            checkOutDate: bookingRequest.checkOutDate,
+            checkInDate: bookingRequest.checkInDate.toString(),
+            checkOutDate: bookingRequest.checkOutDate.toString(),
             roomsRequired: bookingRequest.guestsDistribution.length,
           });
 
@@ -470,7 +500,7 @@ export const Mutation = extendType({
 
           const roomsAvailablesIds = roomsAvailables.map((room) => room.id);
           const matchRoomsRequestedWithAvailablesOnes = args.roomsIds.every(
-            (id) => roomsAvailablesIds.includes(id)
+            (id: number) => roomsAvailablesIds.includes(id)
           );
 
           if (!matchRoomsRequestedWithAvailablesOnes)
@@ -492,15 +522,22 @@ export const Mutation = extendType({
               checkOutDate: new Date(bookingRequest.checkOutDate),
               paymentMethod: args.paymentMethod,
               totalCost: args.totalCost,
-              rooms: {
-                connect: args.roomsIds.map((roomId: number) => ({
-                  id: roomId,
-                })),
-              },
               status: 'ACTIVE',
             },
           });
-
+          const roomPromises = args.roomsIds.map((id: number) =>
+            prisma.room.update({
+              where: {
+                id: id,
+              },
+              data: {
+                bookings: {
+                  connect: { id: booking.id },
+                },
+              },
+            })
+          );
+          await Promise.all(roomPromises);
           await prisma.guestsDistribution.updateMany({
             where: {
               bookingRequestId: bookingRequest.id,
@@ -509,7 +546,14 @@ export const Mutation = extendType({
               bookingId: booking.id,
             },
           });
-          return booking;
+          return prisma.bookingRequest.update({
+            where: {
+              id: bookingRequestId,
+            },
+            data: {
+              status: 'ACCEPTED',
+            },
+          });
         };
         return makeBooking(
           parseInt(args.userId),
@@ -552,4 +596,3 @@ export const Mutation = extendType({
     });
   },
 });
-// Invalid `prisma.booking.create()` invocation: { data: { clientId: 8, hotelId: 1, roomModelId: 1, administratorId: 1, specifications: 'It would seem like a no-brainer that you should be getting WIFI internet in today\'s world, but unless you ask for the password, chances are you won\'t be connected. Hotels don\'t have their WIFI open because if they did, people who are not guests would be able to connect and slow down the connection. So just ask when checking in what the password is, and you\'ll be hooked for the entire time you\'re at the hotel. Check and see if your hotel has free WIFI, as some want to charge for the service.', children: 1, adults: 2, nights: 8, checkInDate: new Date('2021-12-01T00:00:00.000Z'), checkOutDate: new Date('2021-12-09T00:00:00.000Z'), paymentMethod: 'CASH', totalCost: 0, rooms: { ~~~~~ connect: [ { id: 6 }, { id: 1 } ] }, status: 'ACTIVE' } } Unknown arg `rooms` in data.rooms for type BookingUncheckedCreateInput. Did you mean `roomId`? Available args: type BookingUncheckedCreateInput { id?: Int createdAt?: DateTime updatedAt?: DateTime clientId: Int hotelId: Int roomModelId: Int administratorId: Int children: Int adults: Int nights: Int checkInDate: DateTime checkOutDate: DateTime specifications: String totalCost: Int paymentMethod?: PaymentMethod status?: BookingStatus roomId?: Int | Null guestsDistribution?: GuestsDistributionUncheckedCreateNestedManyWithoutBookingInput }

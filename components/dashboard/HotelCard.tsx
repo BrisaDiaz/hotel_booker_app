@@ -50,7 +50,10 @@ export default function HotelCard({
           <CardMedia
             component="img"
             height="150px"
-            image={hotel.frameImage}
+            image={
+              hotel.frameImage ||
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU'
+            }
             alt={hotel.name}
           />
 
