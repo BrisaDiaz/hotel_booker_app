@@ -134,7 +134,6 @@ export interface NexusGenObjects {
   }
   GuestSearch: { // root type
     guests?: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
-    pageCount?: number | null; // Int
     totalResults?: number | null; // Int
   }
   GuestsDistribution: { // root type
@@ -202,6 +201,11 @@ export interface NexusGenObjects {
     message?: string | null; // String
   }
   Query: {};
+  RequestSearch: { // root type
+    pageCount?: number | null; // Int
+    requests?: Array<NexusGenRootTypes['BookingRequest'] | null> | null; // [BookingRequest]
+    totalResults?: number | null; // Int
+  }
   Room: { // root type
     bookings?: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     id?: string | null; // ID
@@ -374,7 +378,6 @@ export interface NexusGenFieldTypes {
   }
   GuestSearch: { // field return type
     guests: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
-    pageCount: number | null; // Int
     totalResults: number | null; // Int
   }
   GuestsDistribution: { // field return type
@@ -475,18 +478,23 @@ export interface NexusGenFieldTypes {
     bookingById: NexusGenRootTypes['Booking'] | null; // Booking
     checkRoomAvailability: NexusGenRootTypes['RoomConsultResponceResponce'] | null; // RoomConsultResponceResponce
     facilitiesList: Array<NexusGenRootTypes['Facility'] | null> | null; // [Facility]
-    hotelBookingsById: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
+    hotelBookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     hotelById: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelCategoriesList: Array<NexusGenRootTypes['HotelCategory'] | null> | null; // [HotelCategory]
     hotelData: NexusGenRootTypes['HotelData'] | null; // HotelData
     hotelGuests: NexusGenRootTypes['GuestSearch'] | null; // GuestSearch
-    hotelRequestsById: Array<NexusGenRootTypes['BookingRequest'] | null> | null; // [BookingRequest]
+    hotelRequests: NexusGenRootTypes['RequestSearch'] | null; // RequestSearch
     hotelSearch: NexusGenRootTypes['HotelSearch'] | null; // HotelSearch
     languagesList: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
     roomCategoriesList: Array<NexusGenRootTypes['RoomCategory'] | null> | null; // [RoomCategory]
     roomModelById: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     roomModelData: NexusGenRootTypes['RoomModelData'] | null; // RoomModelData
     servicesList: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
+  }
+  RequestSearch: { // field return type
+    pageCount: number | null; // Int
+    requests: Array<NexusGenRootTypes['BookingRequest'] | null> | null; // [BookingRequest]
+    totalResults: number | null; // Int
   }
   Room: { // field return type
     bookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
@@ -655,7 +663,6 @@ export interface NexusGenFieldTypeNames {
   }
   GuestSearch: { // field return type name
     guests: 'Client'
-    pageCount: 'Int'
     totalResults: 'Int'
   }
   GuestsDistribution: { // field return type name
@@ -756,18 +763,23 @@ export interface NexusGenFieldTypeNames {
     bookingById: 'Booking'
     checkRoomAvailability: 'RoomConsultResponceResponce'
     facilitiesList: 'Facility'
-    hotelBookingsById: 'Booking'
+    hotelBookings: 'Booking'
     hotelById: 'Hotel'
     hotelCategoriesList: 'HotelCategory'
     hotelData: 'HotelData'
     hotelGuests: 'GuestSearch'
-    hotelRequestsById: 'BookingRequest'
+    hotelRequests: 'RequestSearch'
     hotelSearch: 'HotelSearch'
     languagesList: 'Language'
     roomCategoriesList: 'RoomCategory'
     roomModelById: 'RoomModel'
     roomModelData: 'RoomModelData'
     servicesList: 'Service'
+  }
+  RequestSearch: { // field return type name
+    pageCount: 'Int'
+    requests: 'BookingRequest'
+    totalResults: 'Int'
   }
   Room: { // field return type name
     bookings: 'Booking'
@@ -1021,7 +1033,7 @@ export interface NexusGenArgTypes {
       roomModelId: string; // ID!
       rooms: Array<NexusGenInputs['roomSpecifications'] | null>; // [roomSpecifications]!
     }
-    hotelBookingsById: { // args
+    hotelBookings: { // args
       hotelId: string; // ID!
       userId: string; // ID!
     }
@@ -1040,8 +1052,12 @@ export interface NexusGenArgTypes {
       take: number | null; // Int
       userId: string; // ID!
     }
-    hotelRequestsById: { // args
+    hotelRequests: { // args
       hotelId: string; // ID!
+      search?: NexusGenInputs['searchFilter'] | null; // searchFilter
+      skip?: number | null; // Int
+      sort?: string | null; // String
+      take: number | null; // Int
       userId: string; // ID!
     }
     hotelSearch: { // args

@@ -105,7 +105,11 @@ export default function KeepMountedModal({
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Box sx={styles.modal} component="form" onSubmit={handleSubmit}>
+        <Box
+          sx={styles.modal}
+          component="form"
+          onSubmit={(e) => handleSubmit(e)}
+        >
           <Typography
             id="transition-modal-title"
             variant="h6"

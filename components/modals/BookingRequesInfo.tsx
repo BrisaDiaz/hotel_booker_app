@@ -198,7 +198,7 @@ export default function RequestInfo({
         </Typography>
       </Box>
       <Typography sx={{ mx: 1, fontSize: '14px' }}>
-        {requestInfo.specifications}
+        {requestInfo.specifications || 'No special requests.'}
       </Typography>
     </div>
   );

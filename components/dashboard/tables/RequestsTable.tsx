@@ -23,6 +23,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { getComparator, stableSort } from './sort';
 import type { Order } from './sort';
+import TableFilter from './TableFilter';
 interface Data {
   id: number;
   checkInDate: string;
@@ -77,7 +78,7 @@ const headCells: readonly HeadCell[] = [
   {
     id: 'id',
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     label: 'ID',
     sortable: false,
   },
@@ -156,7 +157,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={'center'}
+            align={'left'}
             sx={{ minWidth: 'max-content' }}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
@@ -180,6 +181,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             ) : (
               <Typography
                 variant="body2"
+                key={headCell.id}
                 sx={{ fontWeight: 500, minWidth: 'max-content' }}
               >
                 {headCell.label}
@@ -194,21 +196,29 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number | null;
-  handleAcctions: Function;
+  handleActions: Function;
 
   resetSelection: Function;
 }
 ///// TOGGLE ON CHECK
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const { numSelected, handleAcctions } = props;
+  const { numSelected, handleActions } = props;
+  const [isSearching, setIsSearching] = React.useState(false);
   const handleActionClick = (actionName: string) => {
-    handleAcctions(actionName, numSelected);
+    handleActions(actionName, numSelected);
+  };
+  const handleSearch = (field: string, value: string) => {
+    handleActions('search', [field, value]);
+  };
+  const toggleSearchMode = () => {
+    setIsSearching(!isSearching);
   };
   return (
     <Toolbar
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
+        position: 'relative',
         ...(numSelected && {
           bgcolor: (theme) =>
             alpha(
@@ -253,7 +263,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
               onClick={() => handleActionClick('show/confirm')}
             >
               <IconButton>
-                <VisibilityOutlinedIcon color="primary" fontSize="small" />
+                <VisibilityOutlinedIcon />
               </IconButton>
             </Tooltip>
             <Tooltip
@@ -261,16 +271,59 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
               onClick={() => handleActionClick('decline')}
             >
               <IconButton>
-                <ClearIcon color="primary" fontSize="small" />
+                <ClearIcon />
               </IconButton>
             </Tooltip>
           </Box>
         ) : (
-          <Tooltip title="Filter list">
-            <IconButton>
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
+          <>
+            <Tooltip title="Filter list" onClick={toggleSearchMode}>
+              <IconButton>
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+            <Box
+              sx={{
+                position: 'fixed',
+                zIndex: 1500,
+                top: '120px',
+                right: { xs: '10px', sm: '30px' },
+              }}
+            >
+              {isSearching && (
+                <TableFilter
+                  isModalOpen={isSearching}
+                  onSearch={handleSearch}
+                  closeModal={toggleSearchMode}
+                  searchFields={[
+                    { label: 'ID', value: 'id', type: 'number' },
+                    {
+                      label: 'Client Name',
+                      value: 'clientName',
+                      type: 'number',
+                    },
+                    {
+                      label: 'Client Email',
+                      value: 'clientEmail',
+                      type: 'number',
+                    },
+                    { label: 'Room Type', value: 'roomModel', type: 'text' },
+                    { label: 'Send In', value: 'createdAt', type: 'date' },
+                    {
+                      label: 'Check In Date',
+                      value: 'checkInDate',
+                      type: 'date',
+                    },
+                    {
+                      label: 'Check Out Date',
+                      value: 'checkOutDate',
+                      type: 'date',
+                    },
+                  ]}
+                />
+              )}
+            </Box>
+          </>
         )}
       </Box>
     </Toolbar>
@@ -279,10 +332,14 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 
 export default function EnhancedTable({
   data,
-  handleAcctions,
+  handleActions,
+  totalResults,
+  currentPage,
 }: {
   data?: Array<BookingRequest>;
-  handleAcctions: Function;
+  handleActions: Function;
+  totalResults: number;
+  currentPage: number;
 }) {
   const rows: Data[] = data?.length
     ? data.map((record) => createData(record))
@@ -290,7 +347,6 @@ export default function EnhancedTable({
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('sentIn');
   const [selected, setSelected] = React.useState<number | null>(null);
-  const [page, setPage] = React.useState(0);
 
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -311,43 +367,41 @@ export default function EnhancedTable({
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+    handleActions('pageChange', newPage);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    handleActions('pageChange', 0);
   };
 
   const isSelected = (id: number) => selected === id;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    currentPage > 0
+      ? Math.max(0, (1 + currentPage) * rowsPerPage - rows.length)
+      : 0;
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+      <Paper sx={{ width: '100%' }}>
         <EnhancedTableToolbar
           numSelected={selected}
-          handleAcctions={handleAcctions}
+          handleActions={handleActions}
           resetSelection={() => setSelected(null)}
         />
-        <TableContainer>
-          <Table
-            aria-labelledby="tableTitle"
-            size={'medium'}
-            sx={{ minWidth: '70vh' }}
-          >
+        <TableContainer sx={{ minHeight: '70vh' }}>
+          <Table aria-labelledby="tableTitle" size={'medium'}>
             <EnhancedTableHead
               numSelected={selected}
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
             />
-            <TableBody sx={{ minWidth: '70vh' }}>
+            <TableBody>
               {!Boolean(rows.length) ? (
                 <TableRow>
                   <TableCell
@@ -378,7 +432,10 @@ export default function EnhancedTable({
                 </TableRow>
               ) : (
                 stableSort(rows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .slice(
+                    currentPage * rowsPerPage,
+                    currentPage * rowsPerPage + rowsPerPage
+                  )
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
@@ -401,7 +458,12 @@ export default function EnhancedTable({
                           },
                         }}
                       >
-                        <TableCell padding="checkbox">
+                        <TableCell
+                          padding="checkbox"
+                          sx={{
+                            borderRight: 'none',
+                          }}
+                        >
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
@@ -415,11 +477,12 @@ export default function EnhancedTable({
                           id={labelId}
                           scope="row"
                           padding="none"
+                          align="center"
                         >
                           {row.id}
                         </TableCell>
 
-                        <TableCell align="center" sx={{ minWidth: 120 }}>
+                        <TableCell align="left" sx={{ minWidth: 120 }}>
                           {row.sentIn}
                         </TableCell>
                         <TableCell
@@ -442,7 +505,7 @@ export default function EnhancedTable({
                           {row.checkOutDate}
                         </TableCell>
                         <TableCell
-                          align="center"
+                          align="left"
                           sx={{ minWidth: 150, textTransform: 'capitalize' }}
                         >
                           {row.client.name}
@@ -466,9 +529,9 @@ export default function EnhancedTable({
         <TablePagination
           rowsPerPageOptions={[]}
           component="div"
-          count={rows.length}
+          count={totalResults}
           rowsPerPage={rowsPerPage}
-          page={page}
+          page={currentPage}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />

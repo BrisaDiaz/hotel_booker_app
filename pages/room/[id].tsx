@@ -23,6 +23,7 @@ import DinamicFieldIcone from '@/components/DinamicFieldIcone';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import StraightenIcon from '@mui/icons-material/Straighten';
 import AppBar from '@/components/layouts/AppBar';
+import SnackBar from '@/components/SnackBar';
 import { RoomModel, Item } from '@/interfaces/index';
 
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -42,7 +43,7 @@ const styles = {
   },
   listItem: {
     display: 'flex',
-    gap: '10px',
+    gap: 1,
     textTransform: 'capitalize',
     alignItems: 'center',
     '& p': {
@@ -51,26 +52,24 @@ const styles = {
   },
   featuresItems: {
     display: 'flex',
-    gap: '10px',
+    gap: 1,
     textTransform: 'capitalize',
     alignItems: 'center',
     width: { xs: '250px', sm: '300px' },
   },
 };
-const RoomPage: WithLayoutPage = ({
-  room,
-  roomModelId,
-}: {
+type PageProps = {
   room: RoomModel;
   roomModelId: number;
-}) => {
+};
+
+const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
   const theme = useTheme();
 
-  const [requestData, setRequestData] = React.useState<{
-    isAvailable: boolean;
-    message: string;
-  }>({ isAvailable: false, message: '' });
-
+  const [notification, setNotification] = React.useState({
+    content: '',
+    type: 'info',
+  });
   const [makeRoomConsult, consultResponce] = useLazyQuery(MAKE_ROOM_CONSULT, {
     fetchPolicy: 'network-only',
   });
@@ -82,7 +81,7 @@ const RoomPage: WithLayoutPage = ({
     }
   );
 
-  const [loading, setLoading] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
   type Room = {
     childrens: number;
     adults: number;
@@ -93,35 +92,42 @@ const RoomPage: WithLayoutPage = ({
       return setLoading(true);
     }
     return setLoading(false);
-  }, [consultResponce.loading, boolkingResponce.loading]);
+  }, [consultResponce, boolkingResponce]);
 
   React.useEffect(() => {
     if (consultResponce.data) {
-      const { isAvailable, message } = consultResponce.data.responce;
+      const { isAvailable } = consultResponce.data.responce;
       if (isAvailable) {
-        return setRequestData({
-          isAvailable: true,
-          message:
+        setNotification({
+          ...notification,
+          content:
             'There is availability, make your reservation before the quotas run out.',
         });
+        return clearNotifications();
       }
-      return setRequestData({
-        isAvailable: false,
-        message,
+      setNotification({
+        ...notification,
+        content: '',
       });
+      return clearNotifications();
     }
-  }, [consultResponce.loading]);
+  }, [consultResponce]);
 
   React.useEffect(() => {
     if (boolkingResponce.data) {
-      const { isAvailable, message } = boolkingResponce.data.responce;
-      return setRequestData({
-        isAvailable,
-        message,
+      const { content } = boolkingResponce.data.responce;
+      setNotification({
+        ...notification,
+        content,
       });
+      return clearNotifications();
     }
-  }, [boolkingResponce.loading]);
-
+  }, [boolkingResponce]);
+  const clearNotifications = () => {
+    setTimeout(() => {
+      setNotification({ ...notification, content: '' });
+    }, 6000);
+  };
   const handleConsutlSubmit = async (data: {
     checkInDate: string;
     checkOutDate: string;
@@ -235,7 +241,7 @@ const RoomPage: WithLayoutPage = ({
           component="h4"
           variant="h5"
           sx={{
-            p: '10px',
+            p: 1,
             pb: 0,
             fontWeight: 200,
             maxWidth: 'fit-content',
@@ -254,7 +260,6 @@ const RoomPage: WithLayoutPage = ({
         </Typography>
         <Typography
           variant="subtitle1"
-          color="primary"
           sx={{
             p: '0 10px ',
             fontWeight: 200,
@@ -265,7 +270,11 @@ const RoomPage: WithLayoutPage = ({
           }}
         >
           Taxes and Charges{' '}
-          <Typography component="span" sx={{ fontWeight: 200, ml: 0.5, mb: 0 }}>
+          <Typography
+            color="primary"
+            component="span"
+            sx={{ fontWeight: 200, ml: 0.5, mb: 0 }}
+          >
             USD ${room.taxesAndCharges}
           </Typography>
         </Typography>
@@ -276,7 +285,7 @@ const RoomPage: WithLayoutPage = ({
             gap: 3,
             flexWrap: 'wrap',
             alignItems: 'center',
-            mx: '10px',
+            mx: 1,
             mt: { sm: '-20px' },
             p: 0,
           }}
@@ -300,26 +309,11 @@ const RoomPage: WithLayoutPage = ({
         >
           {room.description}
         </Typography>
-        {Boolean(requestData.message) && (
-          <Typography
-            color="secondary.main"
-            sx={{
-              textAlign: 'center',
-              m: '8px',
-              maxWidth: 'max-content',
-              py: 2,
-              px: 1,
-              borderRadius: 2,
-              backgroundColor: '#e9e9e9',
-            }}
-          >
-            {requestData.message}
-          </Typography>
-        )}
+
         <Box sx={{ display: 'flex' }}>
           <ConsultModal onSubmit={handleConsutlSubmit}>
             <Button
-              sx={{ padding: '10px 20px', m: '10px' }}
+              sx={{ padding: '10px 20px', m: 1 }}
               color="secondary"
               variant="outlined"
             >
@@ -353,7 +347,7 @@ const RoomPage: WithLayoutPage = ({
           <Box
             sx={{
               display: 'flex',
-              gap: '10px',
+              gap: 1,
 
               alignItems: 'center',
               my: 3,
@@ -388,9 +382,14 @@ const RoomPage: WithLayoutPage = ({
               sx={{
                 width: '300px',
                 display: 'flex',
+                alignItems: 'center',
               }}
             >
-              <StraightenIcon color="secondary" sx={{ mr: 2 }} />
+              <StraightenIcon
+                color="secondary"
+                sx={{ mr: 1 }}
+                fontSize="small"
+              />
               <Typography
                 sx={{
                   width: 'max-content',
@@ -407,9 +406,12 @@ const RoomPage: WithLayoutPage = ({
               sx={{
                 width: '300px',
                 display: 'flex',
+                alignItems: 'center',
               }}
             >
-              {room.beds && room.beds.length && RoomBedsUI(room.beds, 'medium')}
+              {room.beds && room.beds.length && (
+                <RoomBedsUI beds={room.beds} size="medium" />
+              )}
             </Box>
             <Box
               component="li"
@@ -419,10 +421,13 @@ const RoomPage: WithLayoutPage = ({
               }}
             >
               {new Array(room.maximunGuests).fill(1).map((_, index) => (
-                <PersonOutlineIcon color="secondary" key={index} />
+                <PersonOutlineIcon
+                  color="secondary"
+                  key={index}
+                  fontSize="small"
+                />
               ))}
-              <Typography sx={{ mx: 2 }}>
-                {room.maximunGuests}
+              <Typography sx={{ mx: 1 }}>
                 {room.maximunGuests > 1 ? ' people ' : ' persone '} max
               </Typography>
             </Box>
@@ -435,7 +440,7 @@ const RoomPage: WithLayoutPage = ({
             <Box
               sx={{
                 display: 'flex',
-                gap: '10px',
+                gap: 1,
                 alignItems: 'center',
                 my: 3,
               }}
@@ -468,7 +473,7 @@ const RoomPage: WithLayoutPage = ({
             <Box
               sx={{
                 display: 'flex',
-                gap: '10px',
+                gap: 1,
                 alignItems: 'center',
                 my: 3,
               }}
@@ -500,9 +505,14 @@ const RoomPage: WithLayoutPage = ({
             )}
           </Box>
         </Box>
-
-        <Backdrop loading={loading} />
       </Box>
+      {notification?.content && (
+        <SnackBar
+          severity={notification?.type}
+          message={notification?.content}
+        />
+      )}
+      <Backdrop loading={isLoading} />
     </div>
   );
 };
@@ -513,7 +523,7 @@ RoomPage.getLayout = (page: React.ReactNode) => (
   </>
 );
 export default RoomPage;
-export const getServerSideProps: GetServerSideProps = async ({
+export const getServerSideProps = async ({
   query,
   res,
 }: {

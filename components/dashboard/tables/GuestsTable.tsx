@@ -131,6 +131,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
               </TableSortLabel>
             ) : (
               <Typography
+                key={headCell.id}
                 variant="body2"
                 sx={{ fontWeight: 500, minWidth: 'max-content' }}
               >
@@ -146,14 +147,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number | null;
-  handleAcctions: Function;
+  handleActions: Function;
 }
 ///// TOGGLE ON CHECK
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const [isSearching, setIsSearching] = React.useState(false);
-  const { numSelected, handleAcctions } = props;
+  const { numSelected, handleActions } = props;
   const handleSearch = (field: string, value: string) => {
-    handleAcctions('search', [field, value]);
+    handleActions('search', [field, value]);
   };
   const toggleSearchMode = () => {
     setIsSearching(!isSearching);
@@ -196,28 +197,22 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
             <FilterListIcon />
           </IconButton>
         </Tooltip>
-        <Box
-          sx={{
-            position: 'absolute',
-            zIndex: 100,
-            top: '30px',
-            right: { xs: 0, sm: '50px' },
-          }}
-        >
-          {isSearching && (
-            <TableFilter
-              onSearch={handleSearch}
-              searchFields={[
-                { label: 'ID', value: 'id' },
-                { label: 'Email', value: 'email' },
-                { label: 'Last Name', value: 'lastName' },
-                { label: 'First Name', value: 'firstName' },
-                { label: 'Mobile', value: 'mobileNumber' },
-                { label: 'Landline', value: 'landlineNumber' },
-              ]}
-            />
-          )}
-        </Box>
+
+        {isSearching && (
+          <TableFilter
+            closeModal={toggleSearchMode}
+            onSearch={handleSearch}
+            isModalOpen={isSearching}
+            searchFields={[
+              { label: 'ID', value: 'id', type: 'number' },
+              { label: 'Email', value: 'email', type: 'text' },
+              { label: 'Last Name', value: 'lastName', type: 'text' },
+              { label: 'First Name', value: 'firstName', type: 'text' },
+              { label: 'Mobile', value: 'mobileNumber', type: 'text' },
+              { label: 'Landline', value: 'landlineNumber', type: 'text' },
+            ]}
+          />
+        )}
       </Box>
     </Toolbar>
   );
@@ -225,12 +220,12 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 
 export default function EnhancedTable({
   data,
-  handleAcctions,
+  handleActions,
   totalResults,
   currentPage,
 }: {
   data?: Array<HotelGuest>;
-  handleAcctions: Function;
+  handleActions: Function;
   totalResults: number;
   currentPage: number;
 }) {
@@ -257,7 +252,7 @@ export default function EnhancedTable({
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    handleAcctions('pageChange', newPage);
+    handleActions('pageChange', newPage);
   };
 
   const isSelected = (id: number) => selected === id;
@@ -270,24 +265,20 @@ export default function EnhancedTable({
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+      <Paper sx={{ width: '100%' }}>
         <EnhancedTableToolbar
           numSelected={selected}
-          handleAcctions={handleAcctions}
+          handleActions={handleActions}
         />
-        <TableContainer>
-          <Table
-            aria-labelledby="tableTitle"
-            size={'medium'}
-            sx={{ minWidth: '70vh' }}
-          >
+        <TableContainer sx={{ minHeight: '70vh' }}>
+          <Table aria-labelledby="tableTitle" size={'medium'}>
             <EnhancedTableHead
               numSelected={selected}
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
             />
-            <TableBody sx={{ minWidth: '70vh' }}>
+            <TableBody>
               {!Boolean(rows.length) ? (
                 <TableRow>
                   <TableCell

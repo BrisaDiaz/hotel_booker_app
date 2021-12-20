@@ -35,8 +35,14 @@ const getBedsInterface = (
   }));
   return bedsInterface;
 };
-export default function RoomBedsUI(roomBeds: withQuantityItem[], size: string) {
-  const beds = getBedsInterface(roomBeds, size);
+export default function RoomBedsUI({
+  beds,
+  size,
+}: {
+  beds: withQuantityItem[];
+  size: string;
+}) {
+  const bedsWidthIcon: withIconeBed[] = getBedsInterface(beds, size);
   return (
     <Box sx={{ display: 'flex', columnGap: '8px' }}>
       <Box
@@ -46,14 +52,15 @@ export default function RoomBedsUI(roomBeds: withQuantityItem[], size: string) {
           width: '100%',
         }}
       >
-        {beds.map((bed, index) => (
+        {bedsWidthIcon.map((bed, index) => (
           <div key={bed.label}>
             <Box
               sx={{
                 display: 'flex',
                 alignItems: 'center',
                 flexWrap: 'wrap',
-                columnGap: `${size === 'small' ? '3px' : '15px'}`,
+                columnGap: `${size === 'small' ? '3px' : '6px'}`,
+                mr: 0.5,
               }}
             >
               {bed.Icone}
@@ -64,8 +71,10 @@ export default function RoomBedsUI(roomBeds: withQuantityItem[], size: string) {
                 }}
               >
                 {bed.label}
-                {beds.length > 1 && index < beds.length - 1 && <b>{'  '}+</b>}
               </Typography>
+              {index < bedsWidthIcon.length - 1 && (
+                <Typography sx={{ ml: 0.5 }}>+</Typography>
+              )}
             </Box>
           </div>
         ))}

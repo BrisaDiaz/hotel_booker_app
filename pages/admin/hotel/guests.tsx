@@ -13,7 +13,6 @@ import GuestsTable from '@/components/dashboard/tables/GuestsTable';
 type PagePromps = {
   guests: HotelGuest[];
   totalResults: number;
-  pageCount: number;
   userId: number;
   hotelId: number;
 };
@@ -27,6 +26,8 @@ const Guest: WithLayoutPage<PagePromps> = (props) => {
 
   const [page, setPage] = React.useState<number>(0);
   const [query, setQuery] = React.useState<{
+    userId: number;
+    hotelId: number;
     take: number;
     skip: number;
     search?: {
@@ -46,6 +47,8 @@ const Guest: WithLayoutPage<PagePromps> = (props) => {
       if (!value) {
         setPage(0);
         return setQuery({
+          userId: props.userId,
+          hotelId: props.hotelId,
           take: resultsPerPage,
           skip: 0,
         });
@@ -70,18 +73,17 @@ const Guest: WithLayoutPage<PagePromps> = (props) => {
       });
     }
   };
-  const [searchGuest, { data, loading }] = useLazyQuery(GET_HOTEL_GUESTS);
+  const [searchGuest, { data, loading, error }] =
+    useLazyQuery(GET_HOTEL_GUESTS);
   const handleGuestsSearch = async () => {
     try {
       await searchGuest({
         variables: {
-          userId: props.userId,
-          hotelId: props.hotelId,
           ...query,
         },
       });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   };
   React.useEffect(() => {
@@ -95,6 +97,7 @@ const Guest: WithLayoutPage<PagePromps> = (props) => {
       setTotalResults(data.results.totalResults);
     }
   }, [data]);
+
   return (
     <div>
       <Head>
@@ -106,7 +109,7 @@ const Guest: WithLayoutPage<PagePromps> = (props) => {
       <Box sx={{ maxWidth: 1200 }} component="main">
         <GuestsTable
           data={guests}
-          handleAcctions={handleActions}
+          handleActions={handleActions}
           totalResults={totalResults}
           currentPage={page}
         />
@@ -147,7 +150,6 @@ export const getServerSideProps = async ({ req, res, query }: PageContext) => {
           userId: user.id,
           guests: data.results.guests,
           totalResults: data.results.totalResults,
-          pageCount: data.results.pageCount,
         },
       };
     }

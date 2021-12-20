@@ -29,11 +29,13 @@ export default function RoomCard({
   return (
     <Box component={Link} href={`/room/${room.id}`} passHref>
       <Card
+        elevation="none"
         sx={{
           minWidth: '310px',
           p: { xs: '5px', sm: 0 },
           pb: '10px',
           borderRadius: 2,
+          bg: 'transparent',
         }}
       >
         <CardActionArea
@@ -46,7 +48,7 @@ export default function RoomCard({
           <Box>
             <CardMedia
               component="img"
-              height="160px"
+              height="180px"
               sx={{
                 borderRadius: '8px',
                 width: { sm: '95%' },
@@ -92,7 +94,8 @@ export default function RoomCard({
                   {room.mts2} mts<sup>2</sup>
                 </Typography>
               </Box>
-              {RoomBedsUI(room.beds, 'small')}
+              <RoomBedsUI beds={room.beds} size="small" />
+
               <Box
                 sx={{
                   ml: 'auto',

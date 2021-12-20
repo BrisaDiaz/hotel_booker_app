@@ -35,7 +35,7 @@ const styles = {
   },
   listItem: {
     display: 'flex',
-    gap: '10px',
+    gap: 1,
     minWidth: 'min-content',
     textTransform: 'capitalize',
     alignItems: 'center',
@@ -45,7 +45,7 @@ const styles = {
   },
   contactInfo: {
     pt: { xs: 2, sm: 1 },
-    px: '10px',
+    px: 1,
     pl: { sm: 0 },
     pb: { sm: 0 },
     display: 'flex',
@@ -107,13 +107,13 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
           </Typography>
           <Box component="address" sx={styles.contactInfo}>
             <Box sx={styles.listItem}>
-              <MyLocationIcon color="primary" />
+              <MyLocationIcon color="primary" fontSize="small" />
               <Typography color="primary" sx={{ fontSize: '14px' }}>
                 {hotel.address.holeAddress}
               </Typography>
             </Box>
             <Box sx={styles.listItem}>
-              <LocalPhoneIcon color="primary" />
+              <LocalPhoneIcon color="primary" fontSize="small" />
               <Typography
                 sx={{ fontSize: '14px' }}
                 color="primary"
@@ -125,7 +125,7 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
             </Box>
             {hotel?.email && (
               <Box sx={styles.listItem}>
-                <EmailIcon color="primary" />
+                <EmailIcon color="primary" fontSize="small" />
                 <Typography
                   sx={{ fontSize: '14px' }}
                   color="primary"
@@ -138,7 +138,7 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
             )}
             {hotel?.website && (
               <Box sx={styles.listItem}>
-                <LanguageIcon color="primary" />
+                <LanguageIcon color="primary" fontSize="small" />
                 <Typography
                   sx={{ fontSize: '14px', textTransform: 'lowercase' }}
                   color="primary"
@@ -158,7 +158,7 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
             component="h4"
             variant="h5"
             sx={{
-              p: '10px',
+              p: 1,
               pb: 0,
               fontWeight: 200,
               maxWidth: 'fit-content',
@@ -177,7 +177,6 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
 
           <Typography
             variant="subtitle1"
-            color="primary"
             sx={{
               p: '0 10px ',
               fontWeight: 200,
@@ -188,7 +187,11 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
             }}
           >
             Taxes and Charges{' '}
-            <Typography component="span" sx={{ fontWeight: 200, ml: 0.5 }}>
+            <Typography
+              component="span"
+              sx={{ fontWeight: 200, ml: 0.5 }}
+              color="primary"
+            >
               USD ${hotel.taxesAndCharges}
             </Typography>
           </Typography>
@@ -203,7 +206,7 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
             }}
           >
             <Box sx={styles.listItem}>
-              <AlarmIcon color="primary" />
+              <AlarmIcon fontSize="small" color="primary" />
               <Typography>
                 <Typography component="span" color="primary">
                   Check In Hour:
@@ -212,7 +215,7 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
               </Typography>
             </Box>
             <Box sx={styles.listItem}>
-              <AlarmIcon color="primary" />
+              <AlarmIcon fontSize="small" color="primary" />
               <Typography>
                 <Typography component="span" color="primary">
                   Check Out Hour:
@@ -277,7 +280,7 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
                         <Box
                           sx={{
                             display: 'flex',
-                            gap: '10px',
+                            gap: 1,
                             alignItems: 'center',
                             marginBottom: '15px',
                           }}

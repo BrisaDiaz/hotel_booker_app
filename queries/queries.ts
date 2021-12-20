@@ -257,40 +257,57 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
     }
   }
 `;
-export const GET_ROOM_MODEL_BOOKING_REQUESTS = gql`
-  query hotelRequestsById($userId: ID!, $hotelId: ID!) {
-    requests: hotelRequestsById(userId: $userId, hotelId: $hotelId) {
-      id
-      checkInDate
-      checkOutDate
-      specifications
-      createdAt
-      nights
-      availableRooms {
+export const GET_HOTEL_BOOKING_REQUESTS = gql`
+  query hotelRequests(
+    $userId: ID!
+    $hotelId: ID!
+    $take: Int
+    $skip: Int
+    $search: searchFilter
+  ) {
+    results: hotelRequests(
+      userId: $userId
+      hotelId: $hotelId
+      take: $take
+      skip: $skip
+      search: $search
+    ) {
+      requests {
         id
-        number
+        checkInDate
+        checkOutDate
+        specifications
+        createdAt
+        nights
+        availableRooms {
+          id
+          number
+        }
+        client {
+          id
+          firstName
+          lastName
+          mobileNumber
+          landlineNumber
+          email
+        }
+        guestsDistribution {
+          children
+          adults
+        }
+        roomModel {
+          id
+          name
+          lowestPrice
+          taxesAndCharges
+        }
       }
-      client {
-        id
-        firstName
-        lastName
-        mobileNumber
-        landlineNumber
-        email
-      }
-      guestsDistribution {
-        children
-        adults
-      }
-      roomModel {
-        id
-        name
-        lowestPrice
-        taxesAndCharges
-      }
+      totalResults
+      pageCount
     }
   }
 `;
+
 export const GET_HOTEL_GUESTS = gql`
   query hotelGuests(
     $hotelId: ID!
@@ -323,7 +340,6 @@ export const GET_HOTEL_GUESTS = gql`
         }
       }
       totalResults
-      pageCount
     }
   }
 `;

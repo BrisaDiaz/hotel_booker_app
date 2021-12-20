@@ -1,6 +1,6 @@
 import React from 'react';
 import { ADD_ROOMS_TO_MODEL, DELETE_ROOMS_OF_MODEL } from '@/queries/index';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { NextRouter, useRouter } from 'next/router';
 
 export interface RoomType {
@@ -130,7 +130,7 @@ export default function useHotelDashboard({
   });
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const [resultMessage, setResultMessage] = React.useState<{
+  const [notification, setNotification] = React.useState<{
     content: string;
     type: 'error' | 'success';
   }>({ content: '', type: 'success' });
@@ -200,14 +200,14 @@ export default function useHotelDashboard({
             getAlreadyUploadRoomNumbers(actualizedRoomTypes)
           );
           handleCloseModal('addRoom');
-          setResultMessage({
+          setNotification({
             content: 'Rooms where added sucessfully',
             type: 'success',
           });
         }
       },
       onError: (error) => {
-        setResultMessage({
+        setNotification({
           content: `Rooms could not be added.\n Error:${error.message}`,
           type: 'error',
         });
@@ -231,14 +231,14 @@ export default function useHotelDashboard({
         );
         handleCloseModal('deleteRooms');
         setToDeleteRoomsIds([]);
-        setResultMessage({
+        setNotification({
           content: 'Rooms where deleted sucessfully',
           type: 'success',
         });
       },
       onError: (error) => {
         handleCloseModal('deleteRooms');
-        setResultMessage({
+        setNotification({
           content: `Rooms could not be deleted.\n Error:${error.message}`,
           type: 'error',
         });
@@ -253,12 +253,12 @@ export default function useHotelDashboard({
   }, [addRoomResults.loading, deleteRoomsResults.loading]);
 
   React.useEffect(() => {
-    if (resultMessage.content) {
+    if (notification.content) {
       setTimeout(() => {
-        setResultMessage({ content: '', type: 'success' });
+        setNotification({ content: '', type: 'success' });
       }, 5000);
     }
-  }, [resultMessage.content]);
+  }, [notification.content]);
 
   const onAddNewRoom = async (roomNumbers: number[]) => {
     if (!roomNumbers.length) return null;
@@ -295,7 +295,7 @@ export default function useHotelDashboard({
     handleActions,
     handleCloseModal,
     roomTypes,
-    resultMessage,
+    notification,
     loading,
     roomNumbersUploaded,
     modalsOpenState,

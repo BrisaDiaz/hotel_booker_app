@@ -31,12 +31,6 @@ import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    headerLabel: {
-      fontWeight: 600,
-      paddingRight: theme.spacing(1),
-      width: 'max-content',
-      opacity: 0.8,
-    },
     bodyCell: {
       borderRight: '1px solid rgba(0,0,0,0.1)',
     },
@@ -125,6 +119,7 @@ export function ActionsMenu({
     </div>
   );
 }
+
 const ActionsButton = () => {
   return (
     <Tooltip disableFocusListener title="Actions">
@@ -201,6 +196,32 @@ function RoomsTable({
   ) => {
     return rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
   };
+  const Headers = [
+    {
+      label: 'ID',
+      disablePadding: false,
+    },
+    {
+      label: 'Room Type',
+      disablePadding: false,
+    },
+    {
+      label: 'Price',
+      disablePadding: false,
+    },
+    {
+      label: 'Taxes',
+      disablePadding: false,
+    },
+    {
+      label: 'Capacity',
+      disablePadding: false,
+    },
+    {
+      label: 'Rooms',
+      disablePadding: false,
+    },
+  ];
   const [rows, setRows] = React.useState(generateRows(roomTypes));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
@@ -232,32 +253,26 @@ function RoomsTable({
     <TableContainer
       component={Paper}
       elevation={4}
-      sx={{ maxWidth: '100%', overflowX: 'auto' }}
+      sx={{ maxWidth: '100%', overflowX: 'auto', minHeight: '70vh', mb: 0 }}
     >
       <Table sx={{ minWidth: 650 }} aria-label="simple table" size="medium">
         <TableHead sx={{ py: 2 }}>
           <TableRow>
             <TableCell align="right"></TableCell>
-            <TableCell>
-              <Typography className={classes.headerLabel}>ID</Typography>
-            </TableCell>
-            <TableCell>
-              <Typography className={classes.headerLabel}>Room Type</Typography>
-            </TableCell>
-
-            <TableCell align="right">
-              <Typography className={classes.headerLabel}>Price</Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography className={classes.headerLabel}>Taxes</Typography>
-            </TableCell>
-
-            <TableCell align="right">
-              <Typography className={classes.headerLabel}>Capacity</Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography className={classes.headerLabel}>Rooms</Typography>
-            </TableCell>
+            {Headers.map((header) => (
+              <TableCell key={header.label}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: 500,
+                    minWidth: 'max-content',
+                    pr: 1,
+                  }}
+                >
+                  {header.label}
+                </Typography>
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>

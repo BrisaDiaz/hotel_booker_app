@@ -126,7 +126,6 @@ type Features {
 
 type GuestSearch {
   guests: [Client]
-  pageCount: Int
   totalResults: Int
 }
 
@@ -247,18 +246,24 @@ type Query {
   bookingById(bookingId: ID!, userId: ID!): Booking
   checkRoomAvailability(checkInDate: String!, checkOutDate: String!, roomModelId: ID!, rooms: [roomSpecifications]!): RoomConsultResponceResponce
   facilitiesList: [Facility]
-  hotelBookingsById(hotelId: ID!, userId: ID!): [Booking]
+  hotelBookings(hotelId: ID!, userId: ID!): [Booking]
   hotelById(hotelId: ID!): Hotel
   hotelCategoriesList: [HotelCategory]
   hotelData(hotelId: ID!, userId: ID!): HotelData
   hotelGuests(hotelId: ID!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 6, userId: ID!): GuestSearch
-  hotelRequestsById(hotelId: ID!, userId: ID!): [BookingRequest]
+  hotelRequests(hotelId: ID!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 8, userId: ID!): RequestSearch
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
   languagesList: [Language]
   roomCategoriesList: [RoomCategory]
   roomModelById(roomModelId: ID!): RoomModel
   roomModelData(roomModelId: ID!, userId: ID!): RoomModelData
   servicesList: [Service]
+}
+
+type RequestSearch {
+  pageCount: Int
+  requests: [BookingRequest]
+  totalResults: Int
 }
 
 enum Role {

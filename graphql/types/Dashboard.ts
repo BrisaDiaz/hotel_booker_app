@@ -16,6 +16,7 @@ import {
   checkRoomsAvailable,
   checkIsValidRoomRequest,
   clientQueryConstructor,
+  bookingRequestQueryConstructor,
 } from '../utils/index';
 import { roomSpecifications, Client } from './Booking';
 import { searchFilter } from './Commun';
@@ -33,6 +34,15 @@ export const GuestSearch = objectType({
   definition(t) {
     t.list.field('guests', {
       type: 'Client',
+    });
+    t.int('totalResults');
+  },
+});
+export const RequestSearch = objectType({
+  name: 'RequestSearch',
+  definition(t) {
+    t.list.field('requests', {
+      type: 'BookingRequest',
     });
     t.int('totalResults');
     t.int('pageCount');
@@ -267,36 +277,55 @@ export const Query = extendType({
         return getBooking(parseInt(args.userId), parseInt(args.bookingId));
       },
     });
-    t.field('hotelRequestsById', {
-      type: list('BookingRequest'),
+    t.field('hotelRequests', {
+      type: RequestSearch,
       args: {
         hotelId: nonNull(idArg()),
         userId: nonNull(idArg()),
+        sort: stringArg(),
+        search: searchFilter,
+        take: intArg({ default: 8 }),
+        skip: intArg({ default: 0 }),
       },
       resolve(root, args, ctx) {
-        const getRequests = async (userId: number, hotelId: number) => {
+        const getRequests = async (userId: number, hotelId: number, args) => {
           await verifyIsHotelAdmin(userId, hotelId);
+          const query = bookingRequestQueryConstructor(hotelId, args);
 
-          const requests = await prisma.bookingRequest.findMany({
-            orderBy: {
-              createdAt: 'desc',
-            },
-            where: {
-              hotelId: hotelId,
-              status: 'PENDING',
-            },
-            include: {
-              roomModel: true,
-              guestsDistribution: true,
-            },
+          if (query?.where?.id) {
+            const request = await prisma.bookingRequest.findUnique(query);
+            if (
+              request &&
+              request.status === 'PENDING' &&
+              request.hotelId === hotelId
+            ) {
+              return {
+                requests: [request],
+                totalResults: request ? 1 : 0,
+                pageCount: 1,
+              };
+            }
+            return {
+              requests: [],
+              totalResults: 0,
+              pageCount: 1,
+            };
+          }
+
+          const totalResults = await prisma.bookingRequest.count({
+            where: query.where,
           });
 
-          return requests;
+          const requests = await prisma.bookingRequest.findMany(query);
+
+          const pageCount: number = Math.floor(totalResults / query.take);
+          return { requests, totalResults, pageCount };
         };
-        return getRequests(parseInt(args.userId), parseInt(args.hotelId));
+
+        return getRequests(parseInt(args.userId), parseInt(args.hotelId), args);
       },
     });
-    t.field('hotelBookingsById', {
+    t.field('hotelBookings', {
       type: list('Booking'),
 
       args: {
@@ -337,17 +366,17 @@ export const Query = extendType({
           args: any
         ) => {
           await verifyIsHotelAdmin(userId, hotelId);
-
           const query = clientQueryConstructor(hotelId, args);
+
           const totalResults = await prisma.client.count({
-            where: query.where,
+            where: query?.where,
           });
 
           const guests = await prisma.client.findMany(query);
 
-          const pageCount: number = Math.floor(totalResults / query.take);
-          return { guests, totalResults, pageCount };
+          return { guests, totalResults };
         };
+
         return getGuests(parseInt(args.userId), parseInt(args.hotelId), args);
       },
     });

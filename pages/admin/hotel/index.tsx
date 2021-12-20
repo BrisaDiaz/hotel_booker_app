@@ -71,7 +71,7 @@ const HotelAdmin: WithLayoutPage = ({
     handleActions,
     handleCloseModal,
     roomTypes,
-    resultMessage,
+    notification,
     loading,
     roomNumbersUploaded,
     modalsOpenState,
@@ -117,10 +117,10 @@ const HotelAdmin: WithLayoutPage = ({
       />
       <RoomTypesTable roomTypes={roomTypes} handleActions={handleActions} />
       <Backdrop loading={loading} />
-      {resultMessage.content && (
+      {notification.content && (
         <SnackBar
-          severity={resultMessage.type}
-          message={resultMessage.content || 'Oparation succesfully complited'}
+          severity={notification.type}
+          message={notification.content || 'Oparation succesfully complited'}
         />
       )}
     </div>

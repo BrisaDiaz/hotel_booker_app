@@ -332,31 +332,32 @@ export function getHotelFieldsToEdit(args: any): ToEditHotelField[] {
 }
 
 type ClientWhere = {
-  id?: number;
   bookings: {
     some: {
       hotelId: number;
       status: 'ACTIVE';
     };
   };
-  AND?: [
-    | { email?: string }
-    | { mobileNumber?: string }
-    | { landlineNumber?: string }
-    | {
-        lastName?: {
-          contains: string;
-          mode: 'insensitive';
-        };
-      }
-    | {
-        firstName?: {
-          contains: string;
-          mode: 'insensitive';
-        };
-      }
-  ];
+  AND?:
+    | [
+        | { email?: string }
+        | { mobileNumber?: string }
+        | { landlineNumber?: string }
+        | {
+            lastName?: {
+              contains: string;
+              mode: 'insensitive';
+            };
+          }
+        | {
+            firstName?: {
+              contains: string;
+              mode: 'insensitive';
+            };
+          }
+      ];
 };
+
 type ClientField =
   | 'firstName'
   | 'lastName'
@@ -364,32 +365,52 @@ type ClientField =
   | 'mobileNumber'
   | 'landlineNumber'
   | 'id';
-type ClientQuery = {
-  orderBy: { [key: string]: string };
-  take: number;
-  skip: number;
-  where: ClientWhere;
-  include: {
-    bookings: {
+type ClientQuery =
+  | {
+      orderBy: { [key: string]: string };
+      take: number;
+      skip: number;
+      where: ClientWhere;
+      include: {
+        bookings: {
+          where: {
+            hotelId: number;
+            status: string;
+          };
+        };
+      };
+    }
+  | {
       where: {
-        hotelId: number;
-        status: string;
+        bookings: {
+          some: {
+            hotelId: number;
+            status: string;
+            clientId: number;
+          };
+        };
+      };
+      include: {
+        bookings: {
+          where: {
+            hotelId: number;
+            status: string;
+          };
+        };
       };
     };
-  };
-};
 export function clientQueryConstructor(
   hotelId: number,
   args: {
     skip: number;
     take: number;
-
     search?: {
       field: ClientField;
       value: string;
     };
   }
 ): ClientQuery {
+  let orderBy = { createdAt: 'desc' };
   let where: ClientWhere = {
     bookings: {
       some: {
@@ -398,17 +419,34 @@ export function clientQueryConstructor(
       },
     },
   };
-  let orderBy = { createdAt: 'desc' };
-
   if (args.search) {
+    if (args.search.field === 'id') {
+      const query = {
+        where: {
+          bookings: {
+            some: {
+              hotelId: hotelId,
+              status: 'ACTIVE',
+              clientId: parseInt(args.search.value),
+            },
+          },
+        },
+        include: {
+          bookings: {
+            where: {
+              hotelId: hotelId,
+              status: 'ACTIVE',
+            },
+          },
+        },
+      };
+
+      return query;
+    }
     aplayDinamicFilters(args.search.field, args.search.value);
   }
 
   function aplayDinamicFilters(field: ClientField, value: string) {
-    if (field === 'id') {
-      return (where['id'] = parseInt(value));
-    }
-
     if (field === 'firstName' || field === 'lastName') {
       return (where['AND'] = [
         {
@@ -440,6 +478,134 @@ export function clientQueryConstructor(
       },
     },
   };
+  console.log(query);
+  return query;
+}
+type BookingRequestWhere = {
+  hotelId: number;
+  status: string;
+  some?:
+    | {
+        client?: { email: string };
+      }
+    | {
+        client?: {
+          firstName?: string;
+          lastName?: string;
+        };
+      }
+    | {
+        roomModel: {
+          name: string;
+        };
+      };
+  createdAt?: Date;
+  checkInDate?: Date;
+  checkOutDate?: Date;
+};
+type BookingRequestField =
+  | 'checkInDate'
+  | 'checkOutDate'
+  | 'createdAt'
+  | 'clientName'
+  | 'clientEmail'
+  | 'roomModel'
+  | 'id';
+type BookingRequestQuery =
+  | {
+      orderBy: { [key: string]: string };
+      take: number;
+      skip: number;
+      where: BookingRequestWhere;
+      include: {
+        roomModel: boolean;
+        guestsDistribution: boolean;
+      };
+    }
+  | {
+      where: {
+        id: number;
+      };
+      include: {
+        roomModel: boolean;
+        guestsDistribution: boolean;
+      };
+    };
+export function bookingRequestQueryConstructor(
+  hotelId: number,
+  args: {
+    skip: number;
+    take: number;
+    search?: {
+      field: BookingRequestField;
+      value: string;
+    };
+  }
+): BookingRequestQuery {
+  let where: BookingRequestWhere = {
+    hotelId: hotelId,
+    status: 'PENDING',
+  };
+  if (args.search) {
+    if (args.search.field === 'id') {
+      const query = {
+        where: {
+          id: parseInt(args.search.value),
+        },
+        include: {
+          roomModel: true,
+          guestsDistribution: true,
+        },
+      };
+      return query;
+    }
+    aplayDinamicFilters(args.search.field, args.search.value);
+  }
 
+  function aplayDinamicFilters(field: BookingRequestField, value: string) {
+    if (field === 'clientName') {
+      const [firstName, lastName] = value.trim().split(' ');
+      return (where['some'] = {
+        client: {
+          ['firstName']: firstName,
+          ['lastName']: lastName,
+        },
+      });
+    }
+    if (field === 'clientEmail') {
+      return (where['some'] = {
+        client: {
+          ['email']: value,
+        },
+      });
+    }
+    if (field === 'roomModel') {
+      return (where['some'] = {
+        roomModel: {
+          ['name']: value,
+        },
+      });
+    }
+    if (
+      field === 'createdAt' ||
+      field === 'checkInDate' ||
+      field === 'checkOutDate'
+    ) {
+      return (where[field] = new Date(value));
+    }
+  }
+  const query = {
+    take: args.take | 8,
+    skip: args.skip | 0,
+    orderBy: {
+      createdAt: 'desc',
+    },
+    where: where,
+    include: {
+      roomModel: true,
+      guestsDistribution: true,
+    },
+  };
+  console.log(query);
   return query;
 }

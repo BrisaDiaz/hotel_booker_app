@@ -26,17 +26,17 @@ const DinamicIcons = (subject: string) => {
   ) : subjectName.includes('features') ? (
     <RuleIcon />
   ) : subjectName.includes('family friendly') ? (
-    <ChildCareIcon color="primary" />
+    <ChildCareIcon color="primary" fontSize="small" />
   ) : subjectName.includes('pet friendly') ? (
-    <PetsIcon color="primary" />
+    <PetsIcon color="primary" fontSize="small" />
   ) : subjectName.includes('smoker friendly') ? (
-    <SmokingRoomsIcon color="primary" />
+    <SmokingRoomsIcon color="primary" fontSize="small" />
   ) : subjectName.includes('accessible') ? (
-    <AccessibleForwardIcon color="primary" />
+    <AccessibleForwardIcon color="primary" fontSize="small" />
   ) : subjectName.includes('free') ? (
-    <PaidIcon color="primary" />
+    <PaidIcon color="primary" fontSize="small" />
   ) : subjectName.includes('eco') ? (
-    <LocalFloristIcon color="primary" />
+    <LocalFloristIcon color="primary" fontSize="small" />
   ) : null;
 };
 export default DinamicIcons;
