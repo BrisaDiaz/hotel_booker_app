@@ -80,8 +80,8 @@ export interface NexusGenObjects {
   }
   Booking: { // root type
     adults?: number | null; // Int
-    checkInDate?: number | null; // Int
-    checkOutDate?: number | null; // Int
+    checkInDate?: string | null; // String
+    checkOutDate?: string | null; // String
     children?: number | null; // Int
     clientId?: number | null; // Int
     createdAt?: string | null; // String
@@ -316,8 +316,8 @@ export interface NexusGenFieldTypes {
   }
   Booking: { // field return type
     adults: number | null; // Int
-    checkInDate: number | null; // Int
-    checkOutDate: number | null; // Int
+    checkInDate: string | null; // String
+    checkOutDate: string | null; // String
     children: number | null; // Int
     client: NexusGenRootTypes['Client'] | null; // Client
     clientId: number | null; // Int
@@ -601,8 +601,8 @@ export interface NexusGenFieldTypeNames {
   }
   Booking: { // field return type name
     adults: 'Int'
-    checkInDate: 'Int'
-    checkOutDate: 'Int'
+    checkInDate: 'String'
+    checkOutDate: 'String'
     children: 'Int'
     client: 'Client'
     clientId: 'Int'

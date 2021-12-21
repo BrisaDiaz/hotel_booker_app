@@ -5,17 +5,7 @@ import validations from '@/utils/formValidations';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
-
-const withIconLabel = {
-  marginBottom: '10px',
-  display: 'flex',
-  gap: '10px',
-  width: '100%',
-  alignItems: 'center',
-  '& > *': {
-    color: 'primary.main',
-  },
-};
+import { styles } from './styles';
 
 export default function BookingClientInputs({
   register,
@@ -26,7 +16,7 @@ export default function BookingClientInputs({
 }) {
   return (
     <div>
-      <Box sx={withIconLabel}>
+      <Box sx={styles.withIconLabel}>
         <PermContactCalendarIcon />
         <Typography
           id="transition-modal-title"

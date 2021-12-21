@@ -123,8 +123,8 @@ export const Booking = objectType({
     });
     t.int('children');
     t.int('adults');
-    t.int('checkInDate');
-    t.int('checkOutDate');
+    t.string('checkInDate');
+    t.string('checkOutDate');
     t.int('nights');
     t.string('specifications');
     t.list.field('guestsDistribution', {

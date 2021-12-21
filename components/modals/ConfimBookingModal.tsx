@@ -8,34 +8,7 @@ import Button from '@mui/material/Button';
 import BookingRequesInfo from '@/components/modals/BookingRequesInfo';
 import CloseButton from '@/components/modals/CloseButton';
 import BookingAdminInputs from '@/components/modals/BookingAdminInputs';
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-
-  maxWidth: 500,
-  width: '100%',
-  minWidth: '360px',
-  bgcolor: 'background.paper',
-  border: '1px solid rgba(244,244,244,1)',
-  boxShadow: 24,
-  borderRadius: 2,
-  p: 4,
-  px: 3.5,
-  maxHeight: '90%',
-  overflowY: 'scroll',
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
-};
-
-const title = {
-  textTransform: 'capitalize',
-  mb: 2,
-  align: 'center',
-};
+import { styles } from './styles';
 
 export default function BasicModal({
   isModalOpen,
@@ -92,21 +65,21 @@ export default function BasicModal({
         keepMounted
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
+        aria-labelledby="modal-modal-{styles.title}"
         aria-describedby="modal-modal-specifications"
       >
         <Box
-          sx={style}
+          sx={styles.modal}
           component="form"
           noValidate
           onSubmit={handleSubmit(dataFormatter)}
         >
           <CloseButton handleClose={handleClose} />
           <Typography
-            id="modal-modal-title"
+            id="modal-modal-{styles.title}"
             variant="h5"
             component="h2"
-            sx={title}
+            sx={styles.title}
           >
             Confirm Reservation
           </Typography>

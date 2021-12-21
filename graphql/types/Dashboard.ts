@@ -257,19 +257,19 @@ export const Query = extendType({
       },
       resolve(root, args, ctx) {
         const getBooking = async (userId: number, bookingId: number) => {
+          const admin = await getAdminInfo(userId);
           const booking = await prisma.booking.findUnique({
             where: {
               id: bookingId,
             },
             include: {
-              rooms: true,
+              guestsDistribution: true,
               client: true,
             },
           });
           if (!booking) throw new UserInputError('Booking dose not exist');
-          const admin = await getAdminInfo(userId);
 
-          if (!admin.hotels.includes(booking.hotelId))
+          if (!admin.hotels.some((hotel) => hotel.id === booking.hotelId))
             throw new ForbiddenError('Forbidden');
 
           return booking;
@@ -340,9 +340,6 @@ export const Query = extendType({
             where: {
               hotelId: hotelId,
               status: 'ACTIVE',
-            },
-            include: {
-              guestsDistribution: true,
             },
           });
         };

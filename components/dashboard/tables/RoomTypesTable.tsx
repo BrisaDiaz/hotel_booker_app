@@ -77,20 +77,17 @@ export function ActionsMenu({
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem
-          onClick={() => handleMenuClick('displayRoomsStatus')}
-          sx={{ pr: 3 }}
-        >
-          <ListItemIcon>
-            <BedroomParentOutlinedIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Rooms Status</ListItemText>
-        </MenuItem>
         <MenuItem onClick={() => handleMenuClick('addRoom')} sx={{ pr: 3 }}>
           <ListItemIcon>
             <AddCircleOutlineIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Add Room</ListItemText>
+        </MenuItem>
+        <MenuItem sx={{ pr: 3 }} onClick={() => handleMenuClick('addBooking')}>
+          <ListItemIcon>
+            <AddCircleOutlineIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Add Booking</ListItemText>
         </MenuItem>
         {Boolean(selectedRoomsIds.length) ? (
           <MenuItem
@@ -103,12 +100,7 @@ export function ActionsMenu({
             <ListItemText>Delete Rooms</ListItemText>
           </MenuItem>
         ) : null}
-        <MenuItem sx={{ pr: 3 }} onClick={() => handleMenuClick('addBooking')}>
-          <ListItemIcon>
-            <AddCircleOutlineIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Add Booking</ListItemText>
-        </MenuItem>
+
         <MenuItem onClick={() => handleMenuClick('edit')} sx={{ pr: 3 }}>
           <ListItemIcon>
             <EditIcon fontSize="small" />
@@ -253,9 +245,13 @@ function RoomsTable({
     <TableContainer
       component={Paper}
       elevation={4}
-      sx={{ maxWidth: '100%', overflowX: 'auto', minHeight: '70vh', mb: 0 }}
+      sx={{ maxWidth: '100%', overflowX: 'auto', mb: 0 }}
     >
-      <Table sx={{ minWidth: 650 }} aria-label="simple table" size="medium">
+      <Table
+        sx={{ minWidth: 650, minHeight: '70vh' }}
+        aria-label="simple table"
+        size="medium"
+      >
         <TableHead sx={{ py: 2 }}>
           <TableRow>
             <TableCell align="right"></TableCell>

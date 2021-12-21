@@ -146,6 +146,27 @@ export interface HotelGuest {
     }[];
   }[];
 }
+export interface BookingListed {
+  id: number;
+  status: string;
+  checkInDate: string;
+  checkOutDate: string;
+  roomModel: { id: number };
+  reservedRooms: { number: number }[];
+}
+export interface BookingEvent {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  resourceId: number;
+  allDay?: boolean;
+  selectable?: boolean;
+}
+export interface BookingResourceMap {
+  resourceId: number;
+  resourceTitle: string;
+}
 export type WithLayoutPage<P = {}> = NextPage<P> & {
   getLayout?: (page: React.ReactNode) => React.ReactNode;
 };

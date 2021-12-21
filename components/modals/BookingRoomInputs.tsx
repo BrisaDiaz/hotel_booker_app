@@ -7,7 +7,8 @@ import TodayIcon from '@mui/icons-material/Today';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PeopleIcon from '@mui/icons-material/People';
-
+import { Room } from '@/interfaces/index';
+import { styles } from './styles';
 const flexBox = {
   display: 'flex',
   gap: '10px',
@@ -16,16 +17,6 @@ const flexBox = {
   px: '5px',
 };
 
-const withIconLabel = {
-  marginBottom: '10px',
-  display: 'flex',
-  gap: '10px',
-  width: '100%',
-  alignItems: 'center',
-  '& > *': {
-    color: 'primary.main',
-  },
-};
 const roomsContainer = {
   maxHeight: '190px',
   borderBottom: '1px solid #0002',
@@ -108,13 +99,9 @@ export default function BookingRoomInputs({
 }) {
   return (
     <div>
-      <Box sx={withIconLabel}>
+      <Box sx={styles.withIconLabel}>
         <TodayIcon />
-        <Typography
-          id="transition-modal-title"
-          variant="subtitle1"
-          component="h3"
-        >
+        <Typography id="transition-modal-title" component="h3">
           Check In/ Check Out
         </Typography>
       </Box>
@@ -140,13 +127,9 @@ export default function BookingRoomInputs({
           />
         </Box>
       </Typography>
-      <Box sx={withIconLabel}>
+      <Box sx={styles.withIconLabel}>
         <PeopleIcon />
-        <Typography
-          id="transition-modal-title"
-          variant="subtitle1"
-          component="h3"
-        >
+        <Typography id="transition-modal-title" component="h3">
           Guests/Room
         </Typography>
         <Typography variant="caption" component="span">

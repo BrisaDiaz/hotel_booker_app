@@ -96,8 +96,12 @@ export async function checkIsValidRoomRequest({
     };
   const availableRooms = await checkRoomsAvailable({
     roomModelId: roomDetails.id,
-    checkOutDate: checkOutDate,
-    checkInDate: checkInDate,
+    checkOutDate: new Date(checkOutDate)
+      .setHours(roomDetails.checkOutHour)
+      .toString(),
+    checkInDate: new Date(checkInDate)
+      .setHours(roomDetails.checkInHour)
+      .toString(),
     roomsRequired: rooms.length,
   });
   if (!availableRooms.length)

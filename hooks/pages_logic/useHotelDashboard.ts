@@ -156,12 +156,7 @@ export default function useHotelDashboard({
     number | null
   >(null);
 
-  type RoomTypeActions =
-    | 'addRoom'
-    | 'deleteRooms'
-    | 'edit'
-    | 'addBooking'
-    | 'displayRoomsStatus';
+  type RoomTypeActions = 'addRoom' | 'deleteRooms' | 'edit' | 'addBooking';
 
   const handleActions = (
     roomModelId: number,

@@ -47,8 +47,8 @@ type BedType {
 
 type Booking {
   adults: Int
-  checkInDate: Int
-  checkOutDate: Int
+  checkInDate: String
+  checkOutDate: String
   children: Int
   client: Client
   clientId: Int

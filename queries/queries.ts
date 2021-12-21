@@ -370,3 +370,56 @@ export const MAKE_ROOM_CONSULT = gql`
     }
   }
 `;
+
+export const GET_HOTEL_BOOKINGS = gql`
+  query hotelBookings($hotelId: ID!, $userId: ID!) {
+    bookings: hotelBookings(hotelId: $hotelId, userId: $userId) {
+      id
+      status
+      checkInDate
+      checkOutDate
+      roomModel {
+        id
+      }
+      reservedRooms {
+        number
+      }
+    }
+  }
+`;
+export const GET_HOTEL_ROOM_MODELS_LIST = gql`
+  query hotelById($hotelId: ID!) {
+    hotel: hotelById(hotelId: $hotelId) {
+      id
+      roomModels {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const GET_BOOKING_BY_ID = gql`
+  query bookingById($bookingId: ID!, $userId: ID!) {
+    booking: bookingById(bookingId: $bookingId, userId: $userId) {
+      id
+      clientId
+      specifications
+      totalCost
+      paymentMethod
+      checkInDate
+      checkOutDate
+      guestsDistribution {
+        id
+        adults
+        children
+      }
+      roomModel {
+        name
+      }
+      reservedRooms {
+        number
+      }
+    }
+  }
+`;

@@ -19,8 +19,8 @@ export default function LinearIndeterminate() {
     <Box
       sx={{
         width: '100%',
-        position: 'absolute',
-        top: '64px',
+        position: 'fixed',
+        top: '63px',
         visibility: isRouteChanging ? 'visible' : 'hidden',
       }}
     >

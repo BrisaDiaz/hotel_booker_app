@@ -65,11 +65,15 @@ export default function ResponsiveDialog({
         <DialogContent>
           <DialogContentText>{text}</DialogContentText>
         </DialogContent>
-        <DialogActions sx={{ mb: 1 }}>
+        <DialogActions sx={{ mb: 1, mr: 1 }}>
           <Button autoFocus onClick={() => hadleResponce('reject')}>
             {rejectLabel}
           </Button>
-          <Button onClick={() => hadleResponce('accept')} autoFocus>
+          <Button
+            onClick={() => hadleResponce('accept')}
+            autoFocus
+            variant="outlined"
+          >
             {acceptLabel}
           </Button>
         </DialogActions>

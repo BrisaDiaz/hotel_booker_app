@@ -1,6 +1,6 @@
 export function toDateAndHourFormat(toFormate: number): string {
-  const date = new Date(toFormate);
-  const hour = date.toLocaleTimeString();
+  const date = new Date(toFormate * 1);
+  const [hour, minutes] = date.toLocaleTimeString().split(':');
   const fullDate = date.toLocaleDateString();
-  return `${fullDate} ${hour}`;
+  return `${fullDate}${'   '}${hour}:${minutes}hs`;
 }

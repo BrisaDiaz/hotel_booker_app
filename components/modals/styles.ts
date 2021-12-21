@@ -1,0 +1,61 @@
+export const styles = {
+  modal: {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    minWidth: 360,
+    maxWidth: 500,
+    width: '100%',
+    bgcolor: 'background.paper',
+    border: '1px solid rgba(244,244,244,1)',
+    boxShadow: 24,
+    borderRadius: 2,
+    p: 4,
+    px: 3.5,
+    maxHeight: '90%',
+    overflowY: 'scroll',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+  },
+  leyend: {
+    width: { xs: '50%' },
+    color: 'text.secondary',
+    fontSize: '14px',
+    fontWeight: 500,
+  },
+  title: {
+    textTransform: 'capitalize',
+    mb: 2,
+    align: 'center',
+  },
+  withIconLabel: {
+    marginBottom: '10px',
+    display: 'flex',
+    gap: '10px',
+    width: '100%',
+    alignItems: 'center',
+    my: 1,
+    '& > * ': {
+      color: 'primary.main',
+    },
+  },
+  list: {
+    display: 'flex',
+    textTransform: 'capitalize',
+    flexWrap: 'wrap',
+    py: 1,
+    ml: 1,
+    '& > * ': {
+      fontSize: '14px',
+    },
+  },
+  roomGuests: {
+    display: 'flex',
+    gap: 1,
+    pl: 0.5,
+    minWidth: 'max-content',
+    borderLeft: '4px solid rgb(224 224 224)',
+  },
+};

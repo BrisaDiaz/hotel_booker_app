@@ -1,4 +1,6 @@
 import '../styles/globals.css';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
 import { ReactNode } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';

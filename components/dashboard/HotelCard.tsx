@@ -44,7 +44,11 @@ export default function HotelCard({
 }) {
   return (
     <div onClick={() => handleRedirect(hotel.id)}>
-      <Card sx={{ width: '300px', position: 'relative' }} component="article">
+      <Card
+        sx={{ width: '300px', position: 'relative' }}
+        component="article"
+        elevation={2}
+      >
         <CardActionArea component="div">
           <EditButtom onEdit={() => onEdit(hotel.id)} />
           <CardMedia

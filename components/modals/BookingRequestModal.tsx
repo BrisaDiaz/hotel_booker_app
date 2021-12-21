@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import { BookingRequest } from '@/interfaces/index';
 import useBookingInputsController from '@/hooks/useBookingInputsController';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
