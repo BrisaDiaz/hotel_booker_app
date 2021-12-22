@@ -11,7 +11,9 @@ import type { FileUploadEvent } from '@/interfaces/index';
 export default function ({
   register,
   errors,
+  children,
 }: {
+  children?: React.ReactNode;
   register: Function;
   errors: any;
 }) {
@@ -116,6 +118,7 @@ export default function ({
           </Card>
         </Grid>
       </Grid>
+      {children}
     </Grid>
   );
 }

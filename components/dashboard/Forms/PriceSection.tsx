@@ -9,7 +9,10 @@ export default function ({
   register,
   errors,
   defaultData,
+
+  children,
 }: {
+  children?: React.ReactNode;
   register: Function;
   errors: any;
   defaultData?: any;
@@ -81,6 +84,7 @@ export default function ({
           />
         </Grid>
       </Grid>
+      {children}
     </Grid>
   );
 }

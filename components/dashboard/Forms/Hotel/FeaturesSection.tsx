@@ -18,7 +18,9 @@ export default function ({
   activities,
   languages,
   defaultData,
+  children,
 }: {
+  children?: React.ReactNode;
   register: Function;
   setValue: Function;
   services: Feature[];
@@ -180,6 +182,7 @@ export default function ({
         <input type="hidden" {...register('facilities')} />
         <input type="hidden" {...register('languages')} />
       </Grid>
+      {children}
     </Grid>
   );
 }

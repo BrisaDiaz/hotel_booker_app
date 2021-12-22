@@ -1,8 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import SaveIcon from '@mui/icons-material/Save';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import AboutSection from './AboutSection';
@@ -13,6 +11,7 @@ import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
 import { styles } from '@/components/dashboard/forms/styles';
+import FormBottons from '../FormBottons';
 type Feature = {
   id: number;
   name: string;
@@ -106,28 +105,7 @@ export default function MultilineTextFields(props: {
       <PoliciesSection register={register} errors={errors} />
       <AspectSection register={register} errors={errors} />
 
-      <Box sx={styles.formBottons}>
-        <Button
-          variant="contained"
-          color="primary"
-          size={matchesSize ? 'large' : 'medium'}
-          style={{ color: '#fff' }}
-          sx={styles.bottons}
-          startIcon={<SaveIcon />}
-          type="submit"
-        >
-          Save
-        </Button>
-        <Button
-          sx={styles.bottons}
-          variant="outlined"
-          color="primary"
-          type="reset"
-          size={matchesSize ? 'large' : 'medium'}
-        >
-          Reset
-        </Button>
-      </Box>
+      <FormBottons />
     </Box>
   );
 }

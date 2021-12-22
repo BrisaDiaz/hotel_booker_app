@@ -1,10 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import SaveIcon from '@mui/icons-material/Save';
+
 import Box from '@mui/material/Box';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import AboutSection from './AboutSection';
 import ContactSection from './ContactSection';
 import AddressSection from './AddressSection';
@@ -12,6 +10,7 @@ import PriceSection from '../PriceSection';
 import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
+import FormBottons from '../FormBottons';
 import { Hotel } from '@/interfaces/index';
 import { styles } from '@/components/dashboard/forms/styles';
 type Feature = {
@@ -49,7 +48,6 @@ export default function MultilineTextFields(props: {
     abortHandler,
   } = props;
 
-  const matchesSize = useMediaQuery('(min-width:600px)');
   const {
     register,
     setValue,
@@ -149,24 +147,24 @@ export default function MultilineTextFields(props: {
           hotelCategories={hotelCategories}
           errors={errors}
           defaultData={hotel}
-        />
+        >
+          <FormBottons onAbort={abortHandler} />
+        </AboutSection>
       )}
       {toEditField === 'price' && (
-        <PriceSection register={register} errors={errors} defaultData={hotel} />
+        <PriceSection register={register} errors={errors} defaultData={hotel}>
+          <FormBottons onAbort={abortHandler} />
+        </PriceSection>
       )}
       {toEditField === 'contact' && (
-        <ContactSection
-          register={register}
-          errors={errors}
-          defaultData={hotel}
-        />
+        <ContactSection register={register} errors={errors} defaultData={hotel}>
+          <FormBottons onAbort={abortHandler} />
+        </ContactSection>
       )}
       {toEditField === 'address' && (
-        <AddressSection
-          register={register}
-          errors={errors}
-          defaultData={hotel}
-        />
+        <AddressSection register={register} errors={errors} defaultData={hotel}>
+          <FormBottons onAbort={abortHandler} />
+        </AddressSection>
       )}
       {toEditField === 'features' && (
         <FeaturesSection
@@ -177,43 +175,24 @@ export default function MultilineTextFields(props: {
           activities={activities}
           facilities={facilities}
           defaultData={hotel}
-        />
+        >
+          <FormBottons onAbort={abortHandler} />
+        </FeaturesSection>
       )}
       {toEditField === 'policies' && (
         <PoliciesSection
           register={register}
           errors={errors}
           defaultData={hotel}
-        />
+        >
+          <FormBottons onAbort={abortHandler} />
+        </PoliciesSection>
       )}
       {toEditField === 'aspect' && (
-        <AspectSection register={register} errors={errors} />
+        <AspectSection register={register} errors={errors}>
+          <FormBottons onAbort={abortHandler} />
+        </AspectSection>
       )}
-      <Box sx={styles.formBottons}>
-        <Button
-          variant="contained"
-          color="primary"
-          size={matchesSize ? 'large' : 'medium'}
-          style={{ color: '#fff' }}
-          sx={styles.bottons}
-          startIcon={<SaveIcon />}
-          type="submit"
-        >
-          Save
-        </Button>
-        <Button
-          sx={styles.bottons}
-          variant="outlined"
-          color="primary"
-          onClick={(e) => {
-            e.preventDefault();
-            abortHandler();
-          }}
-          size={matchesSize ? 'large' : 'medium'}
-        >
-          Cancel
-        </Button>
-      </Box>
     </Box>
   );
 }

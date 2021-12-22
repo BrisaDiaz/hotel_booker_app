@@ -36,6 +36,21 @@ const lastname = {
       'Last Name must only contain alphabetic characters without spaces.',
   },
 };
-const validations = { email, password, name, lastname };
+const telephone = {
+  required: 'Telephone is required.',
+
+  pattern: {
+    value: /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,
+    message: 'Invalid format +xx (xxx) xxx-xxxx.',
+  },
+};
+const website = {
+  pattern: {
+    value:
+      /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi,
+    message: 'Invalid website url',
+  },
+};
+const validations = { email, password, name, lastname, telephone, website };
 
 export default validations;

@@ -7,14 +7,17 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import LanguageIcon from '@mui/icons-material/Language';
 import { styles } from '@/components/dashboard/forms/styles';
+import validations from '@/utils/formValidations';
 export default function ({
   register,
   errors,
   defaultData,
+  children,
 }: {
   register: Function;
   errors: any;
   defaultData?: any;
+  children?: React.ReactNode;
 }) {
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
@@ -30,17 +33,7 @@ export default function ({
             label={
               errors['telephone'] ? errors['telephone'].message : 'Telephone'
             }
-            {...register('telephone', {
-              required: 'The telephone number is required',
-              minLength: {
-                value: 9,
-                message: 'Invalid telephone number',
-              },
-              maxLength: {
-                value: 20,
-                message: 'Invalid telephone number',
-              },
-            })}
+            {...register('telephone', validations.telephone)}
             error={errors['telephone'] ? true : false}
             InputProps={{
               startAdornment: (
@@ -62,13 +55,7 @@ export default function ({
             variant="outlined"
             label={errors['email'] ? errors['email'].message : 'Email'}
             error={errors['email'] && true}
-            {...register('email', {
-              pattern: {
-                value:
-                  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-                message: 'Invalid email.',
-              },
-            })}
+            {...register('email', { ...validations.email, required: false })}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -88,13 +75,7 @@ export default function ({
             variant="outlined"
             label={errors['website'] ? errors['website'].message : 'Website'}
             error={errors['website'] && true}
-            {...register('website', {
-              pattern: {
-                value:
-                  /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi,
-                message: 'Invalid website url',
-              },
-            })}
+            {...register('website', validations.website)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -105,6 +86,7 @@ export default function ({
           />
         </Grid>
       </Grid>
+      {children}
     </Grid>
   );
 }

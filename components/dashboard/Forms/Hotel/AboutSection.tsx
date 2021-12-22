@@ -14,7 +14,9 @@ export default function ({
   setValue,
   hotelCategories,
   defaultData,
+  children,
 }: {
+  children?: React.ReactNode;
   register: Function;
   setValue: Function;
   errors: any;
@@ -115,6 +117,7 @@ export default function ({
         variant="outlined"
         sx={styles.textField}
       />
+      {children}
     </Grid>
   );
 }
