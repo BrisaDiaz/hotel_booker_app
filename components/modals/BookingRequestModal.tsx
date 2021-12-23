@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import useBookingInputsController from '@/hooks/useBookingInputsController';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
@@ -79,10 +78,12 @@ export default function BasicModal({
     register,
     handleSubmit,
     setError,
+    setValue,
+
     formState: { errors },
   } = useForm({ mode: 'onBlur' });
 
-  const dataFormatter = (data: {
+  const submitMiddleware = (data: {
     firstName: string;
     lastName: string;
     email: string;
@@ -92,34 +93,13 @@ export default function BasicModal({
     checkInDate: string;
     checkOutDate: string;
     specifications?: string;
+    requiredRooms: number;
   }) => {
-    const technicalSpecificatons = handleBookingData(data);
-
-    const formVariables = {
-      ...technicalSpecificatons,
-      ...data,
-    };
     handleClose();
-    onSubmit(formVariables);
+    delete data['requiredRooms'];
+    onSubmit(data);
   };
-  const {
-    handleBookingData,
-    handleDeleteRoom,
-    handdleAddRoom,
-    handleRoomChanges,
-    rooms,
-    minDate,
-  } = useBookingInputsController({ setError });
-  const bookingInputsProps = {
-    handleDeleteRoom,
-    handdleAddRoom,
-    handleRoomChanges,
-    rooms,
-    minDate,
-    register,
-    setError,
-    errors,
-  };
+
   return (
     <div>
       <div onClick={handleOpen}>{children}</div>
@@ -134,7 +114,7 @@ export default function BasicModal({
           sx={style}
           component="form"
           noValidate
-          onSubmit={handleSubmit(dataFormatter)}
+          onSubmit={handleSubmit(submitMiddleware)}
         >
           <CloseButton handleClose={handleClose} />
           <Typography
@@ -179,7 +159,12 @@ export default function BasicModal({
           </Box>
           <BookingClientInputs errors={errors} register={register} />
           <Box sx={{ my: 2 }} />
-          <BookingRoomInputs {...bookingInputsProps} />
+          <BookingRoomInputs
+            register={register}
+            setError={setError}
+            errors={errors}
+            setValue={setValue}
+          />
           <Button
             type="submit"
             fullWidth

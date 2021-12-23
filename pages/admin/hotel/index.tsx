@@ -2,10 +2,10 @@ import React from 'react';
 import { WithLayoutPage } from '@/interfaces/index';
 import useHotelDashboard, {
   Props,
-} from '../../../hooks/pages_logic/useHotelDashboard';
+} from '@/hooks/pages_logic/useHotelDashboard';
 import { GET_DASHBOARD_HOTEL_DATA } from '@/queries/index';
 import { client } from '@/lib/apollo';
-import type { GetServerSideProps, NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUser } from '@/graphql/utils';
 import Head from 'next/head';
 import Backdrop from '@/components/Backdrop';
@@ -17,7 +17,7 @@ import RoomTypesTable from '@/components/dashboard/tables/RoomTypesTable';
 import AddRoomModal from '@/components/modals/AddRoomModal';
 import SnackBar from '@/components/SnackBar';
 import Dialog from '@/components/Dialog';
-
+import AddBookingModal from '@/components/modals/AddBookingModal';
 interface ActionCard {
   title: string;
   actions: Array<{ name: string; callback: Function }>;
@@ -56,7 +56,7 @@ function ActionCardGrid({ cards }: { cards: ActionCard[] }) {
   );
 }
 
-const HotelAdmin: WithLayoutPage = ({
+const HotelAdmin: WithLayoutPage<Props> = ({
   roomModels,
   roomTypesCount,
   bookingsCount,
@@ -64,18 +64,22 @@ const HotelAdmin: WithLayoutPage = ({
   requestsCount,
   hotelId,
   userId,
-}: Props) => {
+}) => {
   const {
     onDeleteRooms,
     onAddNewRoom,
+    onCreateBooking,
     handleActions,
     handleCloseModal,
+    handleGetAvailableRooms,
+    selectedRoomTypeId,
     roomTypes,
     notification,
     loading,
     roomNumbersUploaded,
     modalsOpenState,
-    cardsData,
+    infoCardsData,
+    availableRooms,
   } = useHotelDashboard({
     roomModels,
     roomTypesCount,
@@ -97,7 +101,7 @@ const HotelAdmin: WithLayoutPage = ({
         sx={{ p: { xs: '16px 0', sm: '16px 16px' }, maxWidth: 1200 }}
         component="main"
       >
-        <ActionCardGrid cards={cardsData} />
+        <ActionCardGrid cards={infoCardsData} />
       </Box>
       <AddRoomModal
         onSubmit={onAddNewRoom}
@@ -115,6 +119,16 @@ const HotelAdmin: WithLayoutPage = ({
         isDialogOpen={modalsOpenState.deleteRooms}
         onAccept={onDeleteRooms}
       />
+
+      <AddBookingModal
+        closeModal={() => handleCloseModal('addBooking')}
+        roomTypeId={selectedRoomTypeId}
+        onSubmit={onCreateBooking}
+        isModalOpen={modalsOpenState.addBooking}
+        availableRooms={availableRooms}
+        getAvailableRooms={handleGetAvailableRooms}
+      />
+
       <RoomTypesTable roomTypes={roomTypes} handleActions={handleActions} />
       <Backdrop loading={loading} />
       {notification.content && (
@@ -132,7 +146,7 @@ HotelAdmin.getLayout = function getLayout(page: React.ReactNode) {
 };
 
 export default HotelAdmin;
-export const getServerSideProps: GetServerSideProps = async ({
+export const getServerSideProps = async ({
   req,
   res,
   query,
@@ -164,20 +178,20 @@ export const getServerSideProps: GetServerSideProps = async ({
       };
     }
     return {
-      redirect: {
-        permanent: false,
-        destination: '/signin',
-      },
+      // redirect: {
+      //   permanent: false,
+      //   destination: '/signin',
+      // },
       props: {},
     };
   } catch (e) {
-    console.log(e);
+    console.log(e.networkError ? e.networkError?.result?.errors : e);
 
     return {
-      redirect: {
-        permanent: false,
-        destination: '/signin',
-      },
+      // redirect: {
+      //   permanent: false,
+      //   destination: '/signin',
+      // },
       props: {},
     };
   }

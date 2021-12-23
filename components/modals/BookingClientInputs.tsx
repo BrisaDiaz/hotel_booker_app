@@ -10,12 +10,26 @@ import { styles } from './styles';
 export default function BookingClientInputs({
   register,
   errors,
+  disable,
 }: {
   register: Function;
   errors: any;
+  disable?: Boolean;
 }) {
   return (
     <div>
+      {disable && (
+        <Box
+          sx={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            zIndex: 10,
+            backgroundColor: '#fff',
+            opacity: 0.5,
+          }}
+        />
+      )}
       <Box sx={styles.withIconLabel}>
         <PermContactCalendarIcon />
         <Typography

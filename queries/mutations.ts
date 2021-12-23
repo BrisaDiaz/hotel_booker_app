@@ -367,3 +367,40 @@ export const DECLINE_BOOKING_REQUEST = gql`
     }
   }
 `;
+export const MAKE_BOOKING = gql`
+  mutation makeBooking(
+    $userId: ID!
+    $roomModelId: ID!
+    $firstName: String!
+    $lastName: String!
+    $email: String!
+    $mobileNumber: String!
+    $landlineNumber: String!
+    $guestsDistribution: [roomSpecifications!]!
+    $checkInDate: String!
+    $checkOutDate: String!
+    $specifications: String
+    $totalCost: Float!
+    $paymentMethod: String!
+    $roomsIds: [Int!]!
+  ) {
+    booking: makeBooking(
+      userId: $userId
+      roomModelId: $roomModelId
+      firstName: $firstName
+      lastName: $lastName
+      email: $email
+      mobileNumber: $mobileNumber
+      landlineNumber: $landlineNumber
+      guestsDistribution: $guestsDistribution
+      checkInDate: $checkInDate
+      checkOutDate: $checkOutDate
+      specifications: $specifications
+      totalCost: $totalCost
+      paymentMethod: $paymentMethod
+      roomsIds: $roomsIds
+    ) {
+      id
+    }
+  }
+`;

@@ -20,11 +20,15 @@ export default function BookingClientInputs({
   availableRooms,
   requiredRooms,
   setValue,
+
+  disable,
 }: {
   register: Function;
   setValue: Function;
+
   errors: any;
-  requiredRooms: number;
+  disable?: Boolean;
+  requiredRooms?: number;
   availableRooms: Array<{ id: number; number: number }> | [];
 }) {
   const paymentMethods = [
@@ -48,10 +52,12 @@ export default function BookingClientInputs({
     );
   };
   const handleAddMoreRooms = (roomNumber: number) => {
+    const numberOfRoomsRequired = requiredRooms;
+
     if (numbersSelected.includes(roomNumber)) {
       return handleDeleteNumber(roomNumber);
     }
-    if (numbersSelected.length !== requiredRooms) {
+    if (numbersSelected.length !== numberOfRoomsRequired) {
       return setNumbersSelected([...numbersSelected, roomNumber]);
     }
   };
@@ -59,7 +65,19 @@ export default function BookingClientInputs({
     setValue('roomsIds', numbersSelected);
   }, [numbersSelected]);
   return (
-    <div>
+    <Box sx={{ position: 'relative' }}>
+      {disable && (
+        <Box
+          sx={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            zIndex: 10,
+            backgroundColor: '#fff',
+            opacity: 0.5,
+          }}
+        />
+      )}
       <Box sx={styles.withIconLabel}>
         <AccountBalanceWalletIcon />
         <Typography
@@ -191,14 +209,15 @@ export default function BookingClientInputs({
             sx={{
               textAlign: 'center',
               fontWeight: 500,
+              py: disable && 1,
             }}
           >
-            There is no longer available rooms.
+            {disable ? '' : 'No available rooms were found.'}
           </Typography>
         )}
 
         <input {...register('roomsIds')} type="hidden" />
       </Grid>
-    </div>
+    </Box>
   );
 }

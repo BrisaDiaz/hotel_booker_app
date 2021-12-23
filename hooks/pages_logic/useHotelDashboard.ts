@@ -1,5 +1,10 @@
 import React from 'react';
-import { ADD_ROOMS_TO_MODEL, DELETE_ROOMS_OF_MODEL } from '@/queries/index';
+import {
+  ADD_ROOMS_TO_MODEL,
+  DELETE_ROOMS_OF_MODEL,
+  GET_ROOM_MODEL_AVAILABLE_ROOMS,
+  MAKE_BOOKING,
+} from '@/queries/index';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { NextRouter, useRouter } from 'next/router';
 
@@ -50,6 +55,7 @@ export default function useHotelDashboard({
   }) {
     const cardsData = [
       {
+        id: 'roomTypes',
         title: roomTypesCount === 1 ? 'Room type' : 'Room types',
         count: roomTypesCount,
         actions: [
@@ -65,6 +71,7 @@ export default function useHotelDashboard({
         ],
       },
       {
+        id: 'guests',
         title: guestsCount === 1 ? 'Guest' : 'Guests',
         count: guestsCount,
         actions: [
@@ -80,6 +87,7 @@ export default function useHotelDashboard({
         ],
       },
       {
+        id: 'requests',
         title: requestsCount === 1 ? 'Request' : 'Requests',
         count: requestsCount,
         actions: [
@@ -95,6 +103,7 @@ export default function useHotelDashboard({
         ],
       },
       {
+        id: 'bookings',
         title: bookingsCount === 1 ? 'Booking' : 'Bookings',
         count: bookingsCount,
         actions: [
@@ -112,14 +121,17 @@ export default function useHotelDashboard({
     ];
     return cardsData;
   }
-  const cardsData = generateCardsData({
-    roomTypesCount,
-    bookingsCount,
-    guestsCount,
-    requestsCount,
-    router,
-    hotelId,
-  });
+
+  const [infoCardsData, setInfoCardsData] = React.useState(
+    generateCardsData({
+      roomTypesCount,
+      bookingsCount,
+      guestsCount,
+      requestsCount,
+      router,
+      hotelId,
+    })
+  );
 
   const [modalsOpenState, setModelsOpenState] = React.useState({
     addRoom: false,
@@ -155,23 +167,15 @@ export default function useHotelDashboard({
   const [selectedRoomTypeId, setSelectedRoomTypeId] = React.useState<
     number | null
   >(null);
-
+  const [availableRooms, setAvailableRooms] = React.useState<
+    | {
+        id: number;
+        number: number;
+      }[]
+    | []
+  >([]);
   type RoomTypeActions = 'addRoom' | 'deleteRooms' | 'edit' | 'addBooking';
 
-  const handleActions = (
-    roomModelId: number,
-    action: RoomTypeActions,
-    roomsToDelete: number[] | []
-  ) => {
-    setSelectedRoomTypeId(roomModelId);
-    if (action === 'deleteRooms') {
-      setToDeleteRoomsIds(roomsToDelete);
-    }
-    return setModelsOpenState({
-      ...modalsOpenState,
-      [action]: true,
-    });
-  };
   const handleCloseModal = (modalType: RoomTypeActions) => {
     setModelsOpenState({
       ...modalsOpenState,
@@ -179,36 +183,33 @@ export default function useHotelDashboard({
     });
   };
 
-  const [addRoomsToRoomModel, addRoomResults] = useMutation(
-    ADD_ROOMS_TO_MODEL,
-    {
-      onCompleted: ({ addRoomToModel }) => {
-        const actualizedRooms = addRoomToModel;
-        if (actualizedRooms.length) {
-          const actualizedRoomTypes = roomTypes.map((roomType: RoomType) =>
-            roomType.id === selectedRoomTypeId
-              ? { ...roomType, rooms: actualizedRooms }
-              : roomType
-          );
-          setRoomTypes(actualizedRoomTypes);
-          setRoomNumbersUploaded(
-            getAlreadyUploadRoomNumbers(actualizedRoomTypes)
-          );
-          handleCloseModal('addRoom');
-          setNotification({
-            content: 'Rooms where added sucessfully',
-            type: 'success',
-          });
-        }
-      },
-      onError: (error) => {
+  const [addRoomsToRoomModel, addRoomResults] = useMutation(MAKE_BOOKING, {
+    onCompleted: ({ addRoomToModel }) => {
+      const actualizedRooms = addRoomToModel;
+      if (actualizedRooms.length) {
+        const actualizedRoomTypes = roomTypes.map((roomType: RoomType) =>
+          roomType.id === selectedRoomTypeId
+            ? { ...roomType, rooms: actualizedRooms }
+            : roomType
+        );
+        setRoomTypes(actualizedRoomTypes);
+        setRoomNumbersUploaded(
+          getAlreadyUploadRoomNumbers(actualizedRoomTypes)
+        );
+        handleCloseModal('addRoom');
         setNotification({
-          content: `Rooms could not be added.\n Error:${error.message}`,
-          type: 'error',
+          content: 'Rooms where added sucessfully',
+          type: 'success',
         });
-      },
-    }
-  );
+      }
+    },
+    onError: (error) => {
+      setNotification({
+        content: `Rooms could not be added.\n Error:${error.message}`,
+        type: 'error',
+      });
+    },
+  });
   const [deleteRoomsOfRoomModel, deleteRoomsResults] = useMutation(
     DELETE_ROOMS_OF_MODEL,
     {
@@ -240,12 +241,76 @@ export default function useHotelDashboard({
       },
     }
   );
+  const [createBooking, creatBookingResults] = useMutation(MAKE_BOOKING, {
+    onCompleted: () => {
+      const actualizedCards = infoCardsData.map((card) =>
+        card.id === 'bookings'
+          ? {
+              ...card,
+
+              title: bookingsCount + 1 === 1 ? 'Booking' : 'Bookings',
+              count: bookingsCount + 1,
+            }
+          : card.id === 'guests'
+          ? {
+              ...card,
+              title: guestsCount + 1 === 1 ? 'Guest' : 'Guests',
+              count: guestsCount + 1,
+            }
+          : card
+      );
+      setInfoCardsData(actualizedCards);
+      handleCloseModal('addBooking');
+      setNotification({
+        content: 'Booking was created sucessfully',
+        type: 'success',
+      });
+    },
+    onError: (error) => {
+      setNotification({
+        content: `Booking could not be created.\n Error:${error.message}`,
+        type: 'error',
+      });
+    },
+  });
+  const [getRoomsAvailable, roomsAvailablesRequest] = useLazyQuery(
+    GET_ROOM_MODEL_AVAILABLE_ROOMS
+  );
+  const handleGetAvailableRooms = async (searchArgs: {
+    roomModelId: number;
+    guestsDistribution: { adults: number; children: number }[];
+    checkInDate: string;
+    checkOutDate: string;
+  }) => {
+    try {
+      await getRoomsAvailable({ variables: searchArgs });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  //// actualize rooms availables
   React.useEffect(() => {
-    if (addRoomResults.loading) {
+    if (roomsAvailablesRequest.data?.rooms) {
+      return setAvailableRooms(roomsAvailablesRequest.data?.rooms);
+    }
+  }, [roomsAvailablesRequest.data]);
+
+  React.useEffect(() => {
+    if (
+      addRoomResults.loading ||
+      deleteRoomsResults.loading ||
+      roomsAvailablesRequest.loading ||
+      creatBookingResults.loading
+    ) {
       return setLoading(true);
     }
     return setLoading(false);
-  }, [addRoomResults.loading, deleteRoomsResults.loading]);
+  }, [
+    addRoomResults.loading,
+    deleteRoomsResults.loading,
+    roomsAvailablesRequest.loading,
+    creatBookingResults.loading,
+  ]);
 
   React.useEffect(() => {
     if (notification.content) {
@@ -283,17 +348,49 @@ export default function useHotelDashboard({
       console.log(error);
     }
   };
+  const onCreateBooking = async (data: any) => {
+    const variables = {
+      hotelId,
+      userId,
+      roomModelId: selectedRoomTypeId,
+      ...data,
+    };
+    try {
+      await createBooking({ variables });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleActions = async (
+    roomModelId: number,
+    action: RoomTypeActions,
+    roomsToDelete: number[] | []
+  ) => {
+    setSelectedRoomTypeId(roomModelId);
+    if (action === 'deleteRooms') {
+      setToDeleteRoomsIds(roomsToDelete);
+    }
 
+    return setModelsOpenState({
+      ...modalsOpenState,
+      [action]: true,
+    });
+  };
   return {
     onDeleteRooms,
     onAddNewRoom,
+    onCreateBooking,
     handleActions,
+
     handleCloseModal,
+    handleGetAvailableRooms,
+    selectedRoomTypeId,
     roomTypes,
     notification,
     loading,
     roomNumbersUploaded,
+    availableRooms,
     modalsOpenState,
-    cardsData,
+    infoCardsData,
   };
 }

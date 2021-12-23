@@ -214,7 +214,9 @@ function RoomsTable({
       disablePadding: false,
     },
   ];
-  const [rows, setRows] = React.useState(generateRows(roomTypes));
+  const [rows, setRows] = React.useState(
+    roomTypes ? generateRows(roomTypes) : []
+  );
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
   const [displayedRows, setDisplayedRows] = React.useState(

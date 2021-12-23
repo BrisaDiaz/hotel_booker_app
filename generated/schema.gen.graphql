@@ -212,7 +212,7 @@ type Mutation {
   declineBookingRequest(bookingRequestId: ID!, userId: ID!): BookingRequest
   deleteRoomOfModel(hotelId: ID!, roomModelId: ID!, roomsIds: [Int!]!, userId: ID!): [Room]
   editRoomModelVicibility(hotelId: Int!, public: Boolean!, roomModelId: ID!, userId: ID!): RoomModel
-  makeBooking(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications], landlineNumber: String!, lastName: String!, mobileNumber: String!, paymentMethod: String, roomModelId: ID!, roomsIds: [Int!]!, totalCost: Float!, userId: ID!): Booking
+  makeBooking(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications], landlineNumber: String!, lastName: String!, mobileNumber: String!, paymentMethod: String, roomModelId: ID!, roomsIds: [Int!]!, specifications: String, totalCost: Float!, userId: ID!): Booking
   makeBookingRequest(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications]!, landlineNumber: String!, lastName: String!, mobileNumber: String!, roomModelId: ID!, specifications: String): RoomConsultResponceResponce
   signin(email: String!, password: String!): AuthPayload
   signout(date: String): PlainResponse
@@ -246,6 +246,7 @@ type Query {
   bookingById(bookingId: ID!, userId: ID!): Booking
   checkRoomAvailability(checkInDate: String!, checkOutDate: String!, roomModelId: ID!, rooms: [roomSpecifications]!): RoomConsultResponceResponce
   facilitiesList: [Facility]
+  getRoomModelAvailableRooms(checkInDate: String!, checkOutDate: String!, roomModelId: ID!, rooms: [roomSpecifications!]!): [Room]
   hotelBookings(hotelId: ID!, userId: ID!): [Booking]
   hotelById(hotelId: ID!): Hotel
   hotelCategoriesList: [HotelCategory]

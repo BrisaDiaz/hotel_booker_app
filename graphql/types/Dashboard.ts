@@ -9,7 +9,11 @@ import {
   floatArg,
 } from 'nexus';
 import { prisma } from '@/lib/prisma';
-import { UserInputError, ForbiddenError } from 'apollo-server-micro';
+import {
+  UserInputError,
+  ForbiddenError,
+  ValidationError,
+} from 'apollo-server-micro';
 import {
   getAdminInfo,
   verifyIsHotelAdmin,
@@ -249,6 +253,25 @@ export const Query = extendType({
         return getData(parseInt(args.userId), parseInt(args.roomModelId));
       },
     });
+
+    t.field('getRoomModelAvailableRooms', {
+      type: list('Room'),
+      args: {
+        roomModelId: nonNull(idArg()),
+        checkOutDate: nonNull(stringArg()),
+        checkInDate: nonNull(stringArg()),
+        rooms: nonNull(list(nonNull(roomSpecifications))),
+      },
+      resolve: (root, args: any, ctx) => {
+        return checkRoomsAvailable({
+          roomModelId: parseInt(args.roomModelId),
+          roomsRequired: args.rooms.length,
+          checkOutDate: args.checkOutDate,
+          checkInDate: args.checkInDate,
+        });
+      },
+    });
+
     t.field('bookingById', {
       type: 'Booking',
       args: {
@@ -392,6 +415,7 @@ export const Mutation = extendType({
         email: nonNull(stringArg()),
         mobileNumber: nonNull(stringArg()),
         landlineNumber: nonNull(stringArg()),
+        specifications: stringArg(),
         guestsDistribution: list(roomSpecifications),
         roomsIds: nonNull(list(nonNull(intArg()))),
         checkInDate: nonNull(stringArg()),

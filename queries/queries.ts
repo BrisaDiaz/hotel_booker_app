@@ -423,3 +423,21 @@ export const GET_BOOKING_BY_ID = gql`
     }
   }
 `;
+export const GET_ROOM_MODEL_AVAILABLE_ROOMS = gql`
+  query getRoomModelAvailableRooms(
+    $roomModelId: ID!
+    $checkInDate: String!
+    $checkOutDate: String!
+    $rooms: [roomSpecifications!]!
+  ) {
+    rooms: getRoomModelAvailableRooms(
+      roomModelId: $roomModelId
+      checkInDate: $checkInDate
+      checkOutDate: $checkOutDate
+      rooms: $rooms
+    ) {
+      id
+      number
+    }
+  }
+`;

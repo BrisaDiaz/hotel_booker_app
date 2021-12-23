@@ -1,5 +1,3 @@
-import { keys } from '@mui/system';
-import { array } from 'prop-types';
 import { prisma } from '../../lib/prisma';
 
 export async function checkRoomsAvailable({
@@ -94,19 +92,18 @@ export async function checkIsValidRoomRequest({
         children: totalChildren,
       },
     };
+
   const availableRooms = await checkRoomsAvailable({
     roomModelId: roomDetails.id,
-    checkOutDate: new Date(checkOutDate)
-      .setHours(roomDetails.checkOutHour)
-      .toString(),
-    checkInDate: new Date(checkInDate)
-      .setHours(roomDetails.checkInHour)
-      .toString(),
+    checkOutDate,
+    checkInDate,
     roomsRequired: rooms.length,
   });
+
   if (!availableRooms.length)
     return {
       isAvailable: false,
+      rooms: availableRooms,
       message: 'The number of rooms availables dose not match the required.',
       requestData: {
         nights: totalNights,
@@ -133,8 +130,9 @@ export async function checkIsValidRoomRequest({
     },
   };
 }
-export function inBetweenDates(range: string[] | Date[]): Date[] {
+export function inBetweenDates(range: string[] | Date[]) {
   const [startDate, endDate] = range;
+
   const startDateInMiliseconds = new Date(startDate).getTime();
   const endDateInMiliseconds = new Date(endDate).getTime();
   const inBetweenPeriod = endDateInMiliseconds - startDateInMiliseconds;
@@ -146,6 +144,7 @@ export function inBetweenDates(range: string[] | Date[]): Date[] {
     .map(
       (_, index) => new Date(startDateInMiliseconds + index * aDayInMiliseconds)
     );
+
   return dates;
 }
 interface HotelQueryArgs {

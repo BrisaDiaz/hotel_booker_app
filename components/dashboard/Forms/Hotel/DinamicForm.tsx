@@ -13,6 +13,7 @@ import AspectSection from './AspectSection';
 import FormBottons from '../FormBottons';
 import { Hotel } from '@/interfaces/index';
 import { styles } from '@/components/dashboard/forms/styles';
+import FullScreenDialog from '@/components/FullScreenDialog';
 type Feature = {
   id: number;
   name: string;
@@ -129,70 +130,80 @@ export default function MultilineTextFields(props: {
   };
 
   return (
-    <Box
-      component="form"
-      sx={styles.root}
-      noValidate
-      autoComplete="off"
-      onSubmit={handleSubmit(submitMiddleware)}
+    <FullScreenDialog
+      title={`Edit ${hotel?.name}`}
+      onClose={abortHandler}
+      isOpen={toEditField ? true : false}
     >
-      <Typography component="h1" variant="h4" align="center" sx={styles.title}>
-        Edit {hotel.name}
-      </Typography>
-
-      {toEditField === 'about' && (
-        <AboutSection
-          register={register}
-          setValue={setValue}
-          hotelCategories={hotelCategories}
-          errors={errors}
-          defaultData={hotel}
-        >
-          <FormBottons onAbort={abortHandler} />
-        </AboutSection>
-      )}
-      {toEditField === 'price' && (
-        <PriceSection register={register} errors={errors} defaultData={hotel}>
-          <FormBottons onAbort={abortHandler} />
-        </PriceSection>
-      )}
-      {toEditField === 'contact' && (
-        <ContactSection register={register} errors={errors} defaultData={hotel}>
-          <FormBottons onAbort={abortHandler} />
-        </ContactSection>
-      )}
-      {toEditField === 'address' && (
-        <AddressSection register={register} errors={errors} defaultData={hotel}>
-          <FormBottons onAbort={abortHandler} />
-        </AddressSection>
-      )}
-      {toEditField === 'features' && (
-        <FeaturesSection
-          register={register}
-          setValue={setValue}
-          services={services}
-          languages={languages}
-          activities={activities}
-          facilities={facilities}
-          defaultData={hotel}
-        >
-          <FormBottons onAbort={abortHandler} />
-        </FeaturesSection>
-      )}
-      {toEditField === 'policies' && (
-        <PoliciesSection
-          register={register}
-          errors={errors}
-          defaultData={hotel}
-        >
-          <FormBottons onAbort={abortHandler} />
-        </PoliciesSection>
-      )}
-      {toEditField === 'aspect' && (
-        <AspectSection register={register} errors={errors}>
-          <FormBottons onAbort={abortHandler} />
-        </AspectSection>
-      )}
-    </Box>
+      <Box
+        component="form"
+        sx={styles.root}
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit(submitMiddleware)}
+      >
+        {toEditField === 'about' && (
+          <AboutSection
+            register={register}
+            setValue={setValue}
+            hotelCategories={hotelCategories}
+            errors={errors}
+            defaultData={hotel}
+          >
+            <FormBottons onAbort={abortHandler} />
+          </AboutSection>
+        )}
+        {toEditField === 'price' && (
+          <PriceSection register={register} errors={errors} defaultData={hotel}>
+            <FormBottons onAbort={abortHandler} />
+          </PriceSection>
+        )}
+        {toEditField === 'contact' && (
+          <ContactSection
+            register={register}
+            errors={errors}
+            defaultData={hotel}
+          >
+            <FormBottons onAbort={abortHandler} />
+          </ContactSection>
+        )}
+        {toEditField === 'address' && (
+          <AddressSection
+            register={register}
+            errors={errors}
+            defaultData={hotel}
+          >
+            <FormBottons onAbort={abortHandler} />
+          </AddressSection>
+        )}
+        {toEditField === 'features' && (
+          <FeaturesSection
+            register={register}
+            setValue={setValue}
+            services={services}
+            languages={languages}
+            activities={activities}
+            facilities={facilities}
+            defaultData={hotel}
+          >
+            <FormBottons onAbort={abortHandler} />
+          </FeaturesSection>
+        )}
+        {toEditField === 'policies' && (
+          <PoliciesSection
+            register={register}
+            errors={errors}
+            defaultData={hotel}
+          >
+            <FormBottons onAbort={abortHandler} />
+          </PoliciesSection>
+        )}
+        {toEditField === 'aspect' && (
+          <AspectSection register={register} errors={errors}>
+            <FormBottons onAbort={abortHandler} />
+          </AspectSection>
+        )}
+      </Box>
+    </FullScreenDialog>
   );
 }
