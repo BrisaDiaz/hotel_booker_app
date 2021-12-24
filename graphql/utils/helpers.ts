@@ -1,6 +1,6 @@
 import { prisma } from '../../lib/prisma';
 
-export async function checkRoomsAvailable({
+async function checkRoomsAvailable({
   roomModelId,
   checkInDate,
   checkOutDate,
@@ -42,7 +42,7 @@ export async function checkRoomsAvailable({
 
   return roomsWithRequiredDatesAvailables;
 }
-export async function checkIsValidRoomRequest({
+async function checkIsValidRoomRequest({
   roomDetails,
   rooms,
   checkOutDate,
@@ -130,7 +130,7 @@ export async function checkIsValidRoomRequest({
     },
   };
 }
-export function inBetweenDates(range: string[] | Date[]) {
+function inBetweenDates(range: string[] | Date[]) {
   const [startDate, endDate] = range;
 
   const startDateInMiliseconds = new Date(startDate).getTime();
@@ -159,7 +159,7 @@ interface HotelQueryArgs {
   skip?: number;
   take?: number;
 }
-export function hotelQueryConstructor(args: HotelQueryArgs) {
+function hotelQueryConstructor(args: HotelQueryArgs) {
   interface ArrayFilter {
     [key: string]: {
       some: { name: string };
@@ -286,7 +286,7 @@ type ToEditHotelField =
   | 'dinamicFeatures'
   | 'genericData';
 
-export function getHotelFieldsToEdit(args: any): ToEditHotelField[] {
+function getHotelFieldsToEdit(args: any): ToEditHotelField[] {
   let fields: ToEditHotelField[] = [];
   if (
     args.holeAddress ||
@@ -402,7 +402,7 @@ type ClientQuery =
         };
       };
     };
-export function clientQueryConstructor(
+function clientQueryConstructor(
   hotelId: number,
   args: {
     skip: number;
@@ -534,7 +534,7 @@ type BookingRequestQuery =
         guestsDistribution: boolean;
       };
     };
-export function bookingRequestQueryConstructor(
+function bookingRequestQueryConstructor(
   hotelId: number,
   args: {
     skip: number;
@@ -612,3 +612,29 @@ export function bookingRequestQueryConstructor(
   console.log(query);
   return query;
 }
+
+function schechuleBookingStatusUpdate(
+  bookingId: number,
+  newStatus: 'FINISH' | 'CANCELED',
+  date: Date
+) {
+  const currentDate = new Date(Date.now());
+  const schechuleDate = new Date(date);
+  const timeToDate = schechuleDate.getTime() - currentDate.getTime();
+  setTimeout(async () => {
+    await prisma.booking.update({
+      where: {
+        id: bookingId,
+      },
+      data: { status: newStatus },
+    });
+  }, timeToDate);
+}
+export {
+  checkRoomsAvailable,
+  checkIsValidRoomRequest,
+  getHotelFieldsToEdit,
+  clientQueryConstructor,
+  bookingRequestQueryConstructor,
+  schechuleBookingStatusUpdate,
+};

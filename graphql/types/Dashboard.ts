@@ -21,6 +21,7 @@ import {
   checkIsValidRoomRequest,
   clientQueryConstructor,
   bookingRequestQueryConstructor,
+  schechuleBookingStatusUpdate,
 } from '../utils/index';
 import { roomSpecifications, Client } from './Booking';
 import { searchFilter } from './Commun';
@@ -498,7 +499,11 @@ export const Mutation = extendType({
               })
             ),
           });
-
+          schechuleBookingStatusUpdate(
+            booking.id,
+            'FINISH',
+            booking.checkOutDate
+          );
           return booking;
         };
         return makeBooking(
@@ -596,7 +601,7 @@ export const Mutation = extendType({
               bookingId: booking.id,
             },
           });
-          return prisma.bookingRequest.update({
+          const createdBooking = await prisma.bookingRequest.update({
             where: {
               id: bookingRequestId,
             },
@@ -604,6 +609,12 @@ export const Mutation = extendType({
               status: 'ACCEPTED',
             },
           });
+          schechuleBookingStatusUpdate(
+            createdBooking.id,
+            'FINISH',
+            createdBooking.checkOutDate
+          );
+          return createdBooking;
         };
         return makeBooking(
           parseInt(args.userId),
