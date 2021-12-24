@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { getFeaturesTags } from '@/utils/index';
+
 import { v4 as uuidv4 } from 'uuid';
-import { Hotel } from '@/interfaces/index';
+import { RoomModel, Feature } from '@/interfaces/index';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
@@ -11,7 +11,8 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageList from '@mui/material/ImageList';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Paper from '@mui/material/Paper';
 import ImageSlider from '@/components/ImageSlider';
@@ -123,12 +124,13 @@ type ComponentProps = {
   isModalOpend: Boolean;
   closeModal: Function;
   onEdit: Function;
-  hotel: Partial<Hotel> | null;
+  roomType: Partial<RoomModel> | null;
 };
 
 function TransitionsModal(props: ComponentProps) {
-  const { isModalOpend, closeModal, onEdit, hotel } = props;
-  if (!isModalOpend || !hotel) return <div />;
+  const { isModalOpend, closeModal, onEdit, roomType } = props;
+
+  if (!isModalOpend || !roomType) return <div />;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -142,24 +144,22 @@ function TransitionsModal(props: ComponentProps) {
     }
   }, [isModalOpend]);
 
-  const TagsWithKeys = hotel.features
-    ? getFeaturesTags(hotel.features).map((feature: string) => ({
-        id: uuidv4(),
-        name: feature,
-      }))
-    : [];
+  let aditionalQualities = [];
+  roomType?.smooking &&
+    aditionalQualities.push({
+      id: uuidv4(),
+      name: 'allowe smooking',
+    });
+  roomType?.freeCancelation &&
+    aditionalQualities.push({
+      id: uuidv4(),
+      name: 'free cancelation',
+    });
   const features = [
-    { title: 'Facilities', items: hotel?.facilities },
-    { title: 'Services', items: hotel?.services },
-    { title: 'Activities', items: hotel?.activities },
-    { title: 'Languages', items: hotel?.languages },
-    { title: 'Others Qualities', items: TagsWithKeys },
+    { title: 'Services', items: roomType?.services },
+    { title: 'Activities', items: roomType?.amenities },
+    { title: 'Others Qualities', items: aditionalQualities },
   ];
-  const images: { title: string; image: string }[] = [
-    { title: 'Hotel frame', image: hotel?.frameImage || '' },
-    { title: 'Hotel Interior', image: hotel?.interiorImage || '' },
-  ];
-
   return (
     <div>
       <Modal
@@ -179,7 +179,7 @@ function TransitionsModal(props: ComponentProps) {
               <CloseButton handleClose={handleClose} />
             </Box>
 
-            {hotel && (
+            {roomType && (
               <Box className={classes.modalContent}>
                 <Box className={classes.titleBox}>
                   <Typography variant="subtitle1" color="primary">
@@ -188,7 +188,26 @@ function TransitionsModal(props: ComponentProps) {
                   <EditButton onClick={() => onEdit('aspect')} />
                 </Box>
 
-                <ImageSlider images={images} />
+                <ImageList
+                  sx={{
+                    width: '100%',
+                    maxHeight: '500px',
+                    overflow: 'hidden',
+                    objectFit: 'cover',
+                    objectPosition: 'center bottom',
+                  }}
+                  rowHeight={500}
+                  cols={1}
+                >
+                  <ImageListItem cols={1}>
+                    <img
+                      src={`${roomType.mainImage}`}
+                      srcSet={`${roomType.mainImage}`}
+                      alt={`${roomType.name}`}
+                      loading="lazy"
+                    />
+                  </ImageListItem>
+                </ImageList>
 
                 <Box className={classes.titleBox}>
                   <Typography variant="subtitle1" color="primary">
@@ -205,20 +224,9 @@ function TransitionsModal(props: ComponentProps) {
                     >
                       Name
                     </Typography>
-                    <Typography>{hotel.name}</Typography>
+                    <Typography>{roomType.name}</Typography>
                   </Box>
-                  {hotel?.brand && (
-                    <Box className={classes.rowField}>
-                      <Typography
-                        className={classes.legend}
-                        variant="subtitle2"
-                        color="text.secondary"
-                      >
-                        Brand
-                      </Typography>
-                      <Typography>{hotel.brand}</Typography>
-                    </Box>
-                  )}
+
                   <Box className={classes.rowField}>
                     <Typography
                       className={classes.legend}
@@ -227,7 +235,7 @@ function TransitionsModal(props: ComponentProps) {
                     >
                       Category
                     </Typography>
-                    <Typography>{hotel.category}</Typography>
+                    <Typography>{roomType.category}</Typography>
                   </Box>
                   <Box className={classes.columnField}>
                     <Typography
@@ -238,16 +246,16 @@ function TransitionsModal(props: ComponentProps) {
                       Description
                     </Typography>
                     <Typography component="pre" className={classes.paragraph}>
-                      {hotel.description}
+                      {roomType.description}
                     </Typography>
                   </Box>
                 </Box>
 
                 <Box className={classes.titleBox}>
                   <Typography variant="subtitle1" color="primary">
-                    Policies And Rules
+                    Capacity
                   </Typography>
-                  <EditButton onClick={() => onEdit('policies')} />
+                  <EditButton onClick={() => onEdit('capacity')} />
                 </Box>
 
                 <Box component="section">
@@ -257,9 +265,11 @@ function TransitionsModal(props: ComponentProps) {
                       variant="subtitle2"
                       color="text.secondary"
                     >
-                      Check In Hour
+                      mts<sup>2</sup>
                     </Typography>
-                    <time>{hotel.checkInHour}</time>
+                    <Typography>
+                      {roomType.mts2} mts<sup>2</sup>
+                    </Typography>
                   </Box>
                   <Box className={classes.rowField}>
                     <Typography
@@ -267,21 +277,61 @@ function TransitionsModal(props: ComponentProps) {
                       variant="subtitle2"
                       color="text.secondary"
                     >
-                      Check Out Hour
+                      maximun guests
                     </Typography>
-                    <time>{hotel.checkOutHour}</time>
+                    <Typography>{roomType.maximunGuests}</Typography>
                   </Box>
-                  <Box className={classes.columnField}>
+                  <Box className={classes.rowField}>
                     <Typography
                       className={classes.legend}
                       variant="subtitle2"
                       color="text.secondary"
                     >
-                      Policies
+                      minimun nights
                     </Typography>
-                    <Typography component="pre" className={classes.paragraph}>
-                      {hotel.policiesAndRules}
+                    <Typography>
+                      {' '}
+                      {roomType.minimunStay
+                        ? roomType.minimunStay
+                        : 'not specified'}
                     </Typography>
+                  </Box>
+
+                  <Box className={classes.rowField}>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
+                      maximun nights
+                    </Typography>
+                    <Typography>
+                      {roomType.maximunStay
+                        ? roomType.maximunStay
+                        : 'not specified'}
+                    </Typography>
+                  </Box>
+                  <Box className={classes.rowField}>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
+                      Beds
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                      }}
+                    >
+                      {roomType.beds.map((bed) => (
+                        <Typography key={bed.type} sx={{ fontSize: 'inherit' }}>
+                          {bed.quantity} {bed.type}
+                          {bed.quantity > 1 ? ' beds' : ' bed'}
+                        </Typography>
+                      ))}
+                    </Box>
                   </Box>
                 </Box>
                 <Box className={classes.titleBox}>
@@ -299,7 +349,7 @@ function TransitionsModal(props: ComponentProps) {
                     >
                       Lowest price
                     </Typography>
-                    <Typography>USD ${hotel.lowestPrice}</Typography>
+                    <Typography>USD ${roomType.lowestPrice}</Typography>
                   </Box>
                   <Box component="section">
                     <Box className={classes.rowField}>
@@ -310,68 +360,9 @@ function TransitionsModal(props: ComponentProps) {
                       >
                         Taxes and Charges
                       </Typography>
-                      <Typography>USD ${hotel.taxesAndCharges}</Typography>
+                      <Typography>USD ${roomType.taxesAndCharges}</Typography>
                     </Box>
                   </Box>
-                </Box>
-
-                <Box className={classes.titleBox}>
-                  <Typography variant="subtitle1" color="primary">
-                    Address
-                  </Typography>
-                  <EditButton onClick={() => onEdit('address')} />
-                </Box>
-                <Box component="section">
-                  <Box>
-                    <Typography sx={{ mb: 2, fontSize: '14px' }}>
-                      {hotel.address.holeAddress}
-                    </Typography>
-                  </Box>
-                </Box>
-
-                <Box className={classes.titleBox}>
-                  <Typography variant="subtitle1" color="primary">
-                    Contact
-                  </Typography>
-                  <EditButton onClick={() => onEdit('contact')} />
-                </Box>
-                <Box component="section">
-                  <Box className={classes.rowField}>
-                    <Typography
-                      className={classes.legend}
-                      variant="subtitle2"
-                      color="text.secondary"
-                    >
-                      Telephone
-                    </Typography>
-                    <Typography>{hotel.telephone}</Typography>
-                  </Box>
-                  {hotel?.email && (
-                    <Box className={classes.rowField}>
-                      <Typography
-                        className={classes.legend}
-                        variant="subtitle2"
-                        color="text.secondary"
-                      >
-                        Email
-                      </Typography>
-                      <Typography>{hotel.email}</Typography>
-                    </Box>
-                  )}
-                  {hotel?.website && (
-                    <Box className={classes.rowField}>
-                      <Typography
-                        className={classes.legend}
-                        variant="subtitle2"
-                        color="text.secondary"
-                      >
-                        Website
-                      </Typography>
-                      <Typography sx={{ textTransform: 'initial' }}>
-                        {hotel.website}
-                      </Typography>
-                    </Box>
-                  )}
                 </Box>
 
                 <Box className={classes.titleBox}>

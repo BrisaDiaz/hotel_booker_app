@@ -4,7 +4,7 @@ export const styles = {
     width: '100%',
     margin: '0 auto',
     pb: 4,
-    pt: 2,
+    pt: 1,
     px: { sm: 1 },
   },
   title: {

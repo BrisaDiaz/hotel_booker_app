@@ -30,7 +30,7 @@ export default function BasicModal({
   availableRooms: { id: number; number: number }[] | [];
   roomTypeId?: number | null;
 }) {
-  if (!roomTypeId) return <div />;
+  if (!roomTypeId || !isModalOpen) return <div />;
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {

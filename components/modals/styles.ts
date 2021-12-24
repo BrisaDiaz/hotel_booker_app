@@ -11,7 +11,7 @@ export const styles = {
     border: '1px solid rgba(244,244,244,1)',
     boxShadow: 24,
     borderRadius: 2,
-    p: 4,
+    p: 2,
     px: 3.5,
     maxHeight: '90%',
     overflowY: 'scroll',
@@ -54,8 +54,10 @@ export const styles = {
   roomGuests: {
     display: 'flex',
     gap: 1,
-    pl: 0.5,
     minWidth: 'max-content',
-    borderLeft: '4px solid rgb(224 224 224)',
+    '&:before': {
+      content: '"•"',
+      color: 'rgb(224 224 224)',
+    },
   },
 };

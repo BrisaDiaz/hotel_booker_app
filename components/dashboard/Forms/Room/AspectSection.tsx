@@ -11,12 +11,13 @@ import type { FileUploadEvent } from '@/interfaces/index';
 export default function ({
   register,
   errors,
+  children,
 }: {
+  children?: React.ReactNode;
   register: Function;
   errors: any;
 }) {
-  const defaultImage =
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU';
+  const defaultImage = '/public/images/default-img.gif';
   const [mainImage, setMainImage] = useState<string>(defaultImage);
 
   function handleOnChange(changeEvent: FileUploadEvent) {
@@ -76,6 +77,7 @@ export default function ({
           </Card>
         </Grid>
       </Grid>
+      {children}
     </Grid>
   );
 }

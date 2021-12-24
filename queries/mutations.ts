@@ -268,6 +268,82 @@ export const CREATE_ROOM_MODEL = gql`
     }
   }
 `;
+export const UPDATE_ROOM_MODEL = gql`
+  mutation updateRoomModel(
+    $userId: ID!
+    $hotelId: ID!
+    $roomModelId: ID!
+    $lowestPrice: Float
+    $taxesAndCharges: Float
+    $name: String
+    $mts2: Int
+    $beds: [bedsSpecifications]
+    $smooking: Boolean
+    $freeCancelation: Boolean
+    $category: String
+    $description: String
+    $minimunStay: Int
+    $maximunStay: Int
+    $maximunGuests: Int
+    $mainImage: String
+    $services: [String]
+    $amenities: [String]
+  ) {
+    roomModel: updateRoomModel(
+      userId: $userId
+      hotelId: $hotelId
+      roomModelId: $roomModelId
+      lowestPrice: $lowestPrice
+      smooking: $smooking
+      freeCancelation: $freeCancelation
+      taxesAndCharges: $taxesAndCharges
+      name: $name
+      mts2: $mts2
+      beds: $beds
+      category: $category
+      description: $description
+      minimunStay: $minimunStay
+      maximunStay: $maximunStay
+      maximunGuests: $maximunGuests
+      mainImage: $mainImage
+      services: $services
+      amenities: $amenities
+    ) {
+      id
+      hotelId
+      category
+      name
+      mts2
+      mainImage
+      lowestPrice
+      taxesAndCharges
+      maximunGuests
+      maximunStay
+      minimunStay
+      description
+      freeCancelation
+      smooking
+      rooms {
+        id
+        roomModelId
+        number
+      }
+      amenities {
+        id
+        name
+      }
+      services {
+        id
+        name
+      }
+      beds {
+        id
+        type
+        quantity
+      }
+    }
+  }
+`;
 export const ADD_ROOMS_TO_MODEL = gql`
   mutation addRoomToModel(
     $userId: ID!

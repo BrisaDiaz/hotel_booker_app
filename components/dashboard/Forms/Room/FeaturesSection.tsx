@@ -6,88 +6,36 @@ import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { styles } from '@/components/dashboard/forms/styles';
+import { RoomModel, Feature } from '@/interfaces/index';
 
-type Feature = {
-  id: number;
-  name: string;
-};
-export function BedsInputs({
-  beds,
-  register,
-  errors,
-}: {
-  beds: Feature[];
-  register: Function;
-  errors: {
-    [key: string]: {
-      message: string;
-    };
-  };
-}) {
-  return (
-    <>
-      {beds.map((bed) => (
-        <Box
-          key={bed.id}
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '100%',
-            maxWidth: '300px',
-            padding: '0 20px',
-          }}
-        >
-          <Typography
-            sx={{ mr: 1, width: 'max-content', textTransform: 'capitalize' }}
-          >
-            {bed.name}
-            {' :'}
-          </Typography>
-          <Box sx={{ width: '100px' }}>
-            <TextField
-              sx={styles.textField}
-              id="bedQuantity"
-              defaultValue={0}
-              inputProps={{ min: 0 }}
-              {...register(`${bed.name}`, {
-                min: {
-                  value: 0,
-                  message: 'Bed quantity must be positive number',
-                },
-              })}
-              variant="outlined"
-              label={
-                errors[`${bed.name}`]
-                  ? errors[`${bed.name}`].message
-                  : 'Quantity'
-              }
-              type="number"
-              error={errors[`${bed.name}`] ? true : false}
-            />
-          </Box>
-        </Box>
-      ))}
-    </>
-  );
-}
 export default function ({
   register,
   errors,
   services,
   amenities,
   setValue,
-  bedTypes,
+
+  children,
+  defaultData,
 }: {
+  defaultData?: RoomModel;
   register: Function;
   setValue: Function;
   errors: any;
   services: Feature[];
   amenities: Feature[];
-  bedTypes: Feature[];
+
+  children?: React.ReactNode;
 }) {
-  const [servicesSelected, setServicesSelected] = useState<string[]>([]);
-  const [amenitiesSelected, setAmenitiesSelected] = useState<string[]>([]);
+  const getOptionsNames = (data: autocompliteData[]): string[] => {
+    return data.map((option) => option.name);
+  };
+  const [servicesSelected, setServicesSelected] = useState<string[]>(
+    defaultData?.services ? getOptionsNames(defaultData?.services) : []
+  );
+  const [amenitiesSelected, setAmenitiesSelected] = useState<string[]>(
+    defaultData?.amenities ? getOptionsNames(defaultData?.amenities) : []
+  );
 
   type autocompliteData = { name: string };
 
@@ -104,9 +52,6 @@ export default function ({
     setValue('amenities', amenitiesSelected);
   }, [amenitiesSelected]);
 
-  const getOptionsNames = (data: autocompliteData[]): string[] => {
-    return data.map((option) => option.name);
-  };
   return (
     <Box component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -117,30 +62,46 @@ export default function ({
         label="Amenities"
         options={amenities}
         sx={styles.textField}
+        defaultValue={defaultData?.amenities || []}
       />
       <AutocompleteCheckbox
         onChange={(data: autocompliteData[]) => handleServicesField(data)}
         label="Services"
         options={services}
         sx={styles.textField}
+        defaultValue={defaultData?.services || []}
       />
-      <Box sx={{ m: '10px 0', display: 'flex', flexWrap: 'wrap' }}>
-        <BedsInputs beds={bedTypes} register={register} errors={errors} />
+      <Box sx={{ my: 1 }}>
+        <FormControlLabel
+          sx={{ textTransform: 'capitalize' }}
+          {...register('freeCancelation')}
+          control={
+            <Checkbox
+              color="secondary"
+              inputProps={{
+                defaultChecked: defaultData?.freeCancelation ? true : false,
+              }}
+            />
+          }
+          label="free cancelation"
+        />
+        <FormControlLabel
+          sx={{ textTransform: 'capitalize' }}
+          {...register('smooking')}
+          control={
+            <Checkbox
+              color="secondary"
+              inputProps={{
+                defaultChecked: defaultData?.smooking ? true : false,
+              }}
+            />
+          }
+          label="smooking"
+        />
       </Box>
-      <FormControlLabel
-        sx={{ textTransform: 'capitalize' }}
-        {...register('freeCancelation')}
-        control={<Checkbox color="secondary" />}
-        label="free cancelation"
-      />
-      <FormControlLabel
-        sx={{ textTransform: 'capitalize' }}
-        {...register('smooking')}
-        control={<Checkbox />}
-        label="smooking"
-      />
       <input type="hidden" {...register('services')} />
       <input type="hidden" {...register('amenities')} />
+      {children}
     </Box>
   );
 }

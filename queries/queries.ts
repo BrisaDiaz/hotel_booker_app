@@ -175,7 +175,7 @@ export const GET_HOTEL_BY_ID = gql`
 `;
 export const GET_ROOM_MODEL_BY_ID = gql`
   query roomModelById($roomModelId: ID!) {
-    roomModelById(roomModelId: $roomModelId) {
+    roomModel: roomModelById(roomModelId: $roomModelId) {
       id
       hotelId
       hotel {

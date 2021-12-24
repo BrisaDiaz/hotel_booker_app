@@ -454,14 +454,13 @@ export interface NexusGenFieldTypes {
     createHotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     declineBookingRequest: NexusGenRootTypes['BookingRequest'] | null; // BookingRequest
     deleteRoomOfModel: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
-    editRoomModelVicibility: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     makeBooking: NexusGenRootTypes['Booking'] | null; // Booking
     makeBookingRequest: NexusGenRootTypes['RoomConsultResponceResponce'] | null; // RoomConsultResponceResponce
     signin: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
     signout: NexusGenRootTypes['PlainResponse'] | null; // PlainResponse
     signup: NexusGenRootTypes['User'] | null; // User
     updateHotel: NexusGenRootTypes['Hotel'] | null; // Hotel
-    updateRoomModelPrice: NexusGenRootTypes['RoomModel'] | null; // RoomModel
+    updateRoomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
   }
   Mutetion: { // field return type
     updateMyAccount: NexusGenRootTypes['User'] | null; // User
@@ -740,14 +739,13 @@ export interface NexusGenFieldTypeNames {
     createHotel: 'Hotel'
     declineBookingRequest: 'BookingRequest'
     deleteRoomOfModel: 'Room'
-    editRoomModelVicibility: 'RoomModel'
     makeBooking: 'Booking'
     makeBookingRequest: 'RoomConsultResponceResponce'
     signin: 'AuthPayload'
     signout: 'PlainResponse'
     signup: 'User'
     updateHotel: 'Hotel'
-    updateRoomModelPrice: 'RoomModel'
+    updateRoomModel: 'RoomModel'
   }
   Mutetion: { // field return type name
     updateMyAccount: 'User'
@@ -926,12 +924,6 @@ export interface NexusGenArgTypes {
       roomsIds: number[]; // [Int!]!
       userId: string; // ID!
     }
-    editRoomModelVicibility: { // args
-      hotelId: number; // Int!
-      public: boolean; // Boolean!
-      roomModelId: string; // ID!
-      userId: string; // ID!
-    }
     makeBooking: { // args
       checkInDate: string; // String!
       checkOutDate: string; // String!
@@ -1007,9 +999,23 @@ export interface NexusGenArgTypes {
       userId: string; // ID!
       website?: string | null; // String
     }
-    updateRoomModelPrice: { // args
+    updateRoomModel: { // args
+      amenities?: Array<string | null> | null; // [String]
+      beds?: Array<NexusGenInputs['bedsSpecifications'] | null> | null; // [bedsSpecifications]
+      category?: string | null; // String
+      description?: string | null; // String
+      freeCancelation?: boolean | null; // Boolean
       hotelId: string; // ID!
       lowestPrice?: number | null; // Float
+      mainImage?: string | null; // String
+      maximunGuests?: number | null; // Int
+      maximunStay?: number | null; // Int
+      minimunStay?: number | null; // Int
+      mts2?: number | null; // Int
+      name?: string | null; // String
+      roomModelId: string; // ID!
+      services?: Array<string | null> | null; // [String]
+      smooking?: boolean | null; // Boolean
       taxesAndCharges?: number | null; // Float
       userId: string; // ID!
     }

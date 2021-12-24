@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-
+import { RoomModel } from '@/interfaces/index';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,7 +17,11 @@ export default function ({
   errors,
   roomCategories,
   setValue,
+  children,
+  defaultData,
 }: {
+  defaultData?: RoomModel;
+  children?: React.ReactNode;
   register: Function;
   setValue: Function;
   errors: any;
@@ -98,6 +102,7 @@ export default function ({
         variant="outlined"
         sx={styles.textField}
       />
+      {children}
     </Box>
   );
 }

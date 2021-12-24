@@ -211,14 +211,13 @@ type Mutation {
   createHotel(accessible: Boolean!, activities: [String]!, administrativeArea: String!, brand: String, category: String, checkInHour: String!, checkOutHour: String!, city: String, country: String, description: String!, ecoFriendly: Boolean!, email: String, facilities: [String]!, familyFriendly: Boolean!, frameImage: String!, freeCancelation: Boolean!, holeAddress: String!, interiorImage: String!, languages: [String]!, lowestPrice: Float!, name: String!, petFriendly: Boolean!, policiesAndRules: String!, postalCode: String!, services: [String]!, smokerFriendly: Boolean!, street: String, taxesAndCharges: Float!, telephone: String!, userId: ID!, website: String): Hotel
   declineBookingRequest(bookingRequestId: ID!, userId: ID!): BookingRequest
   deleteRoomOfModel(hotelId: ID!, roomModelId: ID!, roomsIds: [Int!]!, userId: ID!): [Room]
-  editRoomModelVicibility(hotelId: Int!, public: Boolean!, roomModelId: ID!, userId: ID!): RoomModel
   makeBooking(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications], landlineNumber: String!, lastName: String!, mobileNumber: String!, paymentMethod: String, roomModelId: ID!, roomsIds: [Int!]!, specifications: String, totalCost: Float!, userId: ID!): Booking
   makeBookingRequest(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications]!, landlineNumber: String!, lastName: String!, mobileNumber: String!, roomModelId: ID!, specifications: String): RoomConsultResponceResponce
   signin(email: String!, password: String!): AuthPayload
   signout(date: String): PlainResponse
   signup(email: String!, firstName: String!, lastName: String!, password: String!): User
   updateHotel(accessible: Boolean, activities: [String], administrativeArea: String, brand: String, category: String, checkInHour: String, checkOutHour: String, city: String, country: String, description: String, ecoFriendly: Boolean, email: String, facilities: [String], familyFriendly: Boolean, frameImage: String, freeCancelation: Boolean, holeAddress: String, hotelId: ID!, interiorImage: String, languages: [String], lowestPrice: Float, name: String, petFriendly: Boolean, policiesAndRules: String, postalCode: String, services: [String], smokerFriendly: Boolean, street: String, taxesAndCharges: Float, telephone: String, userId: ID!, website: String): Hotel
-  updateRoomModelPrice(hotelId: ID!, lowestPrice: Float, taxesAndCharges: Float, userId: ID!): RoomModel
+  updateRoomModel(amenities: [String], beds: [bedsSpecifications], category: String, description: String, freeCancelation: Boolean, hotelId: ID!, lowestPrice: Float, mainImage: String, maximunGuests: Int, maximunStay: Int, minimunStay: Int, mts2: Int, name: String, roomModelId: ID!, services: [String], smooking: Boolean, taxesAndCharges: Float, userId: ID!): RoomModel
 }
 
 type Mutetion {

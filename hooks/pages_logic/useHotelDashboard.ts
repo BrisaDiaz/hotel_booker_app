@@ -1,13 +1,20 @@
 import React from 'react';
 import {
   ADD_ROOMS_TO_MODEL,
+  GET_ROOM_MODEL_BY_ID,
   DELETE_ROOMS_OF_MODEL,
+  UPDATE_ROOM_MODEL,
   GET_ROOM_MODEL_AVAILABLE_ROOMS,
   MAKE_BOOKING,
+  GET_ALL_SERVICES,
+  GET_ALL_AMENITIES,
+  GET_ALL_ROOM_CATEGORIES,
+  GET_ALL_BEDS,
 } from '@/queries/index';
+import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { NextRouter, useRouter } from 'next/router';
-
+import { RoomModel } from '@/interfaces/index';
 export interface RoomType {
   __typename: string;
   id: number;
@@ -132,11 +139,22 @@ export default function useHotelDashboard({
       hotelId,
     })
   );
+  type SectionToEdit =
+    | 'about'
+    | 'price'
+    | 'aspect'
+    | 'features'
+    | 'capacity'
+    | '';
+  const [toEditSection, setToEditSection] = React.useState<SectionToEdit>('');
+  const [toEditRoomTypeData, setToEditRoomTypeData] =
+    React.useState<RoomModel | null>(null);
 
   const [modalsOpenState, setModelsOpenState] = React.useState({
     addRoom: false,
     deleteRooms: false,
     edit: false,
+    editSection: false,
     addBooking: false,
     displayRoomsStatus: false,
   });
@@ -156,6 +174,9 @@ export default function useHotelDashboard({
 
     return roomNumbers;
   };
+  const setActualizeRoomModelToEditData = (data: RoomModel) => {
+    setToEditRoomTypeData(data);
+  };
   const [roomTypes, setRoomTypes] = React.useState<RoomType[]>(roomModels);
   const [toDeleteRoomsIds, setToDeleteRoomsIds] = React.useState<number[] | []>(
     []
@@ -174,7 +195,6 @@ export default function useHotelDashboard({
       }[]
     | []
   >([]);
-  type RoomTypeActions = 'addRoom' | 'deleteRooms' | 'edit' | 'addBooking';
 
   const handleCloseModal = (modalType: RoomTypeActions) => {
     setModelsOpenState({
@@ -183,33 +203,36 @@ export default function useHotelDashboard({
     });
   };
 
-  const [addRoomsToRoomModel, addRoomResults] = useMutation(MAKE_BOOKING, {
-    onCompleted: ({ addRoomToModel }) => {
-      const actualizedRooms = addRoomToModel;
-      if (actualizedRooms.length) {
-        const actualizedRoomTypes = roomTypes.map((roomType: RoomType) =>
-          roomType.id === selectedRoomTypeId
-            ? { ...roomType, rooms: actualizedRooms }
-            : roomType
-        );
-        setRoomTypes(actualizedRoomTypes);
-        setRoomNumbersUploaded(
-          getAlreadyUploadRoomNumbers(actualizedRoomTypes)
-        );
-        handleCloseModal('addRoom');
+  const [addRoomsToRoomModel, addRoomRequest] = useMutation(
+    ADD_ROOMS_TO_MODEL,
+    {
+      onCompleted: ({ addRoomToModel }) => {
+        const actualizedRooms = addRoomToModel;
+        if (actualizedRooms.length) {
+          const actualizedRoomTypes = roomTypes.map((roomType: RoomType) =>
+            roomType.id === selectedRoomTypeId
+              ? { ...roomType, rooms: actualizedRooms }
+              : roomType
+          );
+          setRoomTypes(actualizedRoomTypes);
+          setRoomNumbersUploaded(
+            getAlreadyUploadRoomNumbers(actualizedRoomTypes)
+          );
+          handleCloseModal('addRoom');
+          setNotification({
+            content: 'Rooms where added sucessfully',
+            type: 'success',
+          });
+        }
+      },
+      onError: (error) => {
         setNotification({
-          content: 'Rooms where added sucessfully',
-          type: 'success',
+          content: `Rooms could not be added.\n Error:${error.message}`,
+          type: 'error',
         });
-      }
-    },
-    onError: (error) => {
-      setNotification({
-        content: `Rooms could not be added.\n Error:${error.message}`,
-        type: 'error',
-      });
-    },
-  });
+      },
+    }
+  );
   const [deleteRoomsOfRoomModel, deleteRoomsResults] = useMutation(
     DELETE_ROOMS_OF_MODEL,
     {
@@ -273,8 +296,41 @@ export default function useHotelDashboard({
       });
     },
   });
+
+  const [updateRoomType, updateRoomTypeRequest] = useMutation(
+    UPDATE_ROOM_MODEL,
+    {
+      onCompleted: ({ roomModel }) => {
+        setActualizeRoomModelToEditData(roomModel);
+        const displayedRoomTypesActualized = roomTypes.map((currentRoom) =>
+          currentRoom.id === roomModel.id ? roomModel : currentRoom
+        );
+        setRoomTypes(displayedRoomTypesActualized);
+        setToEditSection('');
+        setNotification({
+          content: `Update was complited sucessfully`,
+          type: 'success',
+        });
+      },
+      onError: (error) => {
+        setNotification({
+          content: `Update could not be complited.\n Error:${error.message}`,
+          type: 'error',
+        });
+      },
+    }
+  );
   const [getRoomsAvailable, roomsAvailablesRequest] = useLazyQuery(
     GET_ROOM_MODEL_AVAILABLE_ROOMS
+  );
+
+  const [getRoomTypeData, roomTypeDataRequest] =
+    useLazyQuery(GET_ROOM_MODEL_BY_ID);
+  const [getServices, servicesRequest] = useLazyQuery(GET_ALL_SERVICES);
+  const [getAmenities, amenitiesRequest] = useLazyQuery(GET_ALL_AMENITIES);
+  const [getBedsTypes, bedTypesRequest] = useLazyQuery(GET_ALL_BEDS);
+  const [getCategories, categoriesRequest] = useLazyQuery(
+    GET_ALL_ROOM_CATEGORIES
   );
   const handleGetAvailableRooms = async (searchArgs: {
     roomModelId: number;
@@ -295,30 +351,60 @@ export default function useHotelDashboard({
     }
   }, [roomsAvailablesRequest.data]);
 
+  const getRoomModelToEditData = async (roomModelId: number) => {
+    try {
+      await getRoomTypeData({ variables: { roomModelId: roomModelId } });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  React.useEffect(() => {
+    if (!toEditSection) return handleCloseModal('editSection');
+  }, [toEditSection]);
+
   React.useEffect(() => {
     if (
-      addRoomResults.loading ||
+      addRoomRequest.loading ||
       deleteRoomsResults.loading ||
       roomsAvailablesRequest.loading ||
-      creatBookingResults.loading
+      creatBookingResults.loading ||
+      roomTypeDataRequest.loading ||
+      servicesRequest.loading ||
+      amenitiesRequest.loading ||
+      bedTypesRequest.loading ||
+      categoriesRequest.loading ||
+      updateRoomTypeRequest.loading
     ) {
       return setLoading(true);
     }
     return setLoading(false);
   }, [
-    addRoomResults.loading,
+    addRoomRequest.loading,
     deleteRoomsResults.loading,
     roomsAvailablesRequest.loading,
     creatBookingResults.loading,
+    roomTypeDataRequest.loading,
+    servicesRequest.loading,
+    amenitiesRequest.loading,
+    bedTypesRequest.loading,
+    categoriesRequest.loading,
+    updateRoomTypeRequest.loading,
   ]);
 
   React.useEffect(() => {
     if (notification.content) {
       setTimeout(() => {
         setNotification({ content: '', type: 'success' });
-      }, 5000);
+      }, 6000);
     }
   }, [notification.content]);
+  //// actualize room to edit data
+  React.useEffect(() => {
+    if (roomTypeDataRequest.data?.roomModel?.id) {
+      setActualizeRoomModelToEditData(roomTypeDataRequest.data?.roomModel);
+    }
+  }, [roomTypeDataRequest.data]);
 
   const onAddNewRoom = async (roomNumbers: number[]) => {
     if (!roomNumbers.length) return null;
@@ -361,6 +447,53 @@ export default function useHotelDashboard({
       console.log(error);
     }
   };
+  const onEditSection = async (data: any) => {
+    let variables = { ...data };
+
+    try {
+      setLoading(true);
+      if (toEditSection === 'aspect') {
+        const [mainImageData] = await uploadToCloudinary([variables.mainImage]);
+        variables.mainImage = mainImageData.secure_url;
+      }
+      await updateRoomType({
+        variables: {
+          ...variables,
+          hotelId: hotelId,
+          userId: userId,
+          roomModelId: selectedRoomTypeId,
+        },
+      });
+    } catch (err: any) {
+      setLoading(false);
+      setNotification({
+        content: `Update could not be complited.`,
+        type: 'error',
+      });
+    }
+  };
+  const handleEditSelected = async (toEditSection: SectionToEdit) => {
+    if (toEditSection === 'about') {
+      await getCategories();
+    }
+    if (toEditSection === 'capacity') {
+      await getBedsTypes();
+    }
+    if (toEditSection === 'features') {
+      await Promise.all([getServices(), getAmenities()]);
+    }
+    setToEditSection(toEditSection);
+  };
+  const handleEditAbort = () => {
+    setToEditSection('');
+  };
+
+  type RoomTypeActions =
+    | 'addRoom'
+    | 'deleteRooms'
+    | 'edit'
+    | 'editSection'
+    | 'addBooking';
   const handleActions = async (
     roomModelId: number,
     action: RoomTypeActions,
@@ -370,21 +503,35 @@ export default function useHotelDashboard({
     if (action === 'deleteRooms') {
       setToDeleteRoomsIds(roomsToDelete);
     }
+    if (action === 'edit') {
+      if (!toEditRoomTypeData || toEditRoomTypeData.id != roomModelId) {
+        await getRoomModelToEditData(roomModelId);
+      }
+    }
 
     return setModelsOpenState({
       ...modalsOpenState,
       [action]: true,
     });
   };
+
   return {
     onDeleteRooms,
     onAddNewRoom,
     onCreateBooking,
+    onEditSection,
     handleActions,
-
+    handleEditAbort,
     handleCloseModal,
     handleGetAvailableRooms,
+    handleEditSelected,
+    toEditSection,
+    services: servicesRequest.data?.servicesList,
+    amenities: amenitiesRequest.data?.amenitiesList,
+    bedTypes: bedTypesRequest.data?.bedTypesList,
+    categories: categoriesRequest.data?.roomCategoriesList,
     selectedRoomTypeId,
+    toEditRoomTypeData: toEditRoomTypeData,
     roomTypes,
     notification,
     loading,

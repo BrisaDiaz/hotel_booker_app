@@ -27,7 +27,7 @@ import ActionCard from '@/components/dashboard/ActionCard';
 import HotelCard from '@/components/dashboard/HotelCard';
 import HotelModal from '@/components/modals/HotelModal';
 
-type FieldToEdit =
+type SectionToEdit =
   | 'about'
   | 'contact'
   | 'price'
@@ -87,7 +87,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
     null
   );
 
-  const [toEditField, setToEditField] = React.useState<FieldToEdit>('');
+  const [toEditSection, setToEditSection] = React.useState<SectionToEdit>('');
   const [notification, setNotification] = React.useState<{
     content: string;
     type: 'success' | 'error';
@@ -104,15 +104,15 @@ const Dashboard: WithLayoutPage<PageProps> = ({
   const [getFacilities, facilitiesRequest] = useLazyQuery(GET_ALL_FACILITIES);
   const [getActivities, activitiesRequest] = useLazyQuery(GET_ALL_ACTIVITIES);
   const [getLanguages, languagesRequest] = useLazyQuery(GET_ALL_LANGUAGES);
-  const [updateHotel, hotelUpdateRequest] = useMutation(UPDATE_HOTEL, {
+  const [updateHotel] = useMutation(UPDATE_HOTEL, {
     onCompleted: ({ hotel }: { hotel: Hotel }) => {
       setToEditHotelData(hotel);
       ///// update hotel card data
       if (
-        toEditField === 'about' ||
-        toEditField === 'address' ||
-        toEditField === 'price' ||
-        toEditField === 'aspect'
+        toEditSection === 'about' ||
+        toEditSection === 'address' ||
+        toEditSection === 'price' ||
+        toEditSection === 'aspect'
       ) {
         const updatedHotelsCards = hotelCards.map((hotelCard) => {
           if (hotelCard.id === hotel.id) {
@@ -136,7 +136,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
         content: 'Hotel updated successfully',
         type: 'success',
       });
-      setToEditField('');
+      setToEditSection('');
       cleanNotification();
     },
     onError: (graphError) => {
@@ -182,7 +182,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
   }, [hotelDataRequest.data]);
 
   const handleEditAbort = () => {
-    setToEditField('');
+    setToEditSection('');
   };
   const closeHotelModal = () => {
     setIsHotelModalOpen(false);
@@ -201,7 +201,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
 
     try {
       setIsLoading(true);
-      if (toEditField === 'aspect') {
+      if (toEditSection === 'aspect') {
         const toUploadImages = [
           hotelVariables.frameImage,
           hotelVariables.interiorImage,
@@ -238,7 +238,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
     }
   };
 
-  const handleEditSelected = async (fieldSelected: FieldToEdit) => {
+  const handleEditSelected = async (fieldSelected: SectionToEdit) => {
     if (fieldSelected === 'features') {
       await Promise.all([
         getServices(),
@@ -250,14 +250,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
     if (fieldSelected === 'about') {
       await getCategries();
     }
-    setToEditField(fieldSelected);
-    closeHotelModal();
-    if (formRef && formRef.current) {
-      window.scrollTo({
-        top: formRef.current.offsetTop - 100,
-        behavior: 'smooth',
-      });
-    }
+    setToEditSection(fieldSelected);
   };
 
   return (
@@ -292,18 +285,17 @@ const Dashboard: WithLayoutPage<PageProps> = ({
             />
           ))}
         </Box>
-        {!isLoading && toEditHotelData && isHotelModalOpen && (
-          <HotelModal
-            isModalOpend={isHotelModalOpen}
-            closeModal={closeHotelModal}
-            onEdit={handleEditSelected}
-            hotel={toEditHotelData}
-          />
-        )}
+
+        <HotelModal
+          isModalOpend={!isLoading && toEditHotelData && isHotelModalOpen}
+          closeModal={closeHotelModal}
+          onEdit={handleEditSelected}
+          hotel={toEditHotelData}
+        />
       </Box>
-      {!isLoading && toEditField && toEditHotelData && (
+      {!isLoading && toEditSection && toEditHotelData && (
         <DinamicForm
-          toEditField={toEditField}
+          toEditSection={toEditSection}
           hotel={toEditHotelData}
           submitHandler={handleSubmit}
           abortHandler={handleEditAbort}
@@ -313,7 +305,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
           services={servicesRequest.data?.servicesList || []}
           hotelCategories={categoriesRequest?.data?.hotelCategoriesList || []}
         />
-      )}{' '}
+      )}
       <div ref={formRef} />
       <Backdrop loading={isLoading} />
       {notification?.content && (

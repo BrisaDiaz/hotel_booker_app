@@ -18,6 +18,8 @@ import AddRoomModal from '@/components/modals/AddRoomModal';
 import SnackBar from '@/components/SnackBar';
 import Dialog from '@/components/Dialog';
 import AddBookingModal from '@/components/modals/AddBookingModal';
+import DinamicForm from '@/components/dashboard/forms/Room/DinamicForm';
+import RoomModal from '@/components/modals/RoomModal';
 interface ActionCard {
   title: string;
   actions: Array<{ name: string; callback: Function }>;
@@ -69,9 +71,18 @@ const HotelAdmin: WithLayoutPage<Props> = ({
     onDeleteRooms,
     onAddNewRoom,
     onCreateBooking,
+    onEditSection,
     handleActions,
+    handleEditAbort,
     handleCloseModal,
     handleGetAvailableRooms,
+    handleEditSelected,
+    toEditRoomTypeData,
+    toEditSection,
+    services,
+    amenities,
+    bedTypes,
+    categories,
     selectedRoomTypeId,
     roomTypes,
     notification,
@@ -89,6 +100,7 @@ const HotelAdmin: WithLayoutPage<Props> = ({
     hotelId,
     userId,
   });
+
   return (
     <div>
       <Head>
@@ -129,6 +141,29 @@ const HotelAdmin: WithLayoutPage<Props> = ({
         getAvailableRooms={handleGetAvailableRooms}
       />
 
+      <RoomModal
+        isModalOpend={
+          !loading && toEditRoomTypeData && modalsOpenState['edit']
+            ? true
+            : false
+        }
+        closeModal={() => handleCloseModal('edit')}
+        onEdit={handleEditSelected}
+        roomType={toEditRoomTypeData}
+      />
+
+      {!loading && toEditSection && toEditRoomTypeData && (
+        <DinamicForm
+          toEditSection={toEditSection}
+          roomType={toEditRoomTypeData}
+          submitHandler={onEditSection}
+          abortHandler={handleEditAbort}
+          services={services || []}
+          amenities={amenities || []}
+          bedTypes={bedTypes || []}
+          roomCategories={categories || []}
+        />
+      )}
       <RoomTypesTable roomTypes={roomTypes} handleActions={handleActions} />
       <Backdrop loading={loading} />
       {notification.content && (
@@ -184,7 +219,7 @@ export const getServerSideProps = async ({
       // },
       props: {},
     };
-  } catch (e) {
+  } catch (e: any) {
     console.log(e.networkError ? e.networkError?.result?.errors : e);
 
     return {

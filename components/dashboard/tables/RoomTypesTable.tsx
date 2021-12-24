@@ -27,8 +27,11 @@ import Menu from '@mui/material/Menu';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
-import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import BedIcone from '@/components/BedIcone';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     bodyCell: {
@@ -247,14 +250,14 @@ function RoomsTable({
     <TableContainer
       component={Paper}
       elevation={4}
-      sx={{ maxWidth: '100%', overflowX: 'auto', mb: 0 }}
+      sx={{ width: '100%', overflowX: 'clip', mb: 0 }}
     >
       <Table
         sx={{ minWidth: 650, minHeight: '70vh' }}
         aria-label="simple table"
         size="medium"
       >
-        <TableHead sx={{ py: 2 }}>
+        <TableHead sx={{ py: 2, width: '100%' }}>
           <TableRow>
             <TableCell align="right"></TableCell>
             {Headers.map((header) => (
@@ -273,7 +276,7 @@ function RoomsTable({
             ))}
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody sx={{ overflowX: 'auto' }}>
           {!Boolean(displayedRows.length) ? (
             <TableRow>
               <TableCell component="th" scope="row" colSpan={7}>
@@ -351,7 +354,6 @@ function RoomsTable({
                     </Typography>
                   </Box>
                 </TableCell>
-
                 <TableCell align="right">
                   {' '}
                   <Typography
@@ -370,28 +372,39 @@ function RoomsTable({
 
                 <TableCell align="right">
                   <Box
+                    component="ul"
                     sx={{
                       minWidth: 'max-content',
                       display: 'flex',
                       flexDirection: 'column',
+                      px: 1,
                     }}
                   >
-                    <Typography
-                      sx={{ minWidth: 'max-content', fontSize: '14px' }}
-                    >
-                      {`${row.maxGuests} ${
-                        row.maxGuests === 1 ? 'guest' : 'guests'
-                      } max.`}
-                    </Typography>
-                    {row.beds.map((bed) => (
+                    <Box sx={{ display: 'flex' }} component="li">
+                      <PersonOutlineIcon fontSize="small" color="secondary" />
                       <Typography
                         sx={{ minWidth: 'max-content', fontSize: '14px' }}
-                        key={bed.type}
                       >
-                        {`${bed.quantity} ${bed.type} ${
-                          bed.quantity === 1 ? 'bed' : 'beds'
-                        }`}
+                        {`${row.maxGuests} ${
+                          row.maxGuests === 1 ? 'guest' : 'guests'
+                        } max.`}
                       </Typography>
+                    </Box>
+                    {row.beds.map((bed) => (
+                      <Box
+                        key={bed.type}
+                        sx={{ display: 'flex' }}
+                        component="li"
+                      >
+                        <BedIcone type={bed.type} size="small" />
+                        <Typography
+                          sx={{ minWidth: 'max-content', fontSize: '14px' }}
+                        >
+                          {`${bed.quantity} ${bed.type} ${
+                            bed.quantity === 1 ? 'bed' : 'beds'
+                          }`}
+                        </Typography>
+                      </Box>
                     ))}
                   </Box>
                 </TableCell>

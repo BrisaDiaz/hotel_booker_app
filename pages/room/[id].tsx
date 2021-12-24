@@ -547,8 +547,8 @@ export const getServerSideProps = async ({
 
   return {
     props: {
-      room: data?.roomModelById,
-      roomModelId: data?.roomModelById.id,
+      room: data?.roomModel,
+      roomModelId: data?.roomModel.id,
     },
   };
 };

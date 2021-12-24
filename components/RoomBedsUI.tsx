@@ -1,37 +1,25 @@
-import BedIcon from '@mui/icons-material/Bed';
-import KingBedIcon from '@mui/icons-material/KingBed';
-import SingleBedIcon from '@mui/icons-material/SingleBed';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-
-function DinamicBedIcone(bedType: string, size: string) {
-  return bedType === 'californian king' ? (
-    <KingBedIcon fontSize={size} color="secondary" />
-  ) : bedType === 'full' || bedType === 'queen' ? (
-    <BedIcon fontSize={size} color="secondary" />
-  ) : (
-    <SingleBedIcon fontSize={size} color="secondary" />
-  );
-}
+import BedIcone from '@/components/BedIcone';
 
 interface withIconeBed {
   label: string;
   Icone: JSX.Element;
 }
-interface withQuantityItem {
+interface withQuantityFeature {
   id: number;
   type: string;
   quantity: number;
 }
 const getBedsInterface = (
-  beds: withQuantityItem[],
-  size: string
+  beds: withQuantityFeature[],
+  size?: 'small' | 'inherit' | 'medium' | 'large'
 ): withIconeBed[] => {
   const bedsInterface = beds.map((bedInfo) => ({
     label: `${bedInfo.quantity} ${bedInfo.type} ${
       bedInfo.quantity > 1 ? 'beds' : 'bed'
     }`,
-    Icone: DinamicBedIcone(bedInfo.type, size),
+    Icone: <BedIcone type={bedInfo.type} size={size} />,
   }));
   return bedsInterface;
 };
@@ -39,7 +27,7 @@ export default function RoomBedsUI({
   beds,
   size,
 }: {
-  beds: withQuantityItem[];
+  beds: withQuantityFeature[];
   size: string;
 }) {
   const bedsWidthIcon: withIconeBed[] = getBedsInterface(beds, size);

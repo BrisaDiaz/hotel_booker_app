@@ -82,7 +82,11 @@ export default function MultilineTextFields(props: {
         roomCategories={roomCategories}
       />
       <PriceSection register={register} errors={errors} />
-      <CapacitySection register={register} errors={errors} />
+      <CapacitySection
+        register={register}
+        errors={errors}
+        bedTypes={bedTypes}
+      />
       <FeaturesSection
         register={register}
         errors={errors}

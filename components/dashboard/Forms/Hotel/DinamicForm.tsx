@@ -1,6 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import Typography from '@mui/material/Typography';
 
 import Box from '@mui/material/Box';
 import AboutSection from './AboutSection';
@@ -13,12 +12,12 @@ import AspectSection from './AspectSection';
 import FormBottons from '../FormBottons';
 import { Hotel } from '@/interfaces/index';
 import { styles } from '@/components/dashboard/forms/styles';
-import FullScreenDialog from '@/components/FullScreenDialog';
+import FullScreenModal from '@/components/modals/FullScreenModal';
 type Feature = {
   id: number;
   name: string;
 };
-type FieldToEdit =
+type SectionToEdit =
   | 'about'
   | 'contact'
   | 'price'
@@ -29,7 +28,7 @@ type FieldToEdit =
   | '';
 export default function MultilineTextFields(props: {
   hotel: Hotel;
-  toEditField: FieldToEdit;
+  toEditSection: SectionToEdit;
   services: Feature[] | [];
   activities: Feature[] | [];
   facilities: Feature[] | [];
@@ -40,7 +39,7 @@ export default function MultilineTextFields(props: {
 }) {
   const {
     hotel,
-    toEditField,
+    toEditSection,
     services,
     activities,
     facilities,
@@ -59,7 +58,7 @@ export default function MultilineTextFields(props: {
   const submitMiddleware = (data: any, e: any) => {
     let variables: { [key: string]: number | string | File };
 
-    if (toEditField === 'policies') {
+    if (toEditSection === 'policies') {
       variables = {
         checkInHour: data?.checkInHour,
         checkOutHour: data?.checkOutHour,
@@ -67,7 +66,7 @@ export default function MultilineTextFields(props: {
       };
       return props.submitHandler(variables);
     }
-    if (toEditField === 'address') {
+    if (toEditSection === 'address') {
       variables = {
         holeAddress: data?.holeAddress,
         country: data?.country,
@@ -78,7 +77,7 @@ export default function MultilineTextFields(props: {
       };
       return props.submitHandler(variables);
     }
-    if (toEditField === 'about') {
+    if (toEditSection === 'about') {
       variables = {
         name: data?.name,
 
@@ -90,7 +89,7 @@ export default function MultilineTextFields(props: {
       };
       return props.submitHandler(variables);
     }
-    if (toEditField === 'contact') {
+    if (toEditSection === 'contact') {
       variables = {
         telephone: data?.telephone,
         email: data?.email,
@@ -98,21 +97,21 @@ export default function MultilineTextFields(props: {
       };
       return props.submitHandler(variables);
     }
-    if (toEditField === 'price') {
+    if (toEditSection === 'price') {
       variables = {
         lowestPrice: data?.lowestPrice * 1,
         taxesAndCharges: data?.taxesAndCharges * 1,
       };
       return props.submitHandler(variables);
     }
-    if (toEditField === 'aspect') {
+    if (toEditSection === 'aspect') {
       variables = {
         frameImage: data?.frameImage ? data?.frameImage[0] : null,
         interiorImage: data?.interiorImage ? data?.interiorImage[0] : null,
       };
       return props.submitHandler(variables);
     }
-    if (toEditField === 'features') {
+    if (toEditSection === 'features') {
       variables = {
         facilities: data?.facilities,
         services: data?.services,
@@ -130,10 +129,10 @@ export default function MultilineTextFields(props: {
   };
 
   return (
-    <FullScreenDialog
+    <FullScreenModal
       title={`Edit ${hotel?.name}`}
       onClose={abortHandler}
-      isOpen={toEditField ? true : false}
+      isOpen={toEditSection ? true : false}
     >
       <Box
         component="form"
@@ -142,7 +141,7 @@ export default function MultilineTextFields(props: {
         autoComplete="off"
         onSubmit={handleSubmit(submitMiddleware)}
       >
-        {toEditField === 'about' && (
+        {toEditSection === 'about' && (
           <AboutSection
             register={register}
             setValue={setValue}
@@ -153,12 +152,12 @@ export default function MultilineTextFields(props: {
             <FormBottons onAbort={abortHandler} />
           </AboutSection>
         )}
-        {toEditField === 'price' && (
+        {toEditSection === 'price' && (
           <PriceSection register={register} errors={errors} defaultData={hotel}>
             <FormBottons onAbort={abortHandler} />
           </PriceSection>
         )}
-        {toEditField === 'contact' && (
+        {toEditSection === 'contact' && (
           <ContactSection
             register={register}
             errors={errors}
@@ -167,7 +166,7 @@ export default function MultilineTextFields(props: {
             <FormBottons onAbort={abortHandler} />
           </ContactSection>
         )}
-        {toEditField === 'address' && (
+        {toEditSection === 'address' && (
           <AddressSection
             register={register}
             errors={errors}
@@ -176,7 +175,7 @@ export default function MultilineTextFields(props: {
             <FormBottons onAbort={abortHandler} />
           </AddressSection>
         )}
-        {toEditField === 'features' && (
+        {toEditSection === 'features' && (
           <FeaturesSection
             register={register}
             setValue={setValue}
@@ -189,7 +188,7 @@ export default function MultilineTextFields(props: {
             <FormBottons onAbort={abortHandler} />
           </FeaturesSection>
         )}
-        {toEditField === 'policies' && (
+        {toEditSection === 'policies' && (
           <PoliciesSection
             register={register}
             errors={errors}
@@ -198,12 +197,12 @@ export default function MultilineTextFields(props: {
             <FormBottons onAbort={abortHandler} />
           </PoliciesSection>
         )}
-        {toEditField === 'aspect' && (
+        {toEditSection === 'aspect' && (
           <AspectSection register={register} errors={errors}>
             <FormBottons onAbort={abortHandler} />
           </AspectSection>
         )}
       </Box>
-    </FullScreenDialog>
+    </FullScreenModal>
   );
 }

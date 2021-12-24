@@ -10,7 +10,7 @@ import {
   floatArg,
   inputObjectType,
 } from 'nexus';
-import { verifyIsHotelAdmin } from '../utils/index';
+import { verifyIsHotelAdmin, deleteImage } from '../utils/index';
 import { prisma } from '../../lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -189,7 +189,7 @@ export const Mutation = extendType({
         const createHotelRoomModel = async (
           hotelId: number,
           userId: number,
-          args
+          args: any
         ) => {
           await verifyIsHotelAdmin(userId, hotelId);
           const roomModel = await prisma.roomModel.create({
@@ -235,63 +235,99 @@ export const Mutation = extendType({
         return createHotelRoomModel(userId, hotelId, args);
       },
     });
-    t.field('editRoomModelVicibility', {
-      type: 'RoomModel',
-      args: {
-        roomModelId: nonNull(idArg()),
-        userId: nonNull(idArg()),
-        hotelId: nonNull(intArg()),
-        public: nonNull(booleanArg()),
-      },
-      resolve(root, args, ctx) {
-        const hotelId = parseInt(args.hotelId);
-        const userId = parseInt(args.userId);
-        const roomModelId = parseInt(args.roomModelId);
-        const editRoomModelVicibility = async (
-          userId: number,
-          hotelId: number,
-          roomModelId: number
-        ) => {
-          await verifyIsHotelAdmin(userId, hotelId);
-          return await prisma.roomModel.update({
-            where: {
-              id: roomModelId,
-            },
-            data: {
-              public: args.public,
-            },
-          });
-        };
-        return editRoomModelVicibility(userId, hotelId, roomModelId);
-      },
-    });
-    t.field('updateRoomModelPrice', {
+
+    t.field('updateRoomModel', {
       type: 'RoomModel',
       args: {
         userId: nonNull(idArg()),
         hotelId: nonNull(idArg()),
+        roomModelId: nonNull(idArg()),
         lowestPrice: floatArg(),
         taxesAndCharges: floatArg(),
+        name: stringArg(),
+        mts2: intArg(),
+        category: stringArg(),
+        description: stringArg(),
+        minimunStay: intArg(),
+        maximunStay: intArg(),
+        maximunGuests: intArg(),
+        mainImage: stringArg(),
+        services: list(stringArg()),
+        amenities: list(stringArg()),
+        freeCancelation: booleanArg(),
+        smooking: booleanArg(),
+        beds: list(bedsSpecifications),
       },
       resolve(root, args, ctx) {
-        const hotelId = parseInt(args.hotelId);
-        const userId = parseInt(args.userId);
-        const updateRoomModelPrice = async (
+        const updateRoomModel = async (
           userId: number,
           hotelId: number,
+          roomModelId: number,
           args: any
         ) => {
           await verifyIsHotelAdmin(userId, hotelId);
-          return await prisma.roomModel.update({
+          let mainImage;
+          if (args.mainImage) {
+            const roomModel = await prisma.roomModel.findUnique({
+              where: {
+                id: roomModelId,
+              },
+            });
+            if (!roomModel) return;
+            //// delete change images from the cloud
+
+            await deleteImage(roomModel.mainImage);
+
+            mainImage = args.mainImage;
+          }
+          return prisma.roomModel.update({
             where: {
-              id: args.id,
+              id: roomModelId,
             },
             data: {
+              name: args.name,
+              mts2: args.mts2,
+              roomCategory: args.category
+                ? {
+                    connect: { name: args.category },
+                  }
+                : undefined,
               lowestPrice: args.lowestPrice,
+              taxesAndCharges: args.taxesAndCharges,
+              description: args.description,
+              maximunStay: args.maximunStay,
+              minimunStay: args.maximunStay,
+              maximunGuests: args.maximunGuests,
+              mainImage,
+              freeCancelation: args.freeCancelation,
+              smooking: args.smooking,
+              services: args.services?.length
+                ? {
+                    connect: args?.services?.map((service: string) => ({
+                      name: service,
+                    })),
+                  }
+                : undefined,
+              amenities: args.amenities?.length
+                ? {
+                    connect: args?.amenities?.map((item: string) => ({
+                      name: item,
+                    })),
+                  }
+                : undefined,
+            },
+            include: {
+              services: true,
+              amenities: true,
             },
           });
         };
-        return updateRoomModelPrice(userId, hotelId, args);
+        return updateRoomModel(
+          parseInt(args.hotelId),
+          parseInt(args.userId),
+          parseInt(args.roomModelId),
+          args
+        );
       },
     });
 

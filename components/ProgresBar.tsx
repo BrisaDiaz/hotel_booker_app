@@ -20,7 +20,7 @@ export default function LinearIndeterminate() {
       sx={{
         width: '100%',
         position: 'fixed',
-        top: '63px',
+        top: { xs: '56px', sm: '64px' },
         visibility: isRouteChanging ? 'visible' : 'hidden',
       }}
     >

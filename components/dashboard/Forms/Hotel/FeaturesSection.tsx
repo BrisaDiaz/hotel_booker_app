@@ -116,9 +116,11 @@ export default function ({
               control={
                 <Checkbox
                   color="secondary"
-                  checked={
-                    defaultData?.features?.freeCancelation ? true : false
-                  }
+                  inputProps={{
+                    defaultChecked: defaultData?.features?.freeCancelation
+                      ? true
+                      : false,
+                  }}
                   {...register('freeCancelation')}
                 />
               }
@@ -126,16 +128,27 @@ export default function ({
             />
             <FormControlLabel
               control={
-                <Checkbox color="secondary" {...register('accessible')} />
+                <Checkbox
+                  color="secondary"
+                  {...register('accessible')}
+                  inputProps={{
+                    defaultChecked: defaultData?.features?.accessible
+                      ? true
+                      : false,
+                  }}
+                />
               }
-              checked={defaultData?.features?.accessible ? true : false}
               label="Accessible"
             />
             <FormControlLabel
               control={
                 <Checkbox
                   color="secondary"
-                  checked={defaultData?.features?.familyFriendly ? true : false}
+                  inputProps={{
+                    defaultChecked: defaultData?.features?.familyFriendly
+                      ? true
+                      : false,
+                  }}
                   {...register('familyFriendly')}
                 />
               }
@@ -148,7 +161,11 @@ export default function ({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={defaultData?.features?.petFriendly ? true : false}
+                  inputProps={{
+                    defaultChecked: defaultData?.features?.freeCancelation
+                      ? true
+                      : false,
+                  }}
                   color="secondary"
                   {...register('petFriendly')}
                 />
@@ -158,7 +175,11 @@ export default function ({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={defaultData?.features?.smokerFriendly ? true : false}
+                  inputProps={{
+                    defaultChecked: defaultData?.features?.smokerFriendly
+                      ? true
+                      : false,
+                  }}
                   color="secondary"
                   {...register('smokerFriendly')}
                 />
@@ -168,7 +189,11 @@ export default function ({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={defaultData?.features?.ecoFriendly ? true : false}
+                  inputProps={{
+                    defaultChecked: defaultData?.features?.ecoFriendly
+                      ? true
+                      : false,
+                  }}
                   color="secondary"
                   {...register('ecoFriendly')}
                 />
