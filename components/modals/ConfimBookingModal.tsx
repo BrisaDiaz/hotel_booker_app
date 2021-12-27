@@ -42,7 +42,7 @@ export default function BasicModal({
     clearErrors,
   } = useForm({ mode: 'onBlur' });
 
-  const dataFormatter = (data: {
+  const submitMiddleware = (data: {
     roomsIds: number[];
     totalCost: string;
     paymentMethod: string;
@@ -72,7 +72,7 @@ export default function BasicModal({
           sx={styles.modal}
           component="form"
           noValidate
-          onSubmit={handleSubmit(dataFormatter)}
+          onSubmit={handleSubmit(submitMiddleware)}
         >
           <CloseButton handleClose={handleClose} />
           <Typography

@@ -83,6 +83,7 @@ export default function MultilineTextFields({
       variables = {
         lowestPrice: data.lowestPrice * 1,
         taxesAndCharges: data.taxesAndCharges * 1,
+        cancelationFee: data.cancelationFee * 1,
       };
       return submitHandler(variables);
     }
@@ -140,6 +141,7 @@ export default function MultilineTextFields({
             register={register}
             errors={errors}
             defaultData={roomType}
+            sourceForm="roomForm"
           >
             <FormBottons onAbort={abortHandler} />
           </PriceSection>

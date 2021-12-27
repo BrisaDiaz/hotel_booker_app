@@ -17,7 +17,7 @@ export default function ({
   register: Function;
   errors: any;
 }) {
-  const defaultImage = '/public/images/default-img.gif';
+  const defaultImage = 'https://www.grancapitan.com.ar/wp-content/uploads/2014/10/default-img.gif';
   const [frameImage, setFrameImage] = useState<string>(defaultImage);
   const [interiorImage, setInteriorImage] = useState<string>(defaultImage);
   function handleOnChange(changeEvent: FileUploadEvent) {

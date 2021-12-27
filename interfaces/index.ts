@@ -34,6 +34,7 @@ export interface RoomModel {
   mts2: number;
   mainImage: string;
   lowestPrice: number;
+  cancelationFee: number;
   taxesAndCharges: number;
   maximunGuests: number;
   maximunStay: number;
@@ -146,13 +147,35 @@ export interface HotelGuest {
     }[];
   }[];
 }
-export interface BookingListed {
+export interface Booking {
   id: number;
-  status: string;
+  totalCost: number;
+  paymentMethod: string;
+  specifications: number;
+  clientId: number;
   checkInDate: string;
   checkOutDate: string;
-  roomModel: { id: number };
-  reservedRooms: { number: number }[];
+  status: string;
+  roomModel: {
+    id: number;
+    name: string;
+    cancelationFee: number;
+  };
+  reservedRooms: {
+    number: number;
+  }[];
+  guestsDistribution: {
+    id: number;
+    adults: number;
+    children: number;
+  }[];
+}
+export interface CancelationDetails {
+  id: number;
+  createdAt: string;
+  cancelationFee: number;
+  message: string;
+  bookingId: number;
 }
 export interface BookingEvent {
   id: string;
@@ -160,6 +183,8 @@ export interface BookingEvent {
   start: Date;
   end: Date;
   resourceId: number;
+  color: string;
+  status: string;
   allDay?: boolean;
   selectable?: boolean;
 }

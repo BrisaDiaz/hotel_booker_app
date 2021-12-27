@@ -7,29 +7,8 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import BookingRoomInputs from './BookingRoomInputs';
 import CloseButton from '@/components/modals/CloseButton';
-import useBookingInputsController from '../../hooks/useBookingInputsController';
+import { styles } from './styles';
 import { useForm } from 'react-hook-form';
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  minWidth: 360,
-  maxWidth: 420,
-  width: '100%',
-  bgcolor: 'background.paper',
-  border: '1px solid rgba(244,244,244,1)',
-  boxShadow: 24,
-  borderRadius: 2,
-  p: 4,
-  px: 3.5,
-};
-
-const title = {
-  textTransform: 'capitalize',
-  mb: 2,
-  align: 'center',
-};
 
 export default function TransitionsModal({
   children,
@@ -42,37 +21,19 @@ export default function TransitionsModal({
     register,
     handleSubmit,
     setError,
+    setValue,
     formState: { errors },
   } = useForm({ mode: 'onBlur' });
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const {
-    handleBookingData,
-    handleDeleteRoom,
-    handdleAddRoom,
-    handleRoomChanges,
-    rooms,
-    minDate,
-  } = useBookingInputsController({ setError });
-  const submitHandler = (data: any) => {
-    const formattedData = handleBookingData(data);
-    if (!formattedData) return null;
 
-    onSubmit(formattedData);
+  const submitHandler = (data: any) => {
+    onSubmit(data);
     handleClose();
   };
-  const inputsProps = {
-    handleDeleteRoom,
-    handdleAddRoom,
-    handleRoomChanges,
-    rooms,
-    minDate,
-    register,
-    setError,
-    errors,
-  };
+
   return (
     <div>
       <div onClick={handleOpen}>{children}</div>
@@ -88,14 +49,19 @@ export default function TransitionsModal({
         }}
       >
         <Fade in={open}>
-          <Box sx={style}>
+          <Box sx={styles.modal}>
             <CloseButton handleClose={handleClose} />
 
             <form onSubmit={handleSubmit(submitHandler)}>
-              <Typography variant="h5" component="h2" sx={title}>
+              <Typography variant="h5" component="h2" sx={styles.title}>
                 check Room abailability
               </Typography>
-              <BookingRoomInputs {...inputsProps} />
+              <BookingRoomInputs
+                register={register}
+                setError={setError}
+                errors={errors}
+                setValue={setValue}
+              />
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                   type="submit"

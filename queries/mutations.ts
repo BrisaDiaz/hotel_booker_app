@@ -230,6 +230,7 @@ export const CREATE_ROOM_MODEL = gql`
     $userId: ID!
     $hotelId: ID!
     $lowestPrice: Float!
+    $cancelationFee: Float
     $taxesAndCharges: Float!
     $name: String!
     $mts2: Int!
@@ -249,9 +250,11 @@ export const CREATE_ROOM_MODEL = gql`
       userId: $userId
       hotelId: $hotelId
       lowestPrice: $lowestPrice
+      taxesAndCharges: $taxesAndCharges
+      cancelationFee: $cancelationFee
       smooking: $smooking
       freeCancelation: $freeCancelation
-      taxesAndCharges: $taxesAndCharges
+
       name: $name
       mts2: $mts2
       beds: $beds
@@ -274,6 +277,7 @@ export const UPDATE_ROOM_MODEL = gql`
     $hotelId: ID!
     $roomModelId: ID!
     $lowestPrice: Float
+    $cancelationFee: Float!
     $taxesAndCharges: Float
     $name: String
     $mts2: Int
@@ -294,6 +298,7 @@ export const UPDATE_ROOM_MODEL = gql`
       hotelId: $hotelId
       roomModelId: $roomModelId
       lowestPrice: $lowestPrice
+      cancelationFee: $cancelationFee
       smooking: $smooking
       freeCancelation: $freeCancelation
       taxesAndCharges: $taxesAndCharges
@@ -317,6 +322,7 @@ export const UPDATE_ROOM_MODEL = gql`
       mainImage
       lowestPrice
       taxesAndCharges
+      cancelationFee
       maximunGuests
       maximunStay
       minimunStay
@@ -373,6 +379,7 @@ export const DELETE_ROOMS_OF_MODEL = gql`
     deleteRoomOfModel(
       userId: $userId
       hotelId: $hotelId
+
       roomModelId: $roomModelId
       roomsIds: $roomsIds
     ) {
@@ -477,6 +484,26 @@ export const MAKE_BOOKING = gql`
       roomsIds: $roomsIds
     ) {
       id
+    }
+  }
+`;
+export const CANCEL_BOOKING = gql`
+  mutation cancelBooking(
+    $userId: ID!
+    $bookingId: ID!
+    $message: String!
+    $cancelationFee: Float!
+  ) {
+    cancelationDetails: cancelBooking(
+      userId: $userId
+      bookingId: $bookingId
+      message: $message
+      cancelationFee: $cancelationFee
+    ) {
+      bookingId
+      createdAt
+      message
+      cancelationFee
     }
   }
 `;

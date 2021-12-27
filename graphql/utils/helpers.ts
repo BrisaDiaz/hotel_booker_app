@@ -615,10 +615,10 @@ function bookingRequestQueryConstructor(
 
 function schechuleBookingStatusUpdate(
   bookingId: number,
-  newStatus: 'FINISH' | 'CANCELED',
+  newStatus: 'FINISHED' | 'CANCELED',
   date: Date
 ) {
-  const currentDate = new Date(Date.now());
+  const currentDate = new Date();
   const schechuleDate = new Date(date);
   const timeToDate = schechuleDate.getTime() - currentDate.getTime();
   setTimeout(async () => {
@@ -630,11 +630,81 @@ function schechuleBookingStatusUpdate(
     });
   }, timeToDate);
 }
+type BookingStatus = 'FINISHED' | 'CANCELED' | 'ACTIVE';
+type BookingWhere = {
+  hotelId: number;
+  status?: BookingStatus;
+  checkInDate?: {
+    gte: Date;
+  };
+  checkOutDate?: {
+    lte: Date;
+  };
+};
+function bookingQueryConstructor(
+  hotelId: number,
+  args: {
+    from?: string;
+    until?: string;
+    status: string;
+  }
+): {
+  where: BookingWhere;
+} {
+  const currentDate = new Date();
+  const firstDayOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1
+  );
+  const lastDayOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1,
+    0
+  );
+  let where: BookingWhere = {
+    hotelId: hotelId,
+    checkInDate: {
+      gte: firstDayOfMonth,
+    },
+    checkOutDate: {
+      lte: lastDayOfMonth,
+    },
+  };
+
+  if (args.status === 'finished') {
+    where['status'] = 'FINISHED';
+  }
+  if (args.status === 'canceled') {
+    where['status'] = 'CANCELED';
+  }
+  if (args.status === 'active') {
+    where['status'] = 'ACTIVE';
+  }
+
+  if (args.from) {
+    where['checkInDate'] = {
+      gte: new Date(args.from),
+    };
+  }
+  if (args.until) {
+    where['checkOutDate'] = {
+      lte: new Date(args.until),
+    };
+  }
+
+  const query = {
+    where,
+  };
+  return query;
+}
 export {
   checkRoomsAvailable,
   checkIsValidRoomRequest,
   getHotelFieldsToEdit,
+  hotelQueryConstructor,
   clientQueryConstructor,
   bookingRequestQueryConstructor,
   schechuleBookingStatusUpdate,
+  bookingQueryConstructor,
 };

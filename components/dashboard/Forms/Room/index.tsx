@@ -59,6 +59,7 @@ export default function MultilineTextFields(props: {
       minimunStay: data.minimunNights * 1,
       lowestPrice: data.lowestPrice * 1,
       taxesAndCharges: data.taxesAndCharges * 1,
+      cancelationFee: data.cancelationFee * 1,
     };
 
     submitHandler(variables);
@@ -81,7 +82,7 @@ export default function MultilineTextFields(props: {
         setValue={setValue}
         roomCategories={roomCategories}
       />
-      <PriceSection register={register} errors={errors} />
+      <PriceSection register={register} errors={errors} sourceForm="roomForm" />
       <CapacitySection
         register={register}
         errors={errors}

@@ -163,6 +163,7 @@ export const GET_HOTEL_BY_ID = gql`
         mts2
         lowestPrice
         taxesAndCharges
+        cancelationFee
         mainImage
         beds {
           id
@@ -189,6 +190,7 @@ export const GET_ROOM_MODEL_BY_ID = gql`
       mainImage
       lowestPrice
       taxesAndCharges
+      cancelationFee
       maximunGuests
       maximunStay
       minimunStay
@@ -237,7 +239,6 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
         mainImage
         lowestPrice
         taxesAndCharges
-
         maximunGuests
         beds {
           id
@@ -300,6 +301,7 @@ export const GET_HOTEL_BOOKING_REQUESTS = gql`
           name
           lowestPrice
           taxesAndCharges
+          cancelationFee
         }
       }
       totalResults
@@ -372,8 +374,20 @@ export const MAKE_ROOM_CONSULT = gql`
 `;
 
 export const GET_HOTEL_BOOKINGS = gql`
-  query hotelBookings($hotelId: ID!, $userId: ID!) {
-    bookings: hotelBookings(hotelId: $hotelId, userId: $userId) {
+  query hotelBookings(
+    $hotelId: ID!
+    $userId: ID!
+    $status: String
+    $from: String
+    $until: String
+  ) {
+    bookings: hotelBookings(
+      hotelId: $hotelId
+      userId: $userId
+      status: $status
+      from: $from
+      until: $until
+    ) {
       id
       status
       checkInDate
@@ -409,6 +423,7 @@ export const GET_BOOKING_BY_ID = gql`
       paymentMethod
       checkInDate
       checkOutDate
+      status
       guestsDistribution {
         id
         adults
@@ -416,6 +431,7 @@ export const GET_BOOKING_BY_ID = gql`
       }
       roomModel {
         name
+        cancelationFee
       }
       reservedRooms {
         number
@@ -438,6 +454,16 @@ export const GET_ROOM_MODEL_AVAILABLE_ROOMS = gql`
     ) {
       id
       number
+    }
+  }
+`;
+export const GET_BOOKING_CANCELATION_DETAILS = gql`
+  query getBookingCancelationDetails($bookingId: ID!) {
+    cancelationDetails: getBookingCancelationDetails(bookingId: $bookingId) {
+      bookingId
+      createdAt
+      message
+      cancelationFee
     }
   }
 `;

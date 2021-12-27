@@ -92,11 +92,11 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
       return setLoading(true);
     }
     return setLoading(false);
-  }, [consultResponce, boolkingResponce]);
+  }, [consultResponce.loading, boolkingResponce.loading]);
 
   React.useEffect(() => {
-    if (consultResponce.data) {
-      const { isAvailable } = consultResponce.data.responce;
+    if (consultResponce.data?.responce) {
+      const { isAvailable, message } = consultResponce.data.responce;
       if (isAvailable) {
         setNotification({
           ...notification,
@@ -107,18 +107,18 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
       }
       setNotification({
         ...notification,
-        content: '',
+        content: message,
       });
       return clearNotifications();
     }
   }, [consultResponce]);
 
   React.useEffect(() => {
-    if (boolkingResponce.data) {
-      const { content } = boolkingResponce.data.responce;
+    if (boolkingResponce.data?.responce) {
+      const { message } = boolkingResponce.data.responce;
       setNotification({
         ...notification,
-        content,
+        content: message,
       });
       return clearNotifications();
     }

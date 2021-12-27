@@ -48,10 +48,20 @@ export const GuestsDistribution = objectType({
     t.int('children');
   },
 });
+export const CancelationDetails = objectType({
+  name: 'CancelationDetails',
+  definition(t) {
+    t.id('id');
+    t.int('bookingId');
+    t.string('message');
+    t.float('cancelationFee');
+    t.string('createdAt');
+  },
+});
 
 export const BookingStatus = enumType({
   name: 'BookingStatus',
-  members: ['ACTIVE', 'CANCELED', 'FINISH'],
+  members: ['ACTIVE', 'CANCELED', 'FINISHED'],
 });
 export const BookingRequestStatus = enumType({
   name: 'BookingRequestStatus',
@@ -242,6 +252,19 @@ export const ConsultQuery = extendType({
           return { isAvailable: result.isAvailable, message: result.message };
         };
         return makeConsult(parseInt(args.roomModelId), args);
+      },
+    });
+    t.field('getBookingCancelationDetails', {
+      type: CancelationDetails,
+      args: {
+        bookingId: nonNull(idArg()),
+      },
+      resolve(root, args, ctx) {
+        return prisma.cancelationDetails.findUnique({
+          where: {
+            bookingId: parseInt(args.bookingId),
+          },
+        });
       },
     });
   },

@@ -9,13 +9,14 @@ export default function ({
   register,
   errors,
   defaultData,
-
+  sourceForm,
   children,
 }: {
   children?: React.ReactNode;
   register: Function;
   errors: any;
   defaultData?: any;
+  sourceForm?: 'roomForm' | 'hotelForm';
 }) {
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
@@ -74,7 +75,7 @@ export default function ({
                 : 'Taxes And Charges'
             }
             type="number"
-            error={errors['lowestPrice'] ? true : false}
+            error={errors['taxesAndCharges'] ? true : false}
             InputProps={{
               min: 0,
               startAdornment: (
@@ -84,6 +85,39 @@ export default function ({
           />
         </Grid>
       </Grid>
+      {sourceForm === 'roomForm' && (
+        <Grid container spacing={{ sm: 2 }} alignItems="center">
+          <Grid item xs={12} sm={6}>
+            <TextField
+              sx={styles.textField}
+              id="cancelationFee"
+              defaultValue={
+                defaultData?.cancelationFee ? defaultData.cancelationFee : 0
+              }
+              {...register('cancelationFee', {
+                min: {
+                  value: 0,
+                  message: 'The ammount must be a positive number',
+                },
+              })}
+              variant="outlined"
+              label={
+                errors['cancelationFee']
+                  ? errors['cancelationFee'].message
+                  : 'Cancelation Fee'
+              }
+              type="number"
+              error={errors['cancelationFee'] ? true : false}
+              InputProps={{
+                min: 0,
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+        </Grid>
+      )}
       {children}
     </Grid>
   );

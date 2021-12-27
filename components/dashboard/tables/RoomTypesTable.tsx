@@ -166,22 +166,24 @@ function RoomsTable({
   ) {
     return { id, name, caption, lowestPrice, taxes, maxGuests, beds, rooms };
   }
-  const generateRows = (roomTypes: RoomType[]) => {
-    const rows = roomTypes.map((roomType) =>
-      createData(
-        roomType.id,
-        roomType.name,
-        roomType.mainImage,
-        roomType.lowestPrice,
-        roomType.taxesAndCharges,
-        roomType.maximunGuests,
-        roomType.beds,
-        roomType.rooms.map((room: { id: number; number: number }) => ({
-          id: room.id,
-          number: room.number,
-        }))
-      )
-    );
+  const generateRows = (roomTypes: RoomType[] | []) => {
+    const rows = roomTypes?.length
+      ? roomTypes.map((roomType) =>
+          createData(
+            roomType.id,
+            roomType.name,
+            roomType.mainImage,
+            roomType.lowestPrice,
+            roomType.taxesAndCharges,
+            roomType.maximunGuests,
+            roomType.beds,
+            roomType.rooms.map((room: { id: number; number: number }) => ({
+              id: room.id,
+              number: room.number,
+            }))
+          )
+        )
+      : [];
     return rows;
   };
   const getRoomTypesToDisplay = (
@@ -218,12 +220,12 @@ function RoomsTable({
     },
   ];
   const [rows, setRows] = React.useState(
-    roomTypes ? generateRows(roomTypes) : []
+    roomTypes?.length ? generateRows(roomTypes) : []
   );
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
   const [displayedRows, setDisplayedRows] = React.useState(
-    getRoomTypesToDisplay(rows, page, rowsPerPage)
+    rows ? getRoomTypesToDisplay(rows, page, rowsPerPage) : []
   );
   React.useEffect(() => {
     const actualizedRows = generateRows(roomTypes);
@@ -236,7 +238,8 @@ function RoomsTable({
     newPage: number
   ) => {
     setPage(newPage);
-    setDisplayedRows(getRoomTypesToDisplay(rows, newPage, rowsPerPage));
+    setDisplayedRows((rows, newPage, rowsPerPage));
+    getRoomTypesToDisplay;
   };
   const [selectedRooms, setSelectedRooms] = React.useState<number[] | []>([]);
   const handleSelectedRooms = (roomId: number) => {
@@ -250,13 +253,9 @@ function RoomsTable({
     <TableContainer
       component={Paper}
       elevation={4}
-      sx={{ width: '100%', overflowX: 'clip', mb: 0 }}
+      sx={{ width: '100%', mb: 0 }}
     >
-      <Table
-        sx={{ minWidth: 650, minHeight: '70vh' }}
-        aria-label="simple table"
-        size="medium"
-      >
+      <Table aria-label="simple table" size="medium">
         <TableHead sx={{ py: 2, width: '100%' }}>
           <TableRow>
             <TableCell align="right"></TableCell>
@@ -276,9 +275,9 @@ function RoomsTable({
             ))}
           </TableRow>
         </TableHead>
-        <TableBody sx={{ overflowX: 'auto' }}>
+        <TableBody>
           {!Boolean(displayedRows.length) ? (
-            <TableRow>
+            <TableRow sx={{ maxHeight: 'max-content' }}>
               <TableCell component="th" scope="row" colSpan={7}>
                 <Box
                   sx={{

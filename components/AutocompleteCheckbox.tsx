@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -37,16 +38,23 @@ export default function CheckboxesTags({
       sx={{ textTransform: 'capitalize' }}
       getOptionLabel={(option) => option.name}
       renderOption={(props, option, { selected }) => (
-        <li {...props} key={option.id}>
+        <Box
+          component="li"
+          {...props}
+          key={option.id}
+          sx={{
+            textTransform: 'capitalize',
+            fontSize: '14px',
+          }}
+        >
           <Checkbox
             icon={icon}
-            sx={{ textTransform: 'capitalize' }}
             checkedIcon={checkedIcon}
             style={{ marginRight: 8 }}
             checked={selected}
           />
           {option.name}
-        </li>
+        </Box>
       )}
       renderInput={(params) => (
         <TextField

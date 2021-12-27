@@ -10,12 +10,12 @@ export default function BedIcone({
   size?: 'small' | 'medium' | 'large' | 'inherit';
   color?: 'inherit' | 'primary' | 'secondary';
 }) {
-  return type === 'californian king' ? (
+  return type.includes('king') ? (
     <KingBedIcon
       fontSize={size ? size : 'inherit'}
       color={color ? color : 'secondary'}
     />
-  ) : type === 'full' || type === 'queen' ? (
+  ) : type.includes('full') || type.includes('queen') ? (
     <BedIcon
       fontSize={size ? size : 'inherit'}
       color={color ? color : 'secondary'}

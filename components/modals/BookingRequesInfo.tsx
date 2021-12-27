@@ -24,7 +24,7 @@ export default function RequestInfo({
         {' '}
         <Box component="li" sx={styles.list}>
           <Typography sx={styles.leyend}>Room Type:</Typography>
-          <Typography component="span" sx={{ textAlign: 'right' }}>
+          <Typography component="span">
             {requestInfo?.roomModel?.name}
           </Typography>
         </Box>
@@ -64,16 +64,9 @@ export default function RequestInfo({
         </Box>
         <Box component="li" sx={styles.list}>
           <Typography sx={styles.leyend}>Guest/Room: </Typography>
-          <Box sx={styles.roomGuests}>
+          <Box sx={{ display: 'grid' }}>
             {requestInfo?.guestsDistribution?.map((room, index) => (
-              <Box
-                key={index}
-                sx={{
-                  display: 'flex',
-                  gap: 1,
-                  minWidth: 'max-content',
-                }}
-              >
+              <Box key={index} sx={styles.roomGuests}>
                 <Typography variant="body2" sx={{ minWidth: 'max-content' }}>
                   Adults: {room.adults}
                 </Typography>

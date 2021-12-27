@@ -44,8 +44,8 @@ export default function BasicModal({
     rooms: { adults: number; children: number }[];
   }>({
     roomModelId: roomTypeId,
-    checkInDate: getFormatedDate(Date.now()),
-    checkOutDate: getFormatedDate(Date.now() + 1000 * 60 * 60 * 24),
+    checkInDate: getFormatedDate(new Date(Date.now()).getTime()),
+    checkOutDate: getFormatedDate(+1000 * 60 * 60 * 24),
     rooms: [{ adults: 1, children: 0 }],
   });
 

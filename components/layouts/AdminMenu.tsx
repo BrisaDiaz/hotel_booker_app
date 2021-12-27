@@ -50,7 +50,7 @@ interface Props {
 function UserMenu() {
   const [signOut] = useMutation(SIGN_OUT);
   const { resetSession } = useAuth();
-
+  const router = useRouter();
   const handdleSignOut = async () => {
     try {
       handleClose();
@@ -58,6 +58,7 @@ function UserMenu() {
         variables: { date: new Date(Date.now()).toISOString() },
       });
       resetSession();
+      router.push('/signin');
     } catch (e) {
       console.log(e);
     }

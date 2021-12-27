@@ -22,6 +22,7 @@ import {
   clientQueryConstructor,
   bookingRequestQueryConstructor,
   schechuleBookingStatusUpdate,
+  bookingQueryConstructor,
 } from '../utils/index';
 import { roomSpecifications, Client } from './Booking';
 import { searchFilter } from './Commun';
@@ -83,7 +84,7 @@ export const HotelData = objectType({
         return prisma.booking.findMany({
           where: {
             hotelId: root.id,
-            OR: [{ status: 'ACTIVE' }, { status: 'FINISH' }],
+            OR: [{ status: 'ACTIVE' }, { status: 'FINISHED' }],
           },
           include: {
             client: true,
@@ -176,7 +177,6 @@ export const Query = extendType({
           const bookingsCount = await prisma.booking.count({
             where: {
               hotelId: hotelId,
-              OR: [{ status: 'ACTIVE' }, { status: 'FINISH' }],
             },
           });
 
@@ -349,27 +349,33 @@ export const Query = extendType({
         return getRequests(parseInt(args.userId), parseInt(args.hotelId), args);
       },
     });
+
     t.field('hotelBookings', {
       type: list('Booking'),
 
       args: {
         hotelId: nonNull(idArg()),
         userId: nonNull(idArg()),
+        status: stringArg(),
+        from: stringArg(),
+        until: stringArg(),
       },
       resolve(root, args, ctx) {
-        const getBookings = async (userId: number, hotelId: number) => {
+        const getBookings = async (
+          userId: number,
+          hotelId: number,
+          args: any
+        ) => {
           await verifyIsHotelAdmin(userId, hotelId);
 
-          return prisma.booking.findMany({
-            where: {
-              hotelId: hotelId,
-              status: 'ACTIVE',
-            },
-          });
+          const query = bookingQueryConstructor(hotelId, args);
+
+          return prisma.booking.findMany(query);
         };
-        return getBookings(parseInt(args.userId), parseInt(args.hotelId));
+        return getBookings(parseInt(args.userId), parseInt(args.hotelId), args);
       },
     });
+
     t.field('hotelGuests', {
       type: GuestSearch,
       args: {
@@ -501,7 +507,7 @@ export const Mutation = extendType({
           });
           schechuleBookingStatusUpdate(
             booking.id,
-            'FINISH',
+            'FINISHED',
             booking.checkOutDate
           );
           return booking;
@@ -565,7 +571,9 @@ export const Mutation = extendType({
 
           const booking = await prisma.booking.create({
             data: {
-              clientId: bookingRequest.clientId,
+              client: {
+                connect: { id: bookingRequest.clientId },
+              },
               hotelId: bookingRequest.hotelId,
               roomModelId: bookingRequest.roomModelId,
               administratorId: admin.id,
@@ -611,7 +619,7 @@ export const Mutation = extendType({
           });
           schechuleBookingStatusUpdate(
             createdBooking.id,
-            'FINISH',
+            'FINISHED',
             createdBooking.checkOutDate
           );
           return createdBooking;
@@ -652,6 +660,55 @@ export const Mutation = extendType({
         return declineRequest(
           parseInt(args.userId),
           parseInt(args.bookingRequestId)
+        );
+      },
+    });
+    t.field('cancelBooking', {
+      type: 'CancelationDetails',
+      args: {
+        userId: nonNull(idArg()),
+        bookingId: nonNull(idArg()),
+        message: nonNull(stringArg()),
+        cancelationFee: nonNull(floatArg()),
+      },
+      resolve(root, args, ctx) {
+        const declineRequest = async (
+          userId: number,
+          bookingId: number,
+          args: any
+        ) => {
+          const booking = await prisma.booking.findUnique({
+            where: {
+              id: bookingId,
+            },
+          });
+          const cancelationDetails = await prisma.cancelationDetails.create({
+            data: {
+              bookingId: bookingId,
+              cancelationFee: args.cancelationFee,
+              message: args.message,
+            },
+          });
+          if (!booking) throw new UserInputError('Invalid booking identifyer.');
+          if (booking.status !== 'ACTIVE')
+            throw new UserInputError(
+              'The operation can`t be made over a not active booking.'
+            );
+          await verifyIsHotelAdmin(userId, booking.hotelId);
+          await prisma.booking.update({
+            where: {
+              id: bookingId,
+            },
+            data: {
+              status: 'CANCELED',
+            },
+          });
+          return cancelationDetails;
+        };
+        return declineRequest(
+          parseInt(args.userId),
+          parseInt(args.bookingId),
+          args
         );
       },
     });

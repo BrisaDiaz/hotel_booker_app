@@ -19,7 +19,11 @@ export default function SimpleBackdrop({ loading }: { loading: Boolean }) {
   return (
     <div>
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.tooltip + 5 }}
+        sx={{
+          color: '#fff',
+
+          zIndex: 5000,
+        }}
         open={open}
       >
         <CircularProgress color="inherit" />

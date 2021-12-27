@@ -351,17 +351,26 @@ function TransitionsModal(props: ComponentProps) {
                     </Typography>
                     <Typography>USD ${roomType.lowestPrice}</Typography>
                   </Box>
-                  <Box component="section">
-                    <Box className={classes.rowField}>
-                      <Typography
-                        className={classes.legend}
-                        variant="subtitle2"
-                        color="text.secondary"
-                      >
-                        Taxes and Charges
-                      </Typography>
-                      <Typography>USD ${roomType.taxesAndCharges}</Typography>
-                    </Box>
+
+                  <Box className={classes.rowField}>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
+                      Taxes and Charges
+                    </Typography>
+                    <Typography>USD ${roomType.taxesAndCharges}</Typography>
+                  </Box>
+                  <Box className={classes.rowField}>
+                    <Typography
+                      className={classes.legend}
+                      variant="subtitle2"
+                      color="text.secondary"
+                    >
+                      Cancelation Fee
+                    </Typography>
+                    <Typography>USD ${roomType.cancelationFee}</Typography>
                   </Box>
                 </Box>
 

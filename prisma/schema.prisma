@@ -66,8 +66,8 @@ model Hotel {
   rooms            Room[]
   comments         Comment[]
   roomModels       RoomModel[]
-  Features         Features?
-  Address          Address?
+  features         Features?
+  address          Address?
 }
 
 model Facility {
@@ -123,8 +123,9 @@ model RoomModel {
   quantityInHotel Int              @default(0)
   roomCategory    RoomCategory     @relation(fields: [category], references: [name])
   category        String
-  lowestPrice     Float
-  taxesAndCharges Float
+  lowestPrice     Float            @default(0)
+  taxesAndCharges Float            @default(0)
+  cancelationFee  Float            @default(0)
   freeCancelation Boolean
   smooking        Boolean
   mainImage       String
@@ -212,9 +213,20 @@ model Booking {
   specifications     String
   totalCost          Int
   paymentMethod      PaymentMethod        @default(CASH)
-  status             BookingStatus        @default(ACTIVE)
-  client             Client               @relation(fields: [clientId], references: [id])
-  rooms              Room[]
+
+  status BookingStatus @default(ACTIVE)
+  client Client        @relation(fields: [clientId], references: [id])
+  rooms  Room[]
+
+}
+
+model CancelationDetails {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  message        String
+  cancelationFee Float
+  bookingId      Int      @unique
 }
 
 enum PaymentMethod {
@@ -260,7 +272,7 @@ model BookingRequest {
 enum BookingStatus {
   ACTIVE
   CANCELED
-  FINISH
+  FINISHED
 }
 
 enum BookingRequestStatus {

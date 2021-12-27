@@ -8,54 +8,8 @@ import BookingRoomInputs from '@/components/modals/BookingRoomInputs';
 import CloseButton from '@/components/modals/CloseButton';
 import BookingClientInputs from '@/components/modals/BookingClientInputs';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  minWidth: 360,
-  maxWidth: 500,
-  width: '100%',
-  bgcolor: 'background.paper',
-  border: '1px solid rgba(244,244,244,1)',
-  boxShadow: 24,
-  borderRadius: 2,
-  p: 4,
-  px: 3.5,
-  maxHeight: '90%',
-  overflowY: 'scroll',
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
-};
-const withIconLabel = {
-  marginBottom: '10px',
-  display: 'flex',
-  gap: '10px',
-  width: '100%',
-  alignItems: 'center',
-};
-const title = {
-  textTransform: 'capitalize',
-  mb: 2,
-  align: 'center',
-};
-const list = {
-  display: 'flex',
-  textTransform: 'capitalize',
-  flexWrap: 'wrap',
-  mb: 1,
-  ml: 1,
-  '& > *': {
-    fontSize: '14px',
-  },
-};
-const leyend = {
-  width: { xs: '50%' },
-  color: 'text.secondary',
+import { styles } from './styles';
 
-  fontSize: '14px',
-};
 export default function BasicModal({
   children,
   onSubmit,
@@ -97,6 +51,7 @@ export default function BasicModal({
   }) => {
     handleClose();
     delete data['requiredRooms'];
+
     onSubmit(data);
   };
 
@@ -111,7 +66,7 @@ export default function BasicModal({
         aria-describedby="modal-modal-specifications"
       >
         <Box
-          sx={style}
+          sx={styles.modal}
           component="form"
           noValidate
           onSubmit={handleSubmit(submitMiddleware)}
@@ -121,11 +76,11 @@ export default function BasicModal({
             id="modal-modal-title"
             variant="h5"
             component="h2"
-            sx={title}
+            sx={styles.title}
           >
             Ask for a reservation
           </Typography>
-          <Box sx={withIconLabel}>
+          <Box sx={styles.withIconLabel}>
             <MeetingRoomIcon />
             <Typography variant="subtitle1" component="h3">
               Room Details
@@ -133,27 +88,27 @@ export default function BasicModal({
           </Box>
           <Box component="ul" sx={{ mb: 2, px: 0 }}>
             {' '}
-            <Box component="li" sx={list}>
-              <Typography sx={leyend}>Price:</Typography>
+            <Box component="li" sx={styles.list}>
+              <Typography sx={styles.leyend}>Price:</Typography>
               <Typography component="span">USD ${roomData?.price}</Typography>
             </Box>
-            <Box component="li" sx={list}>
-              <Typography sx={leyend}>Taxes and Charges: </Typography>
+            <Box component="li" sx={styles.list}>
+              <Typography sx={styles.leyend}>Taxes and Charges: </Typography>
               <Typography component="span">USD ${roomData?.taxes}</Typography>
             </Box>
-            <Box component="li" sx={list}>
-              <Typography sx={leyend}>Maximun Guests:</Typography>
+            <Box component="li" sx={styles.list}>
+              <Typography sx={styles.leyend}>Maximun Guests:</Typography>
               <Typography component="span">
                 {' '}
                 {roomData?.maximunGuests}
               </Typography>
             </Box>
-            <Box component="li" sx={list}>
-              <Typography sx={leyend}>Check In Hour:</Typography>
+            <Box component="li" sx={styles.list}>
+              <Typography sx={styles.leyend}>Check In Hour:</Typography>
               <time>{roomData?.checkInHour}</time>
             </Box>
-            <Box component="li" sx={list}>
-              <Typography sx={leyend}>Check Out Hour:</Typography>
+            <Box component="li" sx={styles.list}>
+              <Typography sx={styles.leyend}>Check Out Hour:</Typography>
               <time>{roomData?.checkOutHour}</time>
             </Box>
           </Box>

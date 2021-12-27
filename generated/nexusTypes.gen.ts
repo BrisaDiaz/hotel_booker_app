@@ -30,7 +30,7 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   BookingRequestStatus: "ACCEPTED" | "DECLINED" | "PENDING"
-  BookingStatus: "ACTIVE" | "CANCELED" | "FINISH"
+  BookingStatus: "ACTIVE" | "CANCELED" | "FINISHED"
   PaymentMethod: "BILL_TO_ACCOUNT" | "CASH" | "CREDIT_CARD" | "DEBIT_CARD" | "TRAVELER_CHECK"
   Role: "ADMIN" | "USER"
 }
@@ -110,6 +110,13 @@ export interface NexusGenObjects {
     specifications?: string | null; // String
     status?: NexusGenEnums['BookingRequestStatus'] | null; // BookingRequestStatus
     telephone?: string | null; // String
+  }
+  CancelationDetails: { // root type
+    bookingId?: number | null; // Int
+    cancelationFee?: number | null; // Float
+    createdAt?: string | null; // String
+    id?: string | null; // ID
+    message?: string | null; // String
   }
   Client: { // root type
     bookings?: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
@@ -228,6 +235,7 @@ export interface NexusGenObjects {
   }
   RoomModel: { // root type
     amenities?: Array<NexusGenRootTypes['Amenity'] | null> | null; // [Amenity]
+    cancelationFee?: number | null; // Float
     canselationFree?: boolean | null; // Boolean
     category?: string | null; // String
     description?: string | null; // String
@@ -355,6 +363,13 @@ export interface NexusGenFieldTypes {
     status: NexusGenEnums['BookingRequestStatus'] | null; // BookingRequestStatus
     telephone: string | null; // String
   }
+  CancelationDetails: { // field return type
+    bookingId: number | null; // Int
+    cancelationFee: number | null; // Float
+    createdAt: string | null; // String
+    id: string | null; // ID
+    message: string | null; // String
+  }
   Client: { // field return type
     bookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     email: string | null; // String
@@ -449,6 +464,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     addRoomToModel: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
+    cancelBooking: NexusGenRootTypes['CancelationDetails'] | null; // CancelationDetails
     confirmBookingRequest: NexusGenRootTypes['Booking'] | null; // Booking
     creatHotelRoomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     createHotel: NexusGenRootTypes['Hotel'] | null; // Hotel
@@ -477,6 +493,7 @@ export interface NexusGenFieldTypes {
     bookingById: NexusGenRootTypes['Booking'] | null; // Booking
     checkRoomAvailability: NexusGenRootTypes['RoomConsultResponceResponce'] | null; // RoomConsultResponceResponce
     facilitiesList: Array<NexusGenRootTypes['Facility'] | null> | null; // [Facility]
+    getBookingCancelationDetails: NexusGenRootTypes['CancelationDetails'] | null; // CancelationDetails
     getRoomModelAvailableRooms: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
     hotelBookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     hotelById: NexusGenRootTypes['Hotel'] | null; // Hotel
@@ -520,6 +537,7 @@ export interface NexusGenFieldTypes {
   RoomModel: { // field return type
     amenities: Array<NexusGenRootTypes['Amenity'] | null> | null; // [Amenity]
     beds: Array<NexusGenRootTypes['RoomBed'] | null> | null; // [RoomBed]
+    cancelationFee: number | null; // Float
     canselationFree: boolean | null; // Boolean
     category: string | null; // String
     description: string | null; // String
@@ -640,6 +658,13 @@ export interface NexusGenFieldTypeNames {
     status: 'BookingRequestStatus'
     telephone: 'String'
   }
+  CancelationDetails: { // field return type name
+    bookingId: 'Int'
+    cancelationFee: 'Float'
+    createdAt: 'String'
+    id: 'ID'
+    message: 'String'
+  }
   Client: { // field return type name
     bookings: 'Booking'
     email: 'String'
@@ -734,6 +759,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     addRoomToModel: 'Room'
+    cancelBooking: 'CancelationDetails'
     confirmBookingRequest: 'Booking'
     creatHotelRoomModel: 'RoomModel'
     createHotel: 'Hotel'
@@ -762,6 +788,7 @@ export interface NexusGenFieldTypeNames {
     bookingById: 'Booking'
     checkRoomAvailability: 'RoomConsultResponceResponce'
     facilitiesList: 'Facility'
+    getBookingCancelationDetails: 'CancelationDetails'
     getRoomModelAvailableRooms: 'Room'
     hotelBookings: 'Booking'
     hotelById: 'Hotel'
@@ -805,6 +832,7 @@ export interface NexusGenFieldTypeNames {
   RoomModel: { // field return type name
     amenities: 'Amenity'
     beds: 'RoomBed'
+    cancelationFee: 'Float'
     canselationFree: 'Boolean'
     category: 'String'
     description: 'String'
@@ -855,6 +883,12 @@ export interface NexusGenArgTypes {
       roomNumbers: number[]; // [Int!]!
       userId: string; // ID!
     }
+    cancelBooking: { // args
+      bookingId: string; // ID!
+      cancelationFee: number; // Float!
+      message: string; // String!
+      userId: string; // ID!
+    }
     confirmBookingRequest: { // args
       bookingRequestId: string; // ID!
       paymentMethod?: string | null; // String
@@ -865,6 +899,7 @@ export interface NexusGenArgTypes {
     creatHotelRoomModel: { // args
       amenities: Array<string | null>; // [String]!
       beds: Array<NexusGenInputs['bedsSpecifications'] | null>; // [bedsSpecifications]!
+      cancelationFee?: number | null; // Float
       category: string; // String!
       description: string; // String!
       freeCancelation: boolean; // Boolean!
@@ -1002,6 +1037,7 @@ export interface NexusGenArgTypes {
     updateRoomModel: { // args
       amenities?: Array<string | null> | null; // [String]
       beds?: Array<NexusGenInputs['bedsSpecifications'] | null> | null; // [bedsSpecifications]
+      cancelationFee?: number | null; // Float
       category?: string | null; // String
       description?: string | null; // String
       freeCancelation?: boolean | null; // Boolean
@@ -1042,6 +1078,9 @@ export interface NexusGenArgTypes {
       roomModelId: string; // ID!
       rooms: Array<NexusGenInputs['roomSpecifications'] | null>; // [roomSpecifications]!
     }
+    getBookingCancelationDetails: { // args
+      bookingId: string; // ID!
+    }
     getRoomModelAvailableRooms: { // args
       checkInDate: string; // String!
       checkOutDate: string; // String!
@@ -1049,7 +1088,10 @@ export interface NexusGenArgTypes {
       rooms: NexusGenInputs['roomSpecifications'][]; // [roomSpecifications!]!
     }
     hotelBookings: { // args
+      from?: string | null; // String
       hotelId: string; // ID!
+      status?: string | null; // String
+      until?: string | null; // String
       userId: string; // ID!
     }
     hotelById: { // args

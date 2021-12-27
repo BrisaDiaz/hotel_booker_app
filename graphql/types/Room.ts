@@ -67,6 +67,7 @@ export const RoomModel = objectType({
     t.boolean('canselationFree');
     t.float('lowestPrice');
     t.float('taxesAndCharges');
+    t.float('cancelationFee');
     t.string('description');
     t.string('mainImage');
     t.int('maximunGuests');
@@ -168,6 +169,7 @@ export const Mutation = extendType({
         hotelId: nonNull(idArg()),
         lowestPrice: nonNull(floatArg()),
         taxesAndCharges: nonNull(floatArg()),
+        cancelationFee: floatArg(),
         name: nonNull(stringArg()),
         mts2: nonNull(intArg()),
         category: nonNull(stringArg()),
@@ -200,6 +202,7 @@ export const Mutation = extendType({
               roomCategory: { connect: { name: args.category } },
               lowestPrice: args.lowestPrice,
               taxesAndCharges: args.taxesAndCharges,
+              cancelationFee: args.cancelationFee,
               description: args.description,
               maximunStay: args.maximunStay,
               minimunStay: args.maximunStay,
@@ -244,6 +247,7 @@ export const Mutation = extendType({
         roomModelId: nonNull(idArg()),
         lowestPrice: floatArg(),
         taxesAndCharges: floatArg(),
+        cancelationFee: floatArg(),
         name: stringArg(),
         mts2: intArg(),
         category: stringArg(),
@@ -294,6 +298,7 @@ export const Mutation = extendType({
                 : undefined,
               lowestPrice: args.lowestPrice,
               taxesAndCharges: args.taxesAndCharges,
+              cancelationFee: args.cancelationFee,
               description: args.description,
               maximunStay: args.maximunStay,
               minimunStay: args.maximunStay,

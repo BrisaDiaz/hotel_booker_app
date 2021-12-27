@@ -36,7 +36,8 @@ export const styles = {
     gap: '10px',
     width: '100%',
     alignItems: 'center',
-    my: 1,
+    my: 1.5,
+
     '& > * ': {
       color: 'primary.main',
     },
@@ -45,10 +46,11 @@ export const styles = {
     display: 'flex',
     textTransform: 'capitalize',
     flexWrap: 'wrap',
-    py: 1,
+    py: 0.7,
     ml: 1,
+    fontSize: '14px !important',
     '& > * ': {
-      fontSize: '14px',
+      fontSize: '14px !important',
     },
   },
   roomGuests: {

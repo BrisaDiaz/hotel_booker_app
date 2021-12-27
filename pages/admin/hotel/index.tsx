@@ -143,11 +143,11 @@ const HotelAdmin: WithLayoutPage<Props> = ({
 
       <RoomModal
         isModalOpend={
-          !loading && toEditRoomTypeData && modalsOpenState['edit']
+          !loading && toEditRoomTypeData && modalsOpenState['show']
             ? true
             : false
         }
-        closeModal={() => handleCloseModal('edit')}
+        closeModal={() => handleCloseModal('show')}
         onEdit={handleEditSelected}
         roomType={toEditRoomTypeData}
       />

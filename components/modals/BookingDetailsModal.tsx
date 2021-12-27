@@ -4,42 +4,35 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import CloseButton from '@/components/modals/CloseButton';
 import { toDateAndHourFormat } from '@/utils/index';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
+import { Booking, CancelationDetails } from '@/interfaces/index';
 import { styles } from './styles';
 
 export default function BasicModal({
   bookingData,
-  isOpen,
+  isModalOpen,
   closeModal,
+  onCancel,
+  cancelationDetails,
 }: {
-  isOpen: Boolean;
+  isModalOpen: Boolean;
   closeModal: Function;
-  bookingData: {
-    id: number;
-    totalCost: number;
-    paymentMethod: string;
-    specifications: number;
-    clientId: number;
-    checkInDate: string;
-    checkOutDate: string;
-    roomModel: {
-      name: string;
-    };
-    reservedRooms: {
-      number: number;
-    };
-    guestsDistribution: {
-      id: number;
-      adults: number;
-      children: number;
-    };
-  };
+  onCancel: Function;
+  bookingData: Booking | null;
+  cancelationDetails?: CancelationDetails | null;
 }) {
+  if (
+    !bookingData ||
+    (bookingData.status === 'CANCELED' && !cancelationDetails)
+  )
+    return <div />;
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -47,11 +40,11 @@ export default function BasicModal({
     closeModal();
   };
   React.useEffect(() => {
-    if (isOpen) {
+    if (isModalOpen) {
       return handleOpen();
     }
     handleClose();
-  }, [isOpen]);
+  }, [isModalOpen]);
 
   return (
     <div>
@@ -97,8 +90,8 @@ export default function BasicModal({
                 direction="row"
                 sx={{ flexWrap: 'wrap', gap: '6px', py: 1 }}
               >
-                {bookingData.reservedRooms.map((room) => (
-                  <Chip label={room.number} key={room.number} />
+                {bookingData?.reservedRooms?.map((room) => (
+                  <Chip label={room?.number} key={room?.number} />
                 ))}
               </Stack>
             </Box>
@@ -111,7 +104,7 @@ export default function BasicModal({
                       variant="body2"
                       sx={{ minWidth: 'max-content' }}
                     >
-                      Adults: {room.adults}
+                      Adults: {room?.adults}
                     </Typography>
                     <Typography
                       variant="body2"
@@ -140,14 +133,16 @@ export default function BasicModal({
               <Typography component="h3">Special requests</Typography>
             </Box>
             <Typography sx={{ m: 1, mt: 0, fontSize: '14px' }}>
-              {bookingData.specifications || 'No special requests.'}
+              {bookingData?.specifications || 'No special requests.'}
             </Typography>
             <Box sx={styles.withIconLabel}>
               <AccountBalanceWalletIcon />
               <Typography component="h3">Payment</Typography>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Total Cost:</Typography>
+              <Typography sx={styles.leyend}>
+                {bookingData?.status === 'CANCELED' ? 'Cost:' : 'Total Cost:'}
+              </Typography>
               <Typography component="span">
                 USD ${bookingData?.totalCost}
               </Typography>
@@ -158,6 +153,56 @@ export default function BasicModal({
                 {bookingData?.paymentMethod.split('_').join(' ').toLowerCase()}
               </Typography>
             </Box>
+            {cancelationDetails && (
+              <>
+                <Box sx={styles.withIconLabel}>
+                  <DoNotDisturbIcon />
+                  <Typography component="h3">Cancelation Details</Typography>
+                </Box>
+                <Box sx={{ my: 1.5, ml: 1 }}>
+                  <Typography sx={styles.leyend}>Message:</Typography>
+                  <Typography variant="body2" sx={{ mt: 1.5 }}>
+                    {cancelationDetails?.message}
+                  </Typography>
+                </Box>
+
+                <Box component="li" sx={styles.list}>
+                  <Typography sx={styles.leyend}>Cancelation Date:</Typography>
+                  <time>
+                    {toDateAndHourFormat(
+                      parseInt(cancelationDetails?.createdAt)
+                    )}
+                  </time>
+                </Box>
+
+                <Box component="li" sx={styles.list}>
+                  <Typography sx={styles.leyend}>cancelation Fee</Typography>
+                  <Typography component="span">
+                    USD ${cancelationDetails.cancelationFee}
+                  </Typography>
+                </Box>
+                <Box component="li" sx={styles.list}>
+                  <Typography sx={styles.leyend}>Total Const</Typography>
+                  <Typography component="span">
+                    USD $
+                    {bookingData?.totalCost +
+                      cancelationDetails?.cancelationFee}
+                  </Typography>
+                </Box>
+              </>
+            )}
+            {bookingData?.status === 'ACTIVE' && (
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  color="secondary"
+                  onClick={() => onCancel()}
+                >
+                  Cancel Booking
+                </Button>
+              </Box>
+            )}
           </Box>
         </Box>
       </Modal>
