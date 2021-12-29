@@ -50,9 +50,9 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
               sx={{
                 overflow: 'hidden',
                 objectFit: 'cover',
+                transition: 'ease-in-out 0.5s',
                 '&:hover': {
                   transform: 'scale(1.15)',
-                  transition: 'ease-in-out 0.5s',
                 },
                 height: { xs: 250, sm: 220 },
               }}
