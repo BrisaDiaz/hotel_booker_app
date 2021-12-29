@@ -5,6 +5,7 @@ import Checkbox from '@mui/material/Checkbox';
 type Data = {
   id: number;
   name: string;
+  hotelsCount?: number;
   __typename?: string;
 };
 export default function CheckboxLabels({
@@ -26,7 +27,11 @@ export default function CheckboxLabels({
             mb: '4px',
           }}
           key={`${item.name}-${item.id}`}
-          label={item.name}
+          label={
+            item?.hotelsCount
+              ? `${item.name} (${item.hotelsCount})`
+              : ` ${item.name}`
+          }
           control={
             <Checkbox
               size="small"

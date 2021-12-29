@@ -286,6 +286,7 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnu
 
 export interface NexusGenFieldTypes {
   Activity: { // field return type
+    hotelsCount: number | null; // Int
     id: string | null; // ID
     name: string | null; // String
   }
@@ -379,6 +380,7 @@ export interface NexusGenFieldTypes {
     mobileNumber: string | null; // String
   }
   Facility: { // field return type
+    hotelsCount: number | null; // Int
     id: string; // ID!
     name: string; // String!
   }
@@ -431,6 +433,7 @@ export interface NexusGenFieldTypes {
     website: string | null; // String
   }
   HotelCategory: { // field return type
+    hotelsCount: number | null; // Int
     id: string | null; // ID
     name: string | null; // String
   }
@@ -458,6 +461,7 @@ export interface NexusGenFieldTypes {
     title: string | null; // String
   }
   Language: { // field return type
+    hotelsCount: number | null; // Int
     id: string | null; // ID
     name: string | null; // String
   }
@@ -567,6 +571,7 @@ export interface NexusGenFieldTypes {
     roomsCount: number | null; // Int
   }
   Service: { // field return type
+    hotelsCount: number | null; // Int
     id: string | null; // ID
     name: string | null; // String
   }
@@ -582,6 +587,7 @@ export interface NexusGenFieldTypes {
 
 export interface NexusGenFieldTypeNames {
   Activity: { // field return type name
+    hotelsCount: 'Int'
     id: 'ID'
     name: 'String'
   }
@@ -675,6 +681,7 @@ export interface NexusGenFieldTypeNames {
     mobileNumber: 'String'
   }
   Facility: { // field return type name
+    hotelsCount: 'Int'
     id: 'ID'
     name: 'String'
   }
@@ -727,6 +734,7 @@ export interface NexusGenFieldTypeNames {
     website: 'String'
   }
   HotelCategory: { // field return type name
+    hotelsCount: 'Int'
     id: 'ID'
     name: 'String'
   }
@@ -754,6 +762,7 @@ export interface NexusGenFieldTypeNames {
     title: 'String'
   }
   Language: { // field return type name
+    hotelsCount: 'Int'
     id: 'ID'
     name: 'String'
   }
@@ -863,6 +872,7 @@ export interface NexusGenFieldTypeNames {
     roomsCount: 'Int'
   }
   Service: { // field return type name
+    hotelsCount: 'Int'
     id: 'ID'
     name: 'String'
   }

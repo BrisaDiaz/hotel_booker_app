@@ -4,6 +4,7 @@ export const GET_ALL_SERVICES = gql`
     servicesList {
       id
       name
+      hotelsCount
     }
   }
 `;
@@ -20,6 +21,7 @@ export const GET_ALL_FACILITIES = gql`
     facilitiesList {
       id
       name
+      hotelsCount
     }
   }
 `;
@@ -29,6 +31,7 @@ export const GET_ALL_ACTIVITIES = gql`
     activitiesList {
       id
       name
+      hotelsCount
     }
   }
 `;
@@ -37,6 +40,7 @@ export const GET_ALL_LANGUAGES = gql`
     languagesList {
       id
       name
+      hotelsCount
     }
   }
 `;
@@ -53,6 +57,7 @@ export const GET_ALL_HOTEL_CATEGORIES = gql`
     hotelCategoriesList {
       id
       name
+      hotelsCount
     }
   }
 `;

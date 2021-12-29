@@ -3,6 +3,7 @@
 
 
 type Activity {
+  hotelsCount: Int
   id: ID
   name: String
 }
@@ -119,6 +120,7 @@ type Client {
 }
 
 type Facility {
+  hotelsCount: Int
   id: ID!
   name: String!
 }
@@ -177,6 +179,7 @@ type Hotel {
 }
 
 type HotelCategory {
+  hotelsCount: Int
   id: ID
   name: String
 }
@@ -208,6 +211,7 @@ type Image {
 }
 
 type Language {
+  hotelsCount: Int
   id: ID
   name: String
 }
@@ -342,6 +346,7 @@ type RoomModelData {
 }
 
 type Service {
+  hotelsCount: Int
   id: ID
   name: String
 }

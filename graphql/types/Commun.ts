@@ -6,6 +6,17 @@ export const Service = objectType({
   definition(t) {
     t.id('id');
     t.string('name');
+    t.int('hotelsCount', {
+      resolve(root: { id: number }) {
+        return prisma.hotel.count({
+          where: {
+            services: {
+              some: { id: root.id },
+            },
+          },
+        });
+      },
+    });
   },
 });
 
@@ -14,6 +25,17 @@ export const Facility = objectType({
   definition(t) {
     t.nonNull.id('id');
     t.nonNull.string('name');
+    t.int('hotelsCount', {
+      resolve(root: { id: number }) {
+        return prisma.hotel.count({
+          where: {
+            facilities: {
+              some: { id: root.id },
+            },
+          },
+        });
+      },
+    });
   },
 });
 export const Features = objectType({

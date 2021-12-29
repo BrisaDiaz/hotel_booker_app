@@ -17,10 +17,12 @@ import {
   GET_ALL_HOTEL_CATEGORIES,
   GET_HOTELS,
 } from '@/queries/index';
+import { ContentPasteOutlined } from '@mui/icons-material';
 
 type Data = {
   id: number;
   name: string;
+  hotelsCount: number;
   __typename: string;
 };
 interface Hotel {

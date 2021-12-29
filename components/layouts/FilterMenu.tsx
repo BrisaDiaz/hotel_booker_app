@@ -155,6 +155,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 type Data = {
   id: number;
   name: string;
+  hotelsCount: number;
   __typename: string;
 };
 export default function PersistentDrawerLeft({

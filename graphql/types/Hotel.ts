@@ -64,6 +64,19 @@ export const Activity = objectType({
   definition(t) {
     t.id('id');
     t.string('name');
+    t.int('hotelsCount', {
+      resolve(root: { id: number }) {
+        return prisma.hotel.count({
+          where: {
+            activities: {
+              some: {
+                id: root.id,
+              },
+            },
+          },
+        });
+      },
+    });
   },
 });
 export const Language = objectType({
@@ -71,6 +84,19 @@ export const Language = objectType({
   definition(t) {
     t.id('id');
     t.string('name');
+    t.int('hotelsCount', {
+      resolve(root: { id: number }) {
+        return prisma.hotel.count({
+          where: {
+            languages: {
+              some: {
+                id: root.id,
+              },
+            },
+          },
+        });
+      },
+    });
   },
 });
 export const HotelCategory = objectType({
@@ -78,6 +104,17 @@ export const HotelCategory = objectType({
   definition(t) {
     t.id('id');
     t.string('name');
+    t.int('hotelsCount', {
+      resolve(root: { name: string }) {
+        return prisma.hotel.count({
+          where: {
+            category: {
+              equals: root.name,
+            },
+          },
+        });
+      },
+    });
   },
 });
 
