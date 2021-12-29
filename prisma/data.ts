@@ -21,7 +21,7 @@ export const facilities = [
   'open restaurant',
   'restaurant',
   'conference room',
-  'horse cart rental',
+
   'terrance',
   'outdoor terrance',
   'gift shop',
@@ -33,6 +33,7 @@ export const facilities = [
   'facilies for childrens',
   'beach access',
   'hair/beauty salon',
+  'vIP room facilities',
 ];
 
 export const services = [
@@ -43,27 +44,31 @@ export const services = [
   'tour & excursions',
   'luggage forwarding',
   'pick-up/drop-off service',
+
   'outside catering service',
   'babysitting on request',
   'concierge 24hrs',
   'concierge',
   'e-bike rental',
+  'horse cart rental',
   'cooking service',
-  'vIP room facilities',
+
   'special diet meal',
   'coffee house on site',
   'bar/cafe 24hrs',
   'breakfast in the room',
+  'security',
   'security 24hrs',
-  'room service 24hrs',
   'room service',
+  'room service 24hrs',
+
   'front desk 24hrs',
   'limousine',
   'gamming area',
   'special staff attention',
   'free snacks and drinks',
   'children activities',
-  'wake-up service/Alarm clock',
+  'wake-up service/alarm clock',
 ];
 
 export const amenities = [
@@ -83,9 +88,8 @@ export const amenities = [
   'living',
   'DVD player',
   'cupboard',
-  'coffe maker',
   'desk',
-  'chair',
+  'chairs',
   'dressing table',
   'spectacular view',
   'city view',
@@ -115,7 +119,7 @@ export const amenities = [
   'vanity set',
   'sewing kit',
   'first aid box',
-  'Soundproof',
+  'soundproof',
   'suit press',
   'ironing facilities',
   'heating',

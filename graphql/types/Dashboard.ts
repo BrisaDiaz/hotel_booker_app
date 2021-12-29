@@ -9,11 +9,7 @@ import {
   floatArg,
 } from 'nexus';
 import { prisma } from '@/lib/prisma';
-import {
-  UserInputError,
-  ForbiddenError,
-  ValidationError,
-} from 'apollo-server-micro';
+import { UserInputError, ForbiddenError } from 'apollo-server-micro';
 import {
   getAdminInfo,
   verifyIsHotelAdmin,
@@ -62,7 +58,16 @@ export const HotelData = objectType({
     t.int('bookingsCount');
     t.int('guestsCount');
     t.field('hotel', { type: 'Hotel' });
-    t.list.field('roomModels', { type: 'RoomModel' });
+    t.list.field('roomModels', {
+      type: 'RoomModel',
+      resolve(root: { id: number }, args, ctx) {
+        return prisma.roomModel.findMany({
+          where: {
+            hotelId: root.id,
+          },
+        });
+      },
+    });
     t.list.field('requests', {
       type: 'BookingRequest',
       resolve(root: { id: number }, args, ctx) {
@@ -167,7 +172,6 @@ export const Query = extendType({
               services: true,
               activities: true,
               languages: true,
-              roomModels: true,
             },
           });
           if (!hotel)
@@ -175,6 +179,11 @@ export const Query = extendType({
               'The hotel dose not exist or not belong to this account.'
             );
           const bookingsCount = await prisma.booking.count({
+            where: {
+              hotelId: hotelId,
+            },
+          });
+          const roomModelsCount = await prisma.roomModel.count({
             where: {
               hotelId: hotelId,
             },
@@ -188,12 +197,29 @@ export const Query = extendType({
           });
           return {
             hotel,
-            roomModels: hotel.roomModels,
-            roomModelsCount: hotel.roomModels.length,
+            roomModelsCount,
             requestsCount,
             bookingsCount,
             guestsCount: bookingsCount,
           };
+        };
+        return getAdimHotel(parseInt(args.userId), parseInt(args.hotelId));
+      },
+    });
+    t.field('hotelRoomModels', {
+      type: list('RoomModel'),
+      args: {
+        userId: nonNull(idArg()),
+        hotelId: nonNull(idArg()),
+      },
+      resolve(root, args, ctx) {
+        const getAdimHotel = async (userId: number, hotelId: number) => {
+          await verifyIsHotelAdmin(userId, hotelId);
+          return prisma.roomModel.findMany({
+            where: {
+              hotelId: hotelId,
+            },
+          });
         };
         return getAdimHotel(parseInt(args.userId), parseInt(args.hotelId));
       },

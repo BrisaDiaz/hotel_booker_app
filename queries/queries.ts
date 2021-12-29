@@ -238,6 +238,7 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
         name
         mainImage
         lowestPrice
+        cancelationFee
         taxesAndCharges
         maximunGuests
         beds {
@@ -348,9 +349,11 @@ export const GET_HOTEL_GUESTS = gql`
 export const GET_USER_SESSION = gql`
   query authentication {
     authentication {
+      id
       firstName
       lastName
       email
+      role
     }
   }
 `;

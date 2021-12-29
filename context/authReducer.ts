@@ -5,14 +5,11 @@ interface Action {
   payload: SessionPayload | {};
   type: string;
 }
-export default function authReducer(
-  state: SessionPayload | {},
-  action: Action
-) {
+export default function authReducer(state: SessionPayload, action: Action) {
   if (action.type === SET_SESSION) {
-    const user = action.payload ? action.payload?.user : {};
-
-    return { user };
+    return {
+      user: 'user' in action.payload ? action.payload?.user : action.payload,
+    };
   }
   if (action.type === RESET_SESSION) {
     return { user: {} };

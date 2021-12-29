@@ -91,10 +91,11 @@ export interface RoomBuildierVariables {
 }
 export interface SessionPayload {
   user: {
+    id: number;
     firstName: string;
     lastName: string;
     email: string;
-    role: string;
+    role: 'ADMIN' | 'USER';
   };
 }
 export interface BookingRequest {

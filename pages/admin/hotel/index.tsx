@@ -110,7 +110,7 @@ const HotelAdmin: WithLayoutPage<Props> = ({
       </Head>
 
       <Box
-        sx={{ p: { xs: '16px 0', sm: '16px 16px' }, maxWidth: 1200 }}
+        sx={{ p: { xs: '16px 0', sm: '16px 16px' }, maxWidth: 1100 }}
         component="main"
       >
         <ActionCardGrid cards={infoCardsData} />
@@ -143,11 +143,11 @@ const HotelAdmin: WithLayoutPage<Props> = ({
 
       <RoomModal
         isModalOpend={
-          !loading && toEditRoomTypeData && modalsOpenState['show']
+          !loading && toEditRoomTypeData && modalsOpenState['show/edit']
             ? true
             : false
         }
-        closeModal={() => handleCloseModal('show')}
+        closeModal={() => handleCloseModal('show/edit')}
         onEdit={handleEditSelected}
         roomType={toEditRoomTypeData}
       />

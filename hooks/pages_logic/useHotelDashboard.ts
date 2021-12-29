@@ -153,7 +153,7 @@ export default function useHotelDashboard({
   const [modalsOpenState, setModelsOpenState] = React.useState({
     addRoom: false,
     deleteRooms: false,
-    show: false,
+    'show/edit': false,
     edit: false,
     addBooking: false,
     displayRoomsStatus: false,
@@ -399,7 +399,7 @@ export default function useHotelDashboard({
       }, 6000);
     }
   }, [notification.content]);
-  //// actualize room to show data
+  //// actualize room to show/edit data
   React.useEffect(() => {
     if (roomTypeDataRequest.data?.roomModel?.id) {
       setActualizeRoomModelToEditData(roomTypeDataRequest.data?.roomModel);
@@ -491,7 +491,7 @@ export default function useHotelDashboard({
   type RoomTypeActions =
     | 'addRoom'
     | 'deleteRooms'
-    | 'show'
+    | 'show/edit'
     | 'edit'
     | 'addBooking';
   const handleActions = async (
@@ -503,7 +503,7 @@ export default function useHotelDashboard({
     if (action === 'deleteRooms') {
       setToDeleteRoomsIds(roomsToDelete);
     }
-    if (action === 'show') {
+    if (action === 'show/edit') {
       if (!toEditRoomTypeData || toEditRoomTypeData.id != roomModelId) {
         await getRoomModelToEditData(roomModelId);
       }

@@ -3,7 +3,7 @@ import React from 'react';
 import { WithLayoutPage } from '@/interfaces/index';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { getUser } from '@/graphql/utils/index';
+import { useAuth } from '@/context/useAuth';
 import { useRouter } from 'next/router';
 import SnackBar from '@/components/SnackBar';
 import RoomForm from '@/components/dashboard/forms/Room/index';
@@ -29,16 +29,20 @@ type PageProps = {
   servicesList: Option[];
   roomCategoriesList: Option[];
   bedTypesList: Option[];
-  userId: number;
 };
 const RoomUploadPage: WithLayoutPage<PageProps> = ({
   amenitiesList,
   servicesList,
   roomCategoriesList,
   bedTypesList,
-  userId,
 }) => {
+  const authContext = useAuth();
+
   const router = useRouter();
+  if (authContext.loading) return <Backdrop loading={true} />;
+
+  if (!authContext.session.user) return router.push('/signin');
+
   const { hotelId } = router.query;
   const [isLoading, setIsLoading] = React.useState(false);
   const [createRoomUploadPageModel, { error }] = useMutation(
@@ -61,14 +65,16 @@ const RoomUploadPage: WithLayoutPage<PageProps> = ({
   const [success, setSuccess] = React.useState<Boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const onSubmit = async (variables: RoomBuildierVariables) => {
+    if (!authContext.session.user) return router.push('/signin');
     setIsLoading(true);
     try {
       const [mainImageData] = await uploadToCloudinary([variables.mainImage]);
+
       await createRoomUploadPageModel({
         variables: {
           ...variables,
           hotelId: hotelId,
-          userId: userId,
+          userId: authContext.session.user.id,
           mainImage: mainImageData.secure_url,
         },
       });
@@ -116,7 +122,7 @@ export default RoomUploadPage;
 RoomUploadPage.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="dashboard">{page}</AdminMenu>;
 };
-export const getServerSideProps = async ({
+export const getStaticProps = async ({
   req,
   res,
 }: {
@@ -124,48 +130,37 @@ export const getServerSideProps = async ({
   res: NextApiResponse;
 }) => {
   try {
-    const user = await getUser(req, res);
-    if (user.role === 'ADMIN') {
-      const servicesRequest = await client.query({
-        query: GET_ALL_SERVICES,
-      });
-      const amenitiesRequest = await client.query({
-        query: GET_ALL_AMENITIES,
-      });
-      const categoriesRequest = await client.query({
-        query: GET_ALL_ROOM_CATEGORIES,
-      });
-      const bedsRequest = await client.query({
-        query: GET_ALL_BEDS,
-      });
+    const servicesRequest = await client.query({
+      query: GET_ALL_SERVICES,
+    });
+    const amenitiesRequest = await client.query({
+      query: GET_ALL_AMENITIES,
+    });
+    const categoriesRequest = await client.query({
+      query: GET_ALL_ROOM_CATEGORIES,
+    });
+    const bedsRequest = await client.query({
+      query: GET_ALL_BEDS,
+    });
 
-      await Promise.all([
-        servicesRequest,
-        categoriesRequest,
-        amenitiesRequest,
-        bedsRequest,
-      ]);
+    await Promise.all([
+      servicesRequest,
+      categoriesRequest,
+      amenitiesRequest,
+      bedsRequest,
+    ]);
 
-      const props = {
-        ...amenitiesRequest.data,
-        ...servicesRequest.data,
-        ...categoriesRequest.data,
-        ...bedsRequest.data,
-        userId: user.id,
-      };
+    const props = {
+      ...amenitiesRequest.data,
+      ...servicesRequest.data,
+      ...categoriesRequest.data,
+      ...bedsRequest.data,
+    };
 
-      return {
-        props: {
-          ...props,
-        },
-      };
-    }
     return {
-      redirect: {
-        permanent: false,
-        destination: '/signin',
+      props: {
+        ...props,
       },
-      props: {},
     };
   } catch (error) {
     return {

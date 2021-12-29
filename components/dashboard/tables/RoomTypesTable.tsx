@@ -104,7 +104,7 @@ export function ActionsMenu({
           </MenuItem>
         ) : null}
 
-        <MenuItem onClick={() => handleMenuClick('edit')} sx={{ pr: 3 }}>
+        <MenuItem onClick={() => handleMenuClick('show/edit')} sx={{ pr: 3 }}>
           <ListItemIcon>
             <EditIcon fontSize="small" />
           </ListItemIcon>
@@ -131,6 +131,7 @@ interface RoomType {
   mainImage: string;
   lowestPrice: number;
   taxesAndCharges: number;
+  cancelationFee: number;
   maximunGuests: number;
   beds: Array<{ id: number; type: string; quantity: number }>;
   rooms: Array<{ id: number; number: number }>;
@@ -141,6 +142,7 @@ interface Row {
   caption: string;
   lowestPrice: number;
   taxes: number;
+  cancelationFee: number;
   maxGuests: number;
   beds: Array<{ id: number; type: string; quantity: number }>;
   rooms: Array<{ id: number; number: number }>;
@@ -152,7 +154,6 @@ function RoomsTable({
   roomTypes: RoomType[];
   handleActions: Function;
 }) {
-  const classes = useStyles();
   ////data
   function createData(
     id: number,
@@ -160,11 +161,22 @@ function RoomsTable({
     caption: string,
     lowestPrice: number,
     taxes: number,
+    cancelationFee: number,
     maxGuests: number,
     beds: Array<{ id: number; type: string; quantity: number }>,
     rooms: Array<{ number: number; id: number }>
   ) {
-    return { id, name, caption, lowestPrice, taxes, maxGuests, beds, rooms };
+    return {
+      id,
+      name,
+      caption,
+      lowestPrice,
+      taxes,
+      maxGuests,
+      beds,
+      rooms,
+      cancelationFee,
+    };
   }
   const generateRows = (roomTypes: RoomType[] | []) => {
     const rows = roomTypes?.length
@@ -175,6 +187,7 @@ function RoomsTable({
             roomType.mainImage,
             roomType.lowestPrice,
             roomType.taxesAndCharges,
+            roomType.cancelationFee,
             roomType.maximunGuests,
             roomType.beds,
             roomType.rooms.map((room: { id: number; number: number }) => ({
@@ -211,6 +224,10 @@ function RoomsTable({
       disablePadding: false,
     },
     {
+      label: 'Cancelation Fee',
+      disablePadding: false,
+    },
+    {
       label: 'Capacity',
       disablePadding: false,
     },
@@ -238,7 +255,7 @@ function RoomsTable({
     newPage: number
   ) => {
     setPage(newPage);
-    setDisplayedRows((rows, newPage, rowsPerPage));
+    setDisplayedRows(getRoomTypesToDisplay(rows, page, rowsPerPage));
     getRoomTypesToDisplay;
   };
   const [selectedRooms, setSelectedRooms] = React.useState<number[] | []>([]);
@@ -255,7 +272,7 @@ function RoomsTable({
       elevation={4}
       sx={{ width: '100%', mb: 0 }}
     >
-      <Table aria-label="simple table" size="medium">
+      <Table aria-label="simple table" size="medium" sx={{ minHeight: '50vh' }}>
         <TableHead sx={{ py: 2, width: '100%' }}>
           <TableRow>
             <TableCell align="right"></TableCell>
@@ -366,6 +383,13 @@ function RoomsTable({
                     sx={{ fontSize: '14px', minWidth: 'max-content' }}
                   >
                     USD ${row.taxes}
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography
+                    sx={{ fontSize: '14px', minWidth: 'max-content' }}
+                  >
+                    USD ${row.cancelationFee}
                   </Typography>
                 </TableCell>
 

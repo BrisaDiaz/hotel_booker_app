@@ -1,16 +1,17 @@
 import Head from 'next/head';
 import React from 'react';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { useRouter } from 'next/router';
 import { WithLayoutPage } from '@/interfaces/index';
 import type { Modify } from '@/interfaces/index';
 import AdminMenu from '@/components/layouts/AdminMenu';
-import { getUser } from '@/graphql/utils/index';
+
 import HotelForm from '@/components/dashboard/forms/Hotel/index';
 import Backdrop from '@/components/Backdrop';
-
+import { useAuth } from '@/context/useAuth';
 import SnackBar from '@/components/SnackBar';
 import { client } from '@/lib/apollo';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import {
   GET_ALL_SERVICES,
@@ -32,7 +33,6 @@ type PageProps = {
   servicesList: Option[];
   languagesList: Option[];
   hotelCategoriesList: Option[];
-  userId: number;
 };
 const HotelUploadPage: WithLayoutPage<PageProps> = ({
   facilitiesList,
@@ -40,8 +40,13 @@ const HotelUploadPage: WithLayoutPage<PageProps> = ({
   servicesList,
   languagesList,
   hotelCategoriesList,
-  userId,
 }) => {
+  const authContext = useAuth();
+
+  const router = useRouter();
+  if (authContext.loading) return <Backdrop loading={true} />;
+
+  if (!authContext.session.user) return router.push('/signin');
   const [isLoading, setIsLoading] = React.useState(false);
   const [createHotel, { error, loading, data }] = useMutation(CREATE_HOTEL, {
     onCompleted: () => {
@@ -68,6 +73,7 @@ const HotelUploadPage: WithLayoutPage<PageProps> = ({
   const [success, setSuccess] = React.useState<Boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const onSubmit = async (hotelVariables: HotelVariables) => {
+    if (!authContext.session.user) return router.push('/signin');
     const toUploadImages = [
       hotelVariables.interiorImage,
       hotelVariables.frameImage,
@@ -81,12 +87,13 @@ const HotelUploadPage: WithLayoutPage<PageProps> = ({
         setIsLoading(false);
         return setErrorMessage('There was an error on the images upload.');
       }
+
       await createHotel({
         variables: {
           ...hotelVariables,
           interiorImage: images[0].secure_url,
           frameImage: images[1].secure_url,
-          userId: userId,
+          userId: authContext.session?.user.id,
         },
       });
     } catch (err: any) {
@@ -136,7 +143,7 @@ HotelUploadPage.getLayout = function getLayout(page: React.ReactNode) {
 };
 export default HotelUploadPage;
 
-export const getServerSideProps = async ({
+export const getStaticProps = async ({
   req,
   res,
 }: {
@@ -150,54 +157,42 @@ export const getServerSideProps = async ({
   };
 }> => {
   try {
-    const user = await getUser(req, res);
+    const activitiesRequest = await client.query({
+      query: GET_ALL_ACTIVITIES,
+    });
+    const servicesRequest = await client.query({
+      query: GET_ALL_SERVICES,
+    });
+    const facilitiesRequest = await client.query({
+      query: GET_ALL_FACILITIES,
+    });
+    const categoriesRequest = await client.query({
+      query: GET_ALL_HOTEL_CATEGORIES,
+    });
+    const languagesRequest = await client.query({
+      query: GET_ALL_LANGUAGES,
+    });
 
-    if (user.role === 'ADMIN') {
-      const activitiesRequest = await client.query({
-        query: GET_ALL_ACTIVITIES,
-      });
-      const servicesRequest = await client.query({
-        query: GET_ALL_SERVICES,
-      });
-      const facilitiesRequest = await client.query({
-        query: GET_ALL_FACILITIES,
-      });
-      const categoriesRequest = await client.query({
-        query: GET_ALL_HOTEL_CATEGORIES,
-      });
-      const languagesRequest = await client.query({
-        query: GET_ALL_LANGUAGES,
-      });
+    await Promise.all([
+      activitiesRequest,
+      servicesRequest,
+      facilitiesRequest,
+      categoriesRequest,
+      languagesRequest,
+    ]);
 
-      await Promise.all([
-        activitiesRequest,
-        servicesRequest,
-        facilitiesRequest,
-        categoriesRequest,
-        languagesRequest,
-      ]);
+    const props = {
+      ...facilitiesRequest.data,
+      ...activitiesRequest.data,
+      ...languagesRequest.data,
+      ...servicesRequest.data,
+      ...categoriesRequest.data,
+    };
 
-      const props = {
-        ...facilitiesRequest.data,
-        ...activitiesRequest.data,
-        ...languagesRequest.data,
-        ...servicesRequest.data,
-        ...categoriesRequest.data,
-        userId: user.id,
-      };
-
-      return {
-        props: {
-          ...props,
-        },
-      };
-    }
     return {
-      redirect: {
-        permanent: false,
-        destination: '/signin',
+      props: {
+        ...props,
       },
-      props: {},
     };
   } catch (error) {
     return {

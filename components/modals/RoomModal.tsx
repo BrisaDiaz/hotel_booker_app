@@ -148,7 +148,7 @@ function TransitionsModal(props: ComponentProps) {
   roomType?.smooking &&
     aditionalQualities.push({
       id: uuidv4(),
-      name: 'allowe smooking',
+      name: 'smooking allowed',
     });
   roomType?.freeCancelation &&
     aditionalQualities.push({

@@ -1,12 +1,15 @@
 import AuthContext from './AuthContext';
 import { useContext } from 'react';
-
-export function useAuth():
-  | {
-      setSession: Function;
-      getSession: Function;
-      session: object;
-    }
-  | {} {
+import { SessionPayload } from '../interfaces';
+export function useAuth(): {
+  setSession?: Function;
+  resetSession?: Function;
+  loading: boolean;
+  session:
+    | SessionPayload
+    | {
+        user: null;
+      };
+} {
   return useContext(AuthContext);
 }

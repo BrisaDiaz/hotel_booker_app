@@ -481,7 +481,7 @@ function clientQueryConstructor(
       },
     },
   };
-  console.log(query);
+
   return query;
 }
 type BookingRequestWhere = {

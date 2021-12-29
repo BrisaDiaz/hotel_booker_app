@@ -262,6 +262,7 @@ type Query {
   hotelData(hotelId: ID!, userId: ID!): HotelData
   hotelGuests(hotelId: ID!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 6, userId: ID!): GuestSearch
   hotelRequests(hotelId: ID!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 8, userId: ID!): RequestSearch
+  hotelRoomModels(hotelId: ID!, userId: ID!): [RoomModel]
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
   languagesList: [Language]
   roomCategoriesList: [RoomCategory]

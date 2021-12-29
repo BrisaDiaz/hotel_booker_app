@@ -346,6 +346,7 @@ export default function ResponsiveDrawer(props: Props) {
           flexGrow: 1,
           mt: 8,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
+          overflow: 'hidden',
         }}
       >
         {children}

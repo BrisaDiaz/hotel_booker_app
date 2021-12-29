@@ -1,6 +1,6 @@
 import React from 'react';
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar';
-
+import { BookingEvent } from '@/interfaces/index';
 import moment from 'moment';
 const localizer = momentLocalizer(moment);
 
@@ -31,9 +31,14 @@ let Resource = ({
     onRangeChange={(data) => {
       onRangeChange(data);
     }}
-    eventPropGetter={(event) => {
-      const backgroundColor = event.color;
-      return { style: { backgroundColor, padding: '5px 10px' } };
+    eventPropGetter={(event: BookingEvent) => {
+      return {
+        style: {
+          backgroundColor: event.color,
+          padding: '5px 10px',
+          fontSize: '14px',
+        },
+      };
     }}
   />
 );
