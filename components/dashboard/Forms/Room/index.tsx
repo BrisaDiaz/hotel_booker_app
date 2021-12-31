@@ -94,7 +94,6 @@ export default function MultilineTextFields(props: {
         setValue={setValue}
         services={services}
         amenities={amenities}
-        bedTypes={bedTypes}
       />
 
       <AspectSection register={register} errors={errors} />

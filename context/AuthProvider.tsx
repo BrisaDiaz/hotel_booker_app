@@ -1,11 +1,12 @@
 import React from 'react';
 import { useReducer, useEffect } from 'react';
+import { SessionPayload } from '../interfaces';
 import AuthContext from './AuthContext';
 import authReducer from './authReducer';
 import { SET_SESSION, RESET_SESSION } from './authActions';
 import { GET_USER_SESSION } from '../queries';
 import { useQuery } from '@apollo/client';
-import { SessionPayload } from '@/graphql/types/Auth';
+
 export default function AuthProvider({
   children,
 }: {
@@ -13,7 +14,6 @@ export default function AuthProvider({
 }) {
   /// check if the session exist and set the state acordingly
   const { data, loading } = useQuery(GET_USER_SESSION);
-
   const initialState = {
     user: null,
   };
@@ -45,12 +45,12 @@ export default function AuthProvider({
       setSession(data.authentication);
     }
   }, [data]);
-  let session: SessionPayload | { user: {} } = state;
+
   return (
     <AuthContext.Provider
       value={{
         loading: loading,
-        session,
+        session: state,
         resetSession,
         setSession,
       }}

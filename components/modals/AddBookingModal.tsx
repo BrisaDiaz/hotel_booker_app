@@ -27,7 +27,7 @@ export default function BasicModal({
   onSubmit: Function;
   closeModal: Function;
   getAvailableRooms: Function;
-  availableRooms: { id: number; number: number }[] | [];
+  availableRooms: { id: string; number: number }[] | [];
   roomTypeId?: number | null;
 }) {
   if (!roomTypeId || !isModalOpen) return <div />;

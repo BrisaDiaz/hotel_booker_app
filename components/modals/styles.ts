@@ -1,26 +1,27 @@
+import React from 'react';
 export const styles = {
   modal: {
-    position: 'absolute' as 'absolute',
+    position: 'fixed',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    minWidth: 360,
-    maxWidth: 500,
+    minWidth: '360px',
+    maxWidth: '500px',
     width: '100%',
     bgcolor: 'background.paper',
     border: '1px solid rgba(244,244,244,1)',
-    boxShadow: 24,
+
     borderRadius: 2,
     p: 2,
     px: 3.5,
     maxHeight: '90%',
-    overflowY: 'scroll',
+    overflowY: 'auto',
     '&::-webkit-scrollbar': {
       display: 'none',
     },
   },
   leyend: {
-    width: { xs: '50%' },
+    width: '50%',
     color: 'text.secondary',
     fontSize: '14px',
     fontWeight: 500,
@@ -28,7 +29,7 @@ export const styles = {
   title: {
     textTransform: 'capitalize',
     mb: 2,
-    align: 'center',
+    mx: 'auto',
   },
   withIconLabel: {
     marginBottom: '10px',
@@ -62,4 +63,4 @@ export const styles = {
       color: 'rgb(224 224 224)',
     },
   },
-};
+} as const;

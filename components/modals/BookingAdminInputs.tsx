@@ -13,7 +13,13 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import InputAdornment from '@mui/material/InputAdornment';
 import KingBedIcon from '@mui/icons-material/KingBed';
 import { styles } from './styles';
-
+const PAYMENT_METHODS = [
+  { name: 'Cash', value: 'CASH' },
+  { name: 'Debit Card', value: 'DEBIT_CARD' },
+  { name: 'Credit Card', value: 'CREDIT_CARD' },
+  { name: 'Bill To Account', value: 'BILL_TO_ACCOUNT' },
+  { name: 'Traveler Check', value: 'TRAVELER_CHECK' },
+];
 export default function BookingClientInputs({
   register,
   errors,
@@ -29,18 +35,10 @@ export default function BookingClientInputs({
   errors: any;
   disable?: Boolean;
   requiredRooms?: number;
-  availableRooms: Array<{ id: number; number: number }> | [];
+  availableRooms: Array<{ id: string; number: number }> | [];
 }) {
-  const paymentMethods = [
-    { name: 'Cash', value: 'CASH' },
-    { name: 'Debit Card', value: 'DEBIT_CARD' },
-    { name: 'Credit Card', value: 'CREDIT_CARD' },
-    { name: 'Bill To Account', value: 'BILL_TO_ACCOUNT' },
-    { name: 'Traveler Check', value: 'TRAVELER_CHECK' },
-  ];
-
   const [paymentMethodSelected, setPaymentMethodSelected] =
-    React.useState<string>(paymentMethods[0].value);
+    React.useState<string>(PAYMENT_METHODS[0].value);
   const handlePaymentMethodField = (event: SelectChangeEvent) => {
     setPaymentMethodSelected(event.target.value as string);
   };
@@ -127,7 +125,7 @@ export default function BookingClientInputs({
               onChange={handlePaymentMethodField}
               sx={{ textTransform: 'capitalize' }}
             >
-              {paymentMethods.map((type: { name: string; value: string }) => (
+              {PAYMENT_METHODS.map((type: { name: string; value: string }) => (
                 <MenuItem
                   key={type.value}
                   value={type.value}

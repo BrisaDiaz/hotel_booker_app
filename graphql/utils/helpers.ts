@@ -147,7 +147,7 @@ function inBetweenDates(range: string[] | Date[]) {
 
   return dates;
 }
-interface HotelQueryArgs {
+export interface HotelQueryArgs {
   facilities?: string[];
   activities?: string[];
   services?: string[];
@@ -343,9 +343,9 @@ type ClientWhere = {
   };
   AND?:
     | [
-        | { email?: string }
-        | { mobileNumber?: string }
-        | { landlineNumber?: string }
+        | { email: string }
+        | { mobileNumber: string }
+        | { landlineNumber: string }
         | {
             lastName?: {
               contains: string;
@@ -368,57 +368,58 @@ type ClientField =
   | 'mobileNumber'
   | 'landlineNumber'
   | 'id';
-type ClientQuery =
-  | {
-      orderBy: { [key: string]: string };
-      take: number;
-      skip: number;
-      where: ClientWhere;
-      include: {
-        bookings: {
-          where: {
-            hotelId: number;
-            status: string;
-          };
-        };
-      };
-    }
-  | {
+export interface MultipleClientQuery {
+  orderBy: { [key: string]: string };
+  take: number;
+  skip: number;
+  where: ClientWhere;
+  include: {
+    bookings: {
       where: {
-        bookings: {
-          some: {
-            hotelId: number;
-            status: string;
-            clientId: number;
-          };
-        };
-      };
-      include: {
-        bookings: {
-          where: {
-            hotelId: number;
-            status: string;
-          };
-        };
+        hotelId: number;
+        status: 'ACTIVE';
       };
     };
+  };
+}
+
+export interface SingleClientQuery {
+  where: {
+    bookings: {
+      some: {
+        hotelId: number;
+        status: 'ACTIVE';
+        clientId: number;
+      };
+    };
+  };
+  include: {
+    bookings: {
+      where: {
+        hotelId: number;
+        status: 'ACTIVE';
+      };
+    };
+  };
+}
+export interface ClientQueryArgs {
+  skip: number;
+  take: number;
+  search?: {
+    field: ClientField;
+    value: string;
+  };
+}
 function clientQueryConstructor(
   hotelId: number,
-  args: {
-    skip: number;
-    take: number;
-    search?: {
-      field: ClientField;
-      value: string;
-    };
-  }
-): ClientQuery {
+  args: ClientQueryArgs
+): MultipleClientQuery | SingleClientQuery {
   let orderBy = { createdAt: 'desc' };
   let where: ClientWhere = {
     bookings: {
       some: {
         hotelId: hotelId,
-        status: 'ACTIVE',
+        status: 'ACTIVE' as 'ACTIVE',
       },
     },
   };
@@ -429,7 +430,7 @@ function clientQueryConstructor(
           bookings: {
             some: {
               hotelId: hotelId,
-              status: 'ACTIVE',
+              status: 'ACTIVE' as 'ACTIVE',
               clientId: parseInt(args.search.value),
             },
           },
@@ -438,7 +439,7 @@ function clientQueryConstructor(
           bookings: {
             where: {
               hotelId: hotelId,
-              status: 'ACTIVE',
+              status: 'ACTIVE' as 'ACTIVE',
             },
           },
         },
@@ -476,7 +477,7 @@ function clientQueryConstructor(
       bookings: {
         where: {
           hotelId: hotelId,
-          status: 'ACTIVE',
+          status: 'ACTIVE' as 'ACTIVE',
         },
       },
     },
@@ -484,17 +485,18 @@ function clientQueryConstructor(
 
   return query;
 }
+type BookingRequestStatus = 'PENDING' | 'DECLINED' | 'ACCEPTED';
 type BookingRequestWhere = {
   hotelId: number;
-  status: string;
+  status: BookingRequestStatus;
   some?:
     | {
-        client?: { email: string };
+        client: { email: string };
       }
     | {
-        client?: {
-          firstName?: string;
-          lastName?: string;
+        client: {
+          firstName: string;
+          lastName: string;
         };
       }
     | {
@@ -514,40 +516,43 @@ type BookingRequestField =
   | 'clientEmail'
   | 'roomModel'
   | 'id';
-type BookingRequestQuery =
-  | {
-      orderBy: { [key: string]: string };
-      take: number;
-      skip: number;
-      where: BookingRequestWhere;
-      include: {
-        roomModel: boolean;
-        guestsDistribution: boolean;
-      };
-    }
-  | {
-      where: {
-        id: number;
-      };
-      include: {
-        roomModel: boolean;
-        guestsDistribution: boolean;
-      };
-    };
+
+export interface SingleBookingRequestQuery {
+  where: {
+    id: number;
+  };
+  include: {
+    roomModel: boolean;
+    guestsDistribution: boolean;
+  };
+}
+export interface MultipleBookingRequestQuery {
+  orderBy: { [key: string]: string };
+  take: number;
+  skip: number;
+  where: BookingRequestWhere;
+  include: {
+    roomModel: boolean;
+    guestsDistribution: boolean;
+  };
+}
+
+export interface BookingRequestQueryArgs {
+  skip: number;
+  take: number;
+  status?: BookingRequestStatus;
+  search?: {
+    field: BookingRequestField;
+    value: string;
+  };
+}
 function bookingRequestQueryConstructor(
   hotelId: number,
-  args: {
-    skip: number;
-    take: number;
-    search?: {
-      field: BookingRequestField;
-      value: string;
-    };
-  }
-): BookingRequestQuery {
+  args: BookingRequestQueryArgs
+): MultipleBookingRequestQuery | SingleBookingRequestQuery {
   let where: BookingRequestWhere = {
     hotelId: hotelId,
-    status: 'PENDING',
+    status: args.status || 'PENDING',
   };
   if (args.search) {
     if (args.search.field === 'id') {
@@ -641,13 +646,14 @@ type BookingWhere = {
     lte: Date;
   };
 };
+export interface BookingQueryArgs {
+  from?: string;
+  until?: string;
+  status?: 'finished' | 'canceled' | 'active';
+}
 function bookingQueryConstructor(
   hotelId: number,
-  args: {
-    from?: string;
-    until?: string;
-    status: string;
-  }
+  args: BookingQueryArgs
 ): {
   where: BookingWhere;
 } {

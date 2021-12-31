@@ -287,7 +287,9 @@ const Dashboard: WithLayoutPage<PageProps> = ({
         </Box>
 
         <HotelModal
-          isModalOpend={!isLoading && toEditHotelData && isHotelModalOpen}
+          isModalOpend={
+            !isLoading && toEditHotelData && isHotelModalOpen ? true : false
+          }
           closeModal={closeHotelModal}
           onEdit={handleEditSelected}
           hotel={toEditHotelData}

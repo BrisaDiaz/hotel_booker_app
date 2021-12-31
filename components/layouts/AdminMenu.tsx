@@ -165,7 +165,7 @@ export default function ResponsiveDrawer(props: Props) {
     query: Query | {};
   } = useRouter();
 
-  const { hotelId } = router.query;
+  const hotelId = 'hotelId' in router.query ? router.query.hotelId : '';
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -189,9 +189,11 @@ export default function ResponsiveDrawer(props: Props) {
       sub: false,
       family: ['requests', 'guests', 'rooms', 'bookings'],
       url: hotelId ? '/admin/hotel' : '/admin',
-      query: {
-        hotelId: hotelId,
-      },
+      query: hotelId
+        ? {
+            hotelId: hotelId,
+          }
+        : {},
     },
 
     {
@@ -202,9 +204,11 @@ export default function ResponsiveDrawer(props: Props) {
       family: ['hotel'],
       level: 1,
       url: '/admin/hotel/requests',
-      query: {
-        hotelId: hotelId,
-      },
+      query: hotelId
+        ? {
+            hotelId: hotelId,
+          }
+        : {},
     },
     {
       label: 'guests',
@@ -214,9 +218,11 @@ export default function ResponsiveDrawer(props: Props) {
       family: ['hotel'],
       level: 1,
       url: '/admin/hotel/guests',
-      query: {
-        hotelId: hotelId,
-      },
+      query: hotelId
+        ? {
+            hotelId: hotelId,
+          }
+        : {},
     },
     {
       label: 'bookings',
@@ -227,9 +233,11 @@ export default function ResponsiveDrawer(props: Props) {
       level: 1,
 
       url: `/admin/hotel/bookings`,
-      query: {
-        hotelId: hotelId,
-      },
+      query: hotelId
+        ? {
+            hotelId: hotelId,
+          }
+        : {},
     },
   ];
 

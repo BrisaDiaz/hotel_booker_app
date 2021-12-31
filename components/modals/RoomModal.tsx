@@ -124,7 +124,7 @@ type ComponentProps = {
   isModalOpend: Boolean;
   closeModal: Function;
   onEdit: Function;
-  roomType: Partial<RoomModel> | null;
+  roomType: RoomModel | null;
 };
 
 function TransitionsModal(props: ComponentProps) {

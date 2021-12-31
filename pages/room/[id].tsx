@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next';
 import { WithLayoutPage } from '@/interfaces/index';
 
 import React from 'react';
@@ -17,14 +17,14 @@ import BedIcon from '@mui/icons-material/Bed';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import ConsultModal from '@/components/modals/AbailableRoomModal';
 import BookingRequestModal from '@/components/modals/BookingRequestModal';
-import Backdrop from '@/components/modals/BookingRequestModal';
+import Backdrop from '@/components/Backdrop';
 import RoomBedsUI from '@/components/RoomBedsUI';
 import DinamicFieldIcone from '@/components/DinamicFieldIcone';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import StraightenIcon from '@mui/icons-material/Straighten';
 import AppBar from '@/components/layouts/AppBar';
 import SnackBar from '@/components/SnackBar';
-import { RoomModel, Item } from '@/interfaces/index';
+import { RoomModel, Feature } from '@/interfaces/index';
 
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -57,7 +57,7 @@ const styles = {
     alignItems: 'center',
     width: { xs: '250px', sm: '300px' },
   },
-};
+} as const;
 type PageProps = {
   room: RoomModel;
   roomModelId: number;
@@ -81,7 +81,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
     }
   );
 
-  const [isLoading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState<Boolean>(false);
   type Room = {
     childrens: number;
     adults: number;
@@ -459,7 +459,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             </Box>
             {room.amenities && room?.amenities?.length && (
               <Box sx={styles.list} component="ul">
-                {room.amenities.map((item: Item) => (
+                {room.amenities.map((item: Feature) => (
                   <Box key={item.id} sx={styles.featuresItems} component="li">
                     <DoneIcon
                       fontSize="small"
@@ -492,7 +492,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             </Box>
             {room.services && room?.services?.length && (
               <Box sx={styles.list} component="ul">
-                {room.services.map((item: Item) => (
+                {room.services.map((item: Feature) => (
                   <Box key={item.id} sx={styles.featuresItems} component="li">
                     <DoneIcon
                       fontSize="small"
@@ -512,7 +512,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
           message={notification?.content}
         />
       )}
-      <Backdrop loading={isLoading} />
+      <Backdrop loading={loading} />
     </div>
   );
 };

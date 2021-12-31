@@ -123,7 +123,7 @@ type ComponentProps = {
   isModalOpend: Boolean;
   closeModal: Function;
   onEdit: Function;
-  hotel: Partial<Hotel> | null;
+  hotel: Hotel | null;
 };
 
 function TransitionsModal(props: ComponentProps) {

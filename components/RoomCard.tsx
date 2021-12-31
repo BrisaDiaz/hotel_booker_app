@@ -5,38 +5,27 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import Box from '@mui/material/Box';
-
+import { RoomModel } from '@/interfaces/index';
 import RoomBedsUI from './RoomBedsUI';
 
-export default function RoomCard({
-  room,
-}: {
-  room: {
-    name: string;
-    id: number;
-    mainImage: string;
-    category: string;
-    lowestPrice: number;
-    mts2: number;
-    taxesAndCharges: number;
-    beds: {
-      id: number;
-      type: string;
-      quantity: number;
-    };
-  };
-}) {
+export default function RoomCard({ room }: { room: RoomModel }) {
   return (
-    <Box component={Link} href={`/room/${room.id}`} passHref>
+    <>
+      <Box
+        component={Link}
+        href={`/room/${room.id}`}
+        sx={{ position: 'absolute', zIndex: 50, width: '100%', height: '100%' }}
+      />
       <Card
-        elevation="none"
-        sx={{
-          minWidth: '310px',
-          p: { xs: '5px', sm: 0 },
-          pb: '10px',
-          borderRadius: 2,
-          bg: 'transparent',
-        }}
+        sx={
+          {
+            minWidth: '310px',
+            p: { xs: '5px', sm: 0 },
+            paddingBottom: '10px',
+            borderRadius: 2,
+            backgroundColor: 'transparent',
+          } as const
+        }
       >
         <CardActionArea
           sx={{
@@ -131,6 +120,6 @@ export default function RoomCard({
           </Box>
         </CardActionArea>
       </Card>
-    </Box>
+    </>
   );
 }

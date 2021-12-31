@@ -27,20 +27,25 @@ export const Mutation = extendType({
         email: stringArg(),
         password: stringArg(),
       },
-      resolve(_, args, ctx) {
-        async function updateAccount(user: User | null, args) {
+      resolve(_, args, ctx): any {
+        async function updateAccount(
+          user: {
+            id: number;
+          } | null,
+          args: any
+        ) {
           if (!user) throw new AuthenticationError('Unauthenticated');
 
           const encryptedPasswod = args.password
             ? await hashPassword(args.password)
-            : null;
+            : undefined;
           return await prisma.user.update({
             where: {
               id: user.id,
             },
             data: {
               firstName: args.firstName,
-              secondName: args.secondName,
+              lastName: args.lastName,
               email: args.email,
               password: encryptedPasswod,
             },

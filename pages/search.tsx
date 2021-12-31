@@ -8,7 +8,7 @@ import HotelsGrid from '@/components/HotelsGrid';
 import FilterMenu from '@/components/layouts/FilterMenu';
 import Pagination from '@/components/Pagination';
 import Box from '@mui/material/Box';
-
+import { Hotel, Feature } from '@/interfaces/index';
 import {
   GET_ALL_SERVICES,
   GET_ALL_FACILITIES,
@@ -17,29 +17,13 @@ import {
   GET_ALL_HOTEL_CATEGORIES,
   GET_HOTELS,
 } from '@/queries/index';
-import { ContentPasteOutlined } from '@mui/icons-material';
 
-type Data = {
-  id: number;
-  name: string;
-  hotelsCount: number;
-  __typename: string;
-};
-interface Hotel {
-  name: string;
-  lowestPrice: number;
-  address: {
-    holeAddress: string;
-  };
-  description: string;
-  frameImage: string;
-}
 type Props = {
-  facilitiesList: Data[];
-  activitiesList: Data[];
-  languagesList: Data[];
-  servicesList: Data[];
-  hotelCategoriesList: Data[];
+  facilitiesList: Feature[];
+  activitiesList: Feature[];
+  languagesList: Feature[];
+  servicesList: Feature[];
+  hotelCategoriesList: Feature[];
 
   hotelSearch: {
     hotels: Hotel[];
@@ -141,41 +125,48 @@ const Search = ({
 };
 
 export default Search;
-export const getStaticProps: GetStaticProps = async (context) => {
-  const activitiesRequest = await client.query({
+export const getServerSideProps = async () => {
+  const activitiesRequest = client.query({
     query: GET_ALL_ACTIVITIES,
   });
-  const servicesRequest = await client.query({
+  const servicesRequest = client.query({
     query: GET_ALL_SERVICES,
   });
-  const facilitiesRequest = await client.query({
+  const facilitiesRequest = client.query({
     query: GET_ALL_FACILITIES,
   });
-  const categoriesRequest = await client.query({
+  const categoriesRequest = client.query({
     query: GET_ALL_HOTEL_CATEGORIES,
   });
-  const languagesRequest = await client.query({
+  const languagesRequest = client.query({
     query: GET_ALL_LANGUAGES,
   });
-  const hotelsRequest = await client.query({
+  const hotelsRequest = client.query({
     query: GET_HOTELS,
   });
-  const response = await Promise.all([
+  const [
+    activitiesList,
+    servicesList,
+    facilitiesList,
+    languagesList,
+    hotelCategoriesList,
+    hotelSearch,
+  ] = await Promise.all([
     activitiesRequest,
     servicesRequest,
     facilitiesRequest,
-    categoriesRequest,
     languagesRequest,
+    categoriesRequest,
     hotelsRequest,
   ]);
 
   const props = {
-    ...facilitiesRequest.data,
-    ...activitiesRequest.data,
-    ...languagesRequest.data,
-    ...servicesRequest.data,
-    ...categoriesRequest.data,
-    ...hotelsRequest.data,
+    activitiesList: activitiesList.data,
+    servicesList: servicesList.data,
+    facilitiesList: facilitiesList.data,
+    languagesList: languagesList.data,
+    hotelCategoriesList: hotelCategoriesList.data,
+    hotelSearch: hotelSearch.data,
   };
 
   return {

@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import BedIcone from '@/components/BedIcone';
-
+type IconeSize = 'small' | 'inherit' | 'medium' | 'large';
 interface withIconeBed {
   label: string;
   Icone: JSX.Element;
@@ -13,7 +13,7 @@ interface withQuantityFeature {
 }
 const getBedsInterface = (
   beds: withQuantityFeature[],
-  size?: 'small' | 'inherit' | 'medium' | 'large'
+  size?: IconeSize
 ): withIconeBed[] => {
   const bedsInterface = beds.map((bedInfo) => ({
     label: `${bedInfo.quantity} ${bedInfo.type} ${
@@ -28,7 +28,7 @@ export default function RoomBedsUI({
   size,
 }: {
   beds: withQuantityFeature[];
-  size: string;
+  size: IconeSize;
 }) {
   const bedsWidthIcon: withIconeBed[] = getBedsInterface(beds, size);
   return (

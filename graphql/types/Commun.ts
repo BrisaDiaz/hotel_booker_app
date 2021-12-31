@@ -7,7 +7,7 @@ export const Service = objectType({
     t.id('id');
     t.string('name');
     t.int('hotelsCount', {
-      resolve(root: { id: number }) {
+      resolve(root: any) {
         return prisma.hotel.count({
           where: {
             services: {
@@ -26,7 +26,7 @@ export const Facility = objectType({
     t.nonNull.id('id');
     t.nonNull.string('name');
     t.int('hotelsCount', {
-      resolve(root: { id: number }) {
+      resolve(root: any) {
         return prisma.hotel.count({
           where: {
             facilities: {
@@ -65,7 +65,7 @@ export const Query = extendType({
   definition(t) {
     t.field('servicesList', {
       type: list('Service'),
-      resolve: () => {
+      resolve: (): any => {
         return prisma.service.findMany({
           orderBy: {
             name: 'asc',
@@ -75,7 +75,7 @@ export const Query = extendType({
     });
     t.field('activitiesList', {
       type: list('Activity'),
-      resolve: () =>
+      resolve: (): any =>
         prisma.activity.findMany({
           orderBy: {
             name: 'asc',
@@ -84,7 +84,7 @@ export const Query = extendType({
     });
     t.list.field('languagesList', {
       type: 'Language',
-      resolve: () => {
+      resolve: (): any => {
         return prisma.language.findMany({
           orderBy: {
             name: 'asc',
@@ -94,7 +94,7 @@ export const Query = extendType({
     });
     t.field('facilitiesList', {
       type: list('Facility'),
-      resolve: () => {
+      resolve: (): any => {
         return prisma.facility.findMany({
           orderBy: {
             name: 'asc',
@@ -104,7 +104,7 @@ export const Query = extendType({
     });
     t.field('amenitiesList', {
       type: list('Amenity'),
-      resolve: () => {
+      resolve: (): any => {
         return prisma.amenity.findMany({
           orderBy: {
             name: 'asc',
@@ -114,7 +114,7 @@ export const Query = extendType({
     });
     t.field('hotelCategoriesList', {
       type: list('HotelCategory'),
-      resolve: () => {
+      resolve: (): any => {
         return prisma.hotelCategory.findMany({
           orderBy: {
             name: 'asc',
@@ -124,7 +124,7 @@ export const Query = extendType({
     });
     t.field('roomCategoriesList', {
       type: list('RoomCategory'),
-      resolve: () => {
+      resolve: (): any => {
         return prisma.roomCategory.findMany({
           orderBy: {
             name: 'asc',
@@ -134,7 +134,7 @@ export const Query = extendType({
     });
     t.field('bedTypesList', {
       type: list('BedType'),
-      resolve: () => {
+      resolve: (): any => {
         return prisma.bedType.findMany({
           orderBy: {
             name: 'asc',

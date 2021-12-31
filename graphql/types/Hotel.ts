@@ -17,6 +17,7 @@ import {
   hotelQueryConstructor,
   deleteImage,
   getHotelFieldsToEdit,
+  HotelQueryArgs,
 } from '../utils/index';
 
 export const Address = objectType({
@@ -39,7 +40,7 @@ export const Administrator = objectType({
     t.int('userId');
     t.field('user', {
       type: 'User',
-      resolve: (root) => {
+      resolve(root: any): any {
         return prisma.user.findUnique({
           where: {
             id: root.userId,
@@ -49,7 +50,7 @@ export const Administrator = objectType({
     });
     t.field('hotels', {
       type: list('Hotel'),
-      resolve: (root) => {
+      resolve(root: any): any {
         return prisma.hotel.findMany({
           where: {
             administratorId: root.id,
@@ -65,7 +66,7 @@ export const Activity = objectType({
     t.id('id');
     t.string('name');
     t.int('hotelsCount', {
-      resolve(root: { id: number }) {
+      resolve(root: any): any {
         return prisma.hotel.count({
           where: {
             activities: {
@@ -85,7 +86,7 @@ export const Language = objectType({
     t.id('id');
     t.string('name');
     t.int('hotelsCount', {
-      resolve(root: { id: number }) {
+      resolve(root: any): any {
         return prisma.hotel.count({
           where: {
             languages: {
@@ -105,7 +106,7 @@ export const HotelCategory = objectType({
     t.id('id');
     t.string('name');
     t.int('hotelsCount', {
-      resolve(root: { name: string }) {
+      resolve(root: any): any {
         return prisma.hotel.count({
           where: {
             category: {
@@ -126,7 +127,7 @@ export const Hotel = objectType({
     t.field('adminstrator', {
       type: 'Administrator',
 
-      resolve: (root: { administratorId: number }) => {
+      resolve(root: any): any {
         return prisma.administrator.findUnique({
           where: {
             id: root.administratorId,
@@ -157,7 +158,7 @@ export const Hotel = objectType({
     t.list.field('languages', { type: 'Language' });
     t.field('features', {
       type: 'Features',
-      resolve: (root) => {
+      resolve(root: any): any {
         return prisma.features.findUnique({
           where: {
             hotelId: root.id * 1,
@@ -167,7 +168,7 @@ export const Hotel = objectType({
     });
     t.list.field('roomModels', {
       type: 'RoomModel',
-      resolve: (root) => {
+      resolve(root: any): any {
         return prisma.roomModel.findMany({
           where: {
             hotelId: root.id * 1,
@@ -177,7 +178,7 @@ export const Hotel = objectType({
     });
     t.list.field('images', {
       type: 'Image',
-      resolve: (root) => {
+      resolve(root: any): any {
         return prisma.image.findMany({
           where: {
             hotelId: root.id,
@@ -188,7 +189,7 @@ export const Hotel = objectType({
 
     t.field('address', {
       type: 'Address',
-      resolve(root: { id: number }, args, ctx) {
+      resolve(root: any): any {
         return prisma.address.findUnique({
           where: {
             hotelId: root.id,
@@ -226,8 +227,8 @@ export const Query = extendType({
         languages: list(stringArg()),
       },
 
-      resolve(root, args: any, ctx) {
-        const query = hotelQueryConstructor(args);
+      resolve(root: any, args): any {
+        const query = hotelQueryConstructor(args as HotelQueryArgs);
         const searchHotels = async (query: { where: any; take: number }) => {
           const hotels = await prisma.hotel.findMany(query);
           const totalResults: number = await prisma.hotel.count({
@@ -244,7 +245,7 @@ export const Query = extendType({
       args: {
         hotelId: nonNull(idArg()),
       },
-      resolve(_, args, ctx) {
+      resolve(root, args): any {
         const searchHotel = async (hotelId: number) => {
           const hotel = await prisma.hotel.findUnique({
             where: {
@@ -303,7 +304,7 @@ export const Mutation = extendType({
         city: stringArg(),
         street: stringArg(),
       },
-      resolve(_, args, ctx) {
+      resolve(_, args, ctx): any {
         const createHotel = async (userId: number, args: any) => {
           const admin = await getAdminInfo(userId);
 
@@ -410,7 +411,7 @@ export const Mutation = extendType({
         city: stringArg(),
         street: stringArg(),
       },
-      resolve(_, args, ctx) {
+      resolve(_, args, ctx): any {
         const update = async (userId: number, hotelId: number, args: any) => {
           verifyIsHotelAdmin(userId, hotelId);
           const toEditFields = getHotelFieldsToEdit(args);

@@ -19,21 +19,24 @@ export default function ({
   register: Function;
   errors: any;
 }) {
-  const defaultBeds =
+  type DefaultBeds = {
+    [key: string]: { quantity: number };
+  };
+  const defaultBeds: DefaultBeds =
     defaultData && defaultData.beds
       ? defaultData.beds.reduce(
           (
-            defaulValues: { [key: string]: { quantity: number } } | {},
-            bed: { type: string; quantity: number }
+            defaulValues: any,
+            bed: { type: keyof DefaultBeds; quantity: number }
           ) => {
-            defaulValues[bed.type] = {
+            defaulValues[`${bed.type}`] = {
               quantity: bed.quantity,
             };
             return defaulValues;
           },
           {}
         )
-      : {};
+      : null;
 
   return (
     <Box component="fieldset" sx={styles.fieldset}>
@@ -150,7 +153,7 @@ export function BedsInputs({
   errors,
   defaultBeds,
 }: {
-  defaultBeds: { [key: string]: { quantity: number } } | {};
+  defaultBeds: { [key: string]: { quantity: number } } | null;
   beds: Feature[];
   register: Function;
   errors: {
@@ -184,9 +187,7 @@ export function BedsInputs({
               sx={styles.textField}
               id="bedQuantity"
               defaultValue={
-                defaultBeds && defaultBeds[`${bed.name}`]
-                  ? defaultBeds[`${bed.name}`].quantity
-                  : 0
+                defaultBeds ? defaultBeds[`${bed.name}`].quantity : 0
               }
               inputProps={{ min: 0 }}
               {...register(`${bed.name}`, {

@@ -1,9 +1,11 @@
 import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
-const env = {
-  DATABASE_URL: process.env.DATABASE_URL,
-  APP_SECRET: process.env.APP_SECRET,
+const env: { [key: string]: string } = {
+  DATABASE_URL:
+    process.env.DATABASE_URL ||
+    'postgresql://postgres:postgres@localhost:5432/hotelBooker',
+  APP_SECRET: process.env.APP_SECRET || 'auth_json_web_token_secret_key',
   HOST: publicRuntimeConfig.HOST || process.env.HOST,
   CLOUDINARY_NAME:
     publicRuntimeConfig.CLOUDINARY_NAME || process.env.CLOUDINARY_NAME,

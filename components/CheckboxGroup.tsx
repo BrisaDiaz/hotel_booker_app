@@ -2,17 +2,13 @@ import * as React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-type Data = {
-  id: number;
-  name: string;
-  hotelsCount?: number;
-  __typename?: string;
-};
+import { Feature } from '@/interfaces/index';
+
 export default function CheckboxLabels({
   items,
   handleChanges,
 }: {
-  items: Data[];
+  items: Feature[];
   handleChanges: Function;
 }) {
   return (

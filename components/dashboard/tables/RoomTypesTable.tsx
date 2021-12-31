@@ -31,23 +31,16 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import BedIcone from '@/components/BedIcone';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    bodyCell: {
-      borderRight: '1px solid rgba(0,0,0,0.1)',
-    },
-  })
-);
+import { RoomModel } from '@/interfaces/index';
 export function ActionsMenu({
   children,
   handleActions,
-  selectedRoomTypeId,
+  selectedRoomModelId,
   selectedRoomsIds,
 }: {
   children: React.ReactNode;
   handleActions: Function;
-  selectedRoomTypeId: number;
+  selectedRoomModelId: number;
   selectedRoomsIds: number[];
 }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -59,7 +52,7 @@ export function ActionsMenu({
     setAnchorEl(null);
   };
   const handleMenuClick = (action: string) => {
-    handleActions(selectedRoomTypeId, action, selectedRoomsIds);
+    handleActions(selectedRoomModelId, action, selectedRoomsIds);
     handleClose();
   };
   return (
@@ -124,18 +117,7 @@ const ActionsButton = () => {
     </Tooltip>
   );
 };
-interface RoomType {
-  __typename: string;
-  id: number;
-  name: string;
-  mainImage: string;
-  lowestPrice: number;
-  taxesAndCharges: number;
-  cancelationFee: number;
-  maximunGuests: number;
-  beds: Array<{ id: number; type: string; quantity: number }>;
-  rooms: Array<{ id: number; number: number }>;
-}
+
 interface Row {
   id: number;
   name: string;
@@ -151,7 +133,7 @@ function RoomsTable({
   roomTypes,
   handleActions,
 }: {
-  roomTypes: RoomType[];
+  roomTypes: RoomModel[];
   handleActions: Function;
 }) {
   ////data
@@ -178,7 +160,7 @@ function RoomsTable({
       cancelationFee,
     };
   }
-  const generateRows = (roomTypes: RoomType[] | []) => {
+  const generateRows = (roomTypes: RoomModel[] | []) => {
     const rows = roomTypes?.length
       ? roomTypes.map((roomType) =>
           createData(
@@ -190,8 +172,8 @@ function RoomsTable({
             roomType.cancelationFee,
             roomType.maximunGuests,
             roomType.beds,
-            roomType.rooms.map((room: { id: number; number: number }) => ({
-              id: room.id,
+            roomType.rooms.map((room: { id: string; number: number }) => ({
+              id: parseInt(room.id),
               number: room.number,
             }))
           )
@@ -199,7 +181,7 @@ function RoomsTable({
       : [];
     return rows;
   };
-  const getRoomTypesToDisplay = (
+  const getRoomModelsToDisplay = (
     rows: Row[],
     page: number,
     rowsPerPage: number
@@ -242,12 +224,12 @@ function RoomsTable({
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
   const [displayedRows, setDisplayedRows] = React.useState(
-    rows ? getRoomTypesToDisplay(rows, page, rowsPerPage) : []
+    rows ? getRoomModelsToDisplay(rows, page, rowsPerPage) : []
   );
   React.useEffect(() => {
     const actualizedRows = generateRows(roomTypes);
     setRows(actualizedRows);
-    setDisplayedRows(getRoomTypesToDisplay(actualizedRows, page, rowsPerPage));
+    setDisplayedRows(getRoomModelsToDisplay(actualizedRows, page, rowsPerPage));
   }, [roomTypes]);
 
   const handleChangePage = (
@@ -255,12 +237,12 @@ function RoomsTable({
     newPage: number
   ) => {
     setPage(newPage);
-    setDisplayedRows(getRoomTypesToDisplay(rows, page, rowsPerPage));
-    getRoomTypesToDisplay;
+    setDisplayedRows(getRoomModelsToDisplay(rows, page, rowsPerPage));
+    getRoomModelsToDisplay;
   };
-  const [selectedRooms, setSelectedRooms] = React.useState<number[] | []>([]);
+  const [selectedRooms, setSelectedRooms] = React.useState<number[]>([]);
   const handleSelectedRooms = (roomId: number) => {
-    if (Boolean(selectedRooms.includes(roomId))) {
+    if (selectedRooms.length && selectedRooms.includes(roomId)) {
       return setSelectedRooms(selectedRooms.filter((id) => id !== roomId));
     }
     return setSelectedRooms([...selectedRooms, roomId]);
@@ -331,7 +313,7 @@ function RoomsTable({
                   {/* ACTION MENU */}
                   <ActionsMenu
                     handleActions={handleActions}
-                    selectedRoomTypeId={row.id}
+                    selectedRoomModelId={row.id}
                     selectedRoomsIds={selectedRooms}
                   >
                     <ActionsButton />
@@ -445,11 +427,11 @@ function RoomsTable({
                           key={room.number}
                           label={room.number}
                           color={
-                            Boolean(selectedRooms.includes(parseInt(room.id)))
+                            selectedRooms.includes(room.id)
                               ? 'primary'
                               : 'default'
                           }
-                          onClick={() => handleSelectedRooms(parseInt(room.id))}
+                          onClick={() => handleSelectedRooms(room.id)}
                         />
                       ))}
                     </Stack>

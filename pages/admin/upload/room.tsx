@@ -1,41 +1,31 @@
 import Head from 'next/head';
 import React from 'react';
-import { WithLayoutPage } from '@/interfaces/index';
 import type { NextApiRequest, NextApiResponse } from 'next';
-
 import { useAuth } from '@/context/useAuth';
 import { useRouter } from 'next/router';
 import SnackBar from '@/components/SnackBar';
 import RoomForm from '@/components/dashboard/forms/Room/index';
 import Backdrop from '@/components/Backdrop';
 import AdminMenu from '@/components/layouts/AdminMenu';
-import { client } from '@/lib/apollo';
 import { useMutation } from '@apollo/client';
 import { RoomBuildierVariables } from '@/interfaces/index';
 import uploadToCloudinary from '@/utils/uploadToCloudinary';
-import {
-  GET_ALL_SERVICES,
-  GET_ALL_ROOM_CATEGORIES,
-  CREATE_ROOM_MODEL,
-  GET_ALL_AMENITIES,
-  GET_ALL_BEDS,
-} from '@/queries/index';
-type Option = {
-  id: number;
-  name: string;
-};
+import { prisma } from '@/lib/prisma';
+import { CREATE_ROOM_MODEL } from '@/queries/index';
+import { Feature } from '@/interfaces/index';
+
 type PageProps = {
-  amenitiesList: Option[];
-  servicesList: Option[];
-  roomCategoriesList: Option[];
-  bedTypesList: Option[];
+  amenitiesList: Feature[];
+  servicesList: Feature[];
+  roomCategoriesList: Feature[];
+  bedTypesList: Feature[];
 };
-const RoomUploadPage: WithLayoutPage<PageProps> = ({
+const RoomUploadPage: any = ({
   amenitiesList,
   servicesList,
   roomCategoriesList,
   bedTypesList,
-}) => {
+}: PageProps) => {
   const authContext = useAuth();
 
   const router = useRouter();
@@ -129,20 +119,11 @@ export const getStaticProps = async ({
   req: NextApiRequest;
   res: NextApiResponse;
 }) => {
-  try {
-    const servicesRequest = await client.query({
-      query: GET_ALL_SERVICES,
-    });
-    const amenitiesRequest = await client.query({
-      query: GET_ALL_AMENITIES,
-    });
-    const categoriesRequest = await client.query({
-      query: GET_ALL_ROOM_CATEGORIES,
-    });
-    const bedsRequest = await client.query({
-      query: GET_ALL_BEDS,
-    });
-
+  const servicesRequest = prisma.service.findMany({});
+  const amenitiesRequest = prisma.amenity.findMany({});
+  const categoriesRequest = prisma.roomCategory.findMany({});
+  const bedsRequest = prisma.bedType.findMany({});
+  const [amenitiesList, servicesList, roomCategoriesList, bedTypesList] =
     await Promise.all([
       servicesRequest,
       categoriesRequest,
@@ -150,25 +131,16 @@ export const getStaticProps = async ({
       bedsRequest,
     ]);
 
-    const props = {
-      ...amenitiesRequest.data,
-      ...servicesRequest.data,
-      ...categoriesRequest.data,
-      ...bedsRequest.data,
-    };
+  const props = {
+    amenitiesList: JSON.stringify(amenitiesList),
+    servicesList: JSON.stringify(servicesList),
+    roomCategoriesList: JSON.stringify(roomCategoriesList),
+    bedTypesList: JSON.stringify(bedTypesList),
+  };
 
-    return {
-      props: {
-        ...props,
-      },
-    };
-  } catch (error) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/signin',
-      },
-      props: {},
-    };
-  }
+  return {
+    props: {
+      ...props,
+    },
+  };
 };

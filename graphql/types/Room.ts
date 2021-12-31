@@ -53,7 +53,7 @@ export const RoomModel = objectType({
     t.int('hotelId');
     t.field('hotel', {
       type: 'Hotel',
-      resolve: (root) => {
+      resolve: (root: any): any => {
         return prisma.hotel.findUnique({
           where: {
             id: root.id,
@@ -77,7 +77,7 @@ export const RoomModel = objectType({
     t.boolean('smooking');
     t.list.field('beds', {
       type: 'RoomBed',
-      resolve: (root) => {
+      resolve: (root: any): any => {
         return prisma.roomBed.findMany({
           where: {
             roomModelId: root.id,
@@ -87,7 +87,7 @@ export const RoomModel = objectType({
     });
     t.list.field('images', {
       type: 'Image',
-      resolve: (root) => {
+      resolve: (root: any): any => {
         return prisma.image.findMany({
           where: {
             roomModelId: root.id,
@@ -99,7 +99,7 @@ export const RoomModel = objectType({
     t.list.field('amenities', { type: 'Amenity' });
     t.list.field('rooms', {
       type: 'Room',
-      resolve: (root) => {
+      resolve: (root: any): any => {
         return prisma.room.findMany({
           where: {
             roomModelId: root.id,
@@ -117,7 +117,7 @@ export const Room = objectType({
     t.int('number');
     t.field('roomModel', {
       type: 'RoomModel',
-      resolve: (root) => {
+      resolve: (root: any): any => {
         return prisma.roomModel.findUnique({
           where: {
             id: root.roomModelId,
@@ -138,7 +138,7 @@ export const Query = extendType({
       args: {
         roomModelId: nonNull(idArg()),
       },
-      resolve(root, args, ctx) {
+      resolve(root, args, ctx): any {
         return prisma.roomModel.findUnique({
           where: {
             id: parseInt(args.roomModelId),
@@ -184,7 +184,7 @@ export const Mutation = extendType({
         smooking: nonNull(booleanArg()),
         beds: nonNull(list(bedsSpecifications)),
       },
-      resolve(root, args, ctx) {
+      resolve(root, args, ctx): any {
         const hotelId = parseInt(args.hotelId);
         const userId = parseInt(args.userId);
 
@@ -262,7 +262,7 @@ export const Mutation = extendType({
         smooking: booleanArg(),
         beds: list(bedsSpecifications),
       },
-      resolve(root, args, ctx) {
+      resolve(root, args, ctx): any {
         const updateRoomModel = async (
           userId: number,
           hotelId: number,
@@ -344,7 +344,7 @@ export const Mutation = extendType({
         roomModelId: nonNull(idArg()),
         roomNumbers: nonNull(list(nonNull(intArg()))),
       },
-      resolve: (root, args, ctx) => {
+      resolve: (root, args, ctx): any => {
         const userId = parseInt(args.userId);
         const hotelId = parseInt(args.hotelId);
         const roomModelId = parseInt(args.roomModelId);
@@ -396,7 +396,7 @@ export const Mutation = extendType({
         roomModelId: nonNull(idArg()),
         roomsIds: nonNull(list(nonNull(intArg()))),
       },
-      resolve: (root, args, ctx) => {
+      resolve: (root, args, ctx): any => {
         const userId = parseInt(args.userId);
         const hotelId = parseInt(args.hotelId);
         const roomModelId = parseInt(args.roomModelId);

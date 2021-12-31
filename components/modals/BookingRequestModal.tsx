@@ -47,7 +47,7 @@ export default function BasicModal({
     checkInDate: string;
     checkOutDate: string;
     specifications?: string;
-    requiredRooms: number;
+    requiredRooms?: number;
   }) => {
     handleClose();
     delete data['requiredRooms'];

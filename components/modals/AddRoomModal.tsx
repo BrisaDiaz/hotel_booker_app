@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack';
 
 const styles = {
   modal: {
-    position: 'absolute' as 'absolute',
+    position: 'fixed',
     top: '50%',
     left: '50%',
     maxWidth: '320px',
@@ -29,7 +29,7 @@ const styles = {
       textTransform: 'capitalize',
     },
   },
-};
+} as const;
 
 export default function KeepMountedModal({
   onSubmit,
@@ -42,7 +42,7 @@ export default function KeepMountedModal({
   isModalOpen: boolean;
   restrictedNumbers: number[];
 }) {
-  const inputRef = React.useRef();
+  const inputRef: any = React.useRef();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
 
@@ -88,7 +88,7 @@ export default function KeepMountedModal({
     }
     return roomNumbers;
   };
-  const handleSubmit = (e: SubmitEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
     const numbers = handleAddMore();
@@ -108,7 +108,7 @@ export default function KeepMountedModal({
         <Box
           sx={styles.modal}
           component="form"
-          onSubmit={(e) => handleSubmit(e)}
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}
         >
           <Typography
             id="transition-modal-title"

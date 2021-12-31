@@ -1,15 +1,9 @@
 import { NextPage } from 'next';
-export type Address = {
-  holeAddress: string;
-  country?: string;
-  postalCode?: string;
-  administrativeArea?: string;
-  city?: string;
-  street?: string;
-};
+
 export type Feature = {
   id: number;
   name: string;
+  hotelsCount?: number;
 };
 export type Features = {
   __typename: string;
@@ -45,6 +39,7 @@ export interface RoomModel {
   amenities: Feature[];
   services: Feature[];
   beds: WithQuantityFeature[];
+  rooms: { id: string; number: number }[];
 }
 
 export interface Hotel {
@@ -53,7 +48,14 @@ export interface Hotel {
   brand: string;
   category: string;
   lowestPrice: number;
-  address: Address;
+  address: {
+    holeAddress: string;
+    country: string;
+    postalCode: string;
+    administrativeArea: string;
+    city: string;
+    street: string;
+  };
   checkInHour: string;
   checkOutHour: string;
   taxesAndCharges: number;
@@ -121,7 +123,7 @@ export interface BookingRequest {
     taxesAndCharges: number;
   };
   availableRooms: Array<{
-    id: number;
+    id: string;
     number: number;
   }>;
 }

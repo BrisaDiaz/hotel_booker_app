@@ -2,25 +2,16 @@ import Head from 'next/head';
 import React from 'react';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { useRouter } from 'next/router';
-import { WithLayoutPage } from '@/interfaces/index';
 import type { Modify } from '@/interfaces/index';
 import AdminMenu from '@/components/layouts/AdminMenu';
-
 import HotelForm from '@/components/dashboard/forms/Hotel/index';
 import Backdrop from '@/components/Backdrop';
 import { useAuth } from '@/context/useAuth';
 import SnackBar from '@/components/SnackBar';
-import { client } from '@/lib/apollo';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import uploadToCloudinary from '@/utils/uploadToCloudinary';
-import {
-  GET_ALL_SERVICES,
-  GET_ALL_FACILITIES,
-  GET_ALL_ACTIVITIES,
-  GET_ALL_LANGUAGES,
-  GET_ALL_HOTEL_CATEGORIES,
-  CREATE_HOTEL,
-} from '@/queries/index';
+import { prisma } from '@/lib/prisma';
+import { CREATE_HOTEL } from '@/queries/index';
 import type { Hotel } from '@/interfaces/index';
 
 type Option = {
@@ -34,13 +25,14 @@ type PageProps = {
   languagesList: Option[];
   hotelCategoriesList: Option[];
 };
-const HotelUploadPage: WithLayoutPage<PageProps> = ({
+
+const HotelUploadPage: any = ({
   facilitiesList,
   activitiesList,
   servicesList,
   languagesList,
   hotelCategoriesList,
-}) => {
+}: PageProps) => {
   const authContext = useAuth();
 
   const router = useRouter();
@@ -156,51 +148,36 @@ export const getStaticProps = async ({
     destination: string;
   };
 }> => {
-  try {
-    const activitiesRequest = await client.query({
-      query: GET_ALL_ACTIVITIES,
-    });
-    const servicesRequest = await client.query({
-      query: GET_ALL_SERVICES,
-    });
-    const facilitiesRequest = await client.query({
-      query: GET_ALL_FACILITIES,
-    });
-    const categoriesRequest = await client.query({
-      query: GET_ALL_HOTEL_CATEGORIES,
-    });
-    const languagesRequest = await client.query({
-      query: GET_ALL_LANGUAGES,
-    });
+  const activitiesRequest = prisma.activity.findMany({});
+  const servicesRequest = prisma.service.findMany({});
+  const facilitiesRequest = prisma.facility.findMany({});
+  const categoriesRequest = prisma.hotelCategory.findMany({});
+  const languagesRequest = prisma.language.findMany({});
+  const [
+    facilitiesList,
+    activitiesList,
+    servicesList,
+    languagesList,
+    hotelCategoriesList,
+  ] = await Promise.all([
+    activitiesRequest,
+    servicesRequest,
+    facilitiesRequest,
+    categoriesRequest,
+    languagesRequest,
+  ]);
 
-    await Promise.all([
-      activitiesRequest,
-      servicesRequest,
-      facilitiesRequest,
-      categoriesRequest,
-      languagesRequest,
-    ]);
+  const props = {
+    facilitiesList: JSON.stringify(facilitiesList),
+    activitiesList: JSON.stringify(activitiesList),
+    servicesList: JSON.stringify(servicesList),
+    languagesList: JSON.stringify(languagesList),
+    hotelCategoriesList: JSON.stringify(hotelCategoriesList),
+  };
 
-    const props = {
-      ...facilitiesRequest.data,
-      ...activitiesRequest.data,
-      ...languagesRequest.data,
-      ...servicesRequest.data,
-      ...categoriesRequest.data,
-    };
-
-    return {
-      props: {
-        ...props,
-      },
-    };
-  } catch (error) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/signin',
-      },
-      props: {},
-    };
-  }
+  return {
+    props: {
+      ...props,
+    },
+  };
 };

@@ -15,19 +15,9 @@ import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { NextRouter, useRouter } from 'next/router';
 import { RoomModel } from '@/interfaces/index';
-export interface RoomType {
-  __typename: string;
-  id: number;
-  name: string;
-  mainImage: string;
-  lowestPrice: number;
-  taxesAndCharges: number;
-  maximunGuests: number;
-  beds: Array<{ id: number; type: string; quantity: number }>;
-  rooms: Array<{ id: number; number: number }>;
-}
+
 export interface Props {
-  roomModels: Array<RoomType>;
+  roomModels: RoomModel[];
   roomTypesCount: number;
   bookingsCount: number;
   guestsCount: number;
@@ -166,7 +156,7 @@ export default function useHotelDashboard({
   }>({ content: '', type: 'success' });
 
   const getAlreadyUploadRoomNumbers = (
-    hotelRoomTypes: RoomType[]
+    hotelRoomTypes: RoomModel[]
   ): number[] | [] => {
     const roomNumbers = hotelRoomTypes
       ?.map((roomType) => roomType?.rooms.map((room) => room.number))
@@ -177,7 +167,7 @@ export default function useHotelDashboard({
   const setActualizeRoomModelToEditData = (data: RoomModel) => {
     setToEditRoomTypeData(data);
   };
-  const [roomTypes, setRoomTypes] = React.useState<RoomType[]>(roomModels);
+  const [roomTypes, setRoomTypes] = React.useState<RoomModel[]>(roomModels);
   const [toDeleteRoomsIds, setToDeleteRoomsIds] = React.useState<number[] | []>(
     []
   );
@@ -190,7 +180,7 @@ export default function useHotelDashboard({
   >(null);
   const [availableRooms, setAvailableRooms] = React.useState<
     | {
-        id: number;
+        id: string;
         number: number;
       }[]
     | []
@@ -209,7 +199,7 @@ export default function useHotelDashboard({
       onCompleted: ({ addRoomToModel }) => {
         const actualizedRooms = addRoomToModel;
         if (actualizedRooms.length) {
-          const actualizedRoomTypes = roomTypes.map((roomType: RoomType) =>
+          const actualizedRoomTypes = roomTypes.map((roomType: RoomModel) =>
             roomType.id === selectedRoomTypeId
               ? { ...roomType, rooms: actualizedRooms }
               : roomType
@@ -239,7 +229,7 @@ export default function useHotelDashboard({
       onCompleted: ({ deleteRoomOfModel }) => {
         const actualizedRooms = deleteRoomOfModel;
 
-        const actualizedRoomTypes = roomTypes.map((roomType: RoomType) =>
+        const actualizedRoomTypes = roomTypes.map((roomType: RoomModel) =>
           roomType.id === selectedRoomTypeId
             ? { ...roomType, rooms: actualizedRooms }
             : roomType

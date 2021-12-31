@@ -42,6 +42,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@mui/types": "^7.1.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookies": "^0.7.7",
     "@types/formidable": "^2.0.0",

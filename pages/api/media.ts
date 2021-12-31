@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import cloudinary from '@/lib/cloudinary';
-import formidable from 'formidable-serverless';
+const formidable = require('formidable-serverless');
 import fs from 'fs';
 
 const form = formidable({

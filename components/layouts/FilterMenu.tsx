@@ -1,5 +1,5 @@
 import { alpha, useTheme, styled } from '@mui/material/styles';
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import Drawer from '@mui/material/Drawer';
@@ -24,6 +24,7 @@ import SortIcon from '@mui/icons-material/Sort';
 import { toCamelCase } from '@/utils/index';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Logo from '@/components/layouts/Logo';
+import { Feature } from '@/interfaces/index';
 const drawerWidth = 240;
 
 const Search = styled('div')(({ theme }) => ({
@@ -152,12 +153,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-type Data = {
-  id: number;
-  name: string;
-  hotelsCount: number;
-  __typename: string;
-};
 export default function PersistentDrawerLeft({
   children,
   facilities,
@@ -168,11 +163,11 @@ export default function PersistentDrawerLeft({
   handleSubmit,
 }: {
   children: React.ReactNode;
-  facilities: Data[];
-  activities: Data[];
-  languages: Data[];
-  services: Data[];
-  hotelCategories: Data[];
+  facilities: Feature[];
+  activities: Feature[];
+  languages: Feature[];
+  services: Feature[];
+  hotelCategories: Feature[];
   handleSubmit: Function;
 }) {
   const matchesSize = useMediaQuery('(min-width:900px)');

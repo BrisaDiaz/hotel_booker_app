@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next';
 import { WithLayoutPage } from '@/interfaces/index';
 import { client } from '@/lib/apollo';
 import AppBar from '@/components/layouts/AppBar';
@@ -53,8 +53,8 @@ const styles = {
     rowGap: 1,
     flexWrap: 'wrap',
   },
-};
-const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
+} as const;
+const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
   const theme = useTheme();
 
   const images = [
@@ -327,8 +327,6 @@ const HotelPage: WithLayoutPage = ({ hotel }: { hotel: Hotel }) => {
                 )}
               <Box
                 component="ul"
-                xs={12}
-                sm={6}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
@@ -385,7 +383,7 @@ HotelPage.getLayout = (page: React.ReactNode) => (
   </>
 );
 export default HotelPage;
-export const getServerSideProps: GetServerSideProps = async ({
+export const getServerSideProps = async ({
   query,
   res,
 }: {

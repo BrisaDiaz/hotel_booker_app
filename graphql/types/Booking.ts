@@ -85,7 +85,7 @@ export const Booking = objectType({
     t.int('hotelId');
     t.field('hotel', {
       type: 'Hotel',
-      resolve(root: { hotelId: number }) {
+      resolve(root: any): any {
         return prisma.hotel.findUnique({
           where: {
             id: root.hotelId,
@@ -97,7 +97,7 @@ export const Booking = objectType({
     t.int('roomModelId');
     t.field('roomModel', {
       type: 'RoomModel',
-      resolve(root) {
+      resolve(root: any): any {
         return prisma.roomModel.findUnique({
           where: {
             id: root.roomModelId,
@@ -107,7 +107,7 @@ export const Booking = objectType({
     });
     t.field('reservedRooms', {
       type: list('Room'),
-      resolve(root: { id: number }) {
+      resolve(root: any): any {
         async function getRooms(bookingId: number) {
           const booking = await prisma.booking.findUnique({
             where: {
@@ -123,7 +123,7 @@ export const Booking = objectType({
     t.int('clientId');
     t.field('client', {
       type: 'Client',
-      resolve(root: { clientId: number }) {
+      resolve(root: any): any {
         return prisma.client.findUnique({
           where: {
             id: root.clientId,
@@ -139,7 +139,7 @@ export const Booking = objectType({
     t.string('specifications');
     t.list.field('guestsDistribution', {
       type: GuestsDistribution,
-      resolve(root: { id: number }) {
+      resolve(root: any): any {
         return prisma.guestsDistribution.findMany({
           where: {
             bookingId: root.id,
@@ -162,7 +162,7 @@ export const BookingRequest = objectType({
     t.int('roomModelId');
     t.field('roomModel', {
       type: 'RoomModel',
-      resolve(root) {
+      resolve(root: any): any {
         return prisma.roomModel.findUnique({
           where: {
             id: root.roomModelId,
@@ -172,7 +172,7 @@ export const BookingRequest = objectType({
     });
     t.field('client', {
       type: 'Client',
-      resolve(root: { clientId: number }) {
+      resolve(root: any): any {
         return prisma.client.findUnique({
           where: {
             id: root.clientId,
@@ -194,12 +194,7 @@ export const BookingRequest = objectType({
     t.field('status', { type: BookingRequestStatus });
     t.field('availableRooms', {
       type: list('Room'),
-      resolve(root: {
-        roomModelId: number;
-        checkInDate: string;
-        checkOutDate: string;
-        guestsDistribution: Array<{ children: number; adults: number }>;
-      }) {
+      resolve(root: any): any {
         return checkRoomsAvailable({
           roomModelId: root.roomModelId,
           checkInDate: root.checkInDate,
@@ -222,7 +217,7 @@ export const ConsultQuery = extendType({
         checkInDate: nonNull(stringArg()),
         rooms: nonNull(list(roomSpecifications)),
       },
-      resolve: (root, args, ctx) => {
+      resolve: (root, args: any, ctx) => {
         type RoomSpecifications = {
           adults: number;
           children: number;
@@ -259,7 +254,7 @@ export const ConsultQuery = extendType({
       args: {
         bookingId: nonNull(idArg()),
       },
-      resolve(root, args, ctx) {
+      resolve(root, args, ctx): any {
         return prisma.cancelationDetails.findUnique({
           where: {
             bookingId: parseInt(args.bookingId),
@@ -287,7 +282,7 @@ export const Mutation = extendType({
         specifications: stringArg(),
       },
       resolve(root, args, ctx) {
-        async function makeRequest(roomModelId: number, args) {
+        async function makeRequest(roomModelId: number, args: any) {
           const roomModel = await prisma.roomModel.findUnique({
             where: {
               id: roomModelId,

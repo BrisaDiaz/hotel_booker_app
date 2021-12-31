@@ -34,8 +34,12 @@ export const Mutation = extendType({
         email: nonNull(stringArg()),
         password: nonNull(stringArg()),
       },
-      resolve(root, args, ctx) {
-        async function signIn(args, req: NextApiRequest, res: NextApiResponse) {
+      resolve(root, args, ctx): any {
+        async function signIn(
+          args: any,
+          req: NextApiRequest,
+          res: NextApiResponse
+        ) {
           const user = await prisma.user.findUnique({
             where: {
               email: args.email,
@@ -73,7 +77,7 @@ export const Mutation = extendType({
         email: nonNull(stringArg()),
         password: nonNull(stringArg()),
       },
-      resolve(_, args) {
+      resolve(_, args: any): any {
         async function signup(args: {
           firstName: string;
           lastName: string;
@@ -123,7 +127,7 @@ export const Query = extendType({
   definition(t) {
     t.field('authentication', {
       type: 'User',
-      resolve(root, args, ctx) {
+      resolve(root, args, ctx): any {
         const getUserSession = async (
           req: NextApiRequest,
           res: NextApiResponse

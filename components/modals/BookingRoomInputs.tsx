@@ -23,14 +23,14 @@ const flexBox = {
   width: '100%',
   alignItems: 'center',
   px: '5px',
-};
+} as const;
 
 const roomsContainer = {
   maxHeight: '190px',
   borderBottom: '1px solid #0002',
   borderTop: '1px solid #0002',
   overflowY: 'hidden',
-};
+} as const;
 
 function RoomField({
   room,

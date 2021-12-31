@@ -33,9 +33,8 @@ export default function ImageSlider({
               rowHeight={500}
               cols={1}
             >
-              <ImageListItem cols={1}>
+              <ImageListItem cols={1} sx={{ alignItems: 'center' }}>
                 <img
-                  sx={{ alignItems: 'center' }}
                   src={`${item.image}`}
                   srcSet={`${item.image}`}
                   alt={item.title}
