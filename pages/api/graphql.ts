@@ -12,7 +12,7 @@ export default async function handler(
   await server.start();
 
   await server.createHandler({
-    path: `${env.HOST}/api/graphql `,
+    path: `/api/graphql`,
   })(req, res);
 }
 

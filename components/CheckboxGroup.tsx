@@ -11,6 +11,7 @@ export default function CheckboxLabels({
   items: Feature[];
   handleChanges: Function;
 }) {
+
   return (
     <FormGroup>
       {items.map((item) => (

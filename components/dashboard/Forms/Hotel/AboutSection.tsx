@@ -32,6 +32,7 @@ export default function ({
   useEffect(() => {
     setValue('category', categorySelected);
   }, [categorySelected]);
+
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -87,7 +88,7 @@ export default function ({
               onChange={handleCategoryField}
               sx={{ textTransform: 'capitalize' }}
             >
-              {hotelCategories.map((type: { name: string; id: number }) => (
+              { hotelCategories.map((type: { name: string; id: number }) => (
                 <MenuItem
                   key={type.id}
                   value={type.name}

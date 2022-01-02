@@ -40,6 +40,7 @@ const Search = ({
   hotelCategoriesList,
   hotelSearch,
 }: Props) => {
+
   const [page, setPage] = React.useState<number>(1);
   const [pageCount, setPageCount] = React.useState<number>(
     hotelSearch.pageCount
@@ -104,7 +105,7 @@ const Search = ({
               padding: { xs: '30px 0', md: '30px 16px' },
             }}
           >
-            {displayHotels.length ? (
+            {displayHotels?.length ? (
               <HotelsGrid hotels={displayHotels} />
             ) : (
               <Box>
@@ -114,7 +115,7 @@ const Search = ({
               </Box>
             )}
           </Box>
-          {!displayHotels.length && <Box sx={{ height: '65vh' }} />}
+          {!displayHotels?.length && <Box sx={{ height: '65vh' }} />}
           <Box sx={{ p: 2, pb: 4, mx: 'auto', maxWidth: 'fit-content' }}>
             <Pagination setPage={setPage} count={pageCount} />
           </Box>
@@ -161,12 +162,12 @@ export const getServerSideProps = async () => {
   ]);
 
   const props = {
-    activitiesList: activitiesList.data,
-    servicesList: servicesList.data,
-    facilitiesList: facilitiesList.data,
-    languagesList: languagesList.data,
-    hotelCategoriesList: hotelCategoriesList.data,
-    hotelSearch: hotelSearch.data,
+    activitiesList: activitiesList.data.activitiesList,
+    servicesList: servicesList.data.servicesList,
+    facilitiesList: facilitiesList.data.facilitiesList,
+    languagesList: languagesList.data.languagesList,
+    hotelCategoriesList: hotelCategoriesList.data.hotelCategoriesList,
+    hotelSearch: hotelSearch.data.hotelSearch,
   };
 
   return {
