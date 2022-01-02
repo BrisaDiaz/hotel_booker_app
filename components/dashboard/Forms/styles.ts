@@ -51,4 +51,4 @@ export const styles = {
     width: '100%',
     my: 1,
   },
-} as const;
+} 

@@ -15,10 +15,23 @@ import {
 
 async function seed() {
   try {
-    await prisma.activity.createMany({
-      data: activities.map((activity) => ({
-        name: activity,
-      })),
+    const saltRounds = 10;
+    const salt = await genSalt(saltRounds);
+    const encryptedPasswod = await hash(adminUser.password, salt);
+
+    const admin = await prisma.user.create({
+      data: {
+        firstName: adminUser.firstName,
+        lastName: adminUser.lastName,
+        email: adminUser.email,
+        password: encryptedPasswod,
+        role: 'ADMIN',
+      },
+    });
+    await prisma.administrator.create({
+      data: {
+        userId: admin.id,
+      },
     });
     await prisma.service.createMany({
       data: services.map((service) => ({
@@ -56,24 +69,12 @@ async function seed() {
         name: type,
       })),
     });
-    const saltRounds = 10;
-    const salt = await genSalt(saltRounds);
-    const encryptedPasswod = await hash(adminUser.password, salt);
+        await prisma.activity.createMany({
+      data: activities.map((activity) => ({
+        name: activity,
+      })),
+    });
 
-    const admin = await prisma.user.create({
-      data: {
-        firstName: adminUser.firstName,
-        lastName: adminUser.lastName,
-        email: adminUser.email,
-        password: encryptedPasswod,
-        role: 'ADMIN',
-      },
-    });
-    await prisma.administrator.create({
-      data: {
-        userId: admin.id,
-      },
-    });
     console.log('Database has been successfully seed');
   } catch (error) {
     console.log(error);
