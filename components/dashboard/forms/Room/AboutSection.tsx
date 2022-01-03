@@ -10,7 +10,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
-import { styles } from '@/components/dashboard/forms/styles';
+import { styles } from '@/components/dashboard/Forms/styles';
 
 export default function AboutSection({
   register,

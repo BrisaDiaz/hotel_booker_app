@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { styles } from '@/components/dashboard/forms/styles';
+import { styles } from '@/components/dashboard/Forms/styles';
 import { RoomModel, Feature } from '@/interfaces/index';
 
 export default function CapacitySection({

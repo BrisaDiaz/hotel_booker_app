@@ -4,7 +4,7 @@ import AutocompleteCheckbox from '@/components/AutocompleteCheckbox';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { styles } from '@/components/dashboard/forms/styles';
+import { styles } from '@/components/dashboard/Forms/styles';
 import { RoomModel, Feature } from '@/interfaces/index';
 
 export default function FeaturesSection({

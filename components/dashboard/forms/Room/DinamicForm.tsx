@@ -11,7 +11,7 @@ import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
 import FormBottons from '../FormBottons';
 import { RoomModel } from '@/interfaces/index';
-import { styles } from '@/components/dashboard/forms/styles';
+import { styles } from '@/components/dashboard/Forms/styles';
 import FullScreenModal from '@/components/modals/FullScreenModal';
 
 type Feature = {

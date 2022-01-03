@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Grid from '@mui/material/Grid';
-import { styles } from '@/components/dashboard/forms/styles';
+import { styles } from '@/components/dashboard/Forms/styles';
 
 export default function PriceSection({
   register,

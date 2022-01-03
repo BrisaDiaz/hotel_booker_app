@@ -9,7 +9,7 @@ import PriceSection from '../PriceSection';
 import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
-import { styles } from '@/components/dashboard/forms/styles';
+import { styles } from '@/components/dashboard/Forms/styles';
 import FormBottons from '../FormBottons';
 type Feature = {
   id: number;

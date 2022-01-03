@@ -6,7 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
-import { styles } from '@/components/dashboard/forms/styles';
+import { styles } from '@/components/dashboard/Forms/styles';
 
 export default function AspectSection({
   register,
