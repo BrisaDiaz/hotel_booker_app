@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import cloudinary from '@/lib/cloudinary';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const formidable = require('formidable-serverless');
 import fs from 'fs';
 

@@ -17,7 +17,7 @@ import ListItemText from '@mui/material/ListItemText';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 type Action = {
   name: string;
-  callback: Function;
+  callback: ()=>void;
 };
 const getIcone = (title: string) => {
   const formatedTitle = title.trim().toLocaleLowerCase();
@@ -101,7 +101,7 @@ export default function DashboardCard({
             }}
           >
             {card.actions.map(
-              (action: { name: string; callback: Function }) => (
+              (action: { name: string; callback: ()=>void }) => (
                 <ListItem
                   disablePadding
                   onClick={() => action.callback()}

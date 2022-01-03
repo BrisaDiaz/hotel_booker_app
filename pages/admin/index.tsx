@@ -1,12 +1,12 @@
 import React from 'react';
-import type { GetServerSideProps, NextApiRequest, NextApiResponse } from 'next';
+import type {  NextApiRequest, NextApiResponse } from 'next';
 import { getUser } from '@/graphql/utils';
 import { client } from '@/lib/apollo';
 import { GET_ADMIN_HOTELS, GET_HOTEL_BY_ID } from '@/queries/index';
 import { useLazyQuery } from '@apollo/client';
 import { Hotel } from '@/interfaces/index';
 import SnackBar from '@/components/SnackBar';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation} from '@apollo/client';
 import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import {
   GET_ALL_SERVICES,
@@ -141,8 +141,8 @@ const Dashboard: WithLayoutPage<PageProps> = ({
     },
     onError: (graphError) => {
       setIsLoading(false);
-      // setNotification({ content: graphError.message, type: 'error' });
-      // cleanNotification();
+      setNotification({ content: graphError.message, type: 'error' });
+      cleanNotification();
     },
   });
 

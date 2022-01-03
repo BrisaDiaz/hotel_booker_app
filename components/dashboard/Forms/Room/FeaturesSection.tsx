@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+ import React, { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import AutocompleteCheckbox from '@/components/AutocompleteCheckbox';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -8,7 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { styles } from '@/components/dashboard/forms/styles';
 import { RoomModel, Feature } from '@/interfaces/index';
 
-export default function ({
+export default function FeaturesSection({
   register,
   errors,
   services,
@@ -19,8 +18,8 @@ export default function ({
   defaultData,
 }: {
   defaultData?: RoomModel;
-  register: Function;
-  setValue: Function;
+  register: (fieldName:string,config?:any)=>void;
+  setValue: (fieldName:string,value:any)=>void;
   errors: any;
   services: Feature[];
   amenities: Feature[];

@@ -133,6 +133,7 @@ export type FileUploadEvent = {
     name: string;
   };
 };
+
 export interface HotelGuest {
   id: number;
   firstName: string;
@@ -156,14 +157,11 @@ export interface Booking {
   paymentMethod: string;
   specifications: number;
   clientId: number;
+  client:HotelGuest;
   checkInDate: string;
   checkOutDate: string;
   status: string;
-  roomModel: {
-    id: number;
-    name: string;
-    cancelationFee: number;
-  };
+  roomModel: RoomModel;
   reservedRooms: {
     number: number;
   }[];

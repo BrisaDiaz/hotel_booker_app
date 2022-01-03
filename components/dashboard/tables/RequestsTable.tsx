@@ -196,16 +196,17 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number | null;
-  handleActions: Function;
+  handleActions: (action:'search' |'pageChange' |'show/confirm'| 'decline',value?:string[]|number )=>void;
 
-  resetSelection: Function;
+  resetSelection: ()=>void;
 }
 ///// TOGGLE ON CHECK
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const { numSelected, handleActions } = props;
   const [isSearching, setIsSearching] = React.useState(false);
-  const handleActionClick = (actionName: string) => {
-    handleActions(actionName, numSelected);
+  const handleActionClick = (actionName:'search' |'pageChange' |'show/confirm'| 'decline') => {
+    
+    numSelected && handleActions(actionName, numSelected);
   };
   const handleSearch = (field: string, value: string) => {
     handleActions('search', [field, value]);
@@ -337,7 +338,8 @@ export default function EnhancedTable({
   currentPage,
 }: {
   data?: Array<BookingRequest>;
-  handleActions: Function;
+  handleActions: (action:'search' |'pageChange' |'show/confirm'|
+'decline',value?:string[]|number )=>void;
   totalResults: number;
   currentPage: number;
 }) {

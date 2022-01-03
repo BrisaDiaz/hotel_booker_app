@@ -42,22 +42,22 @@ export default function MultilineTextFields({
   amenities: Feature[];
   roomCategories: Feature[];
   bedTypes: Feature[];
-  submitHandler: Function;
-  abortHandler: Function;
+  submitHandler: (formData:any)=>void;
+  abortHandler: ()=>void;
 }) {
-  if (!toEditSection || !roomType) return <div></div>;
-  if (toEditSection === 'features' && (!services.length || !amenities.length))
-    return <div></div>;
-  if (toEditSection === 'about' && !roomCategories.length) return <div></div>;
-  if (toEditSection === 'capacity' && !bedTypes.length) return <div></div>;
+
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: 'onChange' });
-
-  const submitMiddleware = (data: any, e: any) => {
+  if (!toEditSection || !roomType) return <div></div>;
+  if (toEditSection === 'features' && (!services.length || !amenities.length))
+    return <div></div>;
+  if (toEditSection === 'about' && !roomCategories.length) return <div></div>;
+  if (toEditSection === 'capacity' && !bedTypes.length) return <div></div>;
+  const submitMiddleware = (data: any) => {
     let variables: {
       [key: string]: any;
     };
@@ -94,7 +94,7 @@ export default function MultilineTextFields({
       return submitHandler(variables);
     }
     if (toEditSection === 'features') {
-      let pickedBedQuantities = bedTypes
+      const pickedBedQuantities = bedTypes
         .map((bed) => ({
           type: bed.name,
           quantity: data[bed.name] * 1,

@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { createStyles, makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
@@ -37,8 +35,8 @@ export default function KeepMountedModal({
   closeModal,
   restrictedNumbers,
 }: {
-  onSubmit: Function;
-  closeModal: Function;
+  onSubmit: (formData:any)=>void;
+  closeModal: ()=>void;
   isModalOpen: boolean;
   restrictedNumbers: number[];
 }) {

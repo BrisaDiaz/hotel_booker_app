@@ -21,13 +21,13 @@ export default function ResponsiveDialog({
   acceptLabel: string;
   rejectLabel: string;
   text: string;
-  onAccept: Function;
-  onCancel?: Function;
+  onAccept: ()=>void;
+  onCancel?: ()=>void;
   isDialogOpen: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  
 
   const handleClose = () => {
     setOpen(false);

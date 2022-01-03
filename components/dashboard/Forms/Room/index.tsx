@@ -1,9 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import SaveIcon from '@mui/icons-material/Save';
 import Box from '@mui/material/Box';
 import AspectSection from './AspectSection';
 import AboutSection from './AboutSection';
@@ -22,9 +19,9 @@ export default function MultilineTextFields(props: {
   amenities: Feature[];
   roomCategories: Feature[];
   bedTypes: Feature[];
-  submitHandler: Function;
+  submitHandler: (formData:any)=>void;
 }) {
-  const matchesSize = useMediaQuery('(min-width:600px)');
+
   const { services, amenities, roomCategories, submitHandler, bedTypes } =
     props;
 
@@ -36,7 +33,7 @@ export default function MultilineTextFields(props: {
   } = useForm({ mode: 'onChange' });
 
   const submitMiddleware = (data: any) => {
-    let pickedBedQuantities = bedTypes
+    const pickedBedQuantities = bedTypes
       .map((bed) => ({
         type: bed.name,
         quantity: data[bed.name] * 1,

@@ -44,6 +44,7 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true
+
   },
 
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "prisma/seed.ts", "prisma/seed.jss"],

@@ -40,8 +40,8 @@ function RoomField({
 }: {
   room: Room;
   index: number;
-  onDelete: Function;
-  handleChange: Function;
+  onDelete: ()=>void;
+  handleChange: (roomId:string,field:'adults'|'children',quantity:number)=>void;
 }) {
   return (
     <div>
@@ -93,10 +93,10 @@ export default function BookingRoomInputs({
   setValue,
   defaultValues,
 }: {
-  register: Function;
-  setError: Function;
+  register: (fieldName:string,config?:any)=>void;
+  setError:  (fieldName:string,error?:any)=>void;
   errors: any;
-  setValue: Function;
+  setValue: (fieldName:string,value:any)=>void;
   defaultValues?: {
     checkInDate?: string;
     checkOutDate?: string;

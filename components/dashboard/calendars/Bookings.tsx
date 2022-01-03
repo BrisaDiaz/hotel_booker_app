@@ -4,14 +4,14 @@ import { BookingEvent } from '@/interfaces/index';
 import moment from 'moment';
 const localizer = momentLocalizer(moment);
 
-let Resource = ({
+const Resource = ({
   data,
   onSelect,
   onRangeChange,
 }: {
   data: any;
-  onSelect: Function;
-  onRangeChange: Function;
+  onSelect: (event: any) => void;
+  onRangeChange: (dateRanges: any) => void;
 }) => (
   <Calendar
     events={data?.events}

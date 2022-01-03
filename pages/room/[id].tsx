@@ -1,6 +1,5 @@
-import type { NextApiResponse } from 'next';
-import { WithLayoutPage } from '@/interfaces/index';
 
+import { WithLayoutPage } from '@/interfaces/index';
 import React from 'react';
 import { client } from '@/lib/apollo';
 import Link from 'next/link';
@@ -81,7 +80,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
     }
   );
 
-  const [loading, setLoading] = React.useState<Boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   type Room = {
     childrens: number;
     adults: number;
@@ -525,10 +524,10 @@ RoomPage.getLayout = (page: React.ReactNode) => (
 export default RoomPage;
 export const getServerSideProps = async ({
   query,
-  res,
+
 }: {
   query: { id: number };
-  res: NextApiResponse;
+
 }) => {
   const { data, error } = await client.query({
     query: GET_ROOM_MODEL_BY_ID,

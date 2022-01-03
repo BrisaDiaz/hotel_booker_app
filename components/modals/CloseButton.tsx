@@ -7,7 +7,7 @@ export default function CloseButton({
   handleClose,
   buttonStyles,
 }: {
-  handleClose: Function;
+  handleClose: ()=>void;
   buttonStyles?: any;
 }) {
   return (

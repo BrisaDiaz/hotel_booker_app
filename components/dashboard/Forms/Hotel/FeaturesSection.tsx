@@ -10,7 +10,7 @@ type Feature = {
   id: number;
   name: string;
 };
-export default function ({
+export default function FeaturesSection({
   register,
   setValue,
   facilities,
@@ -21,8 +21,8 @@ export default function ({
   children,
 }: {
   children?: React.ReactNode;
-  register: Function;
-  setValue: Function;
+  register: (fieldName:string,config?:any)=>void;
+  setValue: (fieldName:string,value:any)=>void;
   services: Feature[];
   activities: Feature[];
   facilities: Feature[];

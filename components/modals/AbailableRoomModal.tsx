@@ -15,7 +15,7 @@ export default function TransitionsModal({
   onSubmit,
 }: {
   children: React.ReactNode;
-  onSubmit: Function;
+  onSubmit: (formData:any)=>void;
 }) {
   const {
     register,

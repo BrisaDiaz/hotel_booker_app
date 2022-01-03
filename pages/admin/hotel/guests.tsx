@@ -73,7 +73,7 @@ const Guest: WithLayoutPage<PagePromps> = (props) => {
       });
     }
   };
-  const [searchGuest, { data, loading, error }] =
+  const [searchGuest, { data, loading }] =
     useLazyQuery(GET_HOTEL_GUESTS);
   const handleGuestsSearch = async () => {
     try {

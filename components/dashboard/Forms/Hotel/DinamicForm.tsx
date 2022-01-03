@@ -34,8 +34,8 @@ export default function MultilineTextFields(props: {
   facilities: Feature[] | [];
   languages: Feature[] | [];
   hotelCategories: Feature[] | [];
-  submitHandler: Function;
-  abortHandler: Function;
+  submitHandler: (formData:any)=>void;
+  abortHandler: ()=>void;
 }) {
   const {
     hotel,
@@ -55,7 +55,7 @@ export default function MultilineTextFields(props: {
     formState: { errors },
   } = useForm({ mode: 'onChange' });
 
-  const submitMiddleware = (data: any, e: any) => {
+  const submitMiddleware = (data: any) => {
     let variables: { [key: string]: number | string | File };
 
     if (toEditSection === 'policies') {

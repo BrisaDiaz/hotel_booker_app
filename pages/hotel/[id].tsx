@@ -364,7 +364,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
             <Box sx={{ my: '20px', mx: { sm: 2 } }}>
               <Grid container spacing={3} justifyContent="start">
                 {hotel.roomModels.map((room) => (
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid item xs={12} sm={6} md={4} key={room.id}>
                     <RoomCard room={room} />
                   </Grid>
                 ))}

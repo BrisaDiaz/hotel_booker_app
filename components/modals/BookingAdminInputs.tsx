@@ -29,11 +29,11 @@ export default function BookingClientInputs({
 
   disable,
 }: {
-  register: Function;
-  setValue: Function;
+  register: (fieldName:string,config?:any)=>void;
+  setValue: (fieldName:string,value:any)=>void;
 
   errors: any;
-  disable?: Boolean;
+  disable?: boolean;
   requiredRooms?: number;
   availableRooms: Array<{ id: string; number: number }> | [];
 }) {
@@ -204,10 +204,11 @@ export default function BookingClientInputs({
         ) : (
           <Typography
             color="secondary.main"
+            align='center'
             sx={{
-              textAlign: 'center',
+        
               fontWeight: 500,
-              py: disable && 1,
+              py: disable ? 1:0,
             }}
           >
             {disable ? '' : 'No available rooms were found.'}

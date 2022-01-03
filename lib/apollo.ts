@@ -38,7 +38,7 @@ function initializeApollo() {
   return apolloClient;
 }
 
-export function useApollo() {
+export function initApollo() {
   return initializeApollo();
 }
-export const client = useApollo();
+export const client = initApollo();

@@ -7,28 +7,28 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { styles } from '@/components/dashboard/forms/styles';
-import type { FileUploadEvent } from '@/interfaces/index';
-export default function ({
+
+export default function AspectSection({
   register,
   errors,
   children,
 }: {
   children?: React.ReactNode;
-  register: Function;
+  register: (fieldName:string,config?:any)=>void;
   errors: any;
 }) {
   const defaultImage =
     'https://www.grancapitan.com.ar/wp-content/uploads/2014/10/default-img.gif';
   const [mainImage, setMainImage] = useState<string>(defaultImage);
 
-  function handleOnChange(changeEvent: FileUploadEvent) {
+  function handleOnChange(changeEvent: any) {
     const reader = new FileReader();
 
     reader.onload = function (onLoadEvent: any) {
       setMainImage(onLoadEvent.target.result);
     };
 
-    reader.readAsDataURL(changeEvent.target.files[0]);
+    reader.readAsDataURL(changeEvent.target.files[0] );
   }
 
   return (
@@ -51,7 +51,7 @@ export default function ({
               required: 'The Main image is required',
             })}
             type="file"
-            onChange={handleOnChange}
+            onChange={(e)=>handleOnChange(e)}
             variant="outlined"
             sx={styles.textField}
             InputProps={{

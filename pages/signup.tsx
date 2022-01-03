@@ -38,7 +38,7 @@ function Copyright(props: any) {
 
 const SignUp: WithLayoutPage = () => {
   const [errorMessage, setErrorMessage] = React.useState<string>('');
-  const [success, setSuccess] = React.useState<Boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
   const {
     register,
     handleSubmit,

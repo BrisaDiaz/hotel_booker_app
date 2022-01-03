@@ -2,7 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-export default function () {
+export default function Logo() {
   return (
     <Box component={Link} href={'/search'} passHref>
       <Typography

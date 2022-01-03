@@ -5,7 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Grid from '@mui/material/Grid';
 import { styles } from '@/components/dashboard/forms/styles';
 
-export default function ({
+export default function PriceSection({
   register,
   errors,
   defaultData,
@@ -13,7 +13,7 @@ export default function ({
   children,
 }: {
   children?: React.ReactNode;
-  register: Function;
+  register: (fieldName:string,config?:any)=>void;
   errors: any;
   defaultData?: any;
   sourceForm?: 'roomForm' | 'hotelForm';
@@ -47,7 +47,7 @@ export default function ({
             type="number"
             error={errors['lowestPrice'] ? true : false}
             InputProps={{
-              min: 0,
+      
               startAdornment: (
                 <InputAdornment position="start">$</InputAdornment>
               ),
@@ -77,7 +77,7 @@ export default function ({
             type="number"
             error={errors['taxesAndCharges'] ? true : false}
             InputProps={{
-              min: 0,
+       
               startAdornment: (
                 <InputAdornment position="start">$</InputAdornment>
               ),
@@ -109,7 +109,7 @@ export default function ({
               type="number"
               error={errors['cancelationFee'] ? true : false}
               InputProps={{
-                min: 0,
+           
                 startAdornment: (
                   <InputAdornment position="start">$</InputAdornment>
                 ),

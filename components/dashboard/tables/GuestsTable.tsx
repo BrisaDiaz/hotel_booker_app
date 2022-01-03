@@ -147,7 +147,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number | null;
-  handleActions: Function;
+  handleActions: (action:'search' |'pageChange',value:string[]|number )=>void;
 }
 ///// TOGGLE ON CHECK
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
@@ -225,7 +225,7 @@ export default function EnhancedTable({
   currentPage,
 }: {
   data?: Array<HotelGuest>;
-  handleActions: Function;
+  handleActions: (action:'search' |'pageChange',value:string[]|number )=>void;
   totalResults: number;
   currentPage: number;
 }) {
@@ -233,7 +233,7 @@ export default function EnhancedTable({
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof HotelGuest>('firstName');
   const [selected, setSelected] = React.useState<number | null>(null);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage] = React.useState(5);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,

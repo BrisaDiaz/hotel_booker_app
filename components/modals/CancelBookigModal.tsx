@@ -21,12 +21,12 @@ export default function BasicModal({
   bookingData,
 }: {
   isModalOpen: boolean;
-  onSubmit: Function;
-  closeModal: Function;
+  onSubmit: (formData:any)=>void;
+  closeModal: ()=>void;
 
   bookingData: Booking | null;
 }) {
-  if (!bookingData) return <div />;
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -35,12 +35,17 @@ export default function BasicModal({
   const [cancelationFee, setCancelationFee] = React.useState<number>(
     bookingData ? bookingData?.roomModel?.cancelationFee : 0
   );
+  
   React.useEffect(() => {
     if (isModalOpen) {
       return handleOpen();
     }
     return handleClose();
   }, [isModalOpen]);
+    React.useEffect(() => {
+    setCancelationFee(bookingData ? bookingData?.roomModel?.cancelationFee : 0);
+  }, [bookingData]);
+ 
   const {
     register,
     handleSubmit,
@@ -59,9 +64,7 @@ export default function BasicModal({
     setCancelationFee(parseInt(e.target.value));
   };
 
-  React.useEffect(() => {
-    setCancelationFee(bookingData ? bookingData?.roomModel?.cancelationFee : 0);
-  }, [bookingData]);
+ if (!bookingData) return <div />;
   return (
     <Modal
       sx={{ zIndex: 2000 }}

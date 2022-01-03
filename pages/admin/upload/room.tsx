@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import React from 'react';
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { useAuth } from '@/context/useAuth';
 import { useRouter } from 'next/router';
 import SnackBar from '@/components/SnackBar';
@@ -29,9 +28,7 @@ const RoomUploadPage: any = ({
   const authContext = useAuth();
 
   const router = useRouter();
-  if (authContext.loading) return <Backdrop loading={true} />;
 
-  if (!authContext.session.user) return router.push('/signin');
 
   const { hotelId } = router.query;
   const [isLoading, setIsLoading] = React.useState(false);
@@ -52,7 +49,7 @@ const RoomUploadPage: any = ({
       },
     }
   );
-  const [success, setSuccess] = React.useState<Boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const onSubmit = async (variables: RoomBuildierVariables) => {
     if (!authContext.session.user) return router.push('/signin');
@@ -74,7 +71,9 @@ const RoomUploadPage: any = ({
       setErrorMessage(JSON.stringify(err));
     }
   };
+  if (authContext.loading) return <Backdrop loading={true} />;
 
+  if (!authContext.session.user) return router.push('/signin');
   return (
     <div>
       <Head>
@@ -112,13 +111,7 @@ export default RoomUploadPage;
 RoomUploadPage.getLayout = function getLayout(page: React.ReactNode) {
   return <AdminMenu activeLink="dashboard">{page}</AdminMenu>;
 };
-export const getStaticProps = async ({
-  req,
-  res,
-}: {
-  req: NextApiRequest;
-  res: NextApiResponse;
-}) => {
+export const getStaticProps = async () => {
   const servicesRequest = prisma.service.findMany({});
   const amenitiesRequest = prisma.amenity.findMany({});
   const categoriesRequest = prisma.roomCategory.findMany({});

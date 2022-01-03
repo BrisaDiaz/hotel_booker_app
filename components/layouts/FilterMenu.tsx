@@ -91,7 +91,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }),
 }));
 
-const SortSelect = ({ handdleChange }: { handdleChange: Function }) => {
+const SortSelect = ({ handdleChange }: { handdleChange: (sortOption:string)=>void }) => {
   const [sort, setSort] = React.useState('price');
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -152,7 +152,16 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end',
 }));
-
+ interface Query {
+    features: string[];
+    categories: string[];
+    services: string[];
+    activities: string[];
+    facilities: string[];
+    languages: string[];
+    sort: string;
+    search: string ;
+  }
 export default function PersistentDrawerLeft({
   children,
   facilities,
@@ -168,7 +177,7 @@ export default function PersistentDrawerLeft({
   languages: Feature[];
   services: Feature[];
   hotelCategories: Feature[];
-  handleSubmit: Function;
+  handleSubmit: (query:Query)=>void;
 }) {
   const matchesSize = useMediaQuery('(min-width:900px)');
   const theme = useTheme();
@@ -195,16 +204,7 @@ export default function PersistentDrawerLeft({
     { id: 6, name: 'smoker friendly' },
   ];
 
-  interface Query {
-    features: string[];
-    categories: string[];
-    services: string[];
-    activities: string[];
-    facilities: string[];
-    languages: string[];
-    sort: string;
-    search: string | null;
-  }
+ 
 
   const [query, setQuery] = React.useState<Query>({
     features: [],
@@ -219,7 +219,7 @@ export default function PersistentDrawerLeft({
   const handleSort = (newValue: string) => {
     setQuery({ ...query, sort: newValue });
   };
-  const handdleCategories = (checked: Boolean, value: string) => {
+  const handdleCategories = (checked: boolean, value: string) => {
     if (checked) {
       return setQuery({
         ...query,
@@ -231,7 +231,7 @@ export default function PersistentDrawerLeft({
       categories: query.categories.filter((name: string) => name === value),
     });
   };
-  const handdleLanguages = (checked: Boolean, value: string) => {
+  const handdleLanguages = (checked: boolean, value: string) => {
     if (checked) {
       return setQuery({
         ...query,
@@ -243,7 +243,7 @@ export default function PersistentDrawerLeft({
       languages: query.languages.filter((name: string) => name === value),
     });
   };
-  const handdleActivities = (checked: Boolean, value: string) => {
+  const handdleActivities = (checked: boolean, value: string) => {
     if (checked) {
       return setQuery({
         ...query,
@@ -255,7 +255,7 @@ export default function PersistentDrawerLeft({
       activities: query.activities.filter((name: string) => name === value),
     });
   };
-  const handdleFacilities = (checked: Boolean, value: string) => {
+  const handdleFacilities = (checked: boolean, value: string) => {
     if (checked) {
       return setQuery({
         ...query,
@@ -267,7 +267,7 @@ export default function PersistentDrawerLeft({
       facilities: query.facilities.filter((name: string) => name !== value),
     });
   };
-  const handdleServices = (checked: Boolean, value: string) => {
+  const handdleServices = (checked: boolean, value: string) => {
     if (checked) {
       return setQuery({
         ...query,
@@ -279,8 +279,8 @@ export default function PersistentDrawerLeft({
       services: query.services.filter((name: string) => name === value),
     });
   };
-  const handdleFeatures = (checked: Boolean, value: string) => {
-    let valueToCamelCase = toCamelCase(value);
+  const handdleFeatures = (checked: boolean, value: string) => {
+    const valueToCamelCase = toCamelCase(value);
 
     if (checked) {
       return setQuery({

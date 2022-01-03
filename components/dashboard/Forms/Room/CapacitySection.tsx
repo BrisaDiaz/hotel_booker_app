@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import { styles } from '@/components/dashboard/forms/styles';
 import { RoomModel, Feature } from '@/interfaces/index';
 
-export default function ({
+export default function CapacitySection({
   register,
   errors,
   children,
@@ -16,7 +16,7 @@ export default function ({
   defaultData?: RoomModel;
   children?: React.ReactNode;
   bedTypes: Feature[];
-  register: Function;
+  register: (fieldName:string,config?:any)=>void;
   errors: any;
 }) {
   type DefaultBeds = {
@@ -155,7 +155,7 @@ export function BedsInputs({
 }: {
   defaultBeds: { [key: string]: { quantity: number } } | null;
   beds: Feature[];
-  register: Function;
+ register: (fieldName:string,config?:any)=>void;
   errors: {
     [key: string]: {
       message: string;

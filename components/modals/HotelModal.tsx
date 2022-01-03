@@ -19,7 +19,7 @@ import CloseButton from '@/components/modals/CloseButton';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modal: {
-      position: 'absolute' as 'absolute',
+      position: 'absolute' ,
       borderRadius: theme.spacing(1),
       top: '50%',
       left: '50%',
@@ -118,17 +118,25 @@ const EditButton = ({ onClick }: { onClick: React.MouseEventHandler }) => {
     </Tooltip>
   );
 };
-
+type SectionToEdit =
+  | 'about'
+  | 'contact'
+  | 'price'
+  | 'aspect'
+  | 'features'
+  | 'policies'
+  | 'address'
+  | '';
 type ComponentProps = {
-  isModalOpend: Boolean;
-  closeModal: Function;
-  onEdit: Function;
+  isModalOpend: boolean;
+  closeModal: ()=>void;
+  onEdit: (sectionName:SectionToEdit)=>void;
   hotel: Hotel | null;
 };
 
 function TransitionsModal(props: ComponentProps) {
   const { isModalOpend, closeModal, onEdit, hotel } = props;
-  if (!isModalOpend || !hotel) return <div />;
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -141,7 +149,7 @@ function TransitionsModal(props: ComponentProps) {
       handleOpen();
     }
   }, [isModalOpend]);
-
+  if (!isModalOpend || !hotel) return <div />;
   const TagsWithKeys = hotel.features
     ? getFeaturesTags(hotel.features).map((feature: string) => ({
         id: uuidv4(),

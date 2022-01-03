@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import React from 'react';
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { useRouter } from 'next/router';
 import type { Modify } from '@/interfaces/index';
 import AdminMenu from '@/components/layouts/AdminMenu';
@@ -36,11 +35,14 @@ const HotelUploadPage: any = ({
   const authContext = useAuth();
 
   const router = useRouter();
-  if (authContext.loading) return <Backdrop loading={true} />;
 
-  if (!authContext.session.user) return router.push('/signin');
   const [isLoading, setIsLoading] = React.useState(false);
-  const [createHotel, { error, loading, data }] = useMutation(CREATE_HOTEL, {
+  const [success, setSuccess] = React.useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = React.useState<string>('');
+
+ 
+  
+  const [createHotel,{error}] = useMutation(CREATE_HOTEL, {
     onCompleted: () => {
       setIsLoading(false);
       setSuccess(true);
@@ -54,6 +56,9 @@ const HotelUploadPage: any = ({
     },
   });
 
+
+
+  
   type HotelVariables = Modify<
     Hotel,
     {
@@ -62,8 +67,7 @@ const HotelUploadPage: any = ({
     }
   >;
 
-  const [success, setSuccess] = React.useState<Boolean>(false);
-  const [errorMessage, setErrorMessage] = React.useState<string>('');
+
   const onSubmit = async (hotelVariables: HotelVariables) => {
     if (!authContext.session.user) return router.push('/signin');
     const toUploadImages = [
@@ -94,7 +98,10 @@ const HotelUploadPage: any = ({
       console.log(err);
     }
   };
+  
+ if (authContext.loading) return <Backdrop loading={true} />;
 
+  if (!authContext.session.user) return router.push('/signin');
   return (
     <div>
       <Head>
@@ -135,19 +142,7 @@ HotelUploadPage.getLayout = function getLayout(page: React.ReactNode) {
 };
 export default HotelUploadPage;
 
-export const getStaticProps = async ({
-  req,
-  res,
-}: {
-  req: NextApiRequest;
-  res: NextApiResponse;
-}): Promise<{
-  props: PageProps | {};
-  redirect?: {
-    permanent: Boolean;
-    destination: string;
-  };
-}> => {
+export const getStaticProps = async ()=> {
   const activitiesRequest = prisma.activity.findMany({});
   const servicesRequest = prisma.service.findMany({});
   const facilitiesRequest = prisma.facility.findMany({});

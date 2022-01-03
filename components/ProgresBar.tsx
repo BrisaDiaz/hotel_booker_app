@@ -8,10 +8,10 @@ export default function LinearIndeterminate() {
   const router = useRouter();
   const [isRouteChanging, setIsRouteChanging] = useState(false);
   useEffect(() => {
-    router.events.on('routeChangeStart', (url, { shallow }) => {
+    router.events.on('routeChangeStart', () => {
       setIsRouteChanging(true);
     });
-    router.events.on('routeChangeComplete', (url, { shallow }) => {
+    router.events.on('routeChangeComplete', () => {
       setIsRouteChanging(false);
     });
   }, [router.pathname]);

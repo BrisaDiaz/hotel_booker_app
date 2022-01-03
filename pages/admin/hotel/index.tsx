@@ -22,7 +22,7 @@ import DinamicForm from '@/components/dashboard/forms/Room/DinamicForm';
 import RoomModal from '@/components/modals/RoomModal';
 interface ActionCard {
   title: string;
-  actions: Array<{ name: string; callback: Function }>;
+  actions: Array<{ name: string; callback: ()=>void }>;
   count: number;
   color?: string;
 }

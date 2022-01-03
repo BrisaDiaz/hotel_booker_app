@@ -24,13 +24,13 @@ export default function BasicModal({
   roomTypeId,
 }: {
   isModalOpen: boolean;
-  onSubmit: Function;
-  closeModal: Function;
-  getAvailableRooms: Function;
+  onSubmit: (formData:any)=>void;
+  closeModal: ()=>void;
+  getAvailableRooms:  (searchVariables:any)=>void;
   availableRooms: { id: string; number: number }[] | [];
-  roomTypeId?: number | null;
+  roomTypeId: number | null;
 }) {
-  if (!roomTypeId || !isModalOpen) return <div />;
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -38,7 +38,7 @@ export default function BasicModal({
   };
 
   const [searchRoomsVariables, setSearchRoomVariables] = React.useState<{
-    roomModelId: number;
+    roomModelId: number| null  ;
     checkInDate: string;
     checkOutDate: string;
     rooms: { adults: number; children: number }[];
@@ -55,6 +55,15 @@ export default function BasicModal({
     }
     return handleClose();
   }, [isModalOpen]);
+    React.useEffect(() => {
+    if (roomTypeId)
+      return getAvailableRooms({
+        ...searchRoomsVariables,
+        roomModelId: roomTypeId,
+      });
+  }, [searchRoomsVariables, roomTypeId]);
+  
+
   const {
     register,
     handleSubmit,
@@ -77,13 +86,7 @@ export default function BasicModal({
     setActiveStep(step);
   };
 
-  React.useEffect(() => {
-    if (roomTypeId)
-      return getAvailableRooms({
-        ...searchRoomsVariables,
-        roomModelId: roomTypeId,
-      });
-  }, [searchRoomsVariables, roomTypeId]);
+
 
   const handleCreateBooking = (data: any) => {
     //// default room quantity === 1
@@ -106,7 +109,7 @@ export default function BasicModal({
     };
     onSubmit(variables);
   };
-
+    if (!roomTypeId || !isModalOpen) return <div />;
   return (
     <div>
       <Modal

@@ -2,7 +2,7 @@ import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
-export default function SimpleBackdrop({ loading }: { loading: Boolean }) {
+export default function SimpleBackdrop({ loading }: { loading: boolean }) {
   const [open, setOpen] = React.useState(false);
   const handleClose = () => {
     setOpen(false);

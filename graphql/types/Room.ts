@@ -362,7 +362,7 @@ export const Mutation = extendType({
             },
           });
 
-          const roomsNumbersInHotel = roomsInHotel.map((room) => room.number);
+          const roomsNumbersInHotel = roomsInHotel.map((room:{number:number}) => room.number);
 
           const roomsAllowed = roomNumbers.filter(
             (number) => !roomsNumbersInHotel.includes(number)

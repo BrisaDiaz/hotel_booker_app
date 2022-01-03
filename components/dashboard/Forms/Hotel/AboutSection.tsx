@@ -8,7 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import { styles } from '@/components/dashboard/forms/styles';
 
-export default function ({
+export default function AboutSection({
   register,
   errors,
   setValue,
@@ -17,8 +17,9 @@ export default function ({
   children,
 }: {
   children?: React.ReactNode;
-  register: Function;
-  setValue: Function;
+  register:  (fieldName:string,config?:any)=>void;
+
+  setValue: (fieldName:string,value:any)=>void;
   errors: any;
   defaultData?: any;
   hotelCategories: Array<{ id: number; name: string }>;

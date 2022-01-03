@@ -12,7 +12,7 @@ import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import { styles } from '@/components/dashboard/forms/styles';
 
-export default function ({
+export default function AboutSection({
   register,
   errors,
   roomCategories,
@@ -22,8 +22,8 @@ export default function ({
 }: {
   defaultData?: RoomModel;
   children?: React.ReactNode;
-  register: Function;
-  setValue: Function;
+  register: (fieldName:string,config?:any)=>void;
+  setValue: (fieldName:string,value:any)=>void;
   errors: any;
   roomCategories: Array<{
     id: number;
@@ -31,7 +31,7 @@ export default function ({
   }>;
 }) {
   const [categorySelected, setCategorieSelected] = useState<string>(
-    roomCategories[0].name
+   defaultData?defaultData.category: roomCategories[0].name
   );
   const handleCategoryField = (event: SelectChangeEvent) => {
     setCategorieSelected(event.target.value as string);
@@ -49,6 +49,7 @@ export default function ({
           <TextField
             sx={styles.textField}
             id="name"
+            defaultValue={defaultData? defaultData.name:''}
             {...register('name', {
               required: 'The name  is required',
               maxLength: {
@@ -89,6 +90,7 @@ export default function ({
       </Grid>
 
       <TextField
+                defaultValue={defaultData? defaultData.description:''}
         id="description"
         multiline
         {...register('description', {

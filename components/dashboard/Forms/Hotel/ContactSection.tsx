@@ -8,13 +8,13 @@ import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import LanguageIcon from '@mui/icons-material/Language';
 import { styles } from '@/components/dashboard/forms/styles';
 import validations from '@/utils/formValidations';
-export default function ({
+export default function ContactSection({
   register,
   errors,
   defaultData,
   children,
 }: {
-  register: Function;
+  register: (fieldName:string,config?:any)=>void;
   errors: any;
   defaultData?: any;
   children?: React.ReactNode;

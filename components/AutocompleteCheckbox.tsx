@@ -23,7 +23,7 @@ export default function CheckboxesTags({
   defaultValue?: Option[];
   options: Option[];
   label: string;
-  onChange: Function;
+  onChange: (newValues:Option[])=>void;
   sx: any;
 }) {
   return (

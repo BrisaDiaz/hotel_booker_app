@@ -73,8 +73,8 @@ const Bookings: WithLayoutPage<PageProps> = ({
     React.useState<CancelationDetails | null>(null);
   const [bookingsStatus, setBookingsStatus] = React.useState('active');
   const [dateRanges, setDateRanges] = React.useState<
-    { from: Date; until: Date } | {}
-  >({});
+    { from: Date; until: Date } | null
+  >(null);
 
   const closeModal = (modalName: string) => {
     setIsModalOpen({ ...isModalOpen, [modalName]: false });
@@ -89,7 +89,7 @@ const Bookings: WithLayoutPage<PageProps> = ({
   );
 
   const [cancelBooking, cancelBookingRequest] = useMutation(CANCEL_BOOKING, {
-    onCompleted({ cancelationDetails }) {
+    onCompleted() {
       setNotification({
         type: 'success',
         content: 'Booking was canceled successfully',
@@ -107,7 +107,25 @@ const Bookings: WithLayoutPage<PageProps> = ({
       clearNotification();
     },
   });
-  const handleGetBookings = async () => {
+
+  React.useEffect(() => {
+    if (bookingsRequest.data?.bookings) {
+      setDisplayedBookings(bookingsRequest.data?.bookings);
+    }
+  }, [bookingsRequest]);
+
+  React.useEffect(() => {
+    if (cancelationDetailsRequest.data?.cancelationDetails) {
+      setCancelationDetails(cancelationDetailsRequest.data.cancelationDetails);
+    }
+    if (bookingDataRequest.data?.booking) {
+      setSelectedBooking(bookingDataRequest.data.booking);
+      openModal('show');
+    }
+  }, [bookingDataRequest, cancelationDetailsRequest]);
+
+  React.useEffect(() => {
+      const handleGetBookings = async () => {
     if (dateRanges) {
       const variables: { [key: string]: number | string | Date } = {
         userId,
@@ -126,23 +144,6 @@ const Bookings: WithLayoutPage<PageProps> = ({
     }
   };
 
-  React.useEffect(() => {
-    if (bookingsRequest.data?.bookings) {
-      setDisplayedBookings(bookingsRequest.data?.bookings);
-    }
-  }, [bookingsRequest]);
-
-  React.useEffect(() => {
-    if (cancelationDetailsRequest.data?.cancelationDetails) {
-      setCancelationDetails(cancelationDetailsRequest.data.cancelationDetails);
-    }
-    if (bookingDataRequest.data?.booking) {
-      setSelectedBooking(bookingDataRequest.data.booking);
-      openModal('show');
-    }
-  }, [bookingDataRequest, cancelationDetails]);
-
-  React.useEffect(() => {
     handleGetBookings();
   }, [bookingsStatus, dateRanges]);
   React.useEffect(() => {
@@ -210,7 +211,7 @@ const Bookings: WithLayoutPage<PageProps> = ({
   }) => {
     if (!selectedBooking) return;
     try {
-      let variables = { ...data, userId, bookingId: selectedBooking.id };
+      const variables = { ...data, userId, bookingId: selectedBooking.id };
       await cancelBooking({ variables });
     } catch (err) {
       console.log(err);

@@ -16,7 +16,7 @@ export default function BasicModal({
   roomData,
 }: {
   children: React.ReactNode;
-  onSubmit: Function;
+  onSubmit: (formData:any)=>void;
   roomData: {
     price: number;
     taxes: number;

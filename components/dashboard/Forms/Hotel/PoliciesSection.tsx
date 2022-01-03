@@ -5,14 +5,14 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { styles } from '@/components/dashboard/forms/styles';
-export default function ({
+export default function PoliciesSection({
   register,
   errors,
   defaultData,
   children,
 }: {
   children?: React.ReactNode;
-  register: Function;
+  register: (fieldName:string,config?:any)=>void;
   errors: any;
   defaultData?: any;
 }) {

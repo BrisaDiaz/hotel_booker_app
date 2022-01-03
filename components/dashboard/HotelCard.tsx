@@ -9,7 +9,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
 
-function EditButtom({ onEdit }: { onEdit: Function }) {
+function EditButtom({ onEdit }: { onEdit: ()=>void }) {
   return (
     <Box
       sx={{ position: 'absolute', zIndex: 30, m: 1 }}
@@ -39,8 +39,8 @@ export default function HotelCard({
       holeAddress: string;
     };
   };
-  handleRedirect: Function;
-  onEdit: Function;
+  handleRedirect: (hotelId:number)=>void;
+  onEdit: (hotelId:number)=>void;
 }) {
   return (
     <div onClick={() => handleRedirect(hotel.id)}>

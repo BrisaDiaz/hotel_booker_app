@@ -1,15 +1,7 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
+
 import Dialog from '@mui/material/Dialog';
-import ListItemText from '@mui/material/ListItemText';
-import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import CloseButton from '@/components/modals/CloseButton';
@@ -28,10 +20,10 @@ export default function FullScreenDialog({
   onClose,
   isOpen,
 }: {
-  isOpen: Boolean;
+  isOpen: boolean;
   title: string;
   children: React.ReactNode;
-  onClose?: Function;
+  onClose?: ()=>void;
 }) {
   const [open, setOpen] = React.useState(false);
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { v4 as uuidv4 } from 'uuid';
-import { RoomModel, Feature } from '@/interfaces/index';
+import { RoomModel } from '@/interfaces/index';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
@@ -15,12 +15,12 @@ import ImageListItem from '@mui/material/ImageListItem';
 import ImageList from '@mui/material/ImageList';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Paper from '@mui/material/Paper';
-import ImageSlider from '@/components/ImageSlider';
 import CloseButton from '@/components/modals/CloseButton';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modal: {
-      position: 'absolute' as 'absolute',
+      position: 'absolute' ,
       borderRadius: theme.spacing(1),
       top: '50%',
       left: '50%',
@@ -119,18 +119,24 @@ const EditButton = ({ onClick }: { onClick: React.MouseEventHandler }) => {
     </Tooltip>
   );
 };
-
+ type SectionToEdit =
+    | 'about'
+    | 'price'
+    | 'aspect'
+    | 'features'
+    | 'capacity'
+    | '';
 type ComponentProps = {
-  isModalOpend: Boolean;
-  closeModal: Function;
-  onEdit: Function;
+  isModalOpend: boolean;
+  closeModal: ()=>void;
+  onEdit:  (sectionName:SectionToEdit)=>void;
   roomType: RoomModel | null;
 };
 
 function TransitionsModal(props: ComponentProps) {
   const { isModalOpend, closeModal, onEdit, roomType } = props;
 
-  if (!isModalOpend || !roomType) return <div />;
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -143,8 +149,8 @@ function TransitionsModal(props: ComponentProps) {
       handleOpen();
     }
   }, [isModalOpend]);
-
-  let aditionalQualities = [];
+  if (!isModalOpend || !roomType) return <div />;
+  const aditionalQualities = [];
   roomType?.smooking &&
     aditionalQualities.push({
       id: uuidv4(),
@@ -201,6 +207,7 @@ function TransitionsModal(props: ComponentProps) {
                 >
                   <ImageListItem cols={1}>
                     <img
+                    
                       src={`${roomType.mainImage}`}
                       srcSet={`${roomType.mainImage}`}
                       alt={`${roomType.name}`}

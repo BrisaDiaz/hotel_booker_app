@@ -14,9 +14,9 @@ export default function TableFilter({
   isModalOpen,
 }: {
   searchFields: { label: string; value: string; type: string }[];
-  onSearch: Function;
-  closeModal: Function;
-  isModalOpen: Boolean;
+  onSearch: (fieldToSearchAt:string,value:string)=>void;
+  closeModal: ()=>void;
+  isModalOpen: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -46,7 +46,7 @@ export default function TableFilter({
     e.preventDefault();
     onSearch(selectedField, searchValue.trim());
   };
-  const onReset = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const onReset = () => {
     setSearchValue('');
     onSearch(selectedField, '');
   };
@@ -55,7 +55,7 @@ export default function TableFilter({
   return (
     <Modal
       open={open}
-      onClick={(e) => {
+      onClick={() => {
         !isInteracting && handleClose();
       }}
       aria-labelledby="keep-mounted-modal-title"
@@ -86,7 +86,7 @@ export default function TableFilter({
           aria-label="reset"
           size="small"
           type="reset"
-          onClick={(e) => onReset(e)}
+          onClick={(e) => onReset()}
         >
           <ClearIcon fontSize="inherit" />
         </IconButton>

@@ -9,7 +9,7 @@ export default function CheckboxLabels({
   handleChanges,
 }: {
   items: Feature[];
-  handleChanges: Function;
+  handleChanges: (checked:boolean,itemName:string)=>void;
 }) {
 
   return (

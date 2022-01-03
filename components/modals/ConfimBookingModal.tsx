@@ -17,11 +17,11 @@ export default function BasicModal({
   requestInfo,
 }: {
   isModalOpen: boolean;
-  onSubmit: Function;
-  closeModal: Function;
+  closeModal: ()=>void;
   requestInfo?: BookingRequest;
+  onSubmit: (formData:any)=>void;
 }) {
-  if (!requestInfo) return null;
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,6 +33,7 @@ export default function BasicModal({
     }
     return handleClose();
   }, [isModalOpen, requestInfo]);
+
   const {
     register,
     handleSubmit,
@@ -47,7 +48,7 @@ export default function BasicModal({
     totalCost: string;
     paymentMethod: string;
   }) => {
-    const roomsRequired: number = requestInfo.guestsDistribution.length;
+    const roomsRequired: number =requestInfo? requestInfo.guestsDistribution.length:1;
 
     if (data.roomsIds.length < roomsRequired)
       return setError('roomsIds', {
@@ -58,7 +59,7 @@ export default function BasicModal({
     clearErrors('roomsIds');
     onSubmit({ ...data, totalCost: parseInt(data.totalCost) });
   };
-
+    if (!requestInfo) return <div/>;
   return (
     <div>
       <Modal

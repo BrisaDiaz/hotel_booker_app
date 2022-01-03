@@ -12,9 +12,9 @@ export default function BookingClientInputs({
   errors,
   disable,
 }: {
-  register: Function;
+  register: (fieldName:string,config?:any)=>void;
   errors: any;
-  disable?: Boolean;
+  disable?: boolean;
 }) {
   return (
     <div>

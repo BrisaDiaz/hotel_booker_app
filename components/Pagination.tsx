@@ -5,7 +5,7 @@ export default function PaginationRounded({
   setPage,
   count,
 }: {
-  setPage: Function;
+  setPage: (page:number)=>void;
   count: number;
 }) {
   return (

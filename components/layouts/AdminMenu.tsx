@@ -36,7 +36,7 @@ interface Link {
   family?: string[];
   level?: number;
   url: string;
-  query: { hotelId: string } | {};
+  query: any;
 }
 interface Props {
   /**
@@ -156,13 +156,10 @@ export default function ResponsiveDrawer(props: Props) {
   const { children } = props;
   const { activeLink } = props;
 
-  interface Query {
-    hotelId: number;
-    roomTypeId: number;
-  }
+
   const router: {
-    push: Function;
-    query: Query | {};
+    push: (url:string)=>void;
+    query: any;
   } = useRouter();
 
   const hotelId = 'hotelId' in router.query ? router.query.hotelId : '';

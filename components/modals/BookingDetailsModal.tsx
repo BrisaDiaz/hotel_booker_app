@@ -22,17 +22,13 @@ export default function BasicModal({
   onCancel,
   cancelationDetails,
 }: {
-  isModalOpen: Boolean;
-  closeModal: Function;
-  onCancel: Function;
+  isModalOpen: boolean;
+  closeModal: ()=>void;
+  onCancel: ()=>void;
   bookingData: Booking | null;
   cancelationDetails?: CancelationDetails | null;
 }) {
-  if (
-    !bookingData ||
-    (bookingData.status === 'CANCELED' && !cancelationDetails)
-  )
-    return <div />;
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -45,7 +41,11 @@ export default function BasicModal({
     }
     handleClose();
   }, [isModalOpen]);
-
+  if (
+    !bookingData ||
+    (bookingData.status === 'CANCELED' && !cancelationDetails)
+  )
+    return <div />;
   return (
     <div>
       <Modal

@@ -50,6 +50,8 @@
     "@types/node": "16.11.6",
     "@types/react": "17.0.33",
     "@types/uuid": "^8.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
     "esbuild": "^0.13.12",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.1",
@@ -58,6 +60,6 @@
     "prettier": "^2.4.1",
     "prisma": "^3.6.0",
     "ts-node": "^10.4.0",
-    "typescript": "4.4.4"
+    "typescript": "^4.4.4"
   }
 }

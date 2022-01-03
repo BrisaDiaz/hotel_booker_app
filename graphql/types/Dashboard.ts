@@ -28,6 +28,7 @@ import {
 } from '../utils/index';
 import { roomSpecifications, Client } from './Booking';
 import { searchFilter } from './Commun';
+
 export const AdminHotels = objectType({
   name: 'AdminHotels',
   definition(t) {
@@ -271,7 +272,7 @@ export const Query = extendType({
             },
           });
 
-          const guests = bookings.map((booking) => booking.client);
+          const guests = bookings.map((booking:any) => booking.client);
 
           return {
             roomModel,
@@ -616,7 +617,7 @@ export const Mutation = extendType({
           if (!roomsAvailables.length)
             throw new UserInputError('There is not enought rooms available.');
 
-          const roomsAvailablesIds = roomsAvailables.map((room) => room.id);
+          const roomsAvailablesIds = roomsAvailables.map((room:{id:number}) => room.id);
           const matchRoomsRequestedWithAvailablesOnes = args.roomsIds.every(
             (id: number) => roomsAvailablesIds.includes(id)
           );

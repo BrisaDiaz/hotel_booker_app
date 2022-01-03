@@ -2,7 +2,6 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import AboutSection from './AboutSection';
 import ContactSection from './ContactSection';
 import AddressSection from './AddressSection';
@@ -22,12 +21,12 @@ export default function MultilineTextFields(props: {
   facilities: Feature[];
   languages: Feature[];
   hotelCategories: Feature[];
-  submitHandler: Function;
+  submitHandler: (formData:any)=>void;
 }) {
   const { services, activities, facilities, languages, hotelCategories } =
     props;
 
-  const matchesSize = useMediaQuery('(min-width:600px)');
+
   const {
     register,
     setValue,

@@ -487,11 +487,11 @@ export default function useHotelDashboard({
   const handleActions = async (
     roomModelId: number,
     action: RoomTypeActions,
-    roomsToDelete: number[] | []
+    roomsToDelete?: number[] 
   ) => {
     setSelectedRoomTypeId(roomModelId);
     if (action === 'deleteRooms') {
-      setToDeleteRoomsIds(roomsToDelete);
+     roomsToDelete && setToDeleteRoomsIds(roomsToDelete);
     }
     if (action === 'show/edit') {
       if (!toEditRoomTypeData || toEditRoomTypeData.id != roomModelId) {

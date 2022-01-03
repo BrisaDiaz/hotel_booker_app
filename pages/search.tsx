@@ -63,13 +63,13 @@ const Search = ({
   }) => {
     const skipe: number = page - 1 * 6;
 
-    let serchVariables = { ...variables, take: 6, skipe };
+    const  serchVariables = { ...variables, take: 6, skipe };
 
     try {
       await requestHotels({
         variables: serchVariables,
       });
-    } catch (err) {
+    } catch (err) {   
       console.log(err);
       console.log(error?.graphQLErrors);
     }
@@ -110,7 +110,7 @@ const Search = ({
             ) : (
               <Box>
                 <Typography>
-                  There wasn't any coincidens for the search
+                  {"There wasn't any coincidens for the search"}
                 </Typography>
               </Box>
             )}

@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 import StepButton from '@mui/material/StepButton';
 export default function HorizontalLabelPositionBelowStepper({
   steps,
@@ -11,7 +10,7 @@ export default function HorizontalLabelPositionBelowStepper({
 }: {
   steps: string[];
   activeStep: number;
-  setStep: Function;
+  setStep: (step:number)=>void;
 }) {
   return (
     <Box sx={{ width: '100%' }}>

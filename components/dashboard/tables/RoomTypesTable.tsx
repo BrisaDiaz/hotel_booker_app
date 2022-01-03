@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { createStyles, makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+
 import TablePaginationActions from './TablePaginationActions';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
@@ -28,7 +27,12 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-
+ type RoomTypeActions =
+    | 'addRoom'
+    | 'deleteRooms'
+    | 'show/edit'
+    | 'edit'
+    | 'addBooking';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import BedIcone from '@/components/BedIcone';
 import { RoomModel } from '@/interfaces/index';
@@ -39,7 +43,8 @@ export function ActionsMenu({
   selectedRoomsIds,
 }: {
   children: React.ReactNode;
-  handleActions: Function;
+  handleActions: (roomModelId:number,
+action:RoomTypeActions,roomsToDelete?:number[])=>void;
   selectedRoomModelId: number;
   selectedRoomsIds: number[];
 }) {
@@ -51,7 +56,7 @@ export function ActionsMenu({
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleMenuClick = (action: string) => {
+  const handleMenuClick = (action: RoomTypeActions) => {
     handleActions(selectedRoomModelId, action, selectedRoomsIds);
     handleClose();
   };
@@ -134,7 +139,7 @@ function RoomsTable({
   handleActions,
 }: {
   roomTypes: RoomModel[];
-  handleActions: Function;
+  handleActions: (roomModelId:number,action:RoomTypeActions,roomsToDelete?:number[])=>void;
 }) {
   ////data
   function createData(
