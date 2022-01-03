@@ -8,7 +8,7 @@ import { setContext } from '@apollo/client/link/context';
 import env from '@/env';
 const isBrowser = typeof window !== undefined;
 const httpLink = createHttpLink({
-  uri: `${env.HOST}/api/graphql`,
+  uri: env.BACKEND_URL,
 
   credentials: 'include',
 });

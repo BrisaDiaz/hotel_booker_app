@@ -16,6 +16,7 @@ module.exports = {
   publicRuntimeConfig: {
     env: {
       HOST: process.env.HOST,
+      BACKEND_URL: process.env.BACKEND_URL,
       CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
       CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
       CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,

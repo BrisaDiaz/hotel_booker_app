@@ -9,6 +9,7 @@
 
 - APP_SECRET= Jwt secret key
 - HOST=Appication hots name
+- BACKEND_URL=HOST/api/graphql
 - DATABASE_URL=Postgresql database connection string
 
 - CLOUDINARY_NAME

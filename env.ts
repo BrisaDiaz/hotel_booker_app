@@ -6,6 +6,7 @@ const env: { [key: string]: string } = {
     process.env.DATABASE_URL ||
     'postgresql://postgres:postgres@localhost:5432/hotelBooker',
   APP_SECRET: process.env.APP_SECRET || 'auth_json_web_token_secret_key',
+    BACKEND_URL: publicRuntimeConfig.BACKEND_URL || process.env.BACKEND_URL,
   HOST: publicRuntimeConfig.HOST || process.env.HOST,
   CLOUDINARY_NAME:
     publicRuntimeConfig.CLOUDINARY_NAME || process.env.CLOUDINARY_NAME,
