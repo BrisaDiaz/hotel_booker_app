@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { styles } from '@/components/dashboard/Forms/styles';
+import { styles } from '@/components/dashboard/forms/styles';
 export default function FormBottons({ onAbort }: { onAbort?: ()=>void; }) {
   const matchesSize = useMediaQuery('(min-width:600px)');
 

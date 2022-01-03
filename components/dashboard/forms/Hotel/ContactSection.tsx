@@ -6,7 +6,7 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import InputAdornment from '@mui/material/InputAdornment';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import LanguageIcon from '@mui/icons-material/Language';
-import { styles } from '@/components/dashboard/Forms/styles';
+import { styles } from '@/components/dashboard/forms/styles';
 import validations from '@/utils/formValidations';
 export default function ContactSection({
   register,

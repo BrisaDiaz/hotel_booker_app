@@ -9,9 +9,9 @@ import PriceSection from '../PriceSection';
 import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
-import FormBottons from '../FormBottons';
+import FormBottons from '@/components/dashboard/forms/FormBottons';
 import { Hotel } from '@/interfaces/index';
-import { styles } from '@/components/dashboard/Forms/styles';
+import { styles } from '@/components/dashboard/forms/styles';
 import FullScreenModal from '@/components/modals/FullScreenModal';
 type Feature = {
   id: number;

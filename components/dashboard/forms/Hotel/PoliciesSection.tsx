@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-import { styles } from '@/components/dashboard/Forms/styles';
+import { styles } from '@/components/dashboard/forms/styles';
 export default function PoliciesSection({
   register,
   errors,

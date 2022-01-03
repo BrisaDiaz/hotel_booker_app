@@ -5,7 +5,7 @@ import AutocompleteCheckbox from '@/components/AutocompleteCheckbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { styles } from '@/components/dashboard/Forms/styles';
+import { styles } from '@/components/dashboard/forms/styles';
 type Feature = {
   id: number;
   name: string;
