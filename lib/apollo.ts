@@ -5,10 +5,10 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-
+import env from '@/env';
 const isBrowser = typeof window !== undefined;
 const httpLink = createHttpLink({
-  uri: `/api/graphql`,
+  uri: `${env.HOST}/api/graphql`,
 
   credentials: 'include',
 });
