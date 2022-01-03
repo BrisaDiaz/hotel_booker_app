@@ -7,7 +7,7 @@ import AboutSection from './AboutSection';
 import CapacitySection from './CapacitySection';
 import FeaturesSection from './FeaturesSection';
 import PriceSection from '../PriceSection';
-import { styles } from '@/components/dashboard/Forms/styles';
+import { styles } from '@/components/dashboard/forms/styles';
 import FormBottons from '../FormBottons';
 interface Feature {
   id: number;
