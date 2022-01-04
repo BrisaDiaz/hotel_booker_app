@@ -64,7 +64,7 @@ export default function AboutSection({
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <FormControl fullWidth>
+          <FormControl fullWidth    sx={styles.textField}>
             <InputLabel id="hotel-type">Category</InputLabel>
 
             <Select

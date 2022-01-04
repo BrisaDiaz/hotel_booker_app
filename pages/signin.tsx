@@ -48,8 +48,8 @@ const SignIn: WithLayoutPage = () => {
       setErrorMessage(graphError.message);
     },
     onCompleted: (data) => {
-      const { email, firstName, lastName, role } = data.signin.user;
-      setSession({ email, firstName, lastName, role });
+      const { id, email, firstName, lastName, role } = data.signin.user;
+      setSession({ id,email, firstName, lastName, role });
       role === 'ADMIN' ? router.push('/admin') : router.push('/search');
     },
   });

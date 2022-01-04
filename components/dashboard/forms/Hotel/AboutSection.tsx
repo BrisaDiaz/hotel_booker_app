@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -35,7 +36,7 @@ export default function AboutSection({
   }, [categorySelected]);
 
   return (
-    <Grid component="fieldset" sx={styles.fieldset}>
+    <Box component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
         About
       </Typography>
@@ -77,9 +78,10 @@ export default function AboutSection({
           />
         </Grid>
       </Grid>
-      <Grid container spacing={{ sm: 2 }} alignItems="center">
+      <Grid container  alignItems="center" >
         <Grid item xs={12} sm={6}>
-          <FormControl fullWidth>
+                    
+          <FormControl fullWidth  sx={styles.textField}>
             <InputLabel id="hotel-type">Category</InputLabel>
 
             <Select
@@ -87,7 +89,6 @@ export default function AboutSection({
               label="Category"
               value={categorySelected}
               onChange={handleCategoryField}
-              sx={{ textTransform: 'capitalize' }}
             >
               { hotelCategories.map((type: { name: string; id: number }) => (
                 <MenuItem
@@ -101,10 +102,9 @@ export default function AboutSection({
             </Select>
           </FormControl>
         </Grid>
-        <input type="hidden" {...register('category')} />
-      </Grid>
-
-      <TextField
+        
+            <Grid item xs={12}>
+            <TextField
         id="description"
         multiline
         {...register('description', {
@@ -119,7 +119,12 @@ export default function AboutSection({
         variant="outlined"
         sx={styles.textField}
       />
+      </Grid>
+      
+      </Grid>
+
+  
       {children}
-    </Grid>
+    </Box>
   );
 }
