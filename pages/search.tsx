@@ -1,5 +1,4 @@
 import React from 'react';
-import { GetStaticProps } from 'next';
 import { client } from '@/lib/apollo';
 import { useLazyQuery } from '@apollo/client';
 import Head from 'next/head';

@@ -8,10 +8,10 @@
 ## Environment variables
 
 - APP_SECRET= Jwt secret key
-- HOST=Appication hots name
-- BACKEND_URL=HOST/api/graphql
+- NEXT_PUBLIC_HOST=Appication hots name
+- NEXT_PUBLIC_BACKEND_URL=HOST/api/graphql
 - DATABASE_URL=Postgresql database connection string
-
+- NODE_ENV= production/development
 - CLOUDINARY_NAME
 - CLOUDINARY_API_KEY
 - CLOUDINARY_API_SECRET
