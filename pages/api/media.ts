@@ -3,7 +3,7 @@ import cloudinary from '@/lib/cloudinary';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const formidable = require('formidable-serverless');
 import fs from 'fs';
-
+import env from '@/env'
 const form = formidable({
   keepExtensions: true,
   multiples: true,
@@ -48,7 +48,7 @@ export default async function handler(
     const images = await upload(filesPaths);
     /// delete images from ./public/uploads folder
 
-    if (images.length) await deleteLocalFiles(filesPaths);
+    if (images.length && env.NODE_ENV!=='production') await deleteLocalFiles(filesPaths);
 
     return res.status(200).json({
       success: true,

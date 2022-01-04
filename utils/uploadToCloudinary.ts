@@ -16,7 +16,7 @@ export default async function upload(files: File[]): Promise<UploadInfo[]> {
       },
     });
 
-    let filesUploaded: UploadInfo[] = data.images;
+    const filesUploaded: UploadInfo[] = data.images;
 
     return filesUploaded;
   } catch (error) {
