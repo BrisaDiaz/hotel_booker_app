@@ -1,6 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import AspectSection from './AspectSection';
 import AboutSection from './AboutSection';
@@ -70,9 +69,6 @@ export default function MultilineTextFields(props: {
       autoComplete="off"
       onSubmit={handleSubmit(submitMiddleware)}
     >
-      <Typography component="h1" variant="h4" align="center" sx={styles.title}>
-        Add a new room template
-      </Typography>
       <AboutSection
         register={register}
         errors={errors}

@@ -7,7 +7,7 @@ import env from '@/env'
 const form = formidable({
   keepExtensions: true,
   multiples: true,
-  uploadDir: './public/uploads',
+  uploadDir: './temp_media_storage',
   filter: function ({ mimetype }: { mimetype: string }) {
     return mimetype && mimetype.includes('image');
   },
@@ -33,7 +33,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    //// store images inside ./public/uploads folder and return the path
+    //// store images inside ./temp_media_storage folder and return the path
 
     const filesPaths: string[] = await new Promise(function (resolve, reject) {
       form.parse(req, async (err: any, fields: any, files: FormidableFile) => {
