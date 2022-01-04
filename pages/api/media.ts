@@ -7,7 +7,7 @@ import env from '@/env'
 const form = formidable({
   keepExtensions: true,
   multiples: true,
-  uploadDir: './temp_media_storage',
+  uploadDir: '.',
   filter: function ({ mimetype }: { mimetype: string }) {
     return mimetype && mimetype.includes('image');
   },
@@ -44,7 +44,10 @@ export default async function handler(
       });
     });
     //// upload to cloudinary
-
+if(!filesPaths.length)   return res.status(400).json({
+      success: false,
+      message: 'No image was provided.',
+    });
     const images = await upload(filesPaths);
     /// delete images from ./public/uploads folder
 
