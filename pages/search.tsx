@@ -126,47 +126,33 @@ const Search = ({
 
 export default Search;
 export const getServerSideProps = async () => {
-  const activitiesRequest = client.query({
+  const activitiesRequest = await client.query({
     query: GET_ALL_ACTIVITIES,
   });
-  const servicesRequest = client.query({
+  const servicesRequest = await client.query({
     query: GET_ALL_SERVICES,
   });
-  const facilitiesRequest = client.query({
+  const facilitiesRequest = await client.query({
     query: GET_ALL_FACILITIES,
   });
-  const categoriesRequest = client.query({
-    query: GET_ALL_HOTEL_CATEGORIES,
-  });
-  const languagesRequest = client.query({
+    const languagesRequest = await client.query({
     query: GET_ALL_LANGUAGES,
   });
-  const hotelsRequest = client.query({
+  const categoriesRequest = await client.query({
+    query: GET_ALL_HOTEL_CATEGORIES,
+  });
+
+  const hotelsRequest = await client.query({
     query: GET_HOTELS,
   });
-  const [
-    activitiesList,
-    servicesList,
-    facilitiesList,
-    languagesList,
-    hotelCategoriesList,
-    hotelSearch,
-  ] = await Promise.all([
-    activitiesRequest,
-    servicesRequest,
-    facilitiesRequest,
-    languagesRequest,
-    categoriesRequest,
-    hotelsRequest,
-  ]);
 
   const props = {
-    activitiesList: activitiesList.data.activitiesList,
-    servicesList: servicesList.data.servicesList,
-    facilitiesList: facilitiesList.data.facilitiesList,
-    languagesList: languagesList.data.languagesList,
-    hotelCategoriesList: hotelCategoriesList.data.hotelCategoriesList,
-    hotelSearch: hotelSearch.data.hotelSearch,
+    activitiesList: activitiesRequest.data.activitiesList,
+    servicesList: servicesRequest.data.servicesList,
+    facilitiesList: facilitiesRequest.data.facilitiesList,
+    languagesList: languagesRequest.data.languagesList,
+    hotelCategoriesList: categoriesRequest.data.hotelCategoriesList,
+    hotelSearch: hotelsRequest.data.hotelSearch,
   };
 
   return {
