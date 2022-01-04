@@ -13,13 +13,18 @@ module.exports = {
   images: {
     domains: ['res.cloudinary.com'],
   },
-  publicRuntimeConfig: {
-    env: {
-      HOST: process.env.HOST,
-      BACKEND_URL: process.env.BACKEND_URL,
-      CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+
+      serverRuntimeConfig: {
+       DATABASE_URL:
+    process.env.DATABASE_URL,
+         APP_SECRET: process.env.APP_SECRET,
+   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
       CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
       CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
-    },
   },
+  publicRuntimeConfig: {
+NEXT_PUBLIC_HOST: process.env.NEXT_PUBLIC_HOST,
+NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  },
+ 
 };

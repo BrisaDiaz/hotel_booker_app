@@ -1,19 +1,16 @@
-import getConfig from 'next/config';
-const { publicRuntimeConfig } = getConfig();
+import getConfig from 'next/config'
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
+
 
 const env: { [key: string]: string } = {
+   HOST: publicRuntimeConfig.NEXT_PUBLIC_HOST|| 'http://localhost:3000',
+  BACKEND_URL: publicRuntimeConfig.NEXT_PUBLIC_BACKEND_URL|| 'http://localhost:3000/api/graphql',
   DATABASE_URL:
-    process.env.DATABASE_URL ||
+   serverRuntimeConfig.DATABASE_URL ||
     'postgresql://postgres:postgres@localhost:5432/hotelBooker',
-  APP_SECRET: process.env.APP_SECRET || 'auth_json_web_token_secret_key',
-    BACKEND_URL: publicRuntimeConfig.BACKEND_URL || process.env.BACKEND_URL,
-  HOST: publicRuntimeConfig.HOST || process.env.HOST,
-  CLOUDINARY_NAME:
-    publicRuntimeConfig.CLOUDINARY_NAME || process.env.CLOUDINARY_NAME,
-  CLOUDINARY_API_KEY:
-    publicRuntimeConfig.CLOUDINARY_API_KEY || process.env.CLOUDINARY_API_KEY,
-  CLOUDINARY_API_SECRET:
-    publicRuntimeConfig.CLOUDINARY_API_SECRET ||
-    process.env.CLOUDINARY_API_SECRET,
+  APP_SECRET: serverRuntimeConfig.APP_SECRET || 'auth_json_web_token_secret_key',
+  CLOUDINARY_NAME:serverRuntimeConfig.CLOUDINARY_NAME||'',
+  CLOUDINARY_API_KEY: serverRuntimeConfig.CLOUDINARY_API_KEY||'',
+  CLOUDINARY_API_SECRET: serverRuntimeConfig.CLOUDINARY_API_SECRET||'',
 };
 export default env;
