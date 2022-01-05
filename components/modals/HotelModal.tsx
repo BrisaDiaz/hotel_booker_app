@@ -36,10 +36,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
       maxHeight: '95%',
 
-      overflowY: 'scroll',
-      '&::-webkit-scrollbar': {
-        display: 'none',
-      },
+      overflowY: 'auto',
+     
     },
     modalContent: {
       '& > section': {

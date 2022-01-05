@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import DoneIcon from '@mui/icons-material/Done';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import EmailIcon from '@mui/icons-material/Email';
-import MyLocationIcon from '@mui/icons-material/MyLocation';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Typography from '@mui/material/Typography';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import Tabs from '@/components/Tabs';
@@ -35,31 +35,33 @@ const styles = {
   },
   listItem: {
     display: 'flex',
-    gap: 1,
+    gap: 1.5,
     minWidth: 'min-content',
     textTransform: 'capitalize',
     alignItems: 'center',
-    '& > p': {
+   
+    '& > p,a,time': {
       m: '8px 0',
+       fontSize:'14px', 
     },
   },
   contactInfo: {
-    pt: { xs: 2, sm: 1 },
-    px: 1,
-    pl: { sm: 0 },
-    pb: { sm: 0 },
+    p:{xs:2,lg:1},
+    mb:'-16px',
     display: 'flex',
     columnGap: { xs: 2, sm: 3 },
-    rowGap: 1,
+    rowGap: 0,
     flexWrap: 'wrap',
+    fontStyle:'inherit',
+    background:'#e6e6e6'
   },
 } as const;
 const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
   const theme = useTheme();
 
   const images = [
-    { title: 'Hotel frame', image: hotel.frameImage },
-    { title: 'Hotel Interior', image: hotel.interiorImage },
+    { title: 'Facade', image: hotel.frameImage },
+    { title: 'Interior', image: hotel.interiorImage },
   ];
   const characteristics = [
     {
@@ -91,13 +93,14 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
       </Head>
 
       <Box sx={{ maxWidth: '1000px', m: '20px auto 30px' }}>
-        <section className="container">
+        
           <Typography
             variant="h3"
             component="h1"
             sx={{
               fontWeight: 700,
-              margin: { xs: '0 10px', md: 0 },
+              mx: { xs: 1, lg: 0 },
+              mb:2,
               width: 'fit-content',
               color: theme.palette.common.black,
               padding: '10px 0 5px',
@@ -107,22 +110,12 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
           </Typography>
           <Box component="address" sx={styles.contactInfo}>
             <Box sx={styles.listItem}>
-              <MyLocationIcon color="primary" fontSize="small" />
+              <LocationOnIcon color="primary" fontSize="small" />
               <Typography color="primary" sx={{ fontSize: '14px' }}>
                 {hotel.address.holeAddress}
               </Typography>
             </Box>
-            <Box sx={styles.listItem}>
-              <LocalPhoneIcon color="primary" fontSize="small" />
-              <Typography
-                sx={{ fontSize: '14px' }}
-                color="primary"
-                component="a"
-                href={`tel:${hotel.telephone}`}
-              >
-                {hotel.telephone}
-              </Typography>
-            </Box>
+            
             {hotel?.email && (
               <Box sx={styles.listItem}>
                 <EmailIcon color="primary" fontSize="small" />
@@ -150,26 +143,37 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                 </Typography>
               </Box>
             )}
+            <Box sx={styles.listItem}>
+              <LocalPhoneIcon color="primary" fontSize="small" />
+              <Typography
+                sx={{ fontSize: '14px' }}
+                color="primary"
+                component="a"
+                href={`tel:${hotel.telephone}`}
+              >
+                {hotel.telephone}
+              </Typography>
+            </Box>
           </Box>
           {/* CARROUSEL */}
           <ImageSlider images={images} />
-
+    <Box component="section" sx={{px:{xs:1,lg:0}}}>
           <Typography
             component="h4"
             variant="h5"
             sx={{
-              p: 1,
-              pb: 0,
               fontWeight: 200,
               maxWidth: 'fit-content',
-              m: '0 8px 0 auto',
+              ml: 'auto',
+              mr:1,
+mb:0.5
             }}
           >
             Prices from{' '}
             <Typography
               variant="h5"
               component="span"
-              sx={{ color: 'primary.main', fontWeight: 700, ml: 1, mb: 1 }}
+              sx={{ color: 'primary.main', fontWeight: 700, mb: 1 }}
             >
               USD ${hotel.lowestPrice}
             </Typography>
@@ -177,20 +181,22 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
 
           <Typography
             variant="subtitle1"
+               color="primary"
             sx={{
-              p: '0 10px ',
+            
               fontWeight: 200,
-              width: 190,
+              width: 160,
               lineHeight: 1.3,
               textAlign: 'end',
-              m: { xs: '0 15px 30px auto', md: '0 15px 20px auto ' },
+              m: { xs: '0 8px 30px auto', md: '0 8px  20px auto ' },
+               
             }}
           >
             Taxes and Charges{' '}
             <Typography
               component="span"
-              sx={{ fontWeight: 200, ml: 0.5 }}
-              color="primary"
+              sx={{ fontWeight: 200, ml: 0.5,fontSize:'inherit' }}
+           
             >
               USD ${hotel.taxesAndCharges}
             </Typography>
@@ -232,9 +238,9 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                 {
                   title: 'About Us',
                   Content: (
-                    <Box sx={{ margin: '30px 6px' }}>
+                    <Box sx={{ margin: {xs:'24px 6px' ,md:'30px 6px'}  }}>
                       <Typography
-                        sx={{ whiteSpace: 'pre-line' }}
+                        sx={{ whiteSpace: 'pre-line',fontSize:{xs:'14px',md:'16px'}   }}
                         component="pre"
                       >
                         {hotel.description}
@@ -245,9 +251,10 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                 {
                   title: 'Policies and Rules',
                   Content: (
-                    <Box sx={{ margin: '30px 6px' }}>
+                    <Box sx={{ margin: {xs:'24px 6px' ,md:'30px 6px'}  }}>
                       <Typography
-                        sx={{ whiteSpace: 'pre-line' }}
+     
+                        sx={{ whiteSpace: 'pre-line',fontSize:{xs:'14px',md:'16px'} }}
                         component="pre"
                       >
                         {hotel.policiesAndRules}
@@ -347,7 +354,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
               </Box>
             </Grid>
           </Box>
-        </section>
+        </Box>
         {hotel.roomModels && hotel?.roomModels?.length > 0 && (
           <Box>
             <Typography
@@ -356,7 +363,9 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
               sx={{
                 fontWeight: 700,
                 color: 'primary.main',
-                margin: '20px 15px 30px',
+                  background:'#e6e6e6',
+                  my: 1,
+                padding: '10px 15px ',
               }}
             >
               Rooms

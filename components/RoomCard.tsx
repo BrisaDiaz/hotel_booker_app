@@ -14,8 +14,8 @@ export default function RoomCard({ room }: { room: RoomModel }) {
       <Box
         component={Link}
         href={`/room/${room.id}`}
-        sx={{ position: 'absolute', zIndex: 50, width: '100%', height: '100%' }}
-      />
+     
+      >
       <Card
         sx={
           {
@@ -120,6 +120,7 @@ export default function RoomCard({ room }: { room: RoomModel }) {
           </Box>
         </CardActionArea>
       </Card>
+      </Box>
     </>
   );
 }

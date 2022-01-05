@@ -19,7 +19,7 @@ export default function ImageSlider({
         width: '100%',
       }}
     >
-      <Carousel navButtonsAlwaysVisible={true} swipe={true} indicators={false}>
+      <Carousel navButtonsAlwaysVisible={true} swipe={true} indicators={false} interval={2000}>
         {images.map((item) => (
           <div key={item.image}>
             <ImageList

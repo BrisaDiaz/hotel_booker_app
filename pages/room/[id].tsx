@@ -41,16 +41,24 @@ const styles = {
     fontWeight: 400,
   },
   listItem: {
-    display: 'flex',
-    gap: 1,
+     display: 'flex',
+    gap: 1.5,
+    minWidth: 'min-content',
     textTransform: 'capitalize',
     alignItems: 'center',
-    '& p': {
+   
+    '& > p,a,time': {
       m: '8px 0',
+       fontSize:'14px', 
     },
   },
   featuresItems: {
     display: 'flex',
+      fontSize:'14px', 
+      '& > p,a,time': {
+
+       fontSize:'14px', 
+    },
     gap: 1,
     textTransform: 'capitalize',
     alignItems: 'center',
@@ -186,7 +194,8 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             component="a"
             sx={{
               fontWeight: 700,
-              margin: { xs: '0 10px', md: 0 },
+              display:'block',
+              mx: { xs: '10px', lg: 0 },
               width: 'fit-content',
               textTransform: 'capitalize',
 
@@ -236,47 +245,50 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             />
           </ImageListItem>
         </ImageList>
-        <Typography
-          component="h4"
-          variant="h5"
-          sx={{
-            p: 1,
-            pb: 0,
-            fontWeight: 200,
-            maxWidth: 'fit-content',
-            m: '0 15px 0 auto',
-          }}
-        >
-          From{' '}
-          <Typography
+        <Box component="section" sx={{px:{xs:1,lg:0}}}>
+    <Typography
+            component="h4"
             variant="h5"
-            component="span"
-            sx={{ color: 'primary.main', fontWeight: 700, ml: 1, mb: 1 }}
+            sx={{
+              fontWeight: 200,
+              maxWidth: 'fit-content',
+              ml: 'auto',
+              mr:1,
+             mb:0.5
+            }}
           >
-            USD ${room.lowestPrice}
+            Prices from{' '}
+            <Typography
+              variant="h5"
+              component="span"
+              sx={{ color: 'primary.main', fontWeight: 700, mb: 1 }}
+            >
+              USD ${room.lowestPrice}
+            </Typography>
           </Typography>
-          /Night
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          sx={{
-            p: '0 10px ',
-            fontWeight: 200,
-            width: 190,
-            textAlign: 'end',
-            m: '0 15px 30px auto',
-            lineHeight: 1.3,
-          }}
-        >
-          Taxes and Charges{' '}
+
           <Typography
-            color="primary"
-            component="span"
-            sx={{ fontWeight: 200, ml: 0.5, mb: 0 }}
+            variant="subtitle1"
+               color="primary"
+            sx={{
+            
+              fontWeight: 200,
+              width: 160,
+              lineHeight: 1.3,
+              textAlign: 'end',
+              m: { xs: '0 8px 30px auto', md: '0 8px  20px auto ' },
+               
+            }}
           >
-            USD ${room.taxesAndCharges}
+            Taxes and Charges{' '}
+            <Typography
+              component="span"
+              sx={{ fontWeight: 200, ml: 0.5,fontSize:'inherit' }}
+           
+            >
+              USD ${room.taxesAndCharges}
+            </Typography>
           </Typography>
-        </Typography>
         <Box
           component="ul"
           sx={{
@@ -304,7 +316,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
         </Box>
         <Typography
           component="pre"
-          sx={{ margin: ' 10px 10px 20px ', whiteSpace: 'pre-line' }}
+          sx={{ margin: ' 10px 10px 20px ', whiteSpace: 'pre-line' ,        fontSize:{xs:'14px',md:'16px'}}}
         >
           {room.description}
         </Typography>
@@ -392,7 +404,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
               <Typography
                 sx={{
                   width: 'max-content',
-
+fontSize:'14px',
                   marginRight: '5px',
                   fontWeight: 400,
                 }}
@@ -409,7 +421,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
               }}
             >
               {room.beds && room.beds.length && (
-                <RoomBedsUI beds={room.beds} size="medium" />
+                <RoomBedsUI beds={room.beds} size="medium" fontSize="14px"/>
               )}
             </Box>
             <Box
@@ -417,6 +429,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
               sx={{
                 width: '300px',
                 display: 'flex',
+                
               }}
             >
               {new Array(room.maximunGuests).fill(1).map((_, index) => (
@@ -424,9 +437,10 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
                   color="secondary"
                   key={index}
                   fontSize="small"
+                  
                 />
               ))}
-              <Typography sx={{ mx: 1 }}>
+              <Typography sx={{ mx: 1 ,fontSize:'14px',}}>
                 {room.maximunGuests > 1 ? ' people ' : ' persone '} max
               </Typography>
             </Box>
@@ -503,6 +517,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
               </Box>
             )}
           </Box>
+        </Box>
         </Box>
       </Box>
       {notification?.content && (

@@ -16,9 +16,7 @@ export const styles = {
     px: 3.5,
     maxHeight: '90%',
     overflowY: 'auto',
-    '&::-webkit-scrollbar': {
-      display: 'none',
-    },
+  
   },
   leyend: {
     width: '50%',

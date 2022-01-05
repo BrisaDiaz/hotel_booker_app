@@ -16,3 +16,22 @@ a {
 * {
   box-sizing: border-box;
 }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #563d06 #ffffff;
+  }
+
+ 
+  *::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #9c5443;
+    border-radius: 10px;
+    border: 1px solid #ffffff;
+  }

@@ -60,12 +60,12 @@ const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
             label={
               errors['frameImage']?.message
                 ? errors['frameImage'].message
-                : 'Frame image'
+                : 'Facade image'
             }
             type="file"
             error={errors['frameImage']?.message ? true : false}
             {...register('frameImage', {
-              required: 'The frame image is required',
+              required: 'The facade image is required',
             })}
             onChange={(e)=>handleOnChange(e)}
             variant="outlined"

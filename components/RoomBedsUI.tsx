@@ -26,9 +26,11 @@ const getBedsInterface = (
 export default function RoomBedsUI({
   beds,
   size,
+  fontSize
 }: {
   beds: withQuantityFeature[];
   size: IconeSize;
+  fontSize?:string
 }) {
   const bedsWidthIcon: withIconeBed[] = getBedsInterface(beds, size);
   return (
@@ -56,6 +58,7 @@ export default function RoomBedsUI({
                 variant={size === 'small' ? 'body2' : 'subtitle1'}
                 sx={{
                   minWidth: 'max-content',
+                  fontSize:fontSize ? fontSize : 'inherit'
                 }}
               >
                 {bed.label}
