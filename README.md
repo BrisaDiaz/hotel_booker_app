@@ -1,9 +1,9 @@
 # Booker App
 
-![image](https://drive.google.com/uc?export=view&id=1n7MF8IswFeYoG_uRf_dGlKvD9gBLWYek)
-![image](https://drive.google.com/uc?export=view&id=1n7MF8IswFeYoG_uRf_dGlKvD9gBLWYek)
-![image](https://drive.google.com/uc?export=view&id=1n7MF8IswFeYoG_uRf_dGlKvD9gBLWYek)
-![image](https://drive.google.com/uc?export=view&id=1n7MF8IswFeYoG_uRf_dGlKvD9gBLWYek)
+![image](https://drive.google.com/uc?export=view&id=1Q_pjetCMvmBjT46-JS-xsIxJ0W0jipoh)
+![image](https://drive.google.com/uc?export=view&id=1_PoKOUhF9Xrn1ef30KdmGAjmBZdwfjGM)
+![image](https://drive.google.com/uc?export=view&id=1XeSzls-_lK8A4XZoWA4j_nYkSMeNONdn)
+![image](https://drive.google.com/uc?export=view&id=15bk-2BBE68kwNMVk3aAXSY0sSLXUm3Ly)
 
 ## Environment variables
 
@@ -25,7 +25,6 @@
 - Material-UI
 - React-hook-form
 - Nexus
-- Postgresql and Prisma
+- Postgresql 
+- Prisma
 - Cloudinary
-- Prettier
-- Eslint
