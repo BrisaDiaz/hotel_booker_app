@@ -1,5 +1,5 @@
 import axios from 'axios';
-type UploadInfo = {
+export interface UploadInfo {
   secure_url: string;
   public_id: string;
 };

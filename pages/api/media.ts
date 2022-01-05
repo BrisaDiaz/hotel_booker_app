@@ -25,9 +25,9 @@ async function deleteLocalFiles(paths: string[]) {
 }
 async function upload(paths: string[]) {
   const imgePromices = paths.map((path) => cloudinary.v2.uploader.upload(path));
-  const imagesUploaded:UploadApiResponse[] =[]
-await Promise.all(imgePromices).then((img:any )=> {
-  imagesUploaded.push(img)
+  let imagesUploaded:UploadApiResponse[] =[]
+await Promise.all(imgePromices).then((images:any )=> {
+  imagesUploaded =images
 }, error => {
   throw new Error(error.message);
 });
@@ -54,7 +54,7 @@ if(!filesPaths.length)   return res.status(400).json({
       message: 'No image was provided.',
     });
     const images = await upload(filesPaths);
-    /// delete images from ./public/uploads folder
+    /// delete images from  folder
 
     if (images.length && env.NODE_ENV!=='production') await deleteLocalFiles(filesPaths);
 
