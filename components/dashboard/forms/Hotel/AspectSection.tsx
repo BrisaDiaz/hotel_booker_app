@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -12,18 +12,32 @@ export default function AspectSection({
   register,
   errors,
   children,
+  setError,
+  clearErrors
 }: {
   children?: React.ReactNode;
   register:  (fieldName:string,config?:any)=>void;
   errors: any;
+  setError:(fieldName:string,error?:any)=>void;
+  clearErrors:(fieldName:string)=>void;
 }) {
   const defaultImage = 'https://www.grancapitan.com.ar/wp-content/uploads/2014/10/default-img.gif';
   const [frameImage, setFrameImage] = useState<string>(defaultImage);
   const [interiorImage, setInteriorImage] = useState<string>(defaultImage);
+
+
   function handleOnChange(changeEvent: any) {
+if(!changeEvent.target.files[0]) return false
+
+const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+ 
+    if(!allowedExtensions.exec(changeEvent.target.files[0].name)) return setError(changeEvent.target.name,{type:'manual',message:'Invalid image'})
+    clearErrors(changeEvent.target.name)
+   
     const reader = new FileReader();
 
     reader.onload = function (onLoadEvent: any) {
+     
       if (changeEvent.target.name === 'frameImage') {
         setFrameImage(onLoadEvent.target.result);
       } else {
@@ -44,12 +58,12 @@ export default function AspectSection({
           <TextField
             id="frame-image"
             label={
-              errors['frameImage']
+              errors['frameImage']?.message
                 ? errors['frameImage'].message
-                : 'Frame image url'
+                : 'Frame image'
             }
             type="file"
-            error={errors['frameImage'] ? true : false}
+            error={errors['frameImage']?.message ? true : false}
             {...register('frameImage', {
               required: 'The frame image is required',
             })}
@@ -71,7 +85,7 @@ export default function AspectSection({
             label={
               errors['interiorImage']
                 ? errors['interiorImage'].message
-                : 'Interior image url'
+                : 'Interior image'
             }
             type="file"
             error={errors['interiorImage'] ? true : false}

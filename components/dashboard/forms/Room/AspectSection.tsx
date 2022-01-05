@@ -10,11 +10,15 @@ import { styles } from '@/components/dashboard/forms/styles';
 
 export default function AspectSection({
   register,
+  setError,
+clearErrors,
   errors,
   children,
 }: {
   children?: React.ReactNode;
   register: (fieldName:string,config?:any)=>void;
+    setError:(fieldName:string,error?:any)=>void;
+    clearErrors:(fieldName:string)=>void;
   errors: any;
 }) {
   const defaultImage =
@@ -22,6 +26,13 @@ export default function AspectSection({
   const [mainImage, setMainImage] = useState<string>(defaultImage);
 
   function handleOnChange(changeEvent: any) {
+    if(!changeEvent.target.files[0]) return false
+
+const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+ 
+    if(!allowedExtensions.exec(changeEvent.target.files[0].name)) return setError(changeEvent.target.name,{type:'manual',message:'Invalid image'})
+    clearErrors(changeEvent.target.name)
+
     const reader = new FileReader();
 
     reader.onload = function (onLoadEvent: any) {
@@ -44,7 +55,7 @@ export default function AspectSection({
             label={
               errors['mainImage']
                 ? errors['mainImage'].message
-                : 'Main image url'
+                : 'Main image'
             }
             error={errors['mainImage'] ? true : false}
             {...register('mainImage', {

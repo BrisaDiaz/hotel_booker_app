@@ -23,8 +23,8 @@ export default function FormBottons({ onAbort }: { onAbort?: ()=>void; }) {
         sx={styles.bottons}
         variant="outlined"
         color="primary"
-        onClick={(e) => {
-          e.preventDefault();
+        type="reset"
+        onClick={() => {
           onAbort && onAbort();
         }}
         size={matchesSize ? 'large' : 'medium'}

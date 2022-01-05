@@ -28,6 +28,8 @@ export default function MultilineTextFields(props: {
     register,
     handleSubmit,
     setValue,
+      setError,
+clearErrors,
     formState: { errors },
   } = useForm({ mode: 'onChange' });
 
@@ -89,7 +91,7 @@ export default function MultilineTextFields(props: {
         amenities={amenities}
       />
 
-      <AspectSection register={register} errors={errors} />
+      <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors} />
       <FormBottons />
     </Box>
   );

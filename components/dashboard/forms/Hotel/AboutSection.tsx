@@ -89,6 +89,7 @@ export default function AboutSection({
               label="Category"
               value={categorySelected}
               onChange={handleCategoryField}
+               sx={{ textTransform: 'capitalize' }}
             >
               { hotelCategories.map((type: { name: string; id: number }) => (
                 <MenuItem

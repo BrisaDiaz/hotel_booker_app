@@ -52,6 +52,7 @@ export default function ContactSection({
             sx={styles.textField}
             id="email"
             type="email"
+      
             variant="outlined"
             label={errors['email'] ? errors['email'].message : 'Email'}
             error={errors['email'] && true}
@@ -69,6 +70,7 @@ export default function ContactSection({
       <Grid container spacing={{ sm: 2 }} alignItems="center">
         <Grid item xs={12} sm={6}>
           <TextField
+          type="url"
             sx={styles.textField}
             id="website"
             defaultValue={defaultData?.website || ''}
