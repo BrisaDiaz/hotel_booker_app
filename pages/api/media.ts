@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import cloudinary from '@/lib/cloudinary';
+import {UploadApiResponse} from 'cloudinary'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const formidable = require('formidable-serverless');
 import fs from 'fs';
@@ -7,7 +8,6 @@ import env from '@/env'
 const form = formidable({
   keepExtensions: true,
   multiples: true,
-  uploadDir: '.',
   filter: function ({ mimetype }: { mimetype: string }) {
     return mimetype && mimetype.includes('image');
   },
@@ -25,8 +25,13 @@ async function deleteLocalFiles(paths: string[]) {
 }
 async function upload(paths: string[]) {
   const imgePromices = paths.map((path) => cloudinary.v2.uploader.upload(path));
-  const responces = await Promise.all(imgePromices);
-  return responces;
+  const imagesUploaded:UploadApiResponse[] =[]
+await Promise.all(imgePromices).then((img:any )=> {
+  imagesUploaded.push(img)
+}, error => {
+  throw new Error(error.message);
+});
+  return imagesUploaded;
 }
 export default async function handler(
   req: NextApiRequest,
@@ -37,7 +42,7 @@ export default async function handler(
 
     const filesPaths: string[] = await new Promise(function (resolve, reject) {
       form.parse(req, async (err: any, fields: any, files: FormidableFile) => {
-        if (err) reject(err.message);
+        if (err) reject(err?.message || err);
         const filesKeys = Object.keys(files);
         const pahts: string[] = filesKeys.map((key) => files[key].path);
         resolve(pahts);
