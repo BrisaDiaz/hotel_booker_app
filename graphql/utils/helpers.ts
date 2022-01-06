@@ -206,7 +206,7 @@ function hotelQueryConstructor(args: HotelQueryArgs) {
     skip?: number;
   }
 
-  let ANDconditionals: AND = [];
+  const ANDconditionals: AND = [];
 
   args.facilities?.length &&
     ANDconditionals.push(
@@ -240,7 +240,7 @@ function hotelQueryConstructor(args: HotelQueryArgs) {
         Features: { [feature]: true },
       }))
     );
-  let ORconditionals: OR = [];
+  const ORconditionals: OR = [];
 
   args.categories?.length &&
     ORconditionals.push(
@@ -256,15 +256,15 @@ function hotelQueryConstructor(args: HotelQueryArgs) {
       description: { contains: args.search, mode: 'insensitive' },
     }) &&
     ORconditionals.push({
-      Address: { holeAddress: { contains: args.search, mode: 'insensitive' } },
+      address: { holeAddress: { contains: args.search, mode: 'insensitive' } },
     });
 
-  let orderBy: sortField[] = [
+  const orderBy: sortField[] = [
     {
       lowestPrice: args?.sort === '-price' ? 'desc' : 'asc',
     },
   ];
-  let query: Query = {
+  const query: Query = {
     orderBy: orderBy,
     where: {},
     take: args.take || 6,
@@ -287,7 +287,7 @@ type ToEditHotelField =
   | 'genericData';
 
 function getHotelFieldsToEdit(args: any): ToEditHotelField[] {
-  let fields: ToEditHotelField[] = [];
+  const fields: ToEditHotelField[] = [];
   if (
     args.holeAddress ||
     args.postalCode ||
@@ -414,12 +414,12 @@ function clientQueryConstructor(
   hotelId: number,
   args: ClientQueryArgs
 ): MultipleClientQuery | SingleClientQuery {
-  let orderBy = { createdAt: 'desc' };
-  let where: ClientWhere = {
+  const orderBy = { createdAt: 'desc' };
+  const where: ClientWhere = {
     bookings: {
       some: {
         hotelId: hotelId,
-        status: 'ACTIVE' as 'ACTIVE',
+        status: 'ACTIVE' as const,
       },
     },
   };
@@ -430,7 +430,7 @@ function clientQueryConstructor(
           bookings: {
             some: {
               hotelId: hotelId,
-              status: 'ACTIVE' as 'ACTIVE',
+              status: 'ACTIVE' as const,
               clientId: parseInt(args.search.value),
             },
           },
@@ -439,7 +439,7 @@ function clientQueryConstructor(
           bookings: {
             where: {
               hotelId: hotelId,
-              status: 'ACTIVE' as 'ACTIVE',
+              status: 'ACTIVE' as const,
             },
           },
         },
@@ -477,7 +477,7 @@ function clientQueryConstructor(
       bookings: {
         where: {
           hotelId: hotelId,
-          status: 'ACTIVE' as 'ACTIVE',
+          status: 'ACTIVE' as const,
         },
       },
     },
@@ -550,7 +550,7 @@ function bookingRequestQueryConstructor(
   hotelId: number,
   args: BookingRequestQueryArgs
 ): MultipleBookingRequestQuery | SingleBookingRequestQuery {
-  let where: BookingRequestWhere = {
+  const where: BookingRequestWhere = {
     hotelId: hotelId,
     status: args.status || 'PENDING',
   };
@@ -668,7 +668,7 @@ function bookingQueryConstructor(
     currentDate.getMonth() + 1,
     0
   );
-  let where: BookingWhere = {
+  const where: BookingWhere = {
     hotelId: hotelId,
     checkInDate: {
       gte: firstDayOfMonth,
