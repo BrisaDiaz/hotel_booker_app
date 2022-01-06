@@ -103,7 +103,7 @@ export default function BookingRoomInputs({
     rooms?: { adults: number; children: number }[];
   };
 }) {
-  const minDate = getFormatedDate(Date.now());
+  const minDate = getFormatedDate(new Date(Date.now()).getTime());
   const [rooms, setRooms] = React.useState<Room[]>(
     defaultValues?.rooms
       ? defaultValues.rooms.map((room) => ({
