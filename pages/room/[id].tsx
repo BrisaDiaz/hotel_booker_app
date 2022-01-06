@@ -31,6 +31,7 @@ import {
   GET_ROOM_MODEL_BY_ID,
   MAKE_BOOKING_REQUEST,
 } from '@/queries/index';
+import { NextApiResponse } from 'next';
 
 const styles = {
   list: {
@@ -539,11 +540,15 @@ RoomPage.getLayout = (page: React.ReactNode) => (
 export default RoomPage;
 export const getServerSideProps = async ({
   query,
-
+res
 }: {
   query: { id: number };
-
+res:NextApiResponse
 }) => {
+      res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=10, stale-while-revalidate=59'
+  )
   const { data, error } = await client.query({
     query: GET_ROOM_MODEL_BY_ID,
     variables: { roomModelId: query.id },

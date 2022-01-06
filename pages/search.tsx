@@ -1,4 +1,5 @@
 import React from 'react';
+import { NextApiResponse } from 'next';
 import { client } from '@/lib/apollo';
 import { useLazyQuery } from '@apollo/client';
 import Head from 'next/head';
@@ -125,7 +126,11 @@ const Search = ({
 };
 
 export default Search;
-export const getServerSideProps = async () => {
+export const getServerSideProps = async ({res}:{res:NextApiResponse}) => {
+    res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=10, stale-while-revalidate=59'
+  )
   const activitiesRequest = await client.query({
     query: GET_ALL_ACTIVITIES,
   });
