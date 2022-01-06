@@ -13,13 +13,15 @@ export default function AspectSection({
   errors,
   children,
   setError,
-  clearErrors
+  clearErrors,
+  resetCount
 }: {
   children?: React.ReactNode;
   register:  (fieldName:string,config?:any)=>void;
   errors: any;
   setError:(fieldName:string,error?:any)=>void;
   clearErrors:(fieldName:string)=>void;
+  resetCount?:number
 }) {
   const defaultImage = 'https://www.grancapitan.com.ar/wp-content/uploads/2014/10/default-img.gif';
   const [frameImage, setFrameImage] = useState<string>(defaultImage);
@@ -27,8 +29,11 @@ export default function AspectSection({
 
 
   function handleOnChange(changeEvent: any) {
-if(!changeEvent.target.files[0]) return false
-
+console.log(changeEvent )
+if(!changeEvent.target.files[0]) {
+  return  changeEvent.target.name === 'frameImage'? setFrameImage(defaultImage):setInteriorImage(defaultImage);
+      
+}
 const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
  
     if(!allowedExtensions.exec(changeEvent.target.files[0].name)) return setError(changeEvent.target.name,{type:'manual',message:'Invalid image'})
@@ -38,15 +43,17 @@ const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 
     reader.onload = function (onLoadEvent: any) {
      
-      if (changeEvent.target.name === 'frameImage') {
-        setFrameImage(onLoadEvent.target.result);
-      } else {
-        setInteriorImage(onLoadEvent.target.result);
-      }
+    changeEvent.target.name === 'frameImage'? setFrameImage(onLoadEvent.target.result):setInteriorImage(onLoadEvent.target.result);
     };
-
+  
     reader.readAsDataURL(changeEvent.target.files[0]);
   }
+React.useEffect(() => {
+ if(resetCount){
+   setFrameImage(defaultImage)
+   setInteriorImage(defaultImage);
+ }
+}, [resetCount])
 
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
@@ -92,6 +99,7 @@ const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
             {...register('interiorImage', {
               required: 'The interior image is required',
             })}
+      
             onChange={(e)=>handleOnChange(e)}
             variant="outlined"
             sx={styles.textField}

@@ -14,12 +14,14 @@ export default function AspectSection({
 clearErrors,
   errors,
   children,
+  resetCount
 }: {
   children?: React.ReactNode;
   register: (fieldName:string,config?:any)=>void;
     setError:(fieldName:string,error?:any)=>void;
     clearErrors:(fieldName:string)=>void;
   errors: any;
+  resetCount?:number
 }) {
   const defaultImage =
     'https://www.grancapitan.com.ar/wp-content/uploads/2014/10/default-img.gif';
@@ -41,7 +43,11 @@ const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 
     reader.readAsDataURL(changeEvent.target.files[0] );
   }
-
+React.useEffect(() => {
+ if(resetCount){
+   setMainImage(defaultImage)
+ }
+}, [resetCount])
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>

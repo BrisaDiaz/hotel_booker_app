@@ -24,7 +24,7 @@ export default function MultilineTextFields(props: {
 }) {
   const { services, activities, facilities, languages, hotelCategories } =
     props;
-
+const  [resetCount, setResetCount] = React.useState(0)
 
   const {
     register,
@@ -102,9 +102,9 @@ export default function MultilineTextFields(props: {
         facilities={facilities}
       />
       <PoliciesSection register={register} errors={errors} />
-      <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors}/>
+      <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors} resetCount={resetCount}/>
 
-      <FormBottons />
+      <FormBottons onAbort={()=>setResetCount(resetCount+1)}/>
     </Box>
   );
 }

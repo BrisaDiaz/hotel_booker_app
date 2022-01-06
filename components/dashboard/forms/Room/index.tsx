@@ -20,7 +20,7 @@ export default function MultilineTextFields(props: {
   bedTypes: Feature[];
   submitHandler: (formData:any)=>void;
 }) {
-
+const  [resetCount, setResetCount] = React.useState(0)
   const { services, amenities, roomCategories, submitHandler, bedTypes } =
     props;
 
@@ -91,8 +91,8 @@ clearErrors,
         amenities={amenities}
       />
 
-      <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors} />
-      <FormBottons />
+      <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors} resetCount={resetCount}/>
+      <FormBottons  onAbort={()=>setResetCount(resetCount+1)}/>
     </Box>
   );
 }
