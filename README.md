@@ -28,3 +28,15 @@
 - Postgresql 
 - Prisma
 - Cloudinary
+
+## Features:
+- File handling from server enabled.
+- Images upload to cloudinary.
+- Database seed.
+- Client end server side authentication.
+- Session persistence.
+- Complex searchs.
+- SSR and ISR. 
+- SSR cache-control haders.
+- Dinamic layouts.
+- Full guest, hotels, rooms and bookings management system.
