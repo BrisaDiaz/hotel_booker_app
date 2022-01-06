@@ -38,13 +38,13 @@ export const facilities = [
 
 export const services = [
   'free high speed internet (WiFi)',
+  'streaming service',
   'buffet breackfast',
   'dry & cleaning service',
   'city guides',
   'tour & excursions',
   'luggage forwarding',
   'pick-up/drop-off service',
-
   'outside catering service',
   'babysitting on request',
   'concierge 24hrs',
@@ -87,9 +87,15 @@ export const amenities = [
   'kitchen',
   'living',
   'DVD player',
+  'CD player',
+  'radio',
+  'iPod dock',
   'cupboard',
   'desk',
-  'chairs',
+  'sitting area',
+  'sofa',
+  'bidet',
+  'toilet',
   'dressing table',
   'spectacular view',
   'city view',
@@ -100,6 +106,7 @@ export const amenities = [
   'bathtub & shower',
   'make up/shaving mirror',
   'bathrobes & slippers',
+  'air purifiers',
   'bathroom telephone',
   'handicapped accesible',
   'outdoor entrance',
@@ -245,3 +252,5 @@ export const adminUser = {
   email: 'admin@hotelBooker.com',
   password: 'admin',
 };
+
+
