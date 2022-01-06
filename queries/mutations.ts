@@ -277,7 +277,7 @@ export const UPDATE_ROOM_MODEL = gql`
     $hotelId: ID!
     $roomModelId: ID!
     $lowestPrice: Float
-    $cancelationFee: Float!
+    $cancelationFee: Float
     $taxesAndCharges: Float
     $name: String
     $mts2: Int
