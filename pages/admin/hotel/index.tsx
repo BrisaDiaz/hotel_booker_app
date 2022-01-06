@@ -213,20 +213,20 @@ export const getServerSideProps = async ({
       };
     }
     return {
-      // redirect: {
-      //   permanent: false,
-      //   destination: '/signin',
-      // },
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
       props: {},
     };
   } catch (e: any) {
     console.log(e.networkError ? e.networkError?.result?.errors : e);
 
     return {
-      // redirect: {
-      //   permanent: false,
-      //   destination: '/signin',
-      // },
+      redirect: {
+        permanent: false,
+        destination: '/signin',
+      },
       props: {},
     };
   }
