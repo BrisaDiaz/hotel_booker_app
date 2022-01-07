@@ -45,7 +45,11 @@ export default function HotelCard({
   return (
     <div onClick={() => handleRedirect(hotel.id)}>
       <Card
-        sx={{ width: '300px', position: 'relative' }}
+        sx={{ width: '300px', position: 'relative',background:'transparent',    boxShadow:
+      '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
+      '&:hover':{
+        boxShadow:'0px 3px 20px -2px rgb(0 0 0 / 14%), 0px 3px 20px 0px rgb(0 0 0 / 8%), 0px 1px 20px 0px rgb(0 0 0 / 8%)'
+      } }}
         component="article"
         elevation={2}
       >

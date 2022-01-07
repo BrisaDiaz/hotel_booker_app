@@ -38,13 +38,16 @@ export const styles = {
   },
   fieldset: {
     my: 4,
-    pt: 1.5,
+    py: 2,
     borderRadius: 5,
     border: '1px solid  rgb(0 0 0 / 10%)',
     padding: { xs: '15px', sm: '20px', md: '25px ' },
     background: '#fff',
     boxShadow:
       '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
+      '&:hover':{
+        boxShadow:'0px 3px 20px -2px rgb(0 0 0 / 14%), 0px 3px 20px 0px rgb(0 0 0 / 8%), 0px 1px 20px 0px rgb(0 0 0 / 8%)'
+      }
   },
 
   textField: {

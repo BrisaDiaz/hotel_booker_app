@@ -50,11 +50,16 @@ export default function DashboardCard({
   return (
     <div key={card.title}>
       <Paper
-        elevation={4}
+
         sx={{
           width: '240px',
           borderRadius: '20px',
           backgroundColor: ` ${card.color || '#795548'}`,
+           boxShadow:
+      '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
+      '&:hover':{
+        boxShadow:'0px 3px 20px -2px rgb(0 0 0 / 14%), 0px 3px 20px 0px rgb(0 0 0 / 8%), 0px 1px 20px 0px rgb(0 0 0 / 8%)'
+      } 
         }}
       >
         <Box

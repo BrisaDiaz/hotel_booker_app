@@ -370,7 +370,7 @@ mb:0.5
             >
               Rooms
             </Typography>
-            <Box sx={{ my: '20px', mx: { sm: 2 } }}>
+            <Box sx={{ mt:4 ,mb: 3, mx: { sm: 2 } }}>
               <Grid container spacing={3} justifyContent="start">
                 {hotel.roomModels.map((room) => (
                   <Grid item xs={12} sm={6} md={4} key={room.id}>
