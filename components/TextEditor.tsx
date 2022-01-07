@@ -1,6 +1,4 @@
 import React from "react";
-import { Editor, EditorState,RichUtils, ContentState, convertFromHTML,getDefaultKeyBinding } from "draft-js";
-
 import Box from '@mui/material/Box';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
@@ -10,7 +8,10 @@ import IconButton from '@mui/material/IconButton';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import TitleIcon from '@mui/icons-material/Title';
+import Tooltip from '@mui/material/Tooltip';
 import "draft-js/dist/Draft.css";
+import { Editor, EditorState,RichUtils, ContentState, convertFromHTML,getDefaultKeyBinding ,KeyBindingUtil} from "draft-js";
+const {hasCommandModifier} = KeyBindingUtil;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { stateToHTML}= require('draft-js-export-html' )
 
@@ -23,6 +24,7 @@ export default function MyEditor({placeholder,onChange,error,defaultData}:{place
     EditorState.createEmpty()
   );
 const [isFocus, setIsFocus] = React.useState<boolean>(false)
+
 
 const handleFocus = ()=>{
   setIsFocus(true)
@@ -49,11 +51,21 @@ const handleBlur= ()=>{
    e.preventDefault()
    onEditorChange(RichUtils.toggleInlineStyle(editorState, style));
   }
-  const toggleBlockType = (e:React.MouseEvent<HTMLElement>, style:blockStyles)=>{
+  const toggleBlockType = (e:React.MouseEvent<HTMLElement>|React.KeyboardEvent<HTMLElement>,style:blockStyles)=>{
    e.preventDefault()
  onEditorChange(RichUtils.toggleBlockType(editorState, style));
 
   }
+ const stylesControls:{[key:string]:string}={
+  'BOLD':'Ctr+b',
+   'ITALIC':'Ctr+i',
+  'UNDERLINE':'Ctr+u',
+  'header-four':'Ctr+a',
+   'blockquote':'Ctr+q',
+ 'unordered-list-item':'Ctr+m',
+  'ordered-list-item':'Ctr+y',
+}
+
   const handleKeyCommand = (command:any, editorState:EditorState) => {
           const newState = RichUtils.handleKeyCommand(editorState, command);
           if (newState) {
@@ -62,20 +74,23 @@ const handleBlur= ()=>{
           }
           return false;
  }
+
      const mapKeyToEditorCommand =(e:React.KeyboardEvent<HTMLElement>)=> {
-          if (e.keyCode === 9 /* TAB */) {
-            const newEditorState = RichUtils.onTab(
-              e,
-              editorState,
-              4, /* maxDepth */
-            );
-            if (newEditorState !== editorState) {
-            onEditorChange(newEditorState);
-            }
-            return;
-          }
+
+    
+              /* `A` key + Alt */ 
+       if (e.keyCode === 65 && hasCommandModifier(e)) return toggleBlockType(e,'header-four') 
+               /* `M` key  */ 
+        if (e.keyCode === 77 && hasCommandModifier(e)) return toggleBlockType(e,'unordered-list-item') 
+              /* `Y` key  */ 
+        if (e.keyCode === 89  && hasCommandModifier(e)) return toggleBlockType(e,'ordered-list-item') 
+
+           /* ` Q "` key  */ 
+           if (e.keyCode === 81  && hasCommandModifier(e)) return toggleBlockType(e,'blockquote') 
           return getDefaultKeyBinding(e);
+      
         }
+     
    const selection = editorState.getSelection();
    const blockType = editorState
           .getCurrentContent()
@@ -94,11 +109,10 @@ const handleBlur= ()=>{
      
       ];
         const   INLINE_STYLES:{icone:React.ReactNode,style:InlineStyles}[] = [
-        {icone: <FormatBoldIcon />, style: 'BOLD'},
+        {icone: <FormatBoldIcon  />, style: 'BOLD'},
         {icone: <FormatItalicIcon />, style: 'ITALIC'},
         {icone:  <FormatUnderlinedIcon />, style: 'UNDERLINE'},
       ];
-
 
 React.useEffect(() => {
  if(defaultData){
@@ -114,17 +128,19 @@ React.useEffect(() => {
 
 
       {INLINE_STYLES.map(inlineStyle=> 
-        <IconButton key={inlineStyle.style} aria-label={inlineStyle.style}component="span" color={currentStyle.has(inlineStyle.style) ? 'primary': 'default' } onClick={(e:React.MouseEvent<HTMLElement>) =>toggleInlineStyle(e,inlineStyle.style)}>
+      <Tooltip  title={stylesControls[inlineStyle.style]}  key={inlineStyle.style}>
+        <IconButton aria-label={inlineStyle.style}component="span" color={currentStyle.has(inlineStyle.style) ? 'primary': 'default' } onClick={(e:React.MouseEvent<HTMLElement>) =>toggleInlineStyle(e,inlineStyle.style)}>
           {inlineStyle.icone}
         </IconButton>
-        
+        </Tooltip>
         )}
         <Box sx={{borderLeft: '1px solid rgba(0, 0, 0, 0.3)',ml:1}}/>
      {BLOCK_TYPES.map(blockStyle=> 
-        <IconButton key={blockStyle.style} aria-label={blockStyle.style}component="span" color={blockStyle.style === blockType ? 'primary': 'default' }  onClick={(e:React.MouseEvent<HTMLElement>) =>toggleBlockType(e,blockStyle.style)}>
+           <Tooltip title={stylesControls[blockStyle.style]} key={blockStyle.style}>
+        <IconButton  aria-label={blockStyle.style}component="span" color={blockStyle.style === blockType ? 'primary': 'default' }  onClick={(e:React.MouseEvent<HTMLElement>) =>toggleBlockType(e,blockStyle.style)}>
           {blockStyle.icone}
         </IconButton>
-        
+        </Tooltip>
         )}
       
   </Box>
