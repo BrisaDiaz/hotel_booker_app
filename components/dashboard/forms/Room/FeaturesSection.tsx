@@ -72,7 +72,7 @@ export default function FeaturesSection({
       />
       <Box sx={{ my: 1 }}>
         <FormControlLabel
-          sx={{ textTransform: 'capitalize' }}
+             sx={{ textTransform: 'capitalize',fontSize:'14px' }}
           {...register('freeCancelation')}
           control={
             <Checkbox
@@ -85,7 +85,8 @@ export default function FeaturesSection({
           label="free cancelation"
         />
         <FormControlLabel
-          sx={{ textTransform: 'capitalize' }}
+ 
+          sx={{ textTransform: 'capitalize',fontSize:'14px' }}
           {...register('smooking')}
           control={
             <Checkbox

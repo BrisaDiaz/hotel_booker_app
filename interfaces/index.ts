@@ -92,6 +92,7 @@ export interface RoomBuildierVariables {
   taxesAndCharges?: number;
 }
 export interface SessionPayload {
+  loading:boolean;
   user: {
     id: number;
     firstName: string;

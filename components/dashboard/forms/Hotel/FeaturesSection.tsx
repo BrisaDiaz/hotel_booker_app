@@ -111,8 +111,9 @@ export default function FeaturesSection({
 
       <Grid container spacing={{ sm: 2 }} alignItems="center" sx={{ mb: 1.5 }}>
         <Grid item xs={12} sm={6}>
-          <FormGroup sx={{ px: 1 }}>
+          <FormGroup sx={{ px: 1 ,fontSize:'14px'}}>
             <FormControlLabel
+         
               control={
                 <Checkbox
                   color="secondary"
@@ -127,7 +128,7 @@ export default function FeaturesSection({
               label="Free Cancelation"
             />
             <FormControlLabel
-              control={
+            control={
                 <Checkbox
                   color="secondary"
                   {...register('accessible')}
@@ -141,6 +142,7 @@ export default function FeaturesSection({
               label="Accessible"
             />
             <FormControlLabel
+      
               control={
                 <Checkbox
                   color="secondary"
@@ -157,8 +159,9 @@ export default function FeaturesSection({
           </FormGroup>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <FormGroup sx={{ px: 1 }}>
+          <FormGroup sx={{ px: 1 ,fontSize:'14px'}}>
             <FormControlLabel
+     
               control={
                 <Checkbox
                   inputProps={{
@@ -173,6 +176,7 @@ export default function FeaturesSection({
               label="Pet Friendly"
             />
             <FormControlLabel
+ 
               control={
                 <Checkbox
                   inputProps={{
@@ -187,6 +191,7 @@ export default function FeaturesSection({
               label="Smoker Friendly"
             />
             <FormControlLabel
+
               control={
                 <Checkbox
                   inputProps={{

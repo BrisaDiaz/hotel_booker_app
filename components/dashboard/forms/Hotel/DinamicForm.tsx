@@ -85,6 +85,11 @@ clearErrors('policiesAndRules')
       return props.submitHandler(variables);
     }
     if (toEditSection === 'about') {
+            if(!data.description)return setError('description',{
+  type:'required',
+  message:'A description required'
+})
+clearErrors('description')
       variables = {
         name: data?.name,
 

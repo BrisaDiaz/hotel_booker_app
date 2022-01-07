@@ -23,6 +23,7 @@ export default function PoliciesSection({
 const handlePolicies =(text:string)=>{
 setPolicies(text)
 }
+
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -65,7 +66,9 @@ setPolicies(text)
           />
         </Grid>
       </Grid>
-<input type="hidden" value={policies} {...register('policiesAndRules')}/>
+<input type="hidden" value={policies} {...register('policiesAndRules',{
+  require:'The policies and rules are required'
+})}/>
    
       <TextEditor 
         defaultData={defaultData ?defaultData.policiesAndRules:''}

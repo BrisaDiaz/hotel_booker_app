@@ -1,6 +1,6 @@
 import React from 'react';
 import { useReducer, useEffect } from 'react';
-import { SessionPayload } from '../interfaces';
+
 import AuthContext from './AuthContext';
 import authReducer from './authReducer';
 import { SET_SESSION, RESET_SESSION } from './authActions';
@@ -13,8 +13,9 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   /// check if the session exist and set the state acordingly
-  const { data, loading } = useQuery(GET_USER_SESSION);
+  const { data } = useQuery(GET_USER_SESSION);
   const initialState = {
+    loading:true,
     user: null,
   };
   const [state, dispatch] = useReducer(authReducer, initialState);
@@ -30,13 +31,13 @@ export default function AuthProvider({
 
     dispatch({
       type: SET_SESSION,
-      payload: { user: userData },
+      payload: { loading:false,user: userData },
     });
   };
   const resetSession = () => {
     dispatch({
       type: RESET_SESSION,
-      payload: {},
+      payload: null,
     });
   };
 
@@ -49,7 +50,6 @@ export default function AuthProvider({
   return (
     <AuthContext.Provider
       value={{
-        loading: loading,
         session: state,
         resetSession,
         setSession,

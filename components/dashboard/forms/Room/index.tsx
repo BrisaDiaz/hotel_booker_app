@@ -29,9 +29,22 @@ const  [resetCount, setResetCount] = React.useState(0)
     handleSubmit,
     setValue,
       setError,
+      getValues,
 clearErrors,
+formState,
     formState: { errors },
   } = useForm({ mode: 'onChange' });
+
+React.useEffect(() => {
+    if(!formState.isValidating) return 
+if(!getValues('description')){
+setError('description',{
+  type:'required',
+  message:'A description is required'
+})}else{
+clearErrors('description');
+}
+}, [formState.isValidating])
 
   const submitMiddleware = (data: any) => {
     const pickedBedQuantities = bedTypes

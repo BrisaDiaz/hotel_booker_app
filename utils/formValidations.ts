@@ -40,7 +40,7 @@ const telephone = {
   required: 'Telephone is required.',
 
   pattern: {
-    value: /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,
+    value: /^(\+\d{1,2}\s)?\(?\d{2,3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,
     message: 'Invalid format +xx (xxx) xxx-xxxx.',
   },
 };

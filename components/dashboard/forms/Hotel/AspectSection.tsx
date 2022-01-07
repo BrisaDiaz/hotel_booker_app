@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-import InputAdornment from '@mui/material/InputAdornment';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
-import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { styles } from '@/components/dashboard/forms/styles';
-;
+import FileInput from '@/components/FileInput'
 export default function AspectSection({
   register,
   errors,
@@ -60,57 +57,42 @@ React.useEffect(() => {
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
         Aspect
       </Typography>
-      <Grid container spacing={{ sm: 2 }} alignItems="center">
+     <Grid container spacing={{ sm: 2 }} alignItems="center">
         <Grid item xs={12} sm={6}>
-          <TextField
-            id="frame-image"
+          <FileInput 
             label={
               errors['frameImage']?.message
                 ? errors['frameImage'].message
                 : 'Facade image'
             }
-            type="file"
-            error={errors['frameImage']?.message ? true : false}
-            {...register('frameImage', {
+           error={errors['frameImage']?.message ? true : false}
+           sx={styles.textField}
+           onChange={(e)=>handleOnChange(e)}
+           register={register('frameImage', {
               required: 'The facade image is required',
-            })}
-            onChange={(e)=>handleOnChange(e)}
-            variant="outlined"
-            sx={styles.textField}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <FileUploadOutlinedIcon />
-                </InputAdornment>
-              ),
-            }}
+            })
+           }
           />
+       
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            id="interior-image"
+<FileInput 
             label={
-              errors['interiorImage']
+              errors['interiorImage']?.message
                 ? errors['interiorImage'].message
                 : 'Interior image'
             }
-            type="file"
-            error={errors['interiorImage'] ? true : false}
-            {...register('interiorImage', {
-              required: 'The interior image is required',
-            })}
-      
-            onChange={(e)=>handleOnChange(e)}
-            variant="outlined"
-            sx={styles.textField}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <FileUploadOutlinedIcon />
-                </InputAdornment>
-              ),
-            }}
+           error={errors['interiorImage']?.message ? true : false}
+           sx={styles.textField}
+           onChange={(e)=>handleOnChange(e)}
+           register={register('interiorImage', {
+              required: 'The facade image is required',
+            })
+           }
           />
+          
+
+       
         </Grid>
       </Grid>
       <Grid container spacing={2} alignItems="center" sx={{ mt: 0, mb: 2 }}>

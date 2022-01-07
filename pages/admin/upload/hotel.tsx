@@ -99,9 +99,12 @@ const HotelUploadPage: any = ({
     }
   };
   
- if (authContext.loading) return <Backdrop loading={true} />;
 
-  if (!authContext.session.user) return router.push('/signin');
+React.useEffect(() => {
+if (!authContext.session.loading && !authContext.session.user)  router.push('/signin');
+}, [authContext])
+
+ if (authContext.session.loading) return <Backdrop loading={true} />;
   return (
     <div>
       <Head>

@@ -32,17 +32,30 @@ const  [resetCount, setResetCount] = React.useState(0)
     handleSubmit,
     setError,
     clearErrors,
+    getValues,
+     formState,
     formState: { errors },
   } = useForm({ mode: 'onChange' });
-
-  const submitMiddleware = async (data: any, e: any) => {
-    e.preventDefault();
-    //// check manualy after submit 
-if(!data.policiesAndRules)return setError('policiesAndRules',{
+React.useEffect(() => {
+  if(!formState.isValidating) return 
+  if(!getValues('policiesAndRules') ){
+ setError('policiesAndRules',{
   type:'required',
   message:'The policies and rules are required'
-})
-clearErrors('policiesAndRules')
+})}else{
+  clearErrors('policiesAndRules');
+}
+if(!getValues('description')){
+setError('description',{
+  type:'required',
+  message:'A description is required'
+})}else{
+clearErrors('description');
+}
+}, [formState.isValidating])
+  const submitMiddleware = async (data: any, e: any) => {
+    e.preventDefault();
+  
     const hotelVariables = {
       name: data.name,
       telephone: data.telephone,

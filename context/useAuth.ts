@@ -10,10 +10,11 @@ export function useAuth(): {
     role: 'ADMIN' | 'USER';
   }) => void,
   resetSession: () => void,
-  loading: boolean;
+ 
   session:
     | SessionPayload
     | {
+      loading:boolean;
         user: null;
       };
 } {

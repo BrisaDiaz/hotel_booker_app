@@ -3,9 +3,9 @@ import { createContext } from 'react';
 
 const AuthContext = createContext({
   session: {
+    loading:true,
     user: null,
   },
-  loading: true,
   setSession(user: {
     id: string;
     firstName: string;

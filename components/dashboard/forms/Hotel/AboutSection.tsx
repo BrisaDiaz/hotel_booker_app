@@ -8,7 +8,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import { styles } from '@/components/dashboard/forms/styles';
-
+import TextEditor from '@/components/TextEditor'
 export default function AboutSection({
   register,
   errors,
@@ -28,6 +28,10 @@ export default function AboutSection({
   const [categorySelected, setCategorieSelected] = useState<string>(
     defaultData?.category || hotelCategories[0]?.name
   );
+    const [description, setDescription] = React.useState<string>(defaultData? defaultData.description:'')
+const handlePolicies =(text:string)=>{
+setDescription(text)
+}
   const handleCategoryField = (event: SelectChangeEvent) => {
     setCategorieSelected(event.target.value as string);
   };
@@ -104,22 +108,20 @@ export default function AboutSection({
           </FormControl>
         </Grid>
         
-            <Grid item xs={12}>
-            <TextField
-        id="description"
-        multiline
-        {...register('description', {
-          required: 'A description is require',
-        })}
-        defaultValue={defaultData?.description || ''}
-        rows={8}
-        label={
-          errors['description'] ? errors['description'].message : 'Description'
-        }
-        error={errors['description'] ? true : false}
-        variant="outlined"
-        sx={styles.textField}
-      />
+            <Grid item xs={12} sx={{mt:1}}>
+      <input type="hidden" value={description} {...register('description',{
+        require:'A description is required'
+      })}/>
+   
+      <TextEditor 
+        defaultData={defaultData ?defaultData.description:''}
+        error={errors['description']? errors['description'].message:''}
+        onChange= {(text:string)=> {handlePolicies(text)}}
+      placeholder={
+          errors['description']
+            ? errors['description'].message
+            : 'Description'
+        }/>
       </Grid>
       
       </Grid>

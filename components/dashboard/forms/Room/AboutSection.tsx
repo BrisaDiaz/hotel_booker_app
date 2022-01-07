@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import { styles } from '@/components/dashboard/forms/styles';
-
+import TextEditor from '@/components/TextEditor'
 export default function AboutSection({
   register,
   errors,
@@ -33,6 +33,10 @@ export default function AboutSection({
   const [categorySelected, setCategorieSelected] = useState<string>(
    defaultData?defaultData.category: roomCategories[0].name
   );
+    const [description, setDescription] = React.useState<string>(defaultData? defaultData.description:'')
+const handlePolicies =(text:string)=>{
+setDescription(text)
+}
   const handleCategoryField = (event: SelectChangeEvent) => {
     setCategorieSelected(event.target.value as string);
   };
@@ -89,21 +93,20 @@ export default function AboutSection({
         <input type="hidden" {...register('category')} />
       </Grid>
 
-      <TextField
-                defaultValue={defaultData? defaultData.description:''}
-        id="description"
-        multiline
-        {...register('description', {
-          required: 'A description is require',
-        })}
-        rows={10}
-        label={
-          errors['description'] ? errors['description'].message : 'Description'
-        }
-        error={errors['description'] ? true : false}
-        variant="outlined"
-        sx={styles.textField}
-      />
+       
+            <Grid item xs={12} sx={{mt:1}}>
+      <input type="hidden" value={description} {...register('description')}/>
+   
+      <TextEditor 
+        defaultData={defaultData ?defaultData.description:''}
+        error={errors['description']? errors['description'].message:''}
+        onChange= {(text:string)=> {handlePolicies(text)}}
+      placeholder={
+          errors['description']
+            ? errors['description'].message
+            : 'Description'
+        }/>
+      </Grid>
       {children}
     </Box>
   );
