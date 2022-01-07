@@ -5,24 +5,31 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { styles } from '@/components/dashboard/forms/styles';
+import TextEditor from '@/components/TextEditor'
 export default function PoliciesSection({
   register,
   errors,
   defaultData,
   children,
+
 }: {
   children?: React.ReactNode;
   register: (fieldName:string,config?:any)=>void;
+
   errors: any;
   defaultData?: any;
 }) {
+  const [policies, setPolicies] = React.useState<string>(defaultData? defaultData.policiesAndRules:'')
+const handlePolicies =(text:string)=>{
+setPolicies(text)
+}
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
         Policies and Rules
       </Typography>
 
-      <Grid container spacing={{ sm: 2 }} alignItems="center">
+      <Grid container spacing={2} alignItems="center" sx={ { mb:1}}>
         <Grid item xs={6}>
           <TextField
             id="checkInHour"
@@ -58,24 +65,17 @@ export default function PoliciesSection({
           />
         </Grid>
       </Grid>
-
-      <TextField
-        id="policies"
-        {...register('policiesAndRules', {
-          required: 'The policies and rules are required',
-        })}
-        label={
+<input type="hidden" value={policies} {...register('policiesAndRules')}/>
+   
+      <TextEditor 
+        defaultData={defaultData ?defaultData.policiesAndRules:''}
+        error={errors['policiesAndRules']? errors['policiesAndRules'].message:''}
+        onChange= {(text:string)=> {handlePolicies(text)}}
+      placeholder={
           errors['policiesAndRules']
             ? errors['policiesAndRules'].message
             : 'Policies and Rules'
-        }
-        error={errors['policiesAndRules'] && true}
-        multiline
-        rows={8}
-        defaultValue={defaultData?.policiesAndRules || ''}
-        variant="outlined"
-        sx={styles.textField}
-      />
+        }/>
       {children}
     </Grid>
   );

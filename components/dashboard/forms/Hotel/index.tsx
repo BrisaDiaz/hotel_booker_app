@@ -37,7 +37,12 @@ const  [resetCount, setResetCount] = React.useState(0)
 
   const submitMiddleware = async (data: any, e: any) => {
     e.preventDefault();
-
+    //// check manualy after submit 
+if(!data.policiesAndRules)return setError('policiesAndRules',{
+  type:'required',
+  message:'The policies and rules are required'
+})
+clearErrors('policiesAndRules')
     const hotelVariables = {
       name: data.name,
       telephone: data.telephone,
@@ -101,7 +106,7 @@ const  [resetCount, setResetCount] = React.useState(0)
         activities={activities}
         facilities={facilities}
       />
-      <PoliciesSection register={register} errors={errors} />
+      <PoliciesSection register={register} errors={errors}     />
       <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors} resetCount={resetCount}/>
 
       <FormBottons onAbort={()=>setResetCount(resetCount+1)}/>

@@ -61,6 +61,11 @@ export default function MultilineTextFields(props: {
     let variables: { [key: string]: number | string | File };
 
     if (toEditSection === 'policies') {
+      if(!data.policiesAndRules)return setError('policiesAndRules',{
+  type:'required',
+  message:'The policies and rules are required'
+})
+clearErrors('policiesAndRules')
       variables = {
         checkInHour: data?.checkInHour,
         checkOutHour: data?.checkOutHour,
@@ -192,6 +197,7 @@ export default function MultilineTextFields(props: {
         )}
         {toEditSection === 'policies' && (
           <PoliciesSection
+
             register={register}
             errors={errors}
             defaultData={hotel}
