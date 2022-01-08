@@ -65,8 +65,8 @@ async function seed() {
       })),
     });
     await prisma.language.createMany({
-      data: languages.map((type) => ({
-        name: type,
+      data: languages.map((language) => ({
+        name: language.name,
       })),
     });
         await prisma.activity.createMany({
