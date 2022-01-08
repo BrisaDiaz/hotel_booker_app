@@ -89,6 +89,7 @@ clearErrors('description');
         errors={errors}
         setValue={setValue}
         roomCategories={roomCategories}
+        resetCount={resetCount}
       />
       <PriceSection register={register} errors={errors} sourceForm="roomForm" />
       <CapacitySection

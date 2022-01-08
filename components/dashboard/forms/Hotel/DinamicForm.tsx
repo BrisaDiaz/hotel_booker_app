@@ -206,6 +206,7 @@ clearErrors('description')
             register={register}
             errors={errors}
             defaultData={hotel}
+     
           >
             <FormBottons onAbort={abortHandler} />
           </PoliciesSection>

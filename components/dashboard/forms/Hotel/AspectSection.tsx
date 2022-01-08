@@ -60,6 +60,7 @@ React.useEffect(() => {
      <Grid container spacing={{ sm: 2 }} alignItems="center">
         <Grid item xs={12} sm={6}>
           <FileInput 
+                resetCount={resetCount}
             label={
               errors['frameImage']?.message
                 ? errors['frameImage'].message
@@ -77,6 +78,7 @@ React.useEffect(() => {
         </Grid>
         <Grid item xs={12} sm={6}>
 <FileInput 
+            resetCount={resetCount}
             label={
               errors['interiorImage']?.message
                 ? errors['interiorImage'].message

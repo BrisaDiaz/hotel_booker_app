@@ -18,11 +18,16 @@ const { stateToHTML}= require('draft-js-export-html' )
 type blockStyles= 'header-four'|'blockquote'|'unordered-list-item'|'ordered-list-item'
 type InlineStyles= 'BOLD'|'ITALIC'|'UNDERLINE' 
 
-export default function MyEditor({placeholder,onChange,error,defaultData}:{placeholder?:string,defaultData?:string,error:string,onChange:(text:string)=>void}) {
+export default function MyEditor({placeholder,onChange,error,defaultData,resetCount}:{placeholder?:string,defaultData?:string,error:string,onChange:(text:string)=>void,resetCount?:number}) {
 
   const [editorState, setEditorState] = React.useState<EditorState>(() =>
     EditorState.createEmpty()
   );
+    ////reset text when reset is trigger
+  React.useEffect(() => {
+if(resetCount)  setEditorState(EditorState.createEmpty())
+  }, [resetCount])
+
 const [isFocus, setIsFocus] = React.useState<boolean>(false)
 
 

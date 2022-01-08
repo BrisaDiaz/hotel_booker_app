@@ -106,7 +106,7 @@ clearErrors('description');
         setValue={setValue}
         hotelCategories={hotelCategories}
         errors={errors}
-
+  resetCount={resetCount}
       />
       <PriceSection register={register} errors={errors} />
       <ContactSection register={register} errors={errors} />
@@ -120,7 +120,7 @@ clearErrors('description');
         facilities={facilities}
       />
 
-      <PoliciesSection register={register} errors={errors}   setValue={setValue}   />
+      <PoliciesSection register={register} errors={errors}   setValue={setValue}   resetCount={resetCount}/>
       <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors} resetCount={resetCount}/>
 
       <FormBottons onAbort={()=>setResetCount(resetCount+1)}/>

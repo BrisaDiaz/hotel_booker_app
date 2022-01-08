@@ -19,6 +19,7 @@ export default function AboutSection({
   setValue,
   children,
   defaultData,
+  resetCount
 }: {
   defaultData?: RoomModel;
   children?: React.ReactNode;
@@ -29,6 +30,7 @@ export default function AboutSection({
     id: number;
     name: string;
   }>;
+      resetCount?:number
 }) {
   const [categorySelected, setCategorieSelected] = useState<string>(
    defaultData?defaultData.category: roomCategories[0].name
@@ -98,6 +100,7 @@ setValue('description',text)
       <input type="hidden"  {...register('description')}/>
    
       <TextEditor 
+        resetCount={resetCount}
         defaultData={defaultData ?defaultData.description:''}
         error={errors['description']? errors['description'].message:''}
         onChange= {handlePolicies}

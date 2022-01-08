@@ -16,10 +16,11 @@ export default function AboutSection({
   hotelCategories,
   defaultData,
   children,
+  resetCount
 }: {
   children?: React.ReactNode;
   register:  (fieldName:string,config?:any)=>void;
-
+resetCount?:number;
   setValue: (fieldName:string,value:any)=>void;
   errors: any;
   defaultData?: any;
@@ -114,6 +115,7 @@ setValue('description',text)
       })}/>
    
       <TextEditor 
+        resetCount={resetCount}
         defaultData={defaultData ?defaultData.description:''}
         error={errors['description']? errors['description'].message:''}
         onChange= {handlePolicies}

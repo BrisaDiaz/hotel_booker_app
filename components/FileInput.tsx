@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 
 
-export default function FileInput({label,sx, onChange,error,register}:{label?:string,sx:any ,onChange?:(event:any)=>void,error?:boolean,register:any}){
+export default function FileInput({label,sx, onChange,error,register,resetCount}:{label?:string,sx:any ,onChange?:(event:any)=>void,error?:boolean,register:any,resetCount?:number}){
   const [file, setFile] = useState<File|null>(null)
 
   const handleChange=(e:any)=>{
@@ -15,6 +15,11 @@ export default function FileInput({label,sx, onChange,error,register}:{label?:st
     setFile(e.target.files[0])
      onChange && onChange(e)
   }
+  ////reset file when reset is trigger
+  React.useEffect(() => {
+if(resetCount)  setFile(null)
+  }, [resetCount])
+
   return(
     <Box sx={{position:'relative'}}>
 {file && <Box sx={{position:'absolute',left:'50px',bottom:'23px',display:'flex'}}>

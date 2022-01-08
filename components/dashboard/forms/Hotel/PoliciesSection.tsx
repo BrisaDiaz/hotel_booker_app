@@ -11,13 +11,15 @@ export default function PoliciesSection({
   errors,
   defaultData,
   children,
-setValue
+setValue,
+  resetCount
 }: {
   children?: React.ReactNode;
   register: (fieldName:string,config?:any)=>void;
   setValue: (fieldName:string,value:any)=>void;
   errors: any;
   defaultData?: any;
+  resetCount?:number
 }) {
 
 const handlePolicies =(text:string)=>{
@@ -33,6 +35,7 @@ setValue('policiesAndRules',text)
       <Grid container spacing={2} alignItems="center" sx={ { mb:1}}>
         <Grid item xs={6}>
           <TextField
+          
             id="checkInHour"
             label="Checkin hour"
             type="time"
@@ -50,6 +53,7 @@ setValue('policiesAndRules',text)
         </Grid>
         <Grid item xs={6}>
           <TextField
+        
             variant="outlined"
             id="checkOutHour"
             {...register('checkOutHour')}
@@ -74,6 +78,7 @@ setValue('policiesAndRules',text)
         defaultData={defaultData ?defaultData.policiesAndRules:''}
         error={errors['policiesAndRules']? errors['policiesAndRules'].message:''}
         onChange= {handlePolicies}
+          resetCount={resetCount}
       placeholder={
           errors['policiesAndRules']
             ? errors['policiesAndRules'].message
