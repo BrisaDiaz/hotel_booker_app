@@ -28,9 +28,9 @@ export default function AboutSection({
   const [categorySelected, setCategorieSelected] = useState<string>(
     defaultData?.category || hotelCategories[0]?.name
   );
-    const [description, setDescription] = React.useState<string>(defaultData? defaultData.description:'')
+
 const handlePolicies =(text:string)=>{
-setDescription(text)
+setValue('description',text)
 }
   const handleCategoryField = (event: SelectChangeEvent) => {
     setCategorieSelected(event.target.value as string);
@@ -109,14 +109,14 @@ setDescription(text)
         </Grid>
         
             <Grid item xs={12} sx={{mt:1}}>
-      <input type="hidden" value={description} {...register('description',{
+      <input type="hidden" {...register('description',{
         require:'A description is required'
       })}/>
    
       <TextEditor 
         defaultData={defaultData ?defaultData.description:''}
         error={errors['description']? errors['description'].message:''}
-        onChange= {(text:string)=> {handlePolicies(text)}}
+        onChange= {handlePolicies}
       placeholder={
           errors['description']
             ? errors['description'].message

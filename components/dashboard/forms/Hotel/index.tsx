@@ -119,7 +119,8 @@ clearErrors('description');
         activities={activities}
         facilities={facilities}
       />
-      <PoliciesSection register={register} errors={errors}     />
+
+      <PoliciesSection register={register} errors={errors}   setValue={setValue}   />
       <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors} resetCount={resetCount}/>
 
       <FormBottons onAbort={()=>setResetCount(resetCount+1)}/>

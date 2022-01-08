@@ -87,17 +87,24 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
             >
               {hotel.name}
             </Typography>
-
-            <Typography
-              variant="body2"
+<Box sx={{fontSize:'14px'}}  />
+            <Box
+            
               sx={{
+                fontSize:'14px',
                 my: 1,
                 fontWeight: 500,
                 opacity: 0.75,
+                maxHeight:'50px',
+                'h4':{ 
+                  mb:'inherit'
+                }
+              
               }}
-            >
-              {hotel.description.substring(0, 120).concat('...')}
-            </Typography>
+              dangerouslySetInnerHTML={{__html: hotel.description.substring(0, 120).concat('...')}}
+              />
+           
+            
             <Typography
               variant="h6"
               sx={{

@@ -53,7 +53,7 @@ const styles = {
     rowGap: 0,
     flexWrap: 'wrap',
     fontStyle:'inherit',
-    background:'#e6e6e6'
+    background:'#f1f3f9'
   },
 } as const;
 const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
@@ -239,12 +239,12 @@ mb:0.5
                   title: 'About Us',
                   Content: (
                     <Box sx={{ margin: {xs:'24px 6px' ,md:'30px 6px'}  }}>
-                      <Typography
-                        sx={{ whiteSpace: 'pre-line',fontSize:{xs:'14px',md:'16px'}   }}
-                        component="pre"
-                      >
-                        {hotel.description}
-                      </Typography>
+                      <Box
+                        sx={{ fontSize:{xs:'14px',md:'16px'}   }}
+                  dangerouslySetInnerHTML={{__html: hotel.description}}
+                      />
+                  
+                     
                     </Box>
                   ),
                 },
@@ -252,13 +252,11 @@ mb:0.5
                   title: 'Policies and Rules',
                   Content: (
                     <Box sx={{ margin: {xs:'24px 6px' ,md:'30px 6px'}  }}>
-                      <Typography
-     
-                        sx={{ whiteSpace: 'pre-line',fontSize:{xs:'14px',md:'16px'} }}
-                        component="pre"
-                      >
-                        {hotel.policiesAndRules}
-                      </Typography>
+                      <Box
+                        sx={{ fontSize:{xs:'14px',md:'16px'}   }}
+                  dangerouslySetInnerHTML={{__html: hotel.policiesAndRules}}
+                      />
+                 
                     </Box>
                   ),
                 },
@@ -363,7 +361,7 @@ mb:0.5
               sx={{
                 fontWeight: 700,
                 color: 'primary.main',
-                  background:'#e6e6e6',
+                  background:'##f1f3f9',
                   my: 1,
                 padding: '10px 15px ',
               }}

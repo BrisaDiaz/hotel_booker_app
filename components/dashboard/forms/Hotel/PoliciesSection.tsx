@@ -11,17 +11,17 @@ export default function PoliciesSection({
   errors,
   defaultData,
   children,
-
+setValue
 }: {
   children?: React.ReactNode;
   register: (fieldName:string,config?:any)=>void;
-
+  setValue: (fieldName:string,value:any)=>void;
   errors: any;
   defaultData?: any;
 }) {
-  const [policies, setPolicies] = React.useState<string>(defaultData? defaultData.policiesAndRules:'')
+
 const handlePolicies =(text:string)=>{
-setPolicies(text)
+setValue('policiesAndRules',text)
 }
 
   return (
@@ -66,14 +66,14 @@ setPolicies(text)
           />
         </Grid>
       </Grid>
-<input type="hidden" value={policies} {...register('policiesAndRules',{
+<input type="hidden"  {...register('policiesAndRules',{
   require:'The policies and rules are required'
 })}/>
    
       <TextEditor 
         defaultData={defaultData ?defaultData.policiesAndRules:''}
         error={errors['policiesAndRules']? errors['policiesAndRules'].message:''}
-        onChange= {(text:string)=> {handlePolicies(text)}}
+        onChange= {handlePolicies}
       placeholder={
           errors['policiesAndRules']
             ? errors['policiesAndRules'].message

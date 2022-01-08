@@ -111,7 +111,7 @@ export default function FeaturesSection({
 
       <Grid container spacing={{ sm: 2 }} alignItems="center" sx={{ mb: 1.5 }}>
         <Grid item xs={12} sm={6}>
-          <FormGroup sx={{ px: 1 ,fontSize:'14px'}}>
+          <FormGroup sx={{ px: 1 ,'& span':{ fontSize:'14px'}}} >
             <FormControlLabel
          
               control={
@@ -159,7 +159,7 @@ export default function FeaturesSection({
           </FormGroup>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <FormGroup sx={{ px: 1 ,fontSize:'14px'}}>
+          <FormGroup sx={{ px: 1 ,'& span':{ fontSize:'14px'}}}>
             <FormControlLabel
      
               control={

@@ -315,12 +315,11 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             </Box>
           )}
         </Box>
-        <Typography
-          component="pre"
-          sx={{ margin: ' 10px 10px 20px ', whiteSpace: 'pre-line' ,        fontSize:{xs:'14px',md:'16px'}}}
-        >
-          {room.description}
-        </Typography>
+          <Box
+                        sx={{ margin: ' 10px 10px 20px ', fontSize:{xs:'14px',md:'16px'}   }}
+                  dangerouslySetInnerHTML={{__html: room.description}}
+                      />
+        
 
         <Box sx={{ display: 'flex' }}>
           <ConsultModal onSubmit={handleConsutlSubmit}>

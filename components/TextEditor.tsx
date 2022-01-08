@@ -31,10 +31,7 @@ const handleFocus = ()=>{
 }
 const handleBlur= ()=>{
   setIsFocus(false)
-   const html = stateToHTML(editorState.getCurrentContent());
-   
-    onChange(JSON.stringify(html))
-  
+
 }
   const onEditorChange = (editorState:EditorState )=>{
     
@@ -122,9 +119,14 @@ React.useEffect(() => {
  setEditorState(defaultState)
  }
 }, [defaultData])
+
+React.useEffect(() => {
+  const html = stateToHTML(editorState.getCurrentContent());
+  onChange(html)
+}, [editorState])
   return (
     <>
-    <Box sx={{display:'flex',border: isFocus? '1px solid rgba(0, 0, 0, 0.6)' : '1px solid rgba(0, 0, 0, 0.3)' ,borderBottom:'transparent'}} >
+    <Box sx={{display:'flex',border:error? ' 1px solid #d32f2f': isFocus? '1px solid rgba(0, 0, 0, 0.6)' : '1px solid rgba(0, 0, 0, 0.3)'   ,borderBottom:'transparent'}} >
 
 
       {INLINE_STYLES.map(inlineStyle=> 

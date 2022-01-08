@@ -202,7 +202,7 @@ clearErrors('description')
         )}
         {toEditSection === 'policies' && (
           <PoliciesSection
-
+            setValue={setValue}  
             register={register}
             errors={errors}
             defaultData={hotel}

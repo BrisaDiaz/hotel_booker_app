@@ -89,12 +89,12 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
 
-      backgroundColor: theme.palette.grey[100],
+      backgroundColor: '#f1f3f9',
       marginBottom: theme.spacing(2),
       padding: theme.spacing(1),
       paddingTop: theme.spacing(0.5),
       paddingBottom: theme.spacing(0.5),
-      opacity: 0.9,
+   
       '& > *': {
         fontWeight: 600,
       },
@@ -243,9 +243,10 @@ function TransitionsModal(props: ComponentProps) {
                     >
                       Description
                     </Typography>
-                    <Typography component="pre" className={classes.paragraph}>
-                      {hotel.description}
-                    </Typography>
+                   
+                    
+                      <Box sx={{fontSize:'14px'}}  dangerouslySetInnerHTML={{__html: hotel.description}}/>
+                    
                   </Box>
                 </Box>
 
@@ -285,9 +286,9 @@ function TransitionsModal(props: ComponentProps) {
                     >
                       Policies
                     </Typography>
-                    <Typography component="pre" className={classes.paragraph}>
-                      {hotel.policiesAndRules}
-                    </Typography>
+                    <Box sx={{fontSize:'14px'}} dangerouslySetInnerHTML={{__html: hotel.policiesAndRules}}/>
+                    
+                   
                   </Box>
                 </Box>
                 <Box className={classes.titleBox}>

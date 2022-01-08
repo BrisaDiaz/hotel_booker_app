@@ -70,6 +70,7 @@ const HotelUploadPage: any = ({
 
   const onSubmit = async (hotelVariables: HotelVariables) => {
     if (!authContext.session.user) return router.push('/signin');
+
     const toUploadImages = [
       hotelVariables.interiorImage,
       hotelVariables.frameImage,
@@ -78,6 +79,7 @@ const HotelUploadPage: any = ({
     setIsLoading(true);
 
     try {
+
       const images = await uploadToCloudinary(toUploadImages);
       if (!images.length) {
         setIsLoading(false);
@@ -89,7 +91,7 @@ const HotelUploadPage: any = ({
           ...hotelVariables,
           interiorImage: images[0].secure_url,
           frameImage: images[1].secure_url,
-          userId: authContext.session?.user.id,
+          userId: authContext.session.user.id,
         },
       });
     } catch (err: any) {
