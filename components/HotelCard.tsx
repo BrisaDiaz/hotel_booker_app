@@ -9,9 +9,17 @@ import Box from '@mui/material/Box';
 import { CardActionArea } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import type { Hotel } from '@/interfaces/index';
-import useMediaQuery from '@mui/material/useMediaQuery';
-export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
-  const matchesSize = useMediaQuery('(min-width:700px)');
+
+export default function MultiActionAreaCard({ hotel ,index}: { hotel: Hotel,index:number }) {
+
+  const [cardImage, setCardImage] = React.useState(index%2  === 0 ?  hotel.frameImage: hotel.interiorImage)
+  
+
+
+setTimeout(() => {
+  setCardImage(cardImage ===hotel.frameImage ? hotel.interiorImage : hotel.frameImage)
+}, 3000);
+
 
   return (
     <Box component={Link} href={`/hotel/${hotel.id}`} passHref>
@@ -47,14 +55,20 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
             sx={{
               maxWidth: { sm: '250px' },
               minHeight: { sm: '100%' },
+              maxHeight:'220px',
               width: { sm: '35%' },
               overflow: 'hidden',
+              position:'relative'
             }}
           >
             <CardMedia
               sx={{
+             
+       
                 overflow: 'hidden',
                 objectFit: 'cover',
+             display: hotel.frameImage===cardImage? 'block':'none',
+    opacity: hotel.frameImage===cardImage? 1:0,
                 transition: 'ease-in-out 0.5s',
                 '&:hover': {
                   transform: 'scale(1.15)',
@@ -63,6 +77,24 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
               }}
               component="img"
               image={hotel.frameImage}
+              alt={hotel.name}
+            />
+            <CardMedia
+              sx={{
+
+                overflow: 'hidden',
+                objectFit: 'cover',
+                 display: hotel.interiorImage===cardImage? 'block':'none',
+                 opacity: hotel.interiorImage===cardImage? 1:0,
+                transition: 'ease-in-out 0.5s',
+              
+                '&:hover': {
+                  transform: 'scale(1.15)',
+                },
+                height: { xs: 250, sm: 220 },
+              }}
+              component="img"
+              image={hotel.interiorImage}
               alt={hotel.name}
             />
           </Box>

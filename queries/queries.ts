@@ -100,6 +100,7 @@ export const GET_HOTELS = gql`
         lowestPrice
         taxesAndCharges
         frameImage
+        interiorImage
         description
         address {
           id
