@@ -121,7 +121,7 @@ export default function HotelCard({
                   alignSelf: 'center',
                 }}
               >
-                Taxes USD ${hotel.taxesAndCharges}
+             {hotel.taxesAndCharges ?`Taxes $${hotel.taxesAndCharges}`:'Taxes Included' }   
               </Typography>
             </Box>
           </CardContent>

@@ -118,7 +118,7 @@ export default function RoomCard({ room }: { room: RoomModel }) {
                     opacity: 0.8,
                   }}
                 >
-                    {room.taxesAndCharges ? `Taxes USD $ ${room.taxesAndCharges}`:'Taxes Included' } 
+                    {room.taxesAndCharges ? `Taxes $${room.taxesAndCharges}`:'Taxes Included' } 
                
                 </Typography>
               </Box>

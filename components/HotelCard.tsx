@@ -159,7 +159,7 @@ setTimeout(() => {
                 opacity: 0.8,
               }}
             >
-             {hotel.taxesAndCharges ? `Taxes USD $ ${hotel.taxesAndCharges}`:'Taxes Included' } 
+             {hotel.taxesAndCharges ? `Taxes $${hotel.taxesAndCharges}`:'Taxes Included' } 
             </Typography>
             <Box sx={{ marginTop: 'auto', display: 'flex' }}>
               <LocationOnIcon color="secondary" fontSize="small" />
