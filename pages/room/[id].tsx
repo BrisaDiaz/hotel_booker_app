@@ -281,14 +281,14 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
                
             }}
           >
-            Taxes and Charges{' '}
-            <Typography
+            {room.taxesAndCharges ? `Taxes and Charges `:'Taxes Included' } 
+         {room.taxesAndCharges ?    <Typography
               component="span"
               sx={{ fontWeight: 200, ml: 0.5,fontSize:'inherit' }}
            
             >
               USD ${room.taxesAndCharges}
-            </Typography>
+            </Typography>:null}
           </Typography>
         <Box
           component="ul"

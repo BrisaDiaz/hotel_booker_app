@@ -185,51 +185,25 @@ mb:0.5
             sx={{
             
               fontWeight: 200,
-              width: 160,
+              width: 170,
               lineHeight: 1.3,
               textAlign: 'end',
               m: { xs: '0 8px 30px auto', md: '0 8px  20px auto ' },
                
             }}
           >
-            Taxes and Charges{' '}
-            <Typography
+              {hotel.taxesAndCharges ? `Taxes and Charges `:'Taxes Included' } 
+            
+         { hotel.taxesAndCharges ?  <Typography
               component="span"
               sx={{ fontWeight: 200, ml: 0.5,fontSize:'inherit' }}
            
             >
               USD ${hotel.taxesAndCharges}
-            </Typography>
+            </Typography>:null
+            }
           </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              columnGap: '20px',
-
-              flexWrap: 'wrap',
-              mx: 1,
-            }}
-          >
-            <Box sx={styles.listItem}>
-              <AlarmIcon fontSize="small" color="primary" />
-              <Typography>
-                <Typography component="span" color="primary">
-                  Check In Hour:
-                </Typography>
-                <time> {`  ${hotel.checkInHour}`}</time>
-              </Typography>
-            </Box>
-            <Box sx={styles.listItem}>
-              <AlarmIcon fontSize="small" color="primary" />
-              <Typography>
-                <Typography component="span" color="primary">
-                  Check Out Hour:
-                </Typography>
-                <time> {`  ${hotel.checkOutHour}`}</time>
-              </Typography>
-            </Box>
-          </Box>
+         
 
           {/* HOTEL POLICIES AND RULES */}
           <Box sx={{ margin: '20px 10px' }} component="section">
@@ -263,15 +237,45 @@ mb:0.5
               ]}
             />
           </Box>
+ <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              columnGap: '20px',
 
+              flexWrap: 'wrap',
+              ml: 1,
+            }}
+          >
+            <Box sx={styles.listItem}>
+              <AlarmIcon fontSize="small" color="primary" />
+              <Typography>
+                <Typography variant="body2" component="span" color="primary">
+                  Check In Hour:
+                </Typography>
+                <time> {`  ${hotel.checkInHour}`}</time>
+              </Typography>
+            </Box>
+            <Box sx={styles.listItem}>
+              <AlarmIcon fontSize="small" color="primary" />
+              <Typography>
+                <Typography variant="body2" component="span" color="primary">
+                  Check Out Hour:
+                </Typography>
+                <time> {`  ${hotel.checkOutHour}`}</time>
+              </Typography>
+            </Box>
+          </Box>
           {/* HOTEL CHARACTERISTICS */}
 
-          <Box sx={{ mt: '20px' }} component="section">
+          <Box sx={{ mt: '20px',maxWidth:900}} component="section">
+            
             <Grid
               container
               alignItems="flex-start"
               sx={{ margin: '0 ', columnGap: '80px' }}
             >
+                 
               {characteristics.length &&
                 characteristics.map((characteristic) =>
                   characteristic.items && characteristic.items.length ? (
@@ -330,14 +334,11 @@ mb:0.5
                     </div>
                   ) : null
                 )}
-              <Box
+           <Box
                 component="ul"
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
 
-                  p: 0,
+                  pl: 1,
                 }}
               >
                 {includedFeatures.map((featureName) => (

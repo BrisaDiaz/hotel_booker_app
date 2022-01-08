@@ -97,7 +97,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
                 opacity: 0.75,
                 maxHeight:'50px',
                 'h4':{ 
-                  mb:'inherit'
+                  mt:0
                 }
               
               }}
@@ -127,7 +127,7 @@ export default function MultiActionAreaCard({ hotel }: { hotel: Hotel }) {
                 opacity: 0.8,
               }}
             >
-              Taxes USD {'$' + hotel.taxesAndCharges}
+             {hotel.taxesAndCharges ? `Taxes USD $ ${hotel.taxesAndCharges}`:'Taxes Included' } 
             </Typography>
             <Box sx={{ marginTop: 'auto', display: 'flex' }}>
               <LocationOnIcon color="secondary" fontSize="small" />

@@ -47,12 +47,16 @@ export default function BasicTabs({ data }: props) {
       <Box
         sx={{
           color: 'primary',
+          '.MuiTabs-flexContainer':{
+            borderBottom:'1px solid #646465ba'
+          }
         }}
       >
         <Tabs
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
+
         >
           {data.map((tab) => (
             <Tab key={tab.title} label={tab.title} />
