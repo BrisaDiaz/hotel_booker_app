@@ -81,6 +81,7 @@ export default function HotelCard({
             >
               <LocationOnIcon color="secondary" fontSize="small" />
               <Typography
+                title={hotel.address.holeAddress}
                 variant="body2"
                 sx={{
                   overflow: 'hidden',

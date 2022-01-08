@@ -164,6 +164,7 @@ setTimeout(() => {
             <Box sx={{ marginTop: 'auto', display: 'flex' }}>
               <LocationOnIcon color="secondary" fontSize="small" />
               <Typography
+              title={hotel.address.holeAddress}
                 variant="body2"
                 sx={{
                   overflow: 'hidden',
