@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import { CardActionArea } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import type { Hotel } from '@/interfaces/index';
-
+import currencyFixer from '@/utils/currencyFixer'
 export default function MultiActionAreaCard({ hotel ,index}: { hotel: Hotel,index:number }) {
 
   const [cardImage, setCardImage] = React.useState(index%2  === 0 ?  hotel.frameImage: hotel.interiorImage)
@@ -146,7 +146,7 @@ setTimeout(() => {
                 fontWeight: 700,
               }}
             >
-              USD {'$' + hotel.lowestPrice}
+              USD {currencyFixer(hotel.lowestPrice)}
             </Typography>
             <Typography
               variant="subtitle1"
@@ -159,7 +159,7 @@ setTimeout(() => {
                 opacity: 0.8,
               }}
             >
-             {hotel.taxesAndCharges ? `Taxes $${hotel.taxesAndCharges}`:'Taxes Included' } 
+             {hotel.taxesAndCharges ? `Taxes ${currencyFixer(hotel.taxesAndCharges)}`:'Taxes Included' } 
             </Typography>
             <Box sx={{ marginTop: 'auto', display: 'flex' }}>
               <LocationOnIcon color="secondary" fontSize="small" />

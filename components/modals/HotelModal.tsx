@@ -11,7 +11,7 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-
+import currencyFixer from '@/utils/currencyFixer'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Paper from '@mui/material/Paper';
 import ImageSlider from '@/components/ImageSlider';
@@ -306,7 +306,7 @@ function TransitionsModal(props: ComponentProps) {
                     >
                       Lowest price
                     </Typography>
-                    <Typography>USD ${hotel.lowestPrice}</Typography>
+                    <Typography>USD {currencyFixer(hotel.lowestPrice)}</Typography>
                   </Box>
                   <Box component="section">
                     <Box className={classes.rowField}>
@@ -317,7 +317,7 @@ function TransitionsModal(props: ComponentProps) {
                       >
                         Taxes and Charges
                       </Typography>
-                      <Typography>USD ${hotel.taxesAndCharges}</Typography>
+                      <Typography>USD {currencyFixer(hotel.taxesAndCharges)}</Typography>
                     </Box>
                   </Box>
                 </Box>

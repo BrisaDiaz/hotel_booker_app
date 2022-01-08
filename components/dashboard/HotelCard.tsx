@@ -8,7 +8,7 @@ import { CardActionArea } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
-
+import currencyFixer from '@/utils/currencyFixer'
 function EditButtom({ onEdit }: { onEdit: ()=>void }) {
   return (
     <Box
@@ -109,19 +109,19 @@ export default function HotelCard({
                 variant="h6"
                 sx={{ fontWeight: 700, minWidth: 'max-content' }}
               >
-                USD ${hotel.lowestPrice}
+                USD {currencyFixer(hotel.lowestPrice)}
               </Typography>
               <Typography
                 variant="subtitle2"
                 sx={{
-                  width: 120,
+       
                   lineHeight: 1.3,
                   fontWeight: 200,
                   opacity: 0.8,
                   alignSelf: 'center',
                 }}
               >
-             {hotel.taxesAndCharges ?`Taxes $${hotel.taxesAndCharges}`:'Taxes Included' }   
+             {hotel.taxesAndCharges ?`Taxes ${currencyFixer(hotel.taxesAndCharges)}`:'Taxes Included' }   
               </Typography>
             </Box>
           </CardContent>

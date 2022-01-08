@@ -10,7 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 
 import CloseButton from '@/components/modals/CloseButton';
-
+import currencyFixer from '@/utils/currencyFixer'
 import { styles } from './styles';
 import { Booking } from '@/interfaces/index';
 export default function BasicModal({
@@ -153,13 +153,13 @@ export default function BasicModal({
           <Box component="li" sx={styles.list}>
             <Typography sx={styles.leyend}>Current Const:</Typography>
             <Typography component="span">
-              USD ${bookingData?.totalCost}
+               ${currencyFixer(bookingData?.totalCost)}
             </Typography>
           </Box>
           <Box component="li" sx={styles.list}>
             <Typography sx={styles.leyend}>Cost after charge:</Typography>
             <Typography component="span">
-              USD ${bookingData?.totalCost + cancelationFee}
+               ${currencyFixer(bookingData?.totalCost + cancelationFee)}
             </Typography>
           </Box>
         </Box>

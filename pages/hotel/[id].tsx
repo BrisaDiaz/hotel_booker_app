@@ -21,6 +21,7 @@ import RoomServiceIcon from '@mui/icons-material/RoomService';
 import HikingIcon from '@mui/icons-material/Hiking';
 import LanguageIcon from '@mui/icons-material/Language';
 import RoomCard from '@/components/RoomCard';
+import currencyFixer from '@/utils/currencyFixer'
 import { useTheme } from '@mui/material/styles';
 import { Hotel } from '@/interfaces/index';
 const styles = {
@@ -175,7 +176,7 @@ mb:0.5
               component="span"
               sx={{ color: 'primary.main', fontWeight: 700, mb: 1 }}
             >
-              USD ${hotel.lowestPrice}
+              USD {currencyFixer(hotel.lowestPrice)}
             </Typography>
           </Typography>
 
@@ -199,7 +200,7 @@ mb:0.5
               sx={{ fontWeight: 200, ml: 0.5,fontSize:'inherit' }}
            
             >
-              USD ${hotel.taxesAndCharges}
+              USD {currencyFixer(hotel.taxesAndCharges)}
             </Typography>:null
             }
           </Typography>

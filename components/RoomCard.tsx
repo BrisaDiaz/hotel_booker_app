@@ -7,7 +7,7 @@ import { CardActionArea } from '@mui/material';
 import Box from '@mui/material/Box';
 import { RoomModel } from '@/interfaces/index';
 import RoomBedsUI from './RoomBedsUI';
-
+import currencyFixer from '@/utils/currencyFixer'
 export default function RoomCard({ room }: { room: RoomModel }) {
   return (
     <>
@@ -107,7 +107,7 @@ export default function RoomCard({ room }: { room: RoomModel }) {
                     opacity: 0.8,
                   }}
                 >
-                  USD ${room.lowestPrice}
+                  USD {currencyFixer(room.lowestPrice)}
                 </Typography>
                 <Typography
                   variant="subtitle1"
@@ -118,7 +118,7 @@ export default function RoomCard({ room }: { room: RoomModel }) {
                     opacity: 0.8,
                   }}
                 >
-                    {room.taxesAndCharges ? `Taxes $${room.taxesAndCharges}`:'Taxes Included' } 
+                    {room.taxesAndCharges ? `Taxes ${currencyFixer(room.taxesAndCharges)}`:'Taxes Included' } 
                
                 </Typography>
               </Box>

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { toDateAndHourFormat } from '@/utils/index';
 import { BookingRequest } from '@/interfaces/index';
 import { styles } from './styles';
-
+import currencyFixer from '@/utils/currencyFixer'
 export default function RequestInfo({
   requestInfo,
 }: {
@@ -32,14 +32,14 @@ export default function RequestInfo({
           <Typography sx={styles.leyend}>Price:</Typography>
           <Typography component="span">
             {' '}
-            USD ${requestInfo?.roomModel?.lowestPrice}
+            USD {currencyFixer(requestInfo?.roomModel?.lowestPrice)}
           </Typography>
         </Box>
         <Box component="li" sx={styles.list}>
           <Typography sx={styles.leyend}>Taxes And Charges:</Typography>
           <Typography component="span">
             {' '}
-            USD $ {requestInfo?.roomModel?.taxesAndCharges}
+            USD {currencyFixer(requestInfo?.roomModel?.taxesAndCharges)}
           </Typography>
         </Box>
         <Box component="li" sx={styles.list}>

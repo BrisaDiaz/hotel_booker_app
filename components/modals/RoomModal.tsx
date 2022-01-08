@@ -16,7 +16,7 @@ import ImageList from '@mui/material/ImageList';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Paper from '@mui/material/Paper';
 import CloseButton from '@/components/modals/CloseButton';
-
+import currencyFixer from '@/utils/currencyFixer'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modal: {
@@ -353,7 +353,7 @@ function TransitionsModal(props: ComponentProps) {
                     >
                       Lowest price
                     </Typography>
-                    <Typography>USD ${roomType.lowestPrice}</Typography>
+                    <Typography>USD {currencyFixer(roomType.lowestPrice)}</Typography>
                   </Box>
 
                   <Box className={classes.rowField}>
@@ -364,7 +364,7 @@ function TransitionsModal(props: ComponentProps) {
                     >
                       Taxes and Charges
                     </Typography>
-                    <Typography>USD ${roomType.taxesAndCharges}</Typography>
+                    <Typography>USD {currencyFixer(roomType.taxesAndCharges)}</Typography>
                   </Box>
                   <Box className={classes.rowField}>
                     <Typography
@@ -374,7 +374,7 @@ function TransitionsModal(props: ComponentProps) {
                     >
                       Cancelation Fee
                     </Typography>
-                    <Typography>USD ${roomType.cancelationFee}</Typography>
+                    <Typography>USD {currencyFixer(roomType.cancelationFee)}</Typography>
                   </Box>
                 </Box>
 

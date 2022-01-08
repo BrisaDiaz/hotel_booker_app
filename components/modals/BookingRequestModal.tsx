@@ -9,7 +9,7 @@ import CloseButton from '@/components/modals/CloseButton';
 import BookingClientInputs from '@/components/modals/BookingClientInputs';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { styles } from './styles';
-
+import currencyFixer from '@/utils/currencyFixer'
 export default function BasicModal({
   children,
   onSubmit,
@@ -90,11 +90,11 @@ export default function BasicModal({
             {' '}
             <Box component="li" sx={styles.list}>
               <Typography sx={styles.leyend}>Price:</Typography>
-              <Typography component="span">USD ${roomData?.price}</Typography>
+              <Typography component="span">USD {currencyFixer(roomData?.price)}</Typography>
             </Box>
             <Box component="li" sx={styles.list}>
               <Typography sx={styles.leyend}>Taxes and Charges: </Typography>
-              <Typography component="span">USD ${roomData?.taxes}</Typography>
+              <Typography component="span">USD {currencyFixer(roomData?.taxes)}</Typography>
             </Box>
             <Box component="li" sx={styles.list}>
               <Typography sx={styles.leyend}>Maximun Guests:</Typography>

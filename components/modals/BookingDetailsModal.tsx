@@ -14,7 +14,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import { Booking, CancelationDetails } from '@/interfaces/index';
 import { styles } from './styles';
-
+import currencyFixer from '@/utils/currencyFixer'
 export default function BasicModal({
   bookingData,
   isModalOpen,
@@ -144,7 +144,7 @@ export default function BasicModal({
                 {bookingData?.status === 'CANCELED' ? 'Cost:' : 'Total Cost:'}
               </Typography>
               <Typography component="span">
-                USD ${bookingData?.totalCost}
+                USD {currencyFixer(bookingData?.totalCost)}
               </Typography>
             </Box>
             <Box component="li" sx={styles.list}>
@@ -178,15 +178,15 @@ export default function BasicModal({
                 <Box component="li" sx={styles.list}>
                   <Typography sx={styles.leyend}>cancelation Fee</Typography>
                   <Typography component="span">
-                    USD ${cancelationDetails.cancelationFee}
+                    USD {currencyFixer(cancelationDetails.cancelationFee)}
                   </Typography>
                 </Box>
                 <Box component="li" sx={styles.list}>
                   <Typography sx={styles.leyend}>Total Const</Typography>
                   <Typography component="span">
-                    USD $
-                    {bookingData?.totalCost +
-                      cancelationDetails?.cancelationFee}
+                    USD 
+                    {currencyFixer(bookingData?.totalCost +
+                      cancelationDetails?.cancelationFee)}
                   </Typography>
                 </Box>
               </>

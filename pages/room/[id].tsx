@@ -23,6 +23,7 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import StraightenIcon from '@mui/icons-material/Straighten';
 import AppBar from '@/components/layouts/AppBar';
 import SnackBar from '@/components/SnackBar';
+import currencyFixer from '@/utils/currencyFixer'
 import { RoomModel, Feature } from '@/interfaces/index';
 
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -264,7 +265,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
               component="span"
               sx={{ color: 'primary.main', fontWeight: 700, mb: 1 }}
             >
-              USD ${room.lowestPrice}
+              USD {currencyFixer(room.lowestPrice)}
             </Typography>
           </Typography>
 
@@ -287,7 +288,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
               sx={{ fontWeight: 200, ml: 0.5,fontSize:'inherit' }}
            
             >
-              USD ${room.taxesAndCharges}
+              USD {currencyFixer(room.taxesAndCharges)}
             </Typography>:null}
           </Typography>
         <Box
