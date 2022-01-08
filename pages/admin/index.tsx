@@ -108,6 +108,17 @@ const Dashboard: WithLayoutPage<PageProps> = ({
     onCompleted: ({ hotel }: { hotel: Hotel }) => {
       setToEditHotelData(hotel);
       ///// update hotel card data
+if(! toEditHotelData) return
+toEditSection === 'about'  ? setToEditHotelData({...toEditHotelData,description:hotel.description,brand: hotel.brand,category:hotel.category,name:hotel.name}):toEditSection === 'address' ? setToEditHotelData({...toEditHotelData,address:hotel.address}):toEditSection === 'price'? setToEditHotelData({...toEditHotelData,lowestPrice:hotel.lowestPrice,taxesAndCharges:hotel.taxesAndCharges}):toEditSection === 'aspect'? setToEditHotelData({...toEditHotelData,frameImage:hotel.frameImage,interiorImage:hotel.interiorImage}):toEditSection === 'features'? setToEditHotelData({...toEditHotelData,services:hotel.services,activities:hotel.activities,languages:hotel.languages,facilities:hotel.facilities,features:hotel.features}):toEditSection === 'policies'? setToEditHotelData({...toEditHotelData,
+checkInHour:hotel.checkInHour,
+checkOutHour:hotel.checkOutHour,
+policiesAndRules:hotel.policiesAndRules
+}):setToEditHotelData({...toEditHotelData,
+telephone:hotel.telephone,
+email:hotel.email,
+website:hotel.website
+})
+
       if (
         toEditSection === 'about' ||
         toEditSection === 'address' ||

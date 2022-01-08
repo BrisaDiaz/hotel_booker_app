@@ -432,11 +432,15 @@ export const Mutation = extendType({
           if (toEditFields.includes('aspect')) {
             hotelUpdated = await updateAspect(hotelId, args);
           }
-          if (hotelUpdated) {
+          if (!hotelUpdated) {
             hotelUpdated = await prisma.hotel.findUnique({
               where: {
                 id: hotelId,
               },
+              include:{
+                features:true,
+                address:true
+              }
             });
           }
           return hotelUpdated;
@@ -541,6 +545,12 @@ export const Mutation = extendType({
                   }
                 : undefined,
             },
+            include:{
+              services:true,
+              languages:true,
+              activities:true,
+              facilities:true
+            }
           });
         };
         const updateGenericData = async (hotelId: number, args: any) => {

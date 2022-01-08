@@ -438,7 +438,7 @@ export default function useHotelDashboard({
     }
   };
   const onEditSection = async (data: any) => {
-    let variables = { ...data };
+    const variables = { ...data };
 
     try {
       setLoading(true);

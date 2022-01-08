@@ -60,7 +60,7 @@ export const services = [
   'security',
   'smoke alarms',
   'convenience store on site',
-  'CCTV outside property',
+  'CCTV inside property',
   'CCTV outside property',
     '24-hour bar/cafe',
     '24-hour concierge',
