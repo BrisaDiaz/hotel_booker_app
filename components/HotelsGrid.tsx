@@ -25,7 +25,7 @@ export default function ResponsiveGrid(props:{hotels:Hotel[]}) {
             sm={12}
             md={10}
             lg={10}
-            key={hotel.policiesAndRules}
+            key={hotel.id+index}
             alignContent="center"
           >
             <HotelCard hotel={hotel} index={index}/>

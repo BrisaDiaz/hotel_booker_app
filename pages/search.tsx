@@ -9,6 +9,7 @@ import FilterMenu from '@/components/layouts/FilterMenu';
 import Pagination from '@/components/Pagination';
 import Box from '@mui/material/Box';
 import { Hotel, Feature } from '@/interfaces/index';
+import Backdrop from '@/components/Backdrop';
 import {
   GET_ALL_SERVICES,
   GET_ALL_FACILITIES,
@@ -120,6 +121,7 @@ const Search = ({
             <Pagination setPage={setPage} count={pageCount} />
           </Box>
         </FilterMenu>
+        <Backdrop loading={loading}/>
       </main>
     </div>
   );
