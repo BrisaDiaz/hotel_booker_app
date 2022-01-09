@@ -72,28 +72,25 @@ export default function FeaturesSection({
       />
       <Box sx={{ my: 1 }}>
         <FormControlLabel
-             sx={{ textTransform: 'capitalize',fontSize:'14px' }}
+             sx={{ textTransform: 'capitalize','span':{fontSize:'14px'} }}
           {...register('freeCancelation')}
           control={
             <Checkbox
               color="secondary"
-              inputProps={{
-                defaultChecked: defaultData?.freeCancelation ? true : false,
-              }}
+            defaultChecked={defaultData?.smooking ? true : false}
             />
           }
           label="free cancelation"
         />
         <FormControlLabel
  
-          sx={{ textTransform: 'capitalize',fontSize:'14px' }}
+        sx={{ textTransform: 'capitalize','span':{fontSize:'14px'} }}
           {...register('smooking')}
           control={
             <Checkbox
+            defaultChecked={defaultData?.smooking ? true : false}
               color="secondary"
-              inputProps={{
-                defaultChecked: defaultData?.smooking ? true : false,
-              }}
+           
             />
           }
           label="smooking"

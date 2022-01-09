@@ -117,11 +117,7 @@ export default function FeaturesSection({
               control={
                 <Checkbox
                   color="secondary"
-                  inputProps={{
-                    defaultChecked: defaultData?.features?.freeCancelation
-                      ? true
-                      : false,
-                  }}
+                       defaultChecked={defaultData?.smooking ? true : false}
                   {...register('freeCancelation')}
                 />
               }
@@ -164,11 +160,7 @@ export default function FeaturesSection({
      
               control={
                 <Checkbox
-                  inputProps={{
-                    defaultChecked: defaultData?.features?.freeCancelation
-                      ? true
-                      : false,
-                  }}
+                       defaultChecked={defaultData?.smooking ? true : false}
                   color="secondary"
                   {...register('petFriendly')}
                 />

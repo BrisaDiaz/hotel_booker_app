@@ -53,6 +53,8 @@ React.useEffect(() => {
       <Grid container spacing={{ sm: 2 }} justifyContent="center">
         <Grid item xs={12}>
           <FileInput
+      onChange={handleOnChange}
+          resetCount={resetCount}
            label={
               errors['mainImage']
                 ? errors['mainImage'].message
