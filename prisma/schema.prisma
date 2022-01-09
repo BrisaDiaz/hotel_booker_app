@@ -160,7 +160,7 @@ model Image {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  src         String
+  src         String  @unique
    albun           Albun            @relation(fields: [albunId], references: [id])
   albunId         Int
 }
@@ -235,7 +235,7 @@ model Albun {
   name String
   description String?
   hotelId     Int
-  roomModelId Int?
+  roomModelId Int? @unique
 }
 
 

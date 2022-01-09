@@ -12,7 +12,7 @@ import {
 } from 'nexus';
 import { verifyIsHotelAdmin, deleteImage } from '../utils/index';
 import { prisma } from '../../lib/prisma';
-import type { NextApiRequest, NextApiResponse } from 'next';
+
 
 export const Amenity = objectType({
   name: 'Amenity',
@@ -85,10 +85,10 @@ export const RoomModel = objectType({
         });
       },
     });
-    t.list.field('images', {
-      type: 'Image',
+    t.list.field('albun', {
+      type: 'Albun',
       resolve: (root: any): any => {
-        return prisma.image.findMany({
+        return prisma.albun.findUnique({
           where: {
             roomModelId: root.id,
           },

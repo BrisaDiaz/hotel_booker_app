@@ -176,10 +176,10 @@ export const Hotel = objectType({
         });
       },
     });
-    t.list.field('images', {
-      type: 'Image',
+    t.list.field('albuns', {
+      type: 'Albun',
       resolve(root: any): any {
-        return prisma.image.findMany({
+        return prisma.albun.findMany({
           where: {
             hotelId: root.id,
           },

@@ -1,6 +1,6 @@
 import { extendType, objectType, list, inputObjectType } from 'nexus';
 import { prisma } from '../../lib/prisma';
-import { Activity } from './Hotel';
+
 export const Service = objectType({
   name: 'Service',
   definition(t) {
