@@ -47,3 +47,5 @@
 - SSR cache-control haders.
 - Dinamic layouts.
 - Full guest, hotels, rooms and bookings management system.
+- Multy hotels suport.
+- Multy hotels ow  suport.

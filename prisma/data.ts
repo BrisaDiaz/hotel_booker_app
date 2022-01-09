@@ -430,3 +430,517 @@ export const adminUser = {
 };
 
 
+export const hotels =[
+   {
+            "id": 1,
+            "name": "Four Seasons Hotel Buenos Aires",
+            "brand": "Four Seasons",
+            "category": "suite hotel",
+            "lowestPrice": 655,
+            "taxesAndCharges": 141,
+            "frameImage": "https://res.cloudinary.com/myproyects/image/upload/v1641668266/ie6lt1r973xga5c6qlea.jpg",
+            "interiorImage": "https://res.cloudinary.com/myproyects/image/upload/v1641668266/moql7uh00pxk3ydi0oqo.jpg",
+            "description": "<p>Upscale Buenos Aires hotel in Microcentro, near Patio Bullrich.</p>\n<p>At this non-smoking hotel you will have 2 restaurants, a full spa and an outdoor pool at your disposal. Wi-Fi connection in common areas is free. You will also find a wellness center, a bar / lounge and a Turkish bath. The 165 soundproofed rooms feature free Wi-Fi, free wired Internet, and 24-hour room service. Along with signature touches like the deep soaking tub, you'll find a DVD player, minibar, and LCD TV.</p>\n<p>Four Seasons Hotel Buenos Aires offers 165 air-conditioned accommodations with DVD players and minibars. All accommodations have different decorations. Beds are dressed in Egyptian cotton sheets and high quality linens. It should be noted that this accommodation allows its clients to choose the type of pillow. A 37-inch LCD television with premium digital channels is provided. Bathrooms include separate bathtubs and showers with deep soaking tubs, bathrobes, slippers and designer toiletries.</p>\n<p>Guests can surf the web thanks to our free internet access (wired and wifi). Specially designed amenities for business travelers include a desk, laptop safe and telephone. Rooms also include a free bottle of water and a hairdryer. In-room massages, hypoallergenic bedding, and ironing board can be requested. A nightly turndown service and housekeeping service is provided daily.</p>\n<p>Recreational amenities at this hotel include an outdoor swimming pool, a wellness center and a Turkish bath.</p>\n<p>The leisure and recreation activities listed below can be practiced on the premises or near the accommodation (a surcharge may apply).</p>\n<p>The on-site spa has massage or treatment rooms. Services include facials and body treatments. The spa offers among other treatments: aromatherapy and Ayurvedic treatments.</p>\n<p>The spa is open every day.</p>",
+            "policiesAndRules": "<h4>Cancellation/Payment</h4>\n<p>Cancellation and payment policies vary according to accommodation type.</p>\n<h4>Child policies</h4>\n<p>Children of all ages are welcome.</p>\n<p>Children 18 and above are considered adults at this property.</p>\n<p>To see correct prices and occupancy info, add the number and ages of children in your group to your search.</p>\n<h4>Crib and extra bed policies</h4>\n<p>There's no capacity for cribs at this property.</p>\n<p>This property doesn't offer extra beds.</p>\n<h4>No age restriction</h4>\n<p>There's no age requirement for check-in</p>\n<h4>Groups</h4>\n<p>When booking more than 8 rooms, different policies and additional supplements may apply.</p>\n<h4>Cards accepted at this hotel</h4>\n<ul>\n  <li>Mastercard</li>\n  <li>Visa</li>\n  <li>American Express</li>\n</ul>\n<p>Four Seasons Hotel Buenos Aires accepts these cards and reserves the right to temporarily hold an amount prior to arrival.</p>",
+            "checkInHour": "15:00",
+            "checkOutHour": "00:00",
+            "telephone": "+54 114 321-1200",
+            "email": "",
+            "website": "www.fourseasons.com",
+            "address": {
+                "holeAddress": "Posadas 1086, C1011 CABA, Argentina",
+                "country": "Argentina",
+                "postalCode": "C1011",
+                "city": "Buenos Aires",
+                "administrativeArea": "Capital Federal",
+                "street": "Posadas 1086",
+                "__typename": "Address"
+            },
+            "services": [
+                {
+                    "id": "25",
+                    "name": "free high speed internet (WiFi)",
+                    "__typename": "Service"
+                },
+                {
+                    "id": "28",
+                    "name": "dry & cleaning service",
+                    "__typename": "Service"
+                },
+                {
+                    "id": "32",
+                    "name": "pick-up/drop-off service",
+                    "__typename": "Service"
+                },
+                {
+                    "id": "36",
+                    "name": "e-bike rental",
+                    "__typename": "Service"
+                }
+            ],
+            "activities": [],
+            "languages": [
+                {
+                    "id": "40",
+                    "name": "English",
+                    "__typename": "Language"
+                },
+                {
+                    "id": "47",
+                    "name": "French",
+                    "__typename": "Language"
+                },
+                {
+                    "id": "128",
+                    "name": "Portuguese",
+                    "__typename": "Language"
+                },
+                {
+                    "id": "148",
+                    "name": "Spanish; Castilian",
+                    "__typename": "Language"
+                }
+            ],
+            "facilities": [
+                {
+                    "id": "1",
+                    "name": "parking",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "4",
+                    "name": "wellness center",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "5",
+                    "name": "fitness center",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "6",
+                    "name": "swimming pool",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "13",
+                    "name": "bar",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "18",
+                    "name": "laundry",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "21",
+                    "name": "restaurant",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "27",
+                    "name": "lobby",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "30",
+                    "name": "elevator",
+                    "__typename": "Facility"
+                }
+            ],
+            "features": {
+                "freeCancelation": true,
+                "accessible": true,
+                "familyFriendly": true,
+                "petFriendly": true,
+                "smokerFriendly": false,
+                "ecoFriendly": false,
+                "__typename": "Features"
+            },
+            "roomModels": [],
+            
+        },
+        {
+            "id": 2,
+            "name": "Eden Roc Miami Beach",
+            "brand": "Eden Roc",
+            "category": "residencial hotel",
+            "lowestPrice": 299,
+            "taxesAndCharges": 82,
+            "frameImage": "https://res.cloudinary.com/myproyects/image/upload/v1641668689/x5uoqhyxdvglzeqylnbd.jpg",
+            "interiorImage": "https://res.cloudinary.com/myproyects/image/upload/v1641668689/luwu6x8shphwcehpv5lr.jpg",
+            "description": "<p>A vibrant city transitions to a beachside oasis.&nbsp;</p>\n<p>Designed by famed architect Morris Lapidus, Eden Roc Miami Beach is one of the most iconic and architecturally significant hotels in Miami, lending nostalgic glamour to a modern beachfront resort experience. The same timeless style and upbeat ambience that once drew Old Hollywood luminaries continues to lure loyal guests from all over the world today. Bright, spacious guest rooms with oversized balconies peer out over the sea with direct ocean views. Three sparkling beachfront pools, the expansive Esencia Wellness Spa, and an exclusive strip of beach invite travelers to unwind in a relaxed tropical setting, with pulsing nightlife and world-famous cultural attractions just minutes away. Guests can indulge with a farm-to-beach fare at Eden Roc Restaurant, retreat to Aquatica Bar for poolside cocktails, or experience the finest Japanese cuisine in the city at Nobu Miami. Whether you’re seeing beach R&amp;R, a wellness escape, or a culinary journey, there are so many ways to discover the energy of Eden Roc.</p>",
+            "policiesAndRules": "<h4>Cancellation/Payment</h4>\n<p>Cancellation and payment policies vary according to accommodation type.</p>\n<h4>Refundable damage deposit</h4>\n<p>A damage deposit of USD 200 is required on arrival. This will be collected by credit card. You should be reimbursed on check-out. Your deposit will be refunded in full by credit card, subject to an inspection of the property.</p>\n<h4>Child policies</h4>\n<p>Children of all ages are welcome.</p>\n<p>Children 18 and above are considered adults at this property.</p>\n<p>To see correct prices and occupancy info, add the number and ages of children in your group to your search.</p>\n<h4>Crib and extra bed policies</h4>\n<p>Children of all ages are welcome.</p>\n<p>Children 18 and above are considered adults at this property.</p>\n<p>To see correct prices and occupancy info, add the number and ages of children in your group to your search.</p>\n<h4>No age restriction</h4>\n<p>The minimum age for check-in is 21.</p>\n<h4>Pets</h4>\n<p>Pets are allowed. Charges may apply.</p>\n<h4>Groups</h4>\n<p>When booking more than 9 rooms, different policies and additional supplements may apply.</p>\n<h4>Cards accepted at this hotel</h4>\n<ul>\n  <li>Mastercard</li>\n  <li>Visa</li>\n  <li>Discover</li>\n  <li>American Express</li>\n</ul>\n<p>Four Seasons Hotel Buenos Aires accepts these cards and reserves the right to temporarily hold an amount prior to arrival.</p>",
+            "checkInHour": "16:00",
+            "checkOutHour": "11:00",
+            "telephone": "+1 305 487-8154",
+            "email": "",
+            "website": "www.fourseasons.com",
+            "address": {
+                "holeAddress": "4525 Collins Ave, Miami Beach, FL 33140, Estados Unidos",
+                "country": "Estados Unidos",
+                "postalCode": "33140",
+                "city": "Miami Beach",
+                "administrativeArea": "Florida",
+                "street": "4525 Collins Avenue",
+                "__typename": "Address"
+            },
+            "services": [
+                {
+                    "id": "25",
+                    "name": "free high speed internet (WiFi)",
+                    "__typename": "Service"
+                },
+                {
+                    "id": "27",
+                    "name": "buffet breackfast",
+                    "__typename": "Service"
+                },
+                {
+                    "id": "28",
+                    "name": "dry & cleaning service",
+                    "__typename": "Service"
+                },
+                {
+                    "id": "36",
+                    "name": "e-bike rental",
+                    "__typename": "Service"
+                }
+            ],
+            "activities": [],
+            "languages": [
+                {
+                    "id": "40",
+                    "name": "English",
+                    "__typename": "Language"
+                },
+                {
+                    "id": "47",
+                    "name": "French",
+                    "__typename": "Language"
+                }
+            ],
+            "facilities": [
+                {
+                    "id": "1",
+                    "name": "parking",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "4",
+                    "name": "wellness center",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "5",
+                    "name": "fitness center",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "6",
+                    "name": "swimming pool",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "13",
+                    "name": "bar",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "18",
+                    "name": "laundry",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "19",
+                    "name": "semi-open restaurant",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "21",
+                    "name": "restaurant",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "22",
+                    "name": "conference room",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "27",
+                    "name": "lobby",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "30",
+                    "name": "elevator",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "32",
+                    "name": "beach access",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "33",
+                    "name": "hair/beauty salon",
+                    "__typename": "Facility"
+                }
+            ],
+            "features": {
+                "freeCancelation": true,
+                "accessible": true,
+                "familyFriendly": true,
+                "petFriendly": true,
+                "smokerFriendly": false,
+                "ecoFriendly": false,
+                "__typename": "Features"
+            },
+            "roomModels": [],
+         
+        },
+        {
+            "id": 3,
+            "name": "Hotel Bay Gulls",
+            "brand": "Bay Gulls",
+            "category": "resort hotel",
+            "lowestPrice": 7368,
+            "taxesAndCharges": 141,
+            "frameImage": "https://res.cloudinary.com/myproyects/image/upload/v1641669825/amuytxquepss4iuna0ae.jpg",
+            "interiorImage": "https://res.cloudinary.com/myproyects/image/upload/v1641669825/xmf72gjhqqlhks5rf4nx.jpg",
+            "description": "<p><strong>Get the celebrity treatment with world-class service at Hotel Bay Gulls</strong></p>\n<p>Set in Tajiri, Hotel Bay Gulls offers a bar. Featuring a restaurant, the 5-star hotel has air-conditioned rooms with free WiFi, each with a private bathroom. Private parking is available on site.</p>\n<p>At the hotel, all rooms include a wardrobe. All guest rooms in Hotel Bay Gulls are fitted with a flat-screen TV and slippers.</p>\n<p>Guests at the accommodations can enjoy a continental or a à la carte breakfast.</p>\n<p>Osaka is 28 mi from Hotel Bay Gulls, while Wakayama is 18 mi from the property. The nearest airport is Kansai International Airport, 3.7 mi from the hotel.</p>\n<p>Couples in particular like the location – they rated it 8.8 for a two-person trip.</p>",
+            "policiesAndRules": "<h4>Cancellation/Payment</h4>\n<p>Cancellation and prepayment policies vary according to accommodations type.&nbsp;</p>\n<p>Please enter the dates of your stay and check what conditions apply to your preferred room.</p>\n<h4>Curfew</h4>\n<p>The entrance to the property is closed between 12:00 AM and 5:00 AM.</p>\n<h4>Child policies</h4>\n<p>Children of all ages are welcome.</p>\n<p>Children 18 and above are considered adults at this property.</p>\n<p>To see correct prices and occupancy info, add the number and ages of children in your group to your search.</p>\n<h4>Crib and extra bed policies</h4>\n<p>There's no capacity for cribs at this property</p>\n<p>This property doesn't offer extra beds.</p>\n<h4>No age restriction</h4>\n<p>There's no age requirement for check-in.</p>\n<h4>Pets</h4>\n<p>Pets are not allowed.</p>\n<h4>&nbsp;Cards accepted at this hotel</h4>\n<ul>\n  <li>Mastercard&nbsp;</li>\n  <li>Visa&nbsp;</li>\n  <li>Union Pay&nbsp;</li>\n  <li>Credit Card</li>\n</ul>\n<p>Hotel Bay Gulls accepts these cards and reserves the right to temporarily hold an amount prior to arrival.</p>",
+            "checkInHour": "15:00",
+            "checkOutHour": "11:00",
+            "telephone": "+81 72 490-0055",
+            "email": "",
+            "website": "www.fourseasons.com",
+            "address": {
+                "holeAddress": "598-0093 Osaka Prefecture, Tajiri, Kinku Port Kita 3-5, Japan",
+                "country": "Japón",
+                "postalCode": "598-0093",
+                "city": "Tajiri",
+                "administrativeArea": "Osaka Prefecture",
+                "street": "Kinku Port Kita 3-5",
+                "__typename": "Address"
+            },
+            "services": [
+                {
+                    "id": "25",
+                    "name": "free high speed internet (WiFi)",
+                    "__typename": "Service"
+                },
+                {
+                    "id": "27",
+                    "name": "buffet breackfast",
+                    "__typename": "Service"
+                },
+                {
+                    "id": "28",
+                    "name": "dry & cleaning service",
+                    "__typename": "Service"
+                },
+                {
+                    "id": "32",
+                    "name": "pick-up/drop-off service",
+                    "__typename": "Service"
+                },
+                {
+                    "id": "36",
+                    "name": "e-bike rental",
+                    "__typename": "Service"
+                }
+            ],
+            "activities": [],
+            "languages": [
+                {
+                    "id": "72",
+                    "name": "Japanese",
+                    "__typename": "Language"
+                }
+            ],
+            "facilities": [
+                {
+                    "id": "1",
+                    "name": "parking",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "4",
+                    "name": "wellness center",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "5",
+                    "name": "fitness center",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "6",
+                    "name": "swimming pool",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "7",
+                    "name": "jacuzzi",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "13",
+                    "name": "bar",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "18",
+                    "name": "laundry",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "19",
+                    "name": "semi-open restaurant",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "21",
+                    "name": "restaurant",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "22",
+                    "name": "conference room",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "27",
+                    "name": "lobby",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "30",
+                    "name": "elevator",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "32",
+                    "name": "beach access",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "33",
+                    "name": "hair/beauty salon",
+                    "__typename": "Facility"
+                }
+            ],
+            "features": {
+                "freeCancelation": true,
+                "accessible": true,
+                "familyFriendly": true,
+                "petFriendly": true,
+                "smokerFriendly": false,
+                "ecoFriendly": false,
+                "__typename": "Features"
+            },
+            "roomModels": [],
+     
+        },
+        {
+            "id": 3,
+            "name": "Moose Hotel and Suites",
+            "brand": "Moose Hotel and Suites",
+            "category": "convention hotel",
+            "lowestPrice": 7368,
+            "taxesAndCharges": 141,
+            "frameImage": "https://res.cloudinary.com/myproyects/image/upload/v1641670140/mczjc3b0cr9bxcmlf1ds.jpg",
+            "interiorImage": "https://res.cloudinary.com/myproyects/image/upload/v1641670140/sgmivqv3fiuectsi1uaa.jpg",
+            "description": "<p>Located a 1 minute walk from the heart of Banff, the Moose Hotel &amp; Suites features a spa center and on-site bar. Each unit offers a patio or balcony.</p>\n<p><br></p>\n<p>Every air-conditioned room has a flat-screen TV. Certain units have a seating area where you can relax.</p>\n<p><br></p>\n<p>An a la carte breakfast is available each morning. Dining is available at Pacini Italian Restaurant, featuring gourmet Italian food with unique and authentic flavors and a warm ambiance.</p>\n<p><br></p>\n<p>Meadow Spa &amp; Pools features 10 treatment rooms and a private outdoor hot pool. A bright indoor swimming pool and exercise room is located on the 4th floor, and 2 spectacular rooftop hot pools offer views of the Canadian Rocky Mountains.</p>\n<p><br></p>\n<p>The Whyte Museum of the Canadian Rockies is 701 m from Moose Hotel and Suites, while Banff Park Museum is 701 m away.</p>",
+            "policiesAndRules": "<h4>Cancellation/Payment</h4>\n<p>Cancellation and prepayment policies vary according to accommodations type.&nbsp;</p>\n<p>Please enter the dates of your stay and check what conditions apply to your preferred room.</p>\n<h4>Curfew</h4>\n<p>The entrance to the property is closed between 12:00 AM and 5:00 AM.</p>\n<h4>Child policies</h4>\n<p>Children of all ages are welcome.</p>\n<p>Children 18 and above are considered adults at this property.</p>\n<p>To see correct prices and occupancy info, add the number and ages of children in your group to your search.</p>\n<h4>Crib and extra bed policies</h4>\n<p>There's no capacity for cribs at this property</p>\n<p>This property doesn't offer extra beds.</p>\n<h4>No age restriction</h4>\n<p>There's no age requirement for check-in.</p>\n<h4>Pets</h4>\n<p>Pets are not allowed.</p>\n<h4>&nbsp;Cards accepted at this hotel</h4>\n<ul>\n  <li>Mastercard&nbsp;</li>\n  <li>Visa&nbsp;</li>\n  <li>Union Pay&nbsp;</li>\n  <li>Credit Card</li>\n</ul>\n<p>Hotel Bay Gulls accepts these cards and reserves the right to temporarily hold an amount prior to arrival.</p>",
+            "checkInHour": "15:00",
+            "checkOutHour": "11:00",
+            "telephone": "+1 866-379-0021",
+            "email": "reservations@bestofbanff.com",
+            "website": "www.fourseasons.com",
+            "address": {
+                "holeAddress": "345 Banff Avenue, Banff, Banff National Park, Alberta T1L 1H8 Canada",
+                "country": "Canadá",
+                "postalCode": "T1L 1H8",
+                "city": "Banff",
+                "administrativeArea": "Banff National Park",
+                "street": "345 Banff Avenue",
+                "__typename": "Address"
+            },
+            "services": [
+                {
+                    "id": "25",
+                    "name": "free high speed internet (WiFi)",
+                    "__typename": "Service"
+                }
+            ],
+            "activities": [
+                {
+                    "id": "15",
+                    "name": "hiking",
+                    "__typename": "Activity"
+                }
+            ],
+            "languages": [
+                {
+                    "id": "40",
+                    "name": "English",
+                    "__typename": "Language"
+                }
+            ],
+            "facilities": [
+                {
+                    "id": "4",
+                    "name": "wellness center",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "5",
+                    "name": "fitness center",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "6",
+                    "name": "swimming pool",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "13",
+                    "name": "bar",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "18",
+                    "name": "laundry",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "21",
+                    "name": "restaurant",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "22",
+                    "name": "conference room",
+                    "__typename": "Facility"
+                },
+                {
+                    "id": "27",
+                    "name": "lobby",
+                    "__typename": "Facility"
+                }
+            ],
+            "features": {
+                "freeCancelation": true,
+                "accessible": true,
+                "familyFriendly": true,
+                "petFriendly": true,
+                "smokerFriendly": false,
+                "ecoFriendly": false,
+                "__typename": "Features"
+            },
+            "roomModels": [],
+        }
+]
+

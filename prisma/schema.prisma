@@ -161,8 +161,8 @@ model Image {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   src         String
-  hotelId     Int
-  roomModelId Int?
+   albun           Albun            @relation(fields: [albunId], references: [id])
+  albunId         Int
 }
 
 model Amenity {
@@ -213,7 +213,6 @@ model Booking {
   specifications     String
   totalCost          Int
   paymentMethod      PaymentMethod        @default(CASH)
-
   status BookingStatus @default(ACTIVE)
   client Client        @relation(fields: [clientId], references: [id])
   rooms  Room[]
@@ -228,6 +227,17 @@ model CancelationDetails {
   cancelationFee Float
   bookingId      Int      @unique
 }
+model Albun {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  images Image[]
+  name String
+  description String?
+  hotelId     Int
+  roomModelId Int?
+}
+
 
 enum PaymentMethod {
   CREDIT_CARD
