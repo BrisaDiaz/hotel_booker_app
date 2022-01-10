@@ -507,3 +507,30 @@ export const CANCEL_BOOKING = gql`
     }
   }
 `;
+export const CREATE_ALBUN = gql`
+  mutation createAlbun(
+    $userId: ID!
+    $hotelId: ID!
+    $roomModelId: ID
+    $name: String!
+    $description: String
+    $images:[String]
+  ) {
+    cancelationDetails: cancelBooking(
+      userId: $userId
+      hotelId: $hotelId
+      roomModelId: $roomModelId
+      name: $name
+      description: $description
+      images: $images
+    ) {
+     id
+     name
+     description
+     images{
+       id
+       src
+     }
+    }
+  }
+`;
