@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 type Image = {url:string,name:string}
-export default function ImageDropzone({images,onClear,onReset}:{images:Image[],onClear:(mode:'all'|'selectedOnly',selectedImagesNames?:string[] )=>void,onReset:()=>void}) {
+export default function ImageDropzone({images,onClear,onReset,onSave}:{images:Image[],onClear:(mode:'all'|'selectedOnly',selectedImagesNames?:string[] )=>void,onReset:()=>void,onSave:()=>void}) {
 const [visuals, setVisuals] = React.useState<{url:string,name:string}[]>(images||[])
 const [selectedFilesNames, setSelectedFilesNames] = React.useState<string[]>([])
 
@@ -61,7 +61,7 @@ setVisuals(images)
   )}
 </Grid>
  <Stack direction="row" spacing={0.5} sx={{my:2,flexWrap:'wrap',mx:'auto',width:'max-content','button':{textTransform:'capitalize'}}} >
-     <Button variant="contained"  size="small" >
+     <Button variant="contained"  size="small" onClick={onSave}>
         Save
       </Button>
          <Button variant="contained"  size="small" onClick={onReset}>

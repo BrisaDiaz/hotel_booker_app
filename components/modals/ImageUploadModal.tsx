@@ -1,5 +1,5 @@
 import FullScreenModal from '@/components/modals/FullScreenModal'
-import ImageManager from '@/components/ImageManager'
+import ImageManager from '@/components/ImagesAlbunManager'
 
 export default function ImageUploadModal({isOpen,onSubmit,onClose,albunName}:{onSubmit:(files:File[],urls?:string[])=> void,onClose:()=>void,isOpen:boolean,albunName:string}){
 
