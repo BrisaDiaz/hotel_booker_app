@@ -49,16 +49,7 @@ export const Features = objectType({
     t.boolean('ecoFriendly');
   },
 });
-export const Image = objectType({
-  name: 'Image',
-  definition(t) {
-    t.id('id');
-    t.string('title');
-    t.string('src');
-    t.int('hotelId');
-    t.int('roomId');
-  },
-});
+
 
 export const Query = extendType({
   type: 'Query',
