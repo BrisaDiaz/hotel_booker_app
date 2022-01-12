@@ -75,7 +75,7 @@ type PageProps = {
 const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
   const theme = useTheme();
 
-  const [notification, setNotification] = React.useState({
+  const [notification, setNotification] = React.useState<{type:"error" | "info" | "success" | "warning",content:string}>({
     content: '',
     type: 'info',
   });
@@ -189,7 +189,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box component="main" sx={{ maxWidth: '1000px', m: '20px auto 30px' }}>
+      <Box component="main" sx={{ maxWidth: '1000px', m: '80px auto 30px' }}>
         <Box component={Link} href={`/hotel/${room.hotelId}`} passHref>
           <Typography
             variant="h3"

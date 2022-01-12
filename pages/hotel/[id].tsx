@@ -93,7 +93,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{ maxWidth: '1000px', m: '20px auto 30px' }}>
+      <Box sx={{ maxWidth: '1000px', m: '80px auto 30px' }}>
         
           <Typography
             variant="h3"

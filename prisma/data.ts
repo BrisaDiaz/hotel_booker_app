@@ -844,7 +844,7 @@ export const hotels =[
      
         },
         {
-            "id": 3,
+            "id": 4,
             "name": "Moose Hotel and Suites",
             "brand": "Moose Hotel and Suites",
             "category": "convention hotel",

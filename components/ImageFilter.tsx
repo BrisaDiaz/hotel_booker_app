@@ -6,7 +6,6 @@ import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import { RecordWithTtl } from 'dns';
 export default function ImageDropzone({images,onClear,onReset,onSave}:{images: {url:string,name:string}[],onClear:(mode:'all'|'selectedOnly',selectedImagesNames?:string[] )=>void,onReset:()=>void,onSave:()=>void}) {
 const [visuals, setVisuals] = React.useState<{url:string,name:string}[]>(images||[])
 const [selectedFilesNames, setSelectedFilesNames] = React.useState<string[]>([])
