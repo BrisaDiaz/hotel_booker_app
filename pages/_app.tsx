@@ -13,7 +13,7 @@ import { client } from '../lib/apollo';
 import { ApolloProvider } from '@apollo/client';
 import { WithLayoutPage } from '@/interfaces/index';
 import AuthProvider from '../context/AuthProvider';
-import ProgresBar from '@/components/ProgresBar';
+import LoadingBar from '@/components/layouts/LoadingBar';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
@@ -43,7 +43,7 @@ function MyApp(props: MyAppProps) {
             <CssBaseline />
             <>
               {getLayout(<Component {...pageProps} />)}
-              <ProgresBar />
+              <LoadingBar />
             </>
           </ThemeProvider>
         </AuthProvider>

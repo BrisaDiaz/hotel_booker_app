@@ -7,7 +7,7 @@ import Logo from '@/components/layouts/Logo';
 export default function SearchAppBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Box sx={{ mr: 2 }}>
             <Logo />

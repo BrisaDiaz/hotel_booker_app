@@ -83,7 +83,8 @@ const SignUp: WithLayoutPage = () => {
         <Box
           sx={{
             maxWidth: '1200px',
-            m: '0 auto',
+            mx: 'auto',
+            mt:2
           }}
         >
           {success && (
