@@ -484,6 +484,7 @@ export interface NexusGenFieldTypes {
     createAlbum: NexusGenRootTypes['Album'] | null; // Album
     createHotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     declineBookingRequest: NexusGenRootTypes['BookingRequest'] | null; // BookingRequest
+    deleteAlbum: NexusGenRootTypes['Album'] | null; // Album
     deleteRoomOfModel: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
     makeBooking: NexusGenRootTypes['Booking'] | null; // Booking
     makeBookingRequest: NexusGenRootTypes['RoomConsultResponceResponce'] | null; // RoomConsultResponceResponce
@@ -796,6 +797,7 @@ export interface NexusGenFieldTypeNames {
     createAlbum: 'Album'
     createHotel: 'Hotel'
     declineBookingRequest: 'BookingRequest'
+    deleteAlbum: 'Album'
     deleteRoomOfModel: 'Room'
     makeBooking: 'Booking'
     makeBookingRequest: 'RoomConsultResponceResponce'
@@ -996,6 +998,10 @@ export interface NexusGenArgTypes {
     }
     declineBookingRequest: { // args
       bookingRequestId: string; // ID!
+      userId: string; // ID!
+    }
+    deleteAlbum: { // args
+      albumId: string; // ID!
       userId: string; // ID!
     }
     deleteRoomOfModel: { // args

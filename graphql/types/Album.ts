@@ -76,9 +76,7 @@ return createAlbum(parseInt(args.userId),parseInt(args.hotelId),args.roomModelId
       args:{
         userId:nonNull(idArg()),
         albumId:nonNull(idArg()),
-        
         name:stringArg(),
-
         images:list(stringArg())
       },
       resolve(root,args):any{
@@ -154,6 +152,43 @@ albumFound.images.forEach((img:{id:number,src:string}) => {
 return updateAlbum(parseInt(args.userId),parseInt(args.albumId),args)
       }
     })
+       t.field('deleteAlbum',{
+      type:Album,
+      args:{
+        userId:nonNull(idArg()),
+        albumId:nonNull(idArg()),
+      },
+      resolve(root,args):any{
+const deleteAlbum=async(userId:number,
+albumId:number)=>{
+  const albumFound = await prisma.album.findUnique({
+           where:{
+             id:albumId
+           },
+           include:{
+             images:true
+           }
+         })
+         if(!albumFound) throw new UserInputError('Invalid album identifier') 
+           verifyIsHotelAdmin(userId, albumFound.hotelId);
+
+         await Promise.all(albumFound.images.map(async(img:{src:string,id:number})=> {
+              await prisma.image.delete({
+              where:{id:img.id}
+            })
+            await deleteImage(img.src)
+          
+          }))
+        await prisma.album.delete({
+          where:{
+            id:albumId
+          }
+        })
+return albumFound
+}
+return deleteAlbum(parseInt(args.userId),parseInt(args.albumId))
+      }
+  })
   }
 })
 

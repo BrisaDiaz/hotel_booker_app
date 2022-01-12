@@ -6,7 +6,9 @@ import {
 GET_HOTEL_ALBUMS,
 EDIT_ALBUM,
 RENAME_ALBUM,
-GET_ALBUM_IMAGES
+DELETE_ALBUM,
+GET_ALBUM_IMAGES,
+
 } from '@/queries/index';
 import { getUser } from '@/graphql/utils';
 import { useLazyQuery,useMutation } from '@apollo/client';
@@ -21,16 +23,18 @@ import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import Tooltip from '@mui/material/Tooltip';
 import Stack from '@mui/material/Stack';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import FolderDirectory from '@/components/dashboard/FoldersDirectory';
 import AlbumModal from '@/components/modals/AlbumModal'
-
+import Dialog from '@/components/Dialog';
 import FullScreenModal from '@/components/modals/FullScreenModal'
 import ImageManager from '@/components/ImagesAlbunManager'
+
+
 type PagePromps = {
 userId:number,
 hotelId:number,
@@ -68,10 +72,12 @@ const [selectedAlbum, setSelectedAlbum] = React.useState<{id:number,name:string}
     createAlbum: boolean;
     renameAlbum: boolean;
        manageAlbum: boolean;
+          deleteAlbum: boolean;
   }>({
     createAlbum: false,
     renameAlbum: false,
       manageAlbum: false,
+       deleteAlbum: false,
   });
 
 const [createAlbum,createAlbumRequest] = useMutation(CREATE_ALBUM,{
@@ -81,6 +87,20 @@ const [createAlbum,createAlbumRequest] = useMutation(CREATE_ALBUM,{
      setFolders(foldersCopy)
      handleCloseModal('createAlbum')
      setNotification({type:'success',content:'Folder created successfully'})
+  },
+  onError({message}){
+      setNotification({type:'error',content:message})
+  }
+})
+const [deleteAlbum,deleteAlbumRequest] = useMutation(DELETE_ALBUM,{
+  onCompleted({album}:{album:{id:number,name:string}}){
+  const foldersCopy=[...folders]
+    const actualizedSubFolders=   foldersCopy[0].subFolders.filter(folder =>folder.id !==album.id )
+    foldersCopy[0].subFolders=actualizedSubFolders
+  
+     setFolders(foldersCopy)
+     handleCloseModal('deleteAlbum')
+     setNotification({type:'success',content:'Folder deleted successfully'})
   },
   onError({message}){
       setNotification({type:'error',content:message})
@@ -100,7 +120,6 @@ foldersCopy[0].subFolders=actualizedSubFolders
       setNotification({type:'error',content:message})
   }
 })
-  console.log(modalsState)
 const [editAlbumImgs,editAlbumImgsRequest] = useMutation(EDIT_ALBUM,{
   onCompleted({album}:{album:{id:number,name:string,images:{id:number,src:string}[]}}){
 
@@ -138,12 +157,17 @@ React.useEffect(() => {
     setModalsState({ ...modalsState, [modalName]: true });
   };
   const handleActions =async (
-    action: 'createAlbum' | 'renameAlbum' |'manageAlbum' ,
+    action: 'createAlbum' | 'renameAlbum' |'manageAlbum'|'deleteAlbum' ,
 
   ) => {
-    if( action === 'renameAlbum' ){
+    if( action === 'renameAlbum'||action==="deleteAlbum" ){
       const isHotelAlbum = folders[0].subFolders.find((folder:{name:string,id:number})=> selectedAlbum?.id===folder.id)
-     !isHotelAlbum && setNotification({type:"warning",content:"Room types albums cannot be renamed."})
+      
+         if(  !isHotelAlbum){
+return setNotification({type:"warning",content:"Room types albums cannot be renamed or deleted."
+      })
+     
+    }
      
     }
     if(action==='manageAlbum' && selectedAlbum){
@@ -181,8 +205,7 @@ const onEditAlbumImgs=async(toUploadFiles:File[] ,imagesFiltered?:string[])=>{
   if(!selectedAlbum)return
 setLoading(true);
     try {
-    
-      const uploadedImgs= await uploadToCloudinary(toUploadFiles);
+ const uploadedImgs= await uploadToCloudinary(toUploadFiles);
 let imagesUrls= uploadedImgs.map(img=> img.secure_url)
 if(imagesFiltered){
 imagesUrls = [...imagesUrls,...imagesFiltered]
@@ -200,6 +223,19 @@ imagesUrls = [...imagesUrls,...imagesFiltered]
       setLoading(false);
       setNotification({type:'error',content:"Album update couldn't be complited, try again later"});
     }
+}
+const onDeleteAlbum=async()=>{
+     if(!selectedAlbum)return
+try{
+await deleteAlbum({
+  variables:{
+     userId:props.userId,
+    albumId:selectedAlbum.id,
+  }
+})
+}catch(error){
+  console.log(error)
+}
 }
 const onCreateAlbum=async(data:{name:string})=>{
 try{
@@ -231,11 +267,11 @@ await renameAlbum({
 }
 }
 React.useEffect(() => {
-  if(createAlbumRequest.loading||albumImagesRequest.loading||renameAlbumRequest.loading||editAlbumImgsRequest.loading){
+  if(createAlbumRequest.loading||albumImagesRequest.loading||renameAlbumRequest.loading||editAlbumImgsRequest.loading||deleteAlbumRequest.loading){
     return setLoading(true)
   }
    setLoading(false)
-}, [createAlbumRequest.loading,albumImagesRequest.loading,renameAlbumRequest.loading,editAlbumImgsRequest.loading])
+}, [createAlbumRequest.loading,albumImagesRequest.loading,renameAlbumRequest.loading,editAlbumImgsRequest.loading,deleteAlbumRequest.loading])
 
 React.useEffect(() => {
   if(notification.content){
@@ -243,6 +279,33 @@ React.useEffect(() => {
   }
 
 }, [notification])
+const ACTION_BOTTOMS=[
+  {
+    title:'Add a new album',
+    onClick:()=>handleActions('createAlbum'),
+    disabled:false,
+    icone:<CreateNewFolderIcon />
+  },
+    {
+    title:'Rename album',
+    onClick:()=>selectedAlbum && handleActions('renameAlbum'),
+    disabled:selectedAlbum ? false:true,
+    icone:<EditIcon />
+  },
+    {
+    title:"Manage album",
+    onClick:()=>selectedAlbum && handleActions('manageAlbum'),
+    disabled:selectedAlbum ? false:true,
+    icone:<CollectionsIcon />
+  },
+    {
+    title:'Delete album',
+    onClick:()=>selectedAlbum && handleActions('deleteAlbum'),
+    disabled:selectedAlbum ? false:true,
+    icone:<DeleteIcon />
+  },
+
+]
   return (
     <div>
       <Head>
@@ -252,20 +315,20 @@ React.useEffect(() => {
       </Head>
 
       <Box sx={{ maxWidth: 1200 }} component="main">
- <Box sx={{width:'100%',background:'#0000000a'}}>
+ <Box sx={{width:'100%',background:'#0000000a',borderBottom:'1px solid #ddd'}}>
 <Stack direction="row" justifyContent="end" spacing={1} sx={{p:1}}>
-  <Tooltip title="Add a new album" ><IconButton onClick={()=>handleActions('createAlbum')} > 
-    <CreateNewFolderIcon />
-  </IconButton ></Tooltip>
-    <Tooltip title="Rename album" >
-      <IconButton disabled={selectedAlbum ? false:true} onClick={()=>selectedAlbum && handleActions('renameAlbum')}>
-    <EditIcon/>
-  </IconButton></Tooltip>
-   <Tooltip title="Manage album" >
-      <IconButton disabled={selectedAlbum ? false:true} onClick={()=>selectedAlbum && handleActions('manageAlbum')}>
-    <CollectionsIcon/>
-  </IconButton></Tooltip>
-  
+
+ {ACTION_BOTTOMS.map(buttom=>
+  <Tooltip title={buttom.title} key={buttom.title}>
+   <span>
+      <IconButton disabled={buttom.disabled} onClick={buttom.onClick}>
+    {buttom.icone}
+  </IconButton>
+  </span>
+  </Tooltip>
+  )}
+ 
+     
 </Stack>
   
  </Box>
@@ -278,10 +341,22 @@ React.useEffect(() => {
            <AlbumModal isModalOpen={modalsState.createAlbum} closeModal={()=>handleCloseModal('createAlbum')}
            
            onSubmit={onCreateAlbum}/>
-               <AlbumModal isModalOpen={modalsState.renameAlbum} defaultValue={selectedAlbum} closeModal={()=>handleCloseModal('renameAlbum')}
+    <AlbumModal isModalOpen={modalsState.renameAlbum} defaultValue={selectedAlbum} closeModal={()=>handleCloseModal('renameAlbum')}
            
            onSubmit={onRenameAbum}/>
         <Backdrop loading={loading} />
+
+        <Dialog
+        acceptLabel={'Procced'}
+        rejectLabel={'Avort'}
+        title={'Are you sure?'}
+        text={
+          'If procced all images inside the album are going to be lost.'
+        }
+        isDialogOpen={modalsState.deleteAlbum}
+        onAccept={onDeleteAlbum}
+        onCancel={ ()=>handleCloseModal('deleteAlbum')}
+      />
         {notification.content && (
           <SnackBar
             severity={notification.type}

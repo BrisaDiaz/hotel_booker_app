@@ -564,3 +564,18 @@ export const RENAME_ALBUM = gql`
     }
   }
 `;
+export const DELETE_ALBUM = gql`
+  mutation deleteAlbum(
+    $userId: ID!
+    $albumId: ID!
+  ) {
+    album: deleteAlbum(
+      userId: $userId
+      albumId: $albumId
+      
+    ) {
+     id
+     name
+    }
+  }
+`;

@@ -7,7 +7,6 @@ import React from 'react';
 import FolderIcon from '@mui/icons-material/Folder';
 
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
@@ -22,15 +21,15 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 function Folder({folder,isOpen,onClick}:{folder:{id:number,name:string},isOpen:boolean,onClick:()=>void}){
   return(
      <ListItemButton sx={{cursor:'pointer',
-        color: isOpen? 'primary.main':'inherit',
+    
 'span':{
  
     transition:'0.2s ease-in-out',
     fontSize:{xs:'14px',sm:'16px'}
 },
       
-        '.MuiListItemIcon-root':{color:isOpen? 'primary.main':'default',    transition:'0.2s ease-in-out'},
-        '&:hover':{color:'primary.main','.MuiListItemIcon-root':{color:'primary.main',opacity: isOpen? 1:0.8}}}} onClick={onClick}>
+        '.MuiListItemIcon-root':{color: 'primary.main',    transition:'0.2s ease-in-out'},
+        '&:hover':{'.MuiListItemIcon-root':{opacity: isOpen? 1:0.8}}}} onClick={onClick}>
                   <ListItemIcon>
                  {  isOpen ?<FolderOpenIcon/> :<FolderIcon />}
                   </ListItemIcon>
@@ -45,13 +44,13 @@ function ContainerFolder({name,children,isOpen,onClick}:{name:string,children:Re
 return(
   <>
         <ListItemButton sx={{cursor:'pointer',
-        color: isOpen? 'primary.main':'default',
+
 'span':{
 
     transition:'0.2s ease-in-out',
     fontSize:{xs:'14px',sm:'16px'}
 },
- '.MuiListItemIcon-root':{color:isOpen ? 'primary.main':'default',    transition:'0.2s ease-in-out'},
+ '.MuiListItemIcon-root':{color:'primary.main',    transition:'0.2s ease-in-out'},
         '&:hover':{color:'primary.main','.MuiListItemIcon-root':{color:'primary.main',opacity: isOpen? 1:0.8}}}} onClick={onClick}>
    
                   <ListItemIcon>
