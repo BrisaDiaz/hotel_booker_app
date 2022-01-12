@@ -17,19 +17,26 @@ export const Image = objectType({
   definition(t){
     t.id('id')
     t.string('src')
-    t.int('albunId')
+    t.int('albumId')
  
   }
 })
-export const Albun = objectType({
-  name:'Albun',
+export const Album = objectType({
+  name:'Album',
   definition(t){
     t.id('id')
     t.string('name')
-    t.string('description')
     t.int('hotelId')
     t.int('roomModelId')
-    t.list.field('images',{type:"Image"})
+    t.list.field('images',{type:"Image",resolve(root:any):any{
+  
+        return prisma.image.findMany({
+          where:{
+            albumId:root.id
+          }
+        })
+  
+    }})
     t.string('createdAt');
   }
 })
@@ -37,61 +44,73 @@ export const Albun = objectType({
 export const Mutation = extendType({
   type:'Mutation',
   definition(t){
-    t.field('createAlbun',{
-      type:Albun,
+    t.field('createAlbum',{
+      type:Album,
       args:{
         userId:nonNull(idArg()),
         hotelId:nonNull(idArg()),
         roomModelId:idArg(),
         name:nonNull(stringArg()),
-        description:stringArg(),
+
         images:list(stringArg())
       },
       resolve(root,args):any{
-       const createAlbun = async(userId:number,hotelId:number,roomModelId:number | undefined,args:any)=>{
+       const createAlbum = async(userId:number,hotelId:number,roomModelId:number | undefined,args:any)=>{
            verifyIsHotelAdmin(userId, hotelId);
-         const albun = await prisma.albun.create({
+         const album = await prisma.album.create({
           data:{
             hotelId:hotelId,
             roomModelId:roomModelId,
             name:args.name,
-            description:args.description,
-            images: args.images.length ? {create:args.images.map((imgSrc:string)=> ({src:imgSrc}))}  :undefined
+
+            images: args.images?.length ? {create:args.images.map((imgSrc:string)=> ({src:imgSrc}))}  :undefined
           }
          })
-         return albun
+         return album
        }
-return createAlbun(parseInt(args.userId),parseInt(args.hotelId),parseInt(args.roomModelId),args)
+return createAlbum(parseInt(args.userId),parseInt(args.hotelId),args.roomModelId ?parseInt(args.roomModelId):undefined,args)
       }
     })
-     t.field('updateAlbun',{
-      type:Albun,
+     t.field('updateAlbum',{
+      type:Album,
       args:{
         userId:nonNull(idArg()),
-        albunId:nonNull(idArg()),
-        roomModelId:idArg(),
-        name:nonNull(stringArg()),
-        description:stringArg(),
+        albumId:nonNull(idArg()),
+        
+        name:stringArg(),
+
         images:list(stringArg())
       },
       resolve(root,args):any{
-       const createAlbun = async(userId:number,albunId:number,roomModelId:number | undefined,args:any)=>{
-         const albunFound = await prisma.albun.findUnique({
+       const updateAlbum = async(userId:number,albumId:number,args:any)=>{
+         const albumFound = await prisma.album.findUnique({
            where:{
-             id:albunId
+             id:albumId
            },
            include:{
              images:true
            }
          })
-         if(!albunFound) throw new UserInputError('Invalid albun identifier') 
-           verifyIsHotelAdmin(userId, albunFound.hotelId);
+         if(!albumFound) throw new UserInputError('Invalid album identifier') 
+           verifyIsHotelAdmin(userId, albumFound.hotelId);
+
+           if(!args.images){
+             return prisma.album.update({
+           where:{
+             id:albumId
+           },
+          data:{
+            name:args.name,
+          }
+         })
+     
+           }
       const toDeleteImgs:{id:number,src:string}[]=[];
         const storagedUrls:string[]=[];
       const toCreateImagesUrls:string[]=[];
    
 
-albunFound.images.forEach((img:{id:number,src:string}) => {
+albumFound.images.forEach((img:{id:number,src:string}) => {
  !args.images.includes(img.src)  && toDeleteImgs.push(img)
  storagedUrls.push(img.src)
 });
@@ -115,27 +134,24 @@ albunFound.images.forEach((img:{id:number,src:string}) => {
     toCreateImagesUrls.map(async(url:string)=>{
       await prisma.image.create({
         data:{
-           albunId:albunFound.id,
+           albumId:albumFound.id,
            src:url
         }
       })
     })
   )
 
-         const albun = await prisma.albun.update({
+         const album = await prisma.album.update({
            where:{
-             id:albunId
+             id:albumId
            },
           data:{
-            hotelId: albunFound.hotelId,
-            roomModelId:roomModelId,
             name:args.name,
-            description:args.description,
           }
          })
-         return albun
+         return album
        }
-return createAlbun(parseInt(args.userId),parseInt(args.albunId),parseInt(args.roomModelId),args)
+return updateAlbum(parseInt(args.userId),parseInt(args.albumId),args)
       }
     })
   }
@@ -144,29 +160,42 @@ return createAlbun(parseInt(args.userId),parseInt(args.albunId),parseInt(args.ro
 export const Query = extendType({
   type: 'Query',
   definition(t) {
-t.field('roomModelAlbun',{
-  type:Albun,
+t.field('roomModelAlbum',{
+  type:Album,
   args:{
     roomModelId:nonNull(idArg())
   },
   resolve(root,args):any{
-    return prisma.albun.findUnique({
+    return prisma.album.findUnique({
       where:{
         id:parseInt(args.roomModelId)
-      }
+      },
     })
   }
 }),
-t.field('hotelAlbuns',{
-  type:Albun,
+t.field('hotelAlbums',{
+  type:list(Album),
   args:{
     hotelId:nonNull(idArg())
   },
   resolve(root,args):any{
-    return prisma.albun.findUnique({
+    return prisma.album.findMany({
       where:{
-        id:parseInt(args.hotelId)
+        hotelId:parseInt(args.hotelId)
       }
+    })
+  }
+}),
+t.field('albumImages',{
+  type:list(Image),
+  args:{
+    albumId:nonNull(idArg())
+  },
+  resolve(root,args):any{
+    return prisma.image.findMany({
+      where:{
+        albumId:parseInt(args.albumId)
+      },
     })
   }
 })

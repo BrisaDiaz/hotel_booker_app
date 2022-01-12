@@ -449,6 +449,7 @@ function RoomsTable({
         <TableFooter>
           <TableRow>
             <TablePagination
+            sx={{overflow:'unset'}}
               rowsPerPageOptions={[]}
               colSpan={3}
               count={rows.length}

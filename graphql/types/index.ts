@@ -4,5 +4,5 @@ export * as Auth from './Auth';
 export * as Booking from './Booking';
 export * as Room from './Room';
 export * as Commun from './Commun';
-export * as Albun from './Albun';
+export * as Album from './Album';
 export * as Dashboard from './Dashboard';

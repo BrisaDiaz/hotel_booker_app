@@ -18,12 +18,14 @@ a {
 }
   * {
     scrollbar-width: thin;
+  
     scrollbar-color: #563d06 #ffffff;
   }
 
  
   *::-webkit-scrollbar {
     width: 8px;
+        height: 8px;
   }
 
   *::-webkit-scrollbar-track {

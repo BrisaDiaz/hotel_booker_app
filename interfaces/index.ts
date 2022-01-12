@@ -34,7 +34,7 @@ export interface RoomModel {
   maximunStay: number;
   minimunStay: number;
   description: string;
-  freeCancelation: Boolean;
+  freeCancelation: boolean;
   smooking: boolean;
   amenities: Feature[];
   services: Feature[];
@@ -179,6 +179,17 @@ export interface CancelationDetails {
   message: string;
   bookingId: number;
 }
+export interface Album {
+  id: number;
+  createdAt: string;
+  hotelId: number;
+  roomModelId: number|null;
+  name:string;
+  images: {
+    id:number,
+    src:string
+  };
+}
 export interface BookingEvent {
   id: string;
   title: string;
@@ -194,7 +205,7 @@ export interface BookingResourceMap {
   resourceId: number;
   resourceTitle: string;
 }
-export type WithLayoutPage<P = {}> = NextPage<P> & {
+export type WithLayoutPage<P =null> = NextPage<P> & {
   getLayout?: (page: React.ReactNode) => React.ReactNode;
 };
 export type Modify<T, R> = Omit<T, keyof R> & R;

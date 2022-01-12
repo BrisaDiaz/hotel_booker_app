@@ -14,7 +14,7 @@ export default function CustomizedSnackbars({
   severity,
   message,
 }: {
-  severity: string;
+  severity: 'error'| 'info'|'success'|'warning';
   message: string;
 }) {
   return (
@@ -24,7 +24,7 @@ export default function CustomizedSnackbars({
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
-          severity={severity === 'error' ? 'error' : 'success'}
+          severity={severity}
           sx={{ width: '100%' }}
         >
           {message}

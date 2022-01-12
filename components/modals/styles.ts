@@ -12,7 +12,8 @@ export const styles = {
     border: '1px solid rgba(244,244,244,1)',
 
     borderRadius: 2,
-    p: 2,
+    pt: 2,
+       pb: 3.5,
     px: 3.5,
     maxHeight: '90%',
     overflowY: 'auto',

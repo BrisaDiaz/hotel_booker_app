@@ -161,8 +161,8 @@ model Image {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   src         String  @unique
-   albun           Albun            @relation(fields: [albunId], references: [id])
-  albunId         Int
+   album           Album            @relation(fields: [albumId], references: [id])
+  albumId         Int
 }
 
 model Amenity {
@@ -227,13 +227,12 @@ model CancelationDetails {
   cancelationFee Float
   bookingId      Int      @unique
 }
-model Albun {
+model Album {
   id             Int      @id @default(autoincrement())
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   images Image[]
   name String
-  description String?
   hotelId     Int
   roomModelId Int? @unique
 }

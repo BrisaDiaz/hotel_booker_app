@@ -476,3 +476,20 @@ export const GET_BOOKING_CANCELATION_DETAILS = gql`
     }
   }
 `;
+export const GET_HOTEL_ALBUMS = gql`
+  query hotelAlbums($hotelId: ID!) {
+    albums: hotelAlbums(hotelId: $hotelId) {
+   id
+   name
+   roomModelId
+    }
+  }
+`;
+export const GET_ALBUM_IMAGES = gql`
+  query albumImages($albumId: ID!) {
+    images: albumImages(albumId: $albumId) {
+   id
+  src
+    }
+  }
+`;

@@ -66,6 +66,13 @@ export interface NexusGenObjects {
     id?: string | null; // ID
     userId?: number | null; // Int
   }
+  Album: { // root type
+    createdAt?: string | null; // String
+    hotelId?: number | null; // Int
+    id?: string | null; // ID
+    name?: string | null; // String
+    roomModelId?: number | null; // Int
+  }
   Amenity: { // root type
     id?: string | null; // ID
     name?: string | null; // String
@@ -191,11 +198,9 @@ export interface NexusGenObjects {
     totalResults?: number | null; // Int
   }
   Image: { // root type
-    hotelId?: number | null; // Int
+    albumId?: number | null; // Int
     id?: string | null; // ID
-    roomId?: number | null; // Int
     src?: string | null; // String
-    title?: string | null; // String
   }
   Language: { // root type
     id?: string | null; // ID
@@ -310,6 +315,14 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
     userId: number | null; // Int
   }
+  Album: { // field return type
+    createdAt: string | null; // String
+    hotelId: number | null; // Int
+    id: string | null; // ID
+    images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
+    name: string | null; // String
+    roomModelId: number | null; // Int
+  }
   Amenity: { // field return type
     id: string | null; // ID
     name: string | null; // String
@@ -409,6 +422,7 @@ export interface NexusGenFieldTypes {
     address: NexusGenRootTypes['Address'] | null; // Address
     administratorId: number; // Int!
     adminstrator: NexusGenRootTypes['Administrator'] | null; // Administrator
+    albums: Array<NexusGenRootTypes['Album'] | null> | null; // [Album]
     brand: string | null; // String
     category: string | null; // String
     checkInHour: string | null; // String
@@ -419,7 +433,6 @@ export interface NexusGenFieldTypes {
     features: NexusGenRootTypes['Features'] | null; // Features
     frameImage: string | null; // String
     id: string; // ID!
-    images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     interiorImage: string | null; // String
     languages: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
     lowestPrice: number | null; // Float
@@ -454,11 +467,9 @@ export interface NexusGenFieldTypes {
     totalResults: number | null; // Int
   }
   Image: { // field return type
-    hotelId: number | null; // Int
+    albumId: number | null; // Int
     id: string | null; // ID
-    roomId: number | null; // Int
     src: string | null; // String
-    title: string | null; // String
   }
   Language: { // field return type
     hotelsCount: number | null; // Int
@@ -470,6 +481,7 @@ export interface NexusGenFieldTypes {
     cancelBooking: NexusGenRootTypes['CancelationDetails'] | null; // CancelationDetails
     confirmBookingRequest: NexusGenRootTypes['Booking'] | null; // Booking
     creatHotelRoomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
+    createAlbum: NexusGenRootTypes['Album'] | null; // Album
     createHotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     declineBookingRequest: NexusGenRootTypes['BookingRequest'] | null; // BookingRequest
     deleteRoomOfModel: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
@@ -478,6 +490,7 @@ export interface NexusGenFieldTypes {
     signin: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
     signout: NexusGenRootTypes['PlainResponse'] | null; // PlainResponse
     signup: NexusGenRootTypes['User'] | null; // User
+    updateAlbum: NexusGenRootTypes['Album'] | null; // Album
     updateHotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     updateRoomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
   }
@@ -490,6 +503,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     activitiesList: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
     adminHotels: NexusGenRootTypes['AdminHotels'] | null; // AdminHotels
+    albumImages: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     amenitiesList: Array<NexusGenRootTypes['Amenity'] | null> | null; // [Amenity]
     authentication: NexusGenRootTypes['User'] | null; // User
     bedTypesList: Array<NexusGenRootTypes['BedType'] | null> | null; // [BedType]
@@ -498,6 +512,7 @@ export interface NexusGenFieldTypes {
     facilitiesList: Array<NexusGenRootTypes['Facility'] | null> | null; // [Facility]
     getBookingCancelationDetails: NexusGenRootTypes['CancelationDetails'] | null; // CancelationDetails
     getRoomModelAvailableRooms: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
+    hotelAlbums: Array<NexusGenRootTypes['Album'] | null> | null; // [Album]
     hotelBookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     hotelById: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelCategoriesList: Array<NexusGenRootTypes['HotelCategory'] | null> | null; // [HotelCategory]
@@ -508,6 +523,7 @@ export interface NexusGenFieldTypes {
     hotelSearch: NexusGenRootTypes['HotelSearch'] | null; // HotelSearch
     languagesList: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
     roomCategoriesList: Array<NexusGenRootTypes['RoomCategory'] | null> | null; // [RoomCategory]
+    roomModelAlbum: NexusGenRootTypes['Album'] | null; // Album
     roomModelById: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     roomModelData: NexusGenRootTypes['RoomModelData'] | null; // RoomModelData
     servicesList: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
@@ -539,6 +555,7 @@ export interface NexusGenFieldTypes {
     message: string | null; // String
   }
   RoomModel: { // field return type
+    album: Array<NexusGenRootTypes['Album'] | null> | null; // [Album]
     amenities: Array<NexusGenRootTypes['Amenity'] | null> | null; // [Amenity]
     beds: Array<NexusGenRootTypes['RoomBed'] | null> | null; // [RoomBed]
     cancelationFee: number | null; // Float
@@ -549,7 +566,6 @@ export interface NexusGenFieldTypes {
     hotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelId: number | null; // Int
     id: string | null; // ID
-    images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     lowestPrice: number | null; // Float
     mainImage: string | null; // String
     maximunGuests: number | null; // Int
@@ -610,6 +626,14 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     user: 'User'
     userId: 'Int'
+  }
+  Album: { // field return type name
+    createdAt: 'String'
+    hotelId: 'Int'
+    id: 'ID'
+    images: 'Image'
+    name: 'String'
+    roomModelId: 'Int'
   }
   Amenity: { // field return type name
     id: 'ID'
@@ -710,6 +734,7 @@ export interface NexusGenFieldTypeNames {
     address: 'Address'
     administratorId: 'Int'
     adminstrator: 'Administrator'
+    albums: 'Album'
     brand: 'String'
     category: 'String'
     checkInHour: 'String'
@@ -720,7 +745,6 @@ export interface NexusGenFieldTypeNames {
     features: 'Features'
     frameImage: 'String'
     id: 'ID'
-    images: 'Image'
     interiorImage: 'String'
     languages: 'Language'
     lowestPrice: 'Float'
@@ -755,11 +779,9 @@ export interface NexusGenFieldTypeNames {
     totalResults: 'Int'
   }
   Image: { // field return type name
-    hotelId: 'Int'
+    albumId: 'Int'
     id: 'ID'
-    roomId: 'Int'
     src: 'String'
-    title: 'String'
   }
   Language: { // field return type name
     hotelsCount: 'Int'
@@ -771,6 +793,7 @@ export interface NexusGenFieldTypeNames {
     cancelBooking: 'CancelationDetails'
     confirmBookingRequest: 'Booking'
     creatHotelRoomModel: 'RoomModel'
+    createAlbum: 'Album'
     createHotel: 'Hotel'
     declineBookingRequest: 'BookingRequest'
     deleteRoomOfModel: 'Room'
@@ -779,6 +802,7 @@ export interface NexusGenFieldTypeNames {
     signin: 'AuthPayload'
     signout: 'PlainResponse'
     signup: 'User'
+    updateAlbum: 'Album'
     updateHotel: 'Hotel'
     updateRoomModel: 'RoomModel'
   }
@@ -791,6 +815,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     activitiesList: 'Activity'
     adminHotels: 'AdminHotels'
+    albumImages: 'Image'
     amenitiesList: 'Amenity'
     authentication: 'User'
     bedTypesList: 'BedType'
@@ -799,6 +824,7 @@ export interface NexusGenFieldTypeNames {
     facilitiesList: 'Facility'
     getBookingCancelationDetails: 'CancelationDetails'
     getRoomModelAvailableRooms: 'Room'
+    hotelAlbums: 'Album'
     hotelBookings: 'Booking'
     hotelById: 'Hotel'
     hotelCategoriesList: 'HotelCategory'
@@ -809,6 +835,7 @@ export interface NexusGenFieldTypeNames {
     hotelSearch: 'HotelSearch'
     languagesList: 'Language'
     roomCategoriesList: 'RoomCategory'
+    roomModelAlbum: 'Album'
     roomModelById: 'RoomModel'
     roomModelData: 'RoomModelData'
     servicesList: 'Service'
@@ -840,6 +867,7 @@ export interface NexusGenFieldTypeNames {
     message: 'String'
   }
   RoomModel: { // field return type name
+    album: 'Album'
     amenities: 'Amenity'
     beds: 'RoomBed'
     cancelationFee: 'Float'
@@ -850,7 +878,6 @@ export interface NexusGenFieldTypeNames {
     hotel: 'Hotel'
     hotelId: 'Int'
     id: 'ID'
-    images: 'Image'
     lowestPrice: 'Float'
     mainImage: 'String'
     maximunGuests: 'Int'
@@ -925,6 +952,13 @@ export interface NexusGenArgTypes {
       services: Array<string | null>; // [String]!
       smooking: boolean; // Boolean!
       taxesAndCharges: number; // Float!
+      userId: string; // ID!
+    }
+    createAlbum: { // args
+      hotelId: string; // ID!
+      images?: Array<string | null> | null; // [String]
+      name: string; // String!
+      roomModelId?: string | null; // ID
       userId: string; // ID!
     }
     createHotel: { // args
@@ -1011,6 +1045,12 @@ export interface NexusGenArgTypes {
       lastName: string; // String!
       password: string; // String!
     }
+    updateAlbum: { // args
+      albumId: string; // ID!
+      images?: Array<string | null> | null; // [String]
+      name?: string | null; // String
+      userId: string; // ID!
+    }
     updateHotel: { // args
       accessible?: boolean | null; // Boolean
       activities?: Array<string | null> | null; // [String]
@@ -1079,6 +1119,9 @@ export interface NexusGenArgTypes {
     adminHotels: { // args
       userId: string; // ID!
     }
+    albumImages: { // args
+      albumId: string; // ID!
+    }
     bookingById: { // args
       bookingId: string; // ID!
       userId: string; // ID!
@@ -1097,6 +1140,9 @@ export interface NexusGenArgTypes {
       checkOutDate: string; // String!
       roomModelId: string; // ID!
       rooms: NexusGenInputs['roomSpecifications'][]; // [roomSpecifications!]!
+    }
+    hotelAlbums: { // args
+      hotelId: string; // ID!
     }
     hotelBookings: { // args
       from?: string | null; // String
@@ -1143,6 +1189,9 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       sort?: string | null; // String
       take?: number | null; // Int
+    }
+    roomModelAlbum: { // args
+      roomModelId: string; // ID!
     }
     roomModelById: { // args
       roomModelId: string; // ID!

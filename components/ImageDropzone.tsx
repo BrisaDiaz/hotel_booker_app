@@ -32,10 +32,15 @@ setDropzoneState({...dropzoneState,loading:false})
     
     <Box sx={{
    position:'relative',
+   cursor:'pointer',
   width:'100%',
   maxWidth:'600px',
   height:'150px',
   mx:'auto',
+  transition:'0.5s ease-in-out',
+  '&:hover':{
+opacity:1
+  },
     opacity: dropzoneState.isDraging ? 1: 0.5,
   border: '2px dashed #265985',
   background:'#f1f3f9',
@@ -45,7 +50,8 @@ setDropzoneState({...dropzoneState,loading:false})
      width:'100%',
  height:'100%',
  zIndex:10,
- opacity:0
+ opacity:0,
+    cursor:'pointer',
   },
  'svg':{
  
@@ -57,7 +63,7 @@ fontWeight:800
 }
 }}>
 
-          <input type="file" multiple onChange={handleChange} onDragEnter={()=>handleDragState(true)} onDragLeave={ ()=>handleDragState(false)} onDrop={()=>handleDragState(false)} />
+          <input type="file" multiple onChange={handleChange} onDragEnter={()=>handleDragState(true)}  onDragLeave={ ()=>handleDragState(false)} onDrop={()=>handleDragState(false)} />
            <CloudUploadIcon color="primary"/>
            <Typography variant="h6" align="center"  color="primary">Drag here your files.</Typography>
             <ProgressBar loading={dropzoneState.loading}/>

@@ -31,6 +31,15 @@ type Administrator {
   userId: Int
 }
 
+type Album {
+  createdAt: String
+  hotelId: Int
+  id: ID
+  images: [Image]
+  name: String
+  roomModelId: Int
+}
+
 type Amenity {
   id: ID
   name: String
@@ -154,6 +163,7 @@ type Hotel {
   address: Address
   administratorId: Int!
   adminstrator: Administrator
+  albums: [Album]
   brand: String
   category: String
   checkInHour: String
@@ -164,7 +174,6 @@ type Hotel {
   features: Features
   frameImage: String
   id: ID!
-  images: [Image]
   interiorImage: String
   languages: [Language]
   lowestPrice: Float
@@ -203,11 +212,9 @@ type HotelSearch {
 }
 
 type Image {
-  hotelId: Int
+  albumId: Int
   id: ID
-  roomId: Int
   src: String
-  title: String
 }
 
 type Language {
@@ -221,6 +228,7 @@ type Mutation {
   cancelBooking(bookingId: ID!, cancelationFee: Float!, message: String!, userId: ID!): CancelationDetails
   confirmBookingRequest(bookingRequestId: ID!, paymentMethod: String, roomsIds: [Int!]!, totalCost: Float!, userId: ID!): Booking
   creatHotelRoomModel(amenities: [String]!, beds: [bedsSpecifications]!, cancelationFee: Float, category: String!, description: String!, freeCancelation: Boolean!, hotelId: ID!, lowestPrice: Float!, mainImage: String!, maximunGuests: Int!, maximunStay: Int, minimunStay: Int!, mts2: Int!, name: String!, services: [String]!, smooking: Boolean!, taxesAndCharges: Float!, userId: ID!): RoomModel
+  createAlbum(hotelId: ID!, images: [String], name: String!, roomModelId: ID, userId: ID!): Album
   createHotel(accessible: Boolean!, activities: [String]!, administrativeArea: String!, brand: String, category: String, checkInHour: String!, checkOutHour: String!, city: String, country: String, description: String!, ecoFriendly: Boolean!, email: String, facilities: [String]!, familyFriendly: Boolean!, frameImage: String!, freeCancelation: Boolean!, holeAddress: String!, interiorImage: String!, languages: [String]!, lowestPrice: Float!, name: String!, petFriendly: Boolean!, policiesAndRules: String!, postalCode: String!, services: [String]!, smokerFriendly: Boolean!, street: String, taxesAndCharges: Float!, telephone: String!, userId: ID!, website: String): Hotel
   declineBookingRequest(bookingRequestId: ID!, userId: ID!): BookingRequest
   deleteRoomOfModel(hotelId: ID!, roomModelId: ID!, roomsIds: [Int!]!, userId: ID!): [Room]
@@ -229,6 +237,7 @@ type Mutation {
   signin(email: String!, password: String!): AuthPayload
   signout(date: String): PlainResponse
   signup(email: String!, firstName: String!, lastName: String!, password: String!): User
+  updateAlbum(albumId: ID!, images: [String], name: String, userId: ID!): Album
   updateHotel(accessible: Boolean, activities: [String], administrativeArea: String, brand: String, category: String, checkInHour: String, checkOutHour: String, city: String, country: String, description: String, ecoFriendly: Boolean, email: String, facilities: [String], familyFriendly: Boolean, frameImage: String, freeCancelation: Boolean, holeAddress: String, hotelId: ID!, interiorImage: String, languages: [String], lowestPrice: Float, name: String, petFriendly: Boolean, policiesAndRules: String, postalCode: String, services: [String], smokerFriendly: Boolean, street: String, taxesAndCharges: Float, telephone: String, userId: ID!, website: String): Hotel
   updateRoomModel(amenities: [String], beds: [bedsSpecifications], cancelationFee: Float, category: String, description: String, freeCancelation: Boolean, hotelId: ID!, lowestPrice: Float, mainImage: String, maximunGuests: Int, maximunStay: Int, minimunStay: Int, mts2: Int, name: String, roomModelId: ID!, services: [String], smooking: Boolean, taxesAndCharges: Float, userId: ID!): RoomModel
 }
@@ -252,6 +261,7 @@ type PlainResponse {
 type Query {
   activitiesList: [Activity]
   adminHotels(userId: ID!): AdminHotels
+  albumImages(albumId: ID!): [Image]
   amenitiesList: [Amenity]
   authentication: User
   bedTypesList: [BedType]
@@ -260,6 +270,7 @@ type Query {
   facilitiesList: [Facility]
   getBookingCancelationDetails(bookingId: ID!): CancelationDetails
   getRoomModelAvailableRooms(checkInDate: String!, checkOutDate: String!, roomModelId: ID!, rooms: [roomSpecifications!]!): [Room]
+  hotelAlbums(hotelId: ID!): [Album]
   hotelBookings(from: String, hotelId: ID!, status: String, until: String, userId: ID!): [Booking]
   hotelById(hotelId: ID!): Hotel
   hotelCategoriesList: [HotelCategory]
@@ -270,6 +281,7 @@ type Query {
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
   languagesList: [Language]
   roomCategoriesList: [RoomCategory]
+  roomModelAlbum(roomModelId: ID!): Album
   roomModelById(roomModelId: ID!): RoomModel
   roomModelData(roomModelId: ID!, userId: ID!): RoomModelData
   servicesList: [Service]
@@ -312,6 +324,7 @@ type RoomConsultResponceResponce {
 }
 
 type RoomModel {
+  album: [Album]
   amenities: [Amenity]
   beds: [RoomBed]
   cancelationFee: Float
@@ -322,7 +335,6 @@ type RoomModel {
   hotel: Hotel
   hotelId: Int
   id: ID
-  images: [Image]
   lowestPrice: Float
   mainImage: String
   maximunGuests: Int

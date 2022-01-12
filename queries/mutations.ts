@@ -507,30 +507,60 @@ export const CANCEL_BOOKING = gql`
     }
   }
 `;
-export const CREATE_ALBUN = gql`
-  mutation createAlbun(
+export const CREATE_ALBUM = gql`
+  mutation createAlbum(
     $userId: ID!
     $hotelId: ID!
     $roomModelId: ID
     $name: String!
-    $description: String
     $images:[String]
   ) {
-    cancelationDetails: cancelBooking(
+    album: createAlbum(
       userId: $userId
       hotelId: $hotelId
       roomModelId: $roomModelId
       name: $name
-      description: $description
+
       images: $images
     ) {
      id
      name
-     description
+    }
+  }
+`;
+export const EDIT_ALBUM = gql`
+  mutation updateAlbum(
+    $userId: ID!
+    $albumId: ID!
+    $images:[String]
+  ) {
+    album: updateAlbum(
+      userId: $userId
+      albumId: $albumId
+      images: $images
+    ) {
+     id
+     name
      images{
        id
        src
      }
+    }
+  }
+`;
+export const RENAME_ALBUM = gql`
+  mutation updateAlbum(
+    $userId: ID!
+    $albumId: ID!
+    $name: String
+  ) {
+    album: updateAlbum(
+      userId: $userId
+      albumId: $albumId
+      name: $name
+    ) {
+     id
+     name
     }
   }
 `;

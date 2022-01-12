@@ -85,10 +85,10 @@ export const RoomModel = objectType({
         });
       },
     });
-    t.list.field('albun', {
-      type: 'Albun',
+    t.list.field('album', {
+      type: 'Album',
       resolve: (root: any): any => {
-        return prisma.albun.findUnique({
+        return prisma.album.findUnique({
           where: {
             roomModelId: root.id,
           },
@@ -232,6 +232,13 @@ export const Mutation = extendType({
                 },
               })
           );
+          await prisma.album.create({
+            data:{
+              hotelId:hotelId,
+              roomModelId:roomModel.id,
+              name:`Room Type ${roomModel.id}`
+            }
+          })
           await Promise.all(roomBeds);
           return roomModel;
         };

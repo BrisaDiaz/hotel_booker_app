@@ -70,9 +70,9 @@ const readerPromices = nonDuplicatedFiles.map(file => {
     onSubmit(files,defaultImgUrls):onSubmit(files)
  }
   return(
-      <Box component="section" sx={{maxWidth:'900px',width:'100%',mx:'auto',p:{xs:2 ,sm:4}}}>
+      <Box component="section" sx={{width:'100%',mx:'auto',px:{xs:1 ,sm:4},my: 4}}>
  <ImageDropzone onChange={handleFilesUpload}/>
- <Box sx={{my:4}}>
+ <Box sx={{mt:2}}>
 
  <ImageFilter onClear={handleClear} images={visuals} onReset={handleResetChanges} onSave={handleSubmit}/>
 </Box>

@@ -21,7 +21,7 @@ export default function FullScreenDialog({
   isOpen,
 }: {
   isOpen: boolean;
-  title: string;
+  title?: string;
   children: React.ReactNode;
   onClose?: ()=>void;
 }) {
@@ -41,6 +41,8 @@ export default function FullScreenDialog({
     }
     return handleClose();
   }, [isOpen]);
+
+  if(!open) return <div/>
   return (
     <div>
       <Dialog
@@ -58,14 +60,14 @@ export default function FullScreenDialog({
           }}
         />
 
-        <Typography
+      {title ?<Typography
           component="h1"
           variant="h4"
           align="center"
           sx={{ fontWeight: 600, opacity: 0.8 }}
         >
           {title}
-        </Typography>
+        </Typography> :null}  
         {children}
       </Dialog>
     </div>

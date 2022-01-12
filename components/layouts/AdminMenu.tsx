@@ -23,6 +23,7 @@ import Menu from '@mui/material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import CollectionsIcon from '@mui/icons-material/Collections';
 import { SIGN_OUT } from '@/queries/index';
 import { useAuth } from '@/context/useAuth';
 import Logo from '@/components/layouts/Logo';
@@ -129,7 +130,9 @@ function NavLink({ link }: { link: Link }) {
               ? '2px solid rgba(255,255,255,0.8)'
               : '1px solid rgba(255,255,255,0.3)'
           }`,
-
+'&:hover':{
+border:'1px solid rgba(255,255,255,0.8)'
+},
           m: '10px 0 10px 0',
           width: `${link.level === 1 ? '90%' : '100%'}`,
         }}
@@ -170,7 +173,7 @@ export default function ResponsiveDrawer(props: Props) {
     setMobileOpen(!mobileOpen);
   };
 
-  const links: Link[] = [
+  const NAVEGATION_LINKS: Link[] = [
     {
       label: 'Dashboard',
       icone: <DashboardIcon />,
@@ -236,6 +239,21 @@ export default function ResponsiveDrawer(props: Props) {
           }
         : {},
     },
+     {
+      label: 'gallery',
+      icone: <CollectionsIcon />,
+      selected: activeLink === 'gallery',
+      sub: true,
+      family: ['hotel'],
+      level: 1,
+
+      url: `/admin/hotel/gallery`,
+      query: hotelId
+        ? {
+            hotelId: hotelId,
+          }
+        : {},
+    },
   ];
 
   const drawer = (
@@ -253,9 +271,9 @@ export default function ResponsiveDrawer(props: Props) {
       />
       <List sx={{ mx: '10px' }} component="nav">
         {activeLink === 'dashboard' ? (
-          <NavLink link={links[0]} />
+          <NavLink link={NAVEGATION_LINKS[0]} />
         ) : (
-          links.map((link: Link) => <NavLink key={link.label} link={link} />)
+          NAVEGATION_LINKS.map((link: Link) => <NavLink key={link.label} link={link} />)
         )}
       </List>
     </Box>
@@ -312,7 +330,7 @@ export default function ResponsiveDrawer(props: Props) {
         }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+        {/* The implementation can be swapped with js to avoid SEO duplication of NAVEGATION_LINKS. */}
         <Drawer
           container={container}
           variant="temporary"
@@ -349,7 +367,7 @@ export default function ResponsiveDrawer(props: Props) {
         component="div"
         sx={{
           flexGrow: 1,
-          mt: 8,
+          mt: {xs:'55px',sm:8},
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           overflow: 'hidden',
         }}

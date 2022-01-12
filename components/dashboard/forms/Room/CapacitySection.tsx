@@ -187,7 +187,7 @@ export function BedsInputs({
               sx={styles.textField}
               id="bedQuantity"
               defaultValue={
-                defaultBeds ? defaultBeds[`${bed.name}`].quantity : 0
+                defaultBeds ? defaultBeds[`${bed.name}`]?.quantity : 0
               }
               inputProps={{ min: 0 }}
               {...register(`${bed.name}`, {
