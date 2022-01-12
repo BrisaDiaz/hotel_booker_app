@@ -112,7 +112,7 @@ if (!authContext.session.loading && !authContext.session.user)  router.push('/si
 };
 export default RoomUploadPage;
 RoomUploadPage.getLayout = function getLayout(page: React.ReactNode) {
-  return <AdminMenu activeLink="dashboard">{page}</AdminMenu>;
+  return <AdminMenu activeLink="hotel">{page}</AdminMenu>;
 };
 export const getStaticProps = async () => {
   const servicesRequest = prisma.service.findMany({});
