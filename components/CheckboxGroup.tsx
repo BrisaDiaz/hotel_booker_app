@@ -3,7 +3,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { Feature } from '@/interfaces/index';
-
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 export default function CheckboxLabels({
   items,
   handleChanges,
@@ -13,21 +14,26 @@ export default function CheckboxLabels({
 }) {
 
   return (
-    <FormGroup>
+    <FormGroup sx={{p:0}}>
       {items.map((item) => (
         <FormControlLabel
           sx={{
             textTransform: 'capitalize',
-            '& >  * ': {
-              fontSize: '14px',
-            },
-            mb: '4px',
+  px:0
           }}
           key={`${item.name}-${item.id}`}
           label={
-            item?.hotelsCount
-              ? `${item.name} (${item.hotelsCount})`
-              : ` ${item.name}`
+            <Box sx={{display:'flex',justifyContent:'space-between',width:'170px',  ' *':{fontSize: '14px' }  }}>
+         <Typography title={item.name} sx={{  
+           maxWidth:'140px',
+              whiteSpace:'nowrap',
+              fontSize: '14px',
+              textOverflow:'ellipsis',
+              overflow:'hidden'}}>{item.name}</Typography>
+       {       item?.hotelsCount ?     <Typography>{  
+               `(${item.hotelsCount})`
+            }</Typography> :null}
+            </Box>
           }
           control={
             <Checkbox

@@ -4,12 +4,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import RoomServiceIcon from '@mui/icons-material/RoomService';
-import HikingIcon from '@mui/icons-material/Hiking';
-import LanguageIcon from '@mui/icons-material/Language';
-import HotelIcon from '@mui/icons-material/Hotel';
-import RuleIcon from '@mui/icons-material/Rule';
 import DinamicFieldIcone from '@/components/DinamicFieldIcone';
 import Box from '@mui/material/Box';
 
@@ -24,12 +18,12 @@ export default function SimpleAccordion({
     <div>
       <Accordion sx={{ boxShadow: 'none' }}>
         <AccordionSummary
-          sx={{ margin: 0 }}
+          sx={{ margin: 0,maxHeight:'48px' }}
           expandIcon={<ExpandMoreIcon color="primary" />}
           aria-controls={`${title}-panel`}
           id={`${title}-panel`}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center',}}>
             {DinamicFieldIcone(title)}
             <Typography
               variant="subtitle1"
@@ -37,6 +31,7 @@ export default function SimpleAccordion({
                 fontWeight: 200,
                 padding: '0 10px',
                 opacity: '0.8',
+              
               }}
             >
               {title}
@@ -44,7 +39,7 @@ export default function SimpleAccordion({
           </Box>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography component="div">{children}</Typography>
+          <Box component="div">{children}</Box>
         </AccordionDetails>
       </Accordion>
     </div>
