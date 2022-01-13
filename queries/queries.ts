@@ -163,6 +163,11 @@ export const GET_HOTEL_BY_ID = gql`
         smokerFriendly
         ecoFriendly
       }
+      imagesCount
+      miniatures{
+      id
+    src
+      }
       roomModels {
         id
         name
@@ -194,6 +199,11 @@ export const GET_ROOM_MODEL_BY_ID = gql`
       name
       mts2
       mainImage
+          imagesCount
+      miniatures{
+      id
+    src
+      }
       lowestPrice
       taxesAndCharges
       cancelationFee
@@ -488,6 +498,22 @@ export const GET_HOTEL_ALBUMS = gql`
 export const GET_ALBUM_IMAGES = gql`
   query albumImages($albumId: ID!) {
     images: albumImages(albumId: $albumId) {
+   id
+  src
+    }
+  }
+`;
+export const GET_HOTEL_IMAGES = gql`
+  query hotelImages($hotelId: ID!) {
+    images: hotelImages(hotelId: $hotelId) {
+   id
+  src
+    }
+  }
+`;
+export const GET_ROOM_MODEL_IMAGES = gql`
+  query roomModelImages($roomModelId: ID!) {
+    images: roomModelImages(roomModelId: $roomModelId) {
    id
   src
     }

@@ -1,8 +1,10 @@
+import * as React from 'react';
 import type { NextApiResponse } from 'next';
 import { WithLayoutPage } from '@/interfaces/index';
 import { client } from '@/lib/apollo';
 import AppBar from '@/components/layouts/AppBar';
-import { GET_HOTEL_BY_ID } from '@/queries/index';
+import { GET_HOTEL_BY_ID,GET_HOTEL_IMAGES } from '@/queries/index';
+import { useLazyQuery } from '@apollo/client';
 import { getFeaturesTags } from '@/utils/index';
 import Head from 'next/head';
 import Grid from '@mui/material/Grid';
@@ -14,7 +16,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Typography from '@mui/material/Typography';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import Tabs from '@/components/Tabs';
-import ImageSlider from '@/components/ImageSlider';
+import AsyncCaroucelModal from '@/components/modals/AsyncCaroucelModal';
 import DinamicFieldIcone from '@/components/DinamicFieldIcone';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
@@ -24,6 +26,7 @@ import RoomCard from '@/components/RoomCard';
 import currencyFixer from '@/utils/currencyFixer'
 import { useTheme } from '@mui/material/styles';
 import { Hotel } from '@/interfaces/index';
+import ImageGrid from '@/components/ImageGrid'
 const styles = {
   list: {
     display: 'flex',
@@ -59,11 +62,6 @@ const styles = {
 } as const;
 const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
   const theme = useTheme();
-
-  const images = [
-    { title: 'Facade', image: hotel.frameImage },
-    { title: 'Interior', image: hotel.interiorImage },
-  ];
   const characteristics = [
     {
       title: 'facilities',
@@ -84,7 +82,55 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
     },
   ];
   const includedFeatures = getFeaturesTags(hotel.features);
+const mainImages=[
+{
+    image: hotel.frameImage,
+    title: 'Hotel Facade',
 
+  },
+  {
+    image: hotel.interiorImage,
+    title: 'Hotel Exterior',
+  },
+]
+const miniatures = hotel.miniatures.map(img=>({title:`${hotel.name} photo`,image:img.src}))
+
+const [isCarouselOpen, setIsCarouselOpen] = React.useState<boolean>(false)
+const [carouselImages, setCarruselImages] = React.useState<{image:string,title:string}[]>( [...mainImages,...miniatures])
+const [carruselIndex, setCarrucelIndex] = React.useState<number>( 0)
+
+const [getHotelImages,{data}] = useLazyQuery(GET_HOTEL_IMAGES) 
+const closeCarrucel=()=>{
+  setIsCarouselOpen(false)
+  setCarrucelIndex(0)
+}
+const openCarousel=()=>{
+  setIsCarouselOpen(true)
+}
+const handleImageClick=(img:{image:string,title:string},index:number)=>{
+  setCarrucelIndex(index)
+  handleShowMore()
+
+}
+const handleShowMore=async()=>{
+try{
+
+await getHotelImages({
+  variables:{hotelId:hotel.id,skip:miniatures.length}
+})
+!isCarouselOpen && openCarousel()
+
+}catch(err){
+  console.log(err)
+}
+}
+
+React.useEffect(() => {
+if(data && 'images' in data){
+
+  setCarruselImages([...mainImages,...data.images.map((img:{id:number,src:string})=>({title:`${hotel.name} photo`,image:img.src}))])
+}
+}, [data])
   return (
     <div>
       <Head>
@@ -93,7 +139,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{ maxWidth: '1000px', m: '80px auto 30px' }}>
+      <Box sx={{ maxWidth: '900px', m: '80px auto 30px' }}>
         
           <Typography
             variant="h3"
@@ -156,8 +202,12 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
               </Typography>
             </Box>
           </Box>
-          {/* CARROUSEL */}
-          <ImageSlider images={images} />
+
+          {/* CARROUCEL */}
+          <ImageGrid mainImages={mainImages}
+miniatures={miniatures} totalQuantity={hotel.imagesCount -miniatures.length} onClick={handleImageClick} onShowMore={handleShowMore}/>
+        
+        <AsyncCaroucelModal totalImages={hotel.imagesCount+mainImages.length}  images={carouselImages} onClose={closeCarrucel} isOpen={isCarouselOpen} defaultIndex={carruselIndex} requireMore={handleShowMore}/> 
     <Box component="section" sx={{px:{xs:1,lg:0}}}>
           <Typography
             component="h4"
@@ -394,12 +444,12 @@ HotelPage.getLayout = (page: React.ReactNode) => (
 export default HotelPage;
 export const getServerSideProps = async ({
   query,
-  res,
+
 }: {
   query: { id: number };
-  res: NextApiResponse;
+
 }) => {
-  const { data, error, loading } = await client.query({
+  const { data, error } = await client.query({
     query: GET_HOTEL_BY_ID,
     variables: { hotelId: query.id },
   });

@@ -433,9 +433,11 @@ export interface NexusGenFieldTypes {
     features: NexusGenRootTypes['Features'] | null; // Features
     frameImage: string | null; // String
     id: string; // ID!
+    imagesCount: number | null; // Int
     interiorImage: string | null; // String
     languages: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
     lowestPrice: number | null; // Float
+    miniatures: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     name: string | null; // String
     policiesAndRules: string | null; // String
     public: boolean | null; // Boolean
@@ -519,10 +521,12 @@ export interface NexusGenFieldTypes {
     hotelCategoriesList: Array<NexusGenRootTypes['HotelCategory'] | null> | null; // [HotelCategory]
     hotelData: NexusGenRootTypes['HotelData'] | null; // HotelData
     hotelGuests: NexusGenRootTypes['GuestSearch'] | null; // GuestSearch
+    hotelImages: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     hotelRequests: NexusGenRootTypes['RequestSearch'] | null; // RequestSearch
     hotelRoomModels: Array<NexusGenRootTypes['RoomModel'] | null> | null; // [RoomModel]
     hotelSearch: NexusGenRootTypes['HotelSearch'] | null; // HotelSearch
     languagesList: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
+    romModelImages: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     roomCategoriesList: Array<NexusGenRootTypes['RoomCategory'] | null> | null; // [RoomCategory]
     roomModelAlbum: NexusGenRootTypes['Album'] | null; // Album
     roomModelById: NexusGenRootTypes['RoomModel'] | null; // RoomModel
@@ -567,10 +571,12 @@ export interface NexusGenFieldTypes {
     hotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelId: number | null; // Int
     id: string | null; // ID
+    imagesCount: number | null; // Int
     lowestPrice: number | null; // Float
     mainImage: string | null; // String
     maximunGuests: number | null; // Int
     maximunStay: number | null; // Int
+    miniatures: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     minimunStay: number | null; // Int
     mts2: number | null; // Int
     name: string | null; // String
@@ -746,9 +752,11 @@ export interface NexusGenFieldTypeNames {
     features: 'Features'
     frameImage: 'String'
     id: 'ID'
+    imagesCount: 'Int'
     interiorImage: 'String'
     languages: 'Language'
     lowestPrice: 'Float'
+    miniatures: 'Image'
     name: 'String'
     policiesAndRules: 'String'
     public: 'Boolean'
@@ -832,10 +840,12 @@ export interface NexusGenFieldTypeNames {
     hotelCategoriesList: 'HotelCategory'
     hotelData: 'HotelData'
     hotelGuests: 'GuestSearch'
+    hotelImages: 'Image'
     hotelRequests: 'RequestSearch'
     hotelRoomModels: 'RoomModel'
     hotelSearch: 'HotelSearch'
     languagesList: 'Language'
+    romModelImages: 'Image'
     roomCategoriesList: 'RoomCategory'
     roomModelAlbum: 'Album'
     roomModelById: 'RoomModel'
@@ -880,10 +890,12 @@ export interface NexusGenFieldTypeNames {
     hotel: 'Hotel'
     hotelId: 'Int'
     id: 'ID'
+    imagesCount: 'Int'
     lowestPrice: 'Float'
     mainImage: 'String'
     maximunGuests: 'Int'
     maximunStay: 'Int'
+    miniatures: 'Image'
     minimunStay: 'Int'
     mts2: 'Int'
     name: 'String'
@@ -1172,6 +1184,11 @@ export interface NexusGenArgTypes {
       take: number | null; // Int
       userId: string; // ID!
     }
+    hotelImages: { // args
+      hotelId: string; // ID!
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
     hotelRequests: { // args
       hotelId: string; // ID!
       search?: NexusGenInputs['searchFilter'] | null; // searchFilter
@@ -1194,6 +1211,11 @@ export interface NexusGenArgTypes {
       services?: Array<string | null> | null; // [String]
       skip?: number | null; // Int
       sort?: string | null; // String
+      take?: number | null; // Int
+    }
+    romModelImages: { // args
+      roomModelId: string; // ID!
+      skip?: number | null; // Int
       take?: number | null; // Int
     }
     roomModelAlbum: { // args

@@ -95,6 +95,34 @@ export const RoomModel = objectType({
         });
       },
     });
+    t.int('imagesCount',{
+      resolve(root:any):any{
+   return prisma.image.count({
+          where: {
+            album:{
+              roomModelId: root.id,
+            }
+          },
+        });
+      }
+    }),
+     t.list.field('miniatures', {
+      type: 'Image',
+      resolve(root: any): any {
+        return prisma.image.findMany({
+          take:6,
+                  orderBy:{
+createdAt:'desc'
+        },
+          where: {
+            album:{
+              roomModelId: root.id,
+            }
+          },
+          
+        });
+      },
+    });
     t.list.field('services', { type: 'Service' });
     t.list.field('amenities', { type: 'Amenity' });
     t.list.field('rooms', {

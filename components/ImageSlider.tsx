@@ -1,9 +1,11 @@
+import React from 'react'
 import PropTypes from 'prop-types';
 import Carousel from 'react-material-ui-carousel';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import ImageList from '@mui/material/ImageList';
 import Box from '@mui/material/Box';
+import Image from 'next/image'
 
 export default function ImageSlider({
   images,
@@ -13,6 +15,12 @@ export default function ImageSlider({
     image: string;
   }[];
 }) {
+  const [isMounted, setIsMounted] = React.useState(false)
+
+   React.useEffect(() => {
+setIsMounted(true)
+  }, [])
+if(!isMounted) return <div/>
   return (
     <Box
       sx={{
@@ -25,20 +33,21 @@ export default function ImageSlider({
             <ImageList
               sx={{
                 width: '100%',
-                maxHeight: '500px',
+                maxHeight: '400px',
                 overflow: 'hidden',
                 objectFit: 'cover',
                 alignItems: 'center',
               }}
-              rowHeight={500}
+              rowHeight={400}
               cols={1}
             >
-              <ImageListItem cols={1} sx={{ alignItems: 'center' }}>
-                <img
+              <ImageListItem cols={1} sx={{ alignItems: 'center','img':{objectFit:'cover'} }} >
+                <Image
                   src={`${item.image}`}
-                  srcSet={`${item.image}`}
+           
+                layout='fill'
                   alt={item.title}
-                  loading="lazy"
+              
                 />
                 <ImageListItemBar title={item.title} />
               </ImageListItem>

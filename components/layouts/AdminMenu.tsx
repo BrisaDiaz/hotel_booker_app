@@ -187,7 +187,7 @@ export default function ResponsiveDrawer(props: Props) {
       icone: <ApartmentIcon />,
       selected: activeLink === 'hotel',
       sub: false,
-      family: ['requests', 'guests', 'rooms', 'bookings'],
+      family: ['requests', 'guests', 'rooms', 'bookings','gallery'],
       url: hotelId ? '/admin/hotel' : '/admin',
       query: hotelId
         ? {

@@ -25,34 +25,19 @@ export default function FullScreenDialog({
   children: React.ReactNode;
   onClose?: ()=>void;
 }) {
-  const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
-  const handleClose = () => {
-    setOpen(false);
-    onClose && onClose();
-  };
-  React.useEffect(() => {
-    if (isOpen) {
-      return handleOpen();
-    }
-    return handleClose();
-  }, [isOpen]);
-
-  if(!open) return <div/>
+  if(!isOpen) return <div/>
   return (
     <div>
       <Dialog
         fullScreen
-        open={open}
-        onClose={handleClose}
+        open={isOpen}
+        onClose={onClose}
         TransitionComponent={Transition}
       >
         <CloseButton
-          handleClose={handleClose}
+          handleClose={onClose}
           buttonStyles={{
             transform: { md: 'scale(1.2)' },
             mx: { xs: 1, md: 2 },

@@ -19,6 +19,11 @@ export type WithQuantityFeature = {
   type: string;
   quantity: number;
 };
+export interface Image {
+  id: number;
+albumId:number;
+src:string
+}
 export interface RoomModel {
   id: number;
   hotel: Hotel;
@@ -40,7 +45,10 @@ export interface RoomModel {
   services: Feature[];
   beds: WithQuantityFeature[];
   rooms: { id: string; number: number }[];
+    miniatures:Image[]
+  imagesCount:number
 }
+
 
 export interface Hotel {
   id: number;
@@ -72,6 +80,8 @@ export interface Hotel {
   services: Feature[];
   languages: Feature[];
   roomModels: RoomModel[];
+  miniatures:Image[]
+  imagesCount:number
 }
 export interface RoomBuildierVariables {
   hotelId?: number;

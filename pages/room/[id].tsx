@@ -8,8 +8,7 @@ import Box from '@mui/material/Box';
 import DoneIcon from '@mui/icons-material/Done';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageList from '@mui/material/ImageList';
+
 import { useTheme } from '@mui/material/styles';
 import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import BedIcon from '@mui/icons-material/Bed';
@@ -23,7 +22,10 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import StraightenIcon from '@mui/icons-material/Straighten';
 import AppBar from '@/components/layouts/AppBar';
 import SnackBar from '@/components/SnackBar';
+import AsyncCaroucelModal from '@/components/modals/AsyncCaroucelModal';
+import ImageGrid from '@/components/ImageGrid'
 import currencyFixer from '@/utils/currencyFixer'
+
 import { RoomModel, Feature } from '@/interfaces/index';
 
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -31,6 +33,7 @@ import {
   MAKE_ROOM_CONSULT,
   GET_ROOM_MODEL_BY_ID,
   MAKE_BOOKING_REQUEST,
+  GET_ROOM_MODEL_IMAGES
 } from '@/queries/index';
 import { NextApiResponse } from 'next';
 
@@ -74,6 +77,51 @@ type PageProps = {
 
 const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
   const theme = useTheme();
+const mainImages=[
+{
+    image: room.mainImage,
+    title: 'Room Interior',
+
+  },
+]
+const miniatures = room.miniatures.map(img=>({title:`${room.name} photo`,image:img.src}))
+
+const [isCarouselOpen, setIsCarouselOpen] = React.useState<boolean>(false)
+const [carouselImages, setCarruselImages] = React.useState<{image:string,title:string}[]>( [...mainImages,...miniatures])
+const [carruselIndex, setCarrucelIndex] = React.useState<number>( 0)
+
+const [getRoomImages,imagesRequest] = useLazyQuery(GET_ROOM_MODEL_IMAGES) 
+const closeCarrucel=()=>{
+  setIsCarouselOpen(false)
+  setCarrucelIndex(0)
+}
+const openCarousel=()=>{
+  setIsCarouselOpen(true)
+}
+const handleImageClick=(img:{image:string,title:string},index:number)=>{
+  setCarrucelIndex(index)
+    handleShowMore()
+}
+const handleShowMore=async()=>{
+try{
+
+await getRoomImages({
+  variables:{roomModelId:room.id,skip:miniatures.length}
+})
+!isCarouselOpen && openCarousel()
+
+}catch(err){
+  console.log(err)
+}
+}
+
+React.useEffect(() => {
+if(imagesRequest.data && 'images' in imagesRequest.data){
+
+  setCarruselImages([...mainImages,...imagesRequest.data.images.map((img:{id:number,src:string})=>({title:`${room.name} photo`,image:img.src}))])
+}
+}, [imagesRequest])
+
 
   const [notification, setNotification] = React.useState<{type:"error" | "info" | "success" | "warning",content:string}>({
     content: '',
@@ -91,6 +139,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
   );
 
   const [loading, setLoading] = React.useState<boolean>(false);
+
   type Room = {
     childrens: number;
     adults: number;
@@ -189,7 +238,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box component="main" sx={{ maxWidth: '1000px', m: '80px auto 30px' }}>
+      <Box component="main" sx={{ maxWidth: '900px', m: '80px auto 30px' }}>
         <Box component={Link} href={`/hotel/${room.hotelId}`} passHref>
           <Typography
             variant="h3"
@@ -197,7 +246,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             sx={{
               fontWeight: 700,
               display:'block',
-              mx: { xs: '10px', lg: 0 },
+              mx: { xs: 2, lg: 0 },
               width: 'fit-content',
               textTransform: 'capitalize',
 
@@ -218,7 +267,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
           color="primary"
           sx={{
             fontWeight: 700,
-            margin: { xs: '0 10px', md: 0 },
+            mx: { xs: 2, lg: 0 },
             width: 'fit-content',
             textTransform: 'capitalize',
             padding: '10px 0 5px',
@@ -227,27 +276,11 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
           {room.name}
         </Typography>
 
-        <ImageList
-          sx={{
-            width: '100%',
-            maxHeight: '500px',
-            overflow: 'hidden',
-            objectFit: 'cover',
-            objectPosition: 'center bottom',
-          }}
-          rowHeight={500}
-          cols={1}
-        >
-          <ImageListItem cols={1}>
-            <img
-              src={`${room.mainImage}`}
-              srcSet={`${room.mainImage}`}
-              alt={`${room.hotel.name} ${room.category}`}
-              loading="lazy"
-            />
-          </ImageListItem>
-        </ImageList>
-        <Box component="section" sx={{px:{xs:1,lg:0}}}>
+  <ImageGrid mainImages={mainImages}
+miniatures={miniatures} totalQuantity={room.imagesCount -miniatures.length} onClick={handleImageClick} onShowMore={handleShowMore}/>
+        
+        <AsyncCaroucelModal totalImages={room.imagesCount+mainImages.length}  images={carouselImages} onClose={closeCarrucel} isOpen={isCarouselOpen} defaultIndex={carruselIndex} requireMore={handleShowMore}/> 
+        <Box component="section" sx={{px:{xs:1,lg:0},mt:2}}>
     <Typography
             component="h4"
             variant="h5"
@@ -256,7 +289,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
               maxWidth: 'fit-content',
               ml: 'auto',
               mr:1,
-             mb:0.5
+        
             }}
           >
             Prices from{' '}
@@ -325,6 +358,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
         <Box sx={{ display: 'flex' }}>
           <ConsultModal onSubmit={handleConsutlSubmit}>
             <Button
+            size="small"
               sx={{ padding: '10px 20px', m: 1 }}
               color="secondary"
               variant="outlined"
@@ -337,9 +371,10 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             roomData={roomReservationData}
           >
             <Button
+                   size="small"
               sx={{
                 padding: '10px 20px',
-                m: '10px 0',
+                my: '8px',
                 maxWidth: 'fit-content',
                 mr: 'auto',
               }}
@@ -381,8 +416,10 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             component="ul"
             sx={{
               display: 'flex',
-              alignItems: 'center',
-              rowGap: 3,
+              flexDirection:{xs:'column',sm:'row'},
+              alignItems:{sm: 'center'},
+              rowGap: 2,
+              columnGap:6,
               textTransform: 'capitalize',
               margin: ' 0 15px',
               flexWrap: 'wrap',
@@ -392,7 +429,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             <Box
               component="li"
               sx={{
-                width: '300px',
+            
                 display: 'flex',
                 alignItems: 'center',
               }}

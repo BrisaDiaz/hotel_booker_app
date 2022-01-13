@@ -5,6 +5,7 @@ import {
   list,
   stringArg,
   nonNull,
+  intArg,
 } from 'nexus';
 import { verifyIsHotelAdmin, deleteImage } from '../utils/index';
 import { UserInputError } from 'apollo-server-micro';
@@ -217,6 +218,54 @@ t.field('hotelAlbums',{
     return prisma.album.findMany({
       where:{
         hotelId:parseInt(args.hotelId)
+      }
+    })
+  }
+}),
+t.field('hotelImages',{
+  type:list(Image),
+  args:{
+    hotelId:nonNull(idArg()),
+    take:intArg(),
+    skip:intArg()
+  },
+  resolve(root,args):any{
+
+    return prisma.image.findMany({
+        take:args.take||undefined,
+        skip:args.skip||undefined,
+        orderBy:{
+createdAt:'desc'
+        },
+      where:{
+      
+        album:{
+          hotelId:parseInt(args.hotelId)
+        }
+      }
+    })
+  }
+}),
+t.field('romModelImages',{
+  type:list(Image),
+  args:{
+    roomModelId:nonNull(idArg()),
+    take:intArg(),
+    skip:intArg()
+  },
+  resolve(root,args):any{
+
+    return prisma.image.findMany({
+      take:args.take||undefined,
+        skip:args.skip||undefined,
+                orderBy:{
+createdAt:'desc'
+        },
+      where:{
+        
+        album:{
+          roomModelId:parseInt(args.roomModelId)
+        }
       }
     })
   }

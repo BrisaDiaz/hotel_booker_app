@@ -47,9 +47,7 @@ export default function BasicTabs({ data }: props) {
       <Box
         sx={{
           color: 'primary',
-          '.MuiTabs-flexContainer':{
-            borderBottom:'1px solid #646465ba'
-          }
+      
         }}
       >
         <Tabs
@@ -59,7 +57,9 @@ export default function BasicTabs({ data }: props) {
 
         >
           {data.map((tab) => (
-            <Tab key={tab.title} label={tab.title} />
+            <Tab key={tab.title} label={tab.title} sx={{    'bottom':{
+            borderBottom:'1px solid #646465ba'
+          }}}/>
           ))}
         </Tabs>
       </Box>

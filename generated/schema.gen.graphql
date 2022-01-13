@@ -174,9 +174,11 @@ type Hotel {
   features: Features
   frameImage: String
   id: ID!
+  imagesCount: Int
   interiorImage: String
   languages: [Language]
   lowestPrice: Float
+  miniatures: [Image]
   name: String
   policiesAndRules: String
   public: Boolean
@@ -277,10 +279,12 @@ type Query {
   hotelCategoriesList: [HotelCategory]
   hotelData(hotelId: ID!, userId: ID!): HotelData
   hotelGuests(hotelId: ID!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 6, userId: ID!): GuestSearch
+  hotelImages(hotelId: ID!, skip: Int, take: Int): [Image]
   hotelRequests(hotelId: ID!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 8, userId: ID!): RequestSearch
   hotelRoomModels(hotelId: ID!, userId: ID!): [RoomModel]
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
   languagesList: [Language]
+  romModelImages(roomModelId: ID!, skip: Int, take: Int): [Image]
   roomCategoriesList: [RoomCategory]
   roomModelAlbum(roomModelId: ID!): Album
   roomModelById(roomModelId: ID!): RoomModel
@@ -336,10 +340,12 @@ type RoomModel {
   hotel: Hotel
   hotelId: Int
   id: ID
+  imagesCount: Int
   lowestPrice: Float
   mainImage: String
   maximunGuests: Int
   maximunStay: Int
+  miniatures: [Image]
   minimunStay: Int
   mts2: Int
   name: String

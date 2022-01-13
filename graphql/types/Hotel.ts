@@ -186,7 +186,35 @@ export const Hotel = objectType({
         });
       },
     });
-
+    t.int('imagesCount',{
+          resolve(root: any): any {
+        return prisma.image.count({
+          where: {
+            album:{
+              hotelId: root.id,
+            }
+          },
+          
+        });
+      },
+    }),
+ t.list.field('miniatures', {
+      type: 'Image',
+      resolve(root: any): any {
+        return prisma.image.findMany({
+                  orderBy:{
+createdAt:'desc'
+        },
+          take:6,
+          where: {
+            album:{
+              hotelId: root.id,
+            }
+          },
+          
+        });
+      },
+    });
     t.field('address', {
       type: 'Address',
       resolve(root: any): any {

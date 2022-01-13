@@ -11,7 +11,7 @@ export default function CloseButton({
   buttonStyles?: any;
 }) {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'flex-end' ,zIndex:500}}>
       <IconButton
         sx={{ mr: '-12px', ...buttonStyles }}
         aria-label="delete"
