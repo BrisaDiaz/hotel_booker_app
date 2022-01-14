@@ -124,7 +124,7 @@ React.useEffect(() => {
 
 if(!data.contentBlocks.length) return
   const defaultState=  EditorState.createWithContent( 
-    ContentState.createFromBlockArray(data.contentBlocks))
+    ContentState.createFromBlockArray(data.contentBlocks,data.entityMap))
 
  setEditorState(defaultState)
  
