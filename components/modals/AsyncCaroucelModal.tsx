@@ -94,7 +94,7 @@ if(!isMounted) return <div/>
            
                 layout='fill'
                   alt={item.title}
-              
+              loading="eager"
                 />:
                 <ImagePlaceholder/>
                 
@@ -129,10 +129,9 @@ onClick={()=> handleChange(index)}
                   width={160}
        
                   alt={item.title}
-   
+          loading="eager"
         
   
-            loading="lazy"
           />
 
     

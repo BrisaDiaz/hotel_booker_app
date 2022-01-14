@@ -80,7 +80,7 @@ function ImageContainer({image,onSelect}:{image:{name:string,url:string},onSelec
       transition:'0.2s ease-in-out',
       }}>
       <Checkbox  sx={{position:'absolute',zIndex:10,top:'-5px',left:'-5px','span,svg':{color:'#fff'}}} name={image.name} onChange={onSelect}/>
-  <Image src={generateImageUrl(image.url,{height:170,width:270})} width={160} height={100} layout="responsive" alt={image.name} 
+  <Image src={generateImageUrl(image.url,{height:170,width:270})}        loading="eager"  width={160} height={100} layout="responsive" alt={image.name} 
 onLoad={(e:any) => {
     e.target.src.indexOf('data:image/gif;base64') < 0 &&  setIsLoaded(true)
   }}/>
