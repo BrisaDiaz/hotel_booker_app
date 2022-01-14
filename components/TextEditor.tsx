@@ -117,12 +117,16 @@ const handleBlur= ()=>{
       ];
 
 React.useEffect(() => {
- if(defaultData){
-  const defaultState=  EditorState.createWithContent( ContentState.createFromBlockArray(
-          convertFromHTML(defaultData) as any
-        ))
+
+  if(!defaultData)return
+  const arrayContent =   convertFromHTML(defaultData) as any;
+
+   if(!arrayContent.length) return
+  const defaultState=  EditorState.createWithContent( 
+    ContentState.createFromBlockArray(arrayContent))
+    
  setEditorState(defaultState)
- }
+ 
 }, [defaultData])
 
 React.useEffect(() => {
