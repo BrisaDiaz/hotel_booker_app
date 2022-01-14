@@ -41,6 +41,7 @@
 
 - File handling from server enabled.
 - Images upload to cloudinary.
+- Advance Image optimization.
 - Database seed.
 - Client end server side authentication.
 - Session persistence.
