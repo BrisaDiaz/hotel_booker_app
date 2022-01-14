@@ -122,7 +122,7 @@ React.useEffect(() => {
   if(!defaultData)return
   const data=   convertFromHTML(defaultData) 
 
-
+if(!data.contentBlocks.lenght) return
   const defaultState=  EditorState.createWithContent( 
     ContentState.createFromBlockArray(data.contentBlocks))
 
