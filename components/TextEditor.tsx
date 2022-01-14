@@ -126,6 +126,7 @@ React.useEffect(() => {
 }, [defaultData])
 
 React.useEffect(() => {
+  if(!editorState) return
   const content=editorState.getCurrentContent()
   if(!content) return
   const html = stateToHTML(content);
