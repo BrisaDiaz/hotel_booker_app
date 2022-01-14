@@ -9,6 +9,7 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import TitleIcon from '@mui/icons-material/Title';
 import Tooltip from '@mui/material/Tooltip';
+import ErrorBoundary from '@/components/ErrorBoundary'
 import "draft-js/dist/Draft.css";
 import { Editor, EditorState,RichUtils, ContentState, convertFromHTML,getDefaultKeyBinding ,KeyBindingUtil} from "draft-js";
 const {hasCommandModifier} = KeyBindingUtil;
@@ -137,7 +138,7 @@ React.useEffect(() => {
   onChange(html)
 }, [editorState])
   return (
-    <>
+    <ErrorBoundary>
     <Box sx={{display:'flex',border:error? ' 1px solid #d32f2f': isFocus? '1px solid rgba(0, 0, 0, 0.6)' : '1px solid rgba(0, 0, 0, 0.3)'   ,borderBottom:'transparent'}} >
 
 
@@ -193,6 +194,6 @@ React.useEffect(() => {
         
       />
     </Box>
-    </>
+    </ErrorBoundary>
   );
 }
