@@ -50,7 +50,11 @@ export default function HotelCard({
 
       <Box
         component={Link}
-        href={`/admin/hotel?hotelId=${hotel.id}`}
+            href={{
+            pathname: '/admin/hotel',
+            query: { hotelId: hotel.id},
+          }}
+      
      passHref
       >
              <Box  component="a" href="">
