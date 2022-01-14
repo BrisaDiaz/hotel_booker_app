@@ -6,10 +6,12 @@
   
 ##  📸 Screenshots  
 
-![image](https://drive.google.com/uc?export=view&id=1Q_pjetCMvmBjT46-JS-xsIxJ0W0jipoh)
-![image](https://drive.google.com/uc?export=view&id=1XeSzls-_lK8A4XZoWA4j_nYkSMeNONdn)
-![image](https://drive.google.com/uc?export=view&id=15bk-2BBE68kwNMVk3aAXSY0sSLXUm3Ly)
-![image](https://drive.google.com/uc?export=view&id=1N2kGhtQl9kREV3BlQQOHvklx1vCjiA54)  
+![image](https://drive.google.com/uc?export=view&id=1MXpnComIXOEDtztrjCU322aT5M8VftWR)
+![image](https://drive.google.com/uc?export=view&id=1uip2SA_QEvyFByFMY3rcZetPUe9obRqM)
+![image](https://drive.google.com/uc?export=view&id=1z25kBK7cQ0_Mkc6A6QdBGzdhWCMtATWt)
+![image](https://drive.google.com/uc?export=view&id=1R_B73P_dSOL8CrtcJSF_Mg23zqvia0LF)
+![image](https://drive.google.com/uc?export=view&id=1N2kGhtQl9kREV3BlQQOHvklx1vCjiA54)
+  
 
 ## 🤐 Environment variables
 
@@ -46,6 +48,6 @@
 - SSR and ISR. 
 - SSR cache-control haders.
 - Dinamic layouts.
-- Full guest, hotels, rooms and bookings management system.
+- Full guest, hotels, rooms and bookings management system.  
 - Multy hotels suport.
 - Multy hotels ow  suport.
