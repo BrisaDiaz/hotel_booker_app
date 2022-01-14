@@ -22,9 +22,10 @@ setTimeout(() => {
 
 
   return (
-    <Box component={Link} href={`/hotel/${hotel.id}`} passHref>
+    <Box component={Link} href={`/hotel/${hotel.id}`} passHref >
+        <Box  component="a" href="">
       <Card
-   
+  
         sx={{
           borderRadius: { sm: 2 },
           flexWrap: 'wrap',
@@ -181,6 +182,7 @@ setTimeout(() => {
           </CardContent>
         </CardActionArea>
       </Card>
+      </Box>
     </Box>
   );
 }

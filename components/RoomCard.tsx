@@ -10,12 +10,13 @@ import RoomBedsUI from './RoomBedsUI';
 import currencyFixer from '@/utils/currencyFixer'
 export default function RoomCard({ room }: { room: RoomModel }) {
   return (
-    <>
+   
       <Box
         component={Link}
         href={`/room/${room.id}`}
-     
+     passHref
       >
+             <Box  component="a" href="">
       <Card
         sx={
           {
@@ -127,6 +128,7 @@ export default function RoomCard({ room }: { room: RoomModel }) {
         </CardActionArea>
       </Card>
       </Box>
-    </>
+      </Box>
+   
   );
 }

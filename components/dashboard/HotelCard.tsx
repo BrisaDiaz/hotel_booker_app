@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Link from 'next/link';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -9,6 +10,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
 import currencyFixer from '@/utils/currencyFixer'
+
 function EditButtom({ onEdit }: { onEdit: ()=>void }) {
   return (
     <Box
@@ -27,7 +29,7 @@ function EditButtom({ onEdit }: { onEdit: ()=>void }) {
 export default function HotelCard({
   hotel,
   onEdit,
-  handleRedirect,
+
 }: {
   hotel: {
     id: number;
@@ -39,11 +41,19 @@ export default function HotelCard({
       holeAddress: string;
     };
   };
-  handleRedirect: (hotelId:number)=>void;
+
   onEdit: (hotelId:number)=>void;
 }) {
   return (
-    <div onClick={() => handleRedirect(hotel.id)}>
+    <Box sx={{ position: 'relative'}}> 
+       <EditButtom onEdit={() => onEdit(hotel.id)} />
+
+      <Box
+        component={Link}
+        href={`/admin/hotel?hotelId=${hotel.id}`}
+     passHref
+      >
+             <Box  component="a" href="">
       <Card
         sx={{ width: '300px', position: 'relative',background:'transparent',    boxShadow:
       '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
@@ -54,7 +64,7 @@ export default function HotelCard({
         elevation={2}
       >
         <CardActionArea component="div">
-          <EditButtom onEdit={() => onEdit(hotel.id)} />
+       
           <CardMedia
             component="img"
             height="150px"
@@ -128,6 +138,8 @@ export default function HotelCard({
           </CardContent>
         </CardActionArea>
       </Card>
-    </div>
+        </Box>
+  </Box>
+      </Box>
   );
 }

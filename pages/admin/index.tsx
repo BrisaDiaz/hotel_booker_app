@@ -70,14 +70,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
     ],
   };
 
-  const handleRedirect = (hotelId: number) => {
-    router.push({
-      pathname: '/admin/hotel',
-      query: {
-        hotelId: hotelId,
-      },
-    });
-  };
+
   const [isHotelModalOpen, setIsHotelModalOpen] =
     React.useState<boolean>(false);
   const [hotelCards, setHotelCards] =
@@ -291,7 +284,7 @@ website:hotel.website
             <HotelCard
               key={hotel.id}
               hotel={hotel}
-              handleRedirect={handleRedirect}
+      
               onEdit={openHotelModal}
             />
           ))}
