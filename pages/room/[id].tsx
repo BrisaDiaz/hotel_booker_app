@@ -359,7 +359,7 @@ miniatures={miniatures} totalQuantity={room.imagesCount -miniatures.length} onCl
           <ConsultModal onSubmit={handleConsutlSubmit}>
             <Button
             size="small"
-              sx={{ padding: '10px 20px', m: 1 }}
+              sx={{ padding: '5px 10px', m: 1,textTransform:'capitalize' }}
               color="secondary"
               variant="outlined"
             >
@@ -373,7 +373,9 @@ miniatures={miniatures} totalQuantity={room.imagesCount -miniatures.length} onCl
             <Button
                    size="small"
               sx={{
-                padding: '10px 20px',
+             padding: '5px 10px',
+             textTransform:'capitalize' ,
+      
                 my: '8px',
                 maxWidth: 'fit-content',
                 mr: 'auto',
@@ -453,7 +455,7 @@ fontSize:'14px',
             <Box
               component="li"
               sx={{
-                width: '300px',
+  
                 display: 'flex',
                 alignItems: 'center',
               }}
@@ -465,7 +467,7 @@ fontSize:'14px',
             <Box
               component="li"
               sx={{
-                width: '300px',
+         
                 display: 'flex',
                 
               }}
