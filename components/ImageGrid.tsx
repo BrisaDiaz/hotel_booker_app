@@ -5,7 +5,7 @@ import { useMediaQuery } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import {Theme} from '@mui/system';
-
+import {generateImageUrl} from '@/utils/generateImageUrl'
 import Image from 'next/image'
 export default function StandardImageList(
   {mainImages,miniatures,onClick,onShowMore,totalQuantity}:{mainImages:{image:string,title:string}[],miniatures:{image:string,title:string}[],totalQuantity:number,onClick:(img:{image:string,title:string},index:number)=>void,onShowMore:()=>void}
@@ -14,28 +14,33 @@ export default function StandardImageList(
 
 
  const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+ const mainImageGridHeight= mainImages.length===1 || isInSmScreen ? 400:500
+const mainImagesCols= mainImages.length===1 ? 1: isInSmScreen?2:1
+const rowHeight =mainImages.length===1 || isInSmScreen ? 200:250
+
 
   return (
     <Box  sx={{my:1}}>
    
      
-    <ImageList sx={{ width: '100%',maxWidth:'900px', height: mainImages.length===1 || isInSmScreen ? 400:500,overflow:'hidden',mb:'4px' }} cols={mainImages.length===1 ? 1: isInSmScreen?2:1} rowHeight={mainImages.length===1 || isInSmScreen ? 200:250}>
+    <ImageList sx={{ width: '100%',maxWidth:'900px', height: mainImageGridHeight,overflow:'hidden',mb:'4px' }} cols={mainImagesCols} rowHeight={rowHeight}>
       {mainImages.map((item,index) => (
         <ImageListItem sx={{cursor:'pointer',overflow:'hidden',transition:'0.2s ease-in-auto','&:hover':{opacity:0.9}}} key={item.image}  rows={mainImages.length===1 ? 2: isInSmScreen ?2:1}>
           <div>
             <Image
-                  src={`${item.image}`}
+                 src={generateImageUrl(item.image,{width:900/mainImagesCols ,height:400,quality:100})}
                   layout="fill"
                   width={900}
               
                   alt={item.title}
                   onClick={()=>onClick(item,index)}
                 />
+           
        </div>
         </ImageListItem>
       ))}
     </ImageList>
-    <ImageList sx={{width: '100%', height: 110,overflowX:{xs: 'auto',md:'hidden'},overflowY:'hidden',my: 0}} cols={6} rowHeight={100} >
+{miniatures.length ?    <ImageList sx={{width: '100%', height: 110,overflowX:{xs: 'auto',md:'hidden'},overflowY:'hidden',my: 0}} cols={6} rowHeight={100} >
       {miniatures.map((item,index) => (
 
         <ImageListItem key={item.image}   sx={{position:'relative', overflow:'hidden',minWidth:'150px',cursor:'pointer','img':{width:'100%'},transition:'0.2s ease-in-auto','&:hover':{opacity:0.9}}}>
@@ -44,7 +49,7 @@ export default function StandardImageList(
       {totalQuantity && index+1 ===miniatures.length ?   <ShowMoreBox quantity={totalQuantity} onClick={onShowMore}/>:null
        }
               <Image
-                  src={`${item.image}`}
+                  src={generateImageUrl(item.image,{width:150,height:100,quality:90})}
                   layout="fill"
                   width={150}
        
@@ -59,7 +64,8 @@ export default function StandardImageList(
         </ImageListItem>
       
       ))}
-    </ImageList>
+    </ImageList>:null}
+  
     </Box>
   );
 }

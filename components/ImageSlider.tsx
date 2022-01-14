@@ -6,7 +6,7 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 import ImageList from '@mui/material/ImageList';
 import Box from '@mui/material/Box';
 import Image from 'next/image'
-
+import {generateImageUrl} from '@/utils/generateImageUrl'
 export default function ImageSlider({
   images,
 }: {
@@ -43,7 +43,7 @@ if(!isMounted) return <div/>
             >
               <ImageListItem cols={1} sx={{ alignItems: 'center','img':{objectFit:'cover'} }} >
                 <Image
-                  src={`${item.image}`}
+                  src={generateImageUrl(item.image,{width:800,height:400})}
            
                 layout='fill'
                   alt={item.title}

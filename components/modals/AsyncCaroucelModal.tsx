@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useMediaQuery } from '@mui/material';
 import {Theme} from '@mui/system';
 import FullScreenModal from '@/components/modals/FullScreenModal'
+import {generateImageUrl} from '@/utils/generateImageUrl'
 export default function SimpleBackdrop({
   images,
   isOpen,
@@ -81,7 +82,7 @@ if(!isMounted) return <div/>
         mx:'auto'
       }}
     >
-      <Carousel navButtonsAlwaysVisible={true} swipe={true} indicators={false} interval={2000} animation='slide' autoPlay={false} index={carouselIndex} cycleNavigation={false} onChange={(newIndex) =>handleChange(newIndex)}>
+      <Carousel navButtonsAlwaysVisible={true} swipe={true} indicators={false} animation='slide' autoPlay={false} index={carouselIndex} cycleNavigation={false} onChange={(newIndex) =>handleChange(newIndex)}>
 
         {[...images,...imagePlaceholders].map((item,index) => (
          
@@ -89,7 +90,7 @@ if(!isMounted) return <div/>
               <Box key={item.image+index}   sx={{ height:isInSmScreen ?400:300, overflow: 'hidden',width:'100%','img':{objectFit:'cover'} }} >
 
                 {item.image ?      <Image
-                  src={`${item.image}`}
+                  src={generateImageUrl(item.image,{height:isInSmScreen ?400:300,quality:100,width:900,crop:'fill'})}
            
                 layout='fill'
                   alt={item.title}
@@ -123,7 +124,7 @@ onClick={()=> handleChange(index)}
       /> 
       {item.image ?
        <Image
-                  src={`${item.image}`}
+                  src={generateImageUrl(item.image,{width:150,height:100,quality:90})}
                   layout="fill"
                   width={160}
        

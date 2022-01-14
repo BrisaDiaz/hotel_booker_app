@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import {generateImageUrl} from '@/utils/generateImageUrl'
 export default function ImageDropzone({images,onClear,onReset,onSave}:{images: {url:string,name:string}[],onClear:(mode:'all'|'selectedOnly',selectedImagesNames?:string[] )=>void,onReset:()=>void,onSave:()=>void}) {
 const [visuals, setVisuals] = React.useState<{url:string,name:string}[]>(images||[])
 const [selectedFilesNames, setSelectedFilesNames] = React.useState<string[]>([])
@@ -79,7 +80,7 @@ function ImageContainer({image,onSelect}:{image:{name:string,url:string},onSelec
       transition:'0.2s ease-in-out',
       }}>
       <Checkbox  sx={{position:'absolute',zIndex:10,top:'-5px',left:'-5px','span,svg':{color:'#fff'}}} name={image.name} onChange={onSelect}/>
-  <Image src={image.url} width={160} height={100} layout="responsive" alt={image.name} 
+  <Image src={generateImageUrl(image.url,{height:170,width:270})} width={160} height={100} layout="responsive" alt={image.name} 
 onLoad={(e:any) => {
     e.target.src.indexOf('data:image/gif;base64') < 0 &&  setIsLoaded(true)
   }}/>

@@ -10,7 +10,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
 import currencyFixer from '@/utils/currencyFixer'
-
+import {generateImageUrl} from '@/utils/generateImageUrl'
 function EditButtom({ onEdit }: { onEdit: ()=>void }) {
   return (
     <Box
@@ -68,10 +68,7 @@ export default function HotelCard({
           <CardMedia
             component="img"
             height="150px"
-            image={
-              hotel.frameImage ||
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDl4inIGpdEJ8gUBHlNiqLGw-9fnI5mdAcKru0oaqoEYUdqdOzB6Xh4UY1OB3XrtonuhU&usqp=CAU'
-            }
+            image={generateImageUrl(hotel.frameImage,{height:150})}
             alt={hotel.name}
           />
 

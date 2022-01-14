@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import { RoomModel } from '@/interfaces/index';
 import RoomBedsUI from './RoomBedsUI';
 import currencyFixer from '@/utils/currencyFixer'
+import {generateImageUrl} from '@/utils/generateImageUrl'
 export default function RoomCard({ room }: { room: RoomModel }) {
   return (
    
@@ -51,7 +52,8 @@ export default function RoomCard({ room }: { room: RoomModel }) {
                 my: { sm: 1 },
                 mx: 'auto',
               }}
-              image={room.mainImage}
+                   image={generateImageUrl(room.mainImage,{quality:100,height:180,width:310})}
+       
               alt={room.category}
             />
             <CardContent

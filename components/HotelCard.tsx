@@ -10,6 +10,7 @@ import { CardActionArea } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import type { Hotel } from '@/interfaces/index';
 import currencyFixer from '@/utils/currencyFixer'
+import {generateImageUrl} from '@/utils/generateImageUrl'
 export default function MultiActionAreaCard({ hotel ,index}: { hotel: Hotel,index:number }) {
 
   const [cardImage, setCardImage] = React.useState(index%2  === 0 ?  hotel.frameImage: hotel.interiorImage)
@@ -95,7 +96,7 @@ setTimeout(() => {
                 height: { xs: 250, sm: 220 },
               }}
               component="img"
-              image={hotel.interiorImage}
+              image={generateImageUrl(hotel.interiorImage,{quality:80,height:250,width:500})}
               alt={hotel.name}
             />
           </Box>

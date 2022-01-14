@@ -27,6 +27,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import {generateImageUrl} from '@/utils/generateImageUrl'
  type RoomTypeActions =
     | 'addRoom'
     | 'deleteRooms'
@@ -338,7 +339,7 @@ function RoomsTable({
                     >
                       <CardMedia
                         component="img"
-                        image={row.caption}
+                        image={generateImageUrl(row.caption,{width:150,height:120})}
                         alt={row.name}
                       />
                     </Card>
