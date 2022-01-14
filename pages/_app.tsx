@@ -17,12 +17,8 @@ import LoadingBar from '@/components/layouts/LoadingBar';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-interface MyAppProps extends AppProps {
-  emotionCache: any;
-  Component: WithLayoutPage;
-}
 
-function MyApp(props: MyAppProps) {
+function MyApp(props: any) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   const getLayout = Component.getLayout ?? ((page: ReactNode) => page);

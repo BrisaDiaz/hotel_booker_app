@@ -23,7 +23,7 @@ export default function FullScreenDialog({
   isOpen: boolean;
   title?: string;
   children: React.ReactNode;
-  onClose?: ()=>void;
+  onClose: ()=>void;
 }) {
 
 
