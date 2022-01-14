@@ -413,14 +413,14 @@ mb:0.5
               sx={{
                 fontWeight: 700,
                 color: 'primary.main',
-                  background:'##f1f3f9',
+                  background:'#f1f3f9',
                   my: 1,
                 padding: '10px 15px ',
               }}
             >
               Rooms
             </Typography>
-            <Box sx={{ mt:4 ,mb: 3, mx: { sm: 2 } }}>
+            <Box sx={{ mt:3 ,mb: 3, mx: { sm: 2 } }}>
               <Grid container spacing={3} justifyContent="start">
                 {hotel.roomModels.map((room) => (
                   <Grid item xs={12} sm={6} md={4} key={room.id}>
