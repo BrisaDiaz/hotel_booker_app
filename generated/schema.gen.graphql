@@ -200,7 +200,7 @@ type HotelData {
   bookingsCount: Int
   guests: [[Client]]
   guestsCount: Int
-  hotel: Hotel
+  id: ID
   requests: [BookingRequest]
   requestsCount: Int
   roomModels: [RoomModel]

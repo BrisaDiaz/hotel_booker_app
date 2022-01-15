@@ -29,12 +29,12 @@ export default function FullScreenDialog({
 
   if(!isOpen) return <div/>
   return (
-    <div>
+
       <Dialog
         fullScreen
         open={isOpen}
         onClose={onClose}
-        sx={{       background: '#f5f5f5'}}
+        sx={{  '.css-m9glnp-MuiPaper-root-MuiDialog-paper':{    background: '#fff'}}}
         TransitionComponent={Transition}
       >
         <CloseButton
@@ -56,6 +56,6 @@ export default function FullScreenDialog({
         </Typography> :null}  
         {children}
       </Dialog>
-    </div>
+    
   );
 }

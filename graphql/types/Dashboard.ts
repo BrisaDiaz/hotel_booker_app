@@ -60,11 +60,11 @@ export const RequestSearch = objectType({
 export const HotelData = objectType({
   name: 'HotelData',
   definition(t) {
+    t.id('id')
     t.int('roomModelsCount');
     t.int('requestsCount');
     t.int('bookingsCount');
     t.int('guestsCount');
-    t.field('hotel', { type: 'Hotel' });
     t.list.field('roomModels', {
       type: 'RoomModel',
       resolve(root: any, args, ctx): any {
@@ -170,21 +170,6 @@ export const Query = extendType({
         const getAdimHotel = async (userId: number, hotelId: number) => {
           await verifyIsHotelAdmin(userId, hotelId);
 
-          const hotel = await prisma.hotel.findUnique({
-            where: {
-              id: hotelId,
-            },
-            include: {
-              facilities: true,
-              services: true,
-              activities: true,
-              languages: true,
-            },
-          });
-          if (!hotel)
-            throw new UserInputError(
-              'The hotel dose not exist or not belong to this account.'
-            );
           const bookingsCount = await prisma.booking.count({
             where: {
               hotelId: hotelId,
@@ -203,7 +188,7 @@ export const Query = extendType({
             },
           });
           return {
-            hotel,
+            id:hotelId,
             roomModelsCount,
             requestsCount,
             bookingsCount,

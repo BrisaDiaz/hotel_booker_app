@@ -188,7 +188,7 @@ export interface NexusGenObjects {
   HotelData: { // root type
     bookingsCount?: number | null; // Int
     guestsCount?: number | null; // Int
-    hotel?: NexusGenRootTypes['Hotel'] | null; // Hotel
+    id?: string | null; // ID
     requestsCount?: number | null; // Int
     roomModelsCount?: number | null; // Int
   }
@@ -457,7 +457,7 @@ export interface NexusGenFieldTypes {
     bookingsCount: number | null; // Int
     guests: Array<Array<NexusGenRootTypes['Client'] | null> | null> | null; // [[Client]]
     guestsCount: number | null; // Int
-    hotel: NexusGenRootTypes['Hotel'] | null; // Hotel
+    id: string | null; // ID
     requests: Array<NexusGenRootTypes['BookingRequest'] | null> | null; // [BookingRequest]
     requestsCount: number | null; // Int
     roomModels: Array<NexusGenRootTypes['RoomModel'] | null> | null; // [RoomModel]
@@ -776,7 +776,7 @@ export interface NexusGenFieldTypeNames {
     bookingsCount: 'Int'
     guests: 'Client'
     guestsCount: 'Int'
-    hotel: 'Hotel'
+    id: 'ID'
     requests: 'BookingRequest'
     requestsCount: 'Int'
     roomModels: 'RoomModel'

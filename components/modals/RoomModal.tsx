@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
       top: '50%',
       left: '50%',
       fontWeight: 200,
-         background: '#f5f5f5',
+         background: '#efefef',
       transform: 'translate(-50%, -50%)',
       minWidth: 360,
       width: '100%',
