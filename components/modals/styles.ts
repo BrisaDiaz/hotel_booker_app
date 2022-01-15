@@ -8,7 +8,7 @@ export const styles = {
     minWidth: '360px',
     maxWidth: '500px',
     width: '100%',
-    bgcolor: 'background.paper',
+    bgcolor: '#f5f5f5',
     border: '1px solid rgba(244,244,244,1)',
 
     borderRadius: 2,
