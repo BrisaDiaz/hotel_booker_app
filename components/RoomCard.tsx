@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -9,21 +8,25 @@ import { RoomModel } from '@/interfaces/index';
 import RoomBedsUI from './RoomBedsUI';
 import currencyFixer from '@/utils/currencyFixer'
 import {generateImageUrl} from '@/utils/generateImageUrl'
+import Image from 'next/image'
 export default function RoomCard({ room }: { room: RoomModel }) {
+  
   return (
    
       <Box
+
         component={Link}
         href={`/room/${room.id}`}
      passHref
       >
              <Box  component="a" href="">
       <Card
+
         sx={
           {
             minWidth: '310px',
-            p: { xs: '5px', sm: 0 },
-            paddingBottom: '10px',
+           
+       
             borderRadius: 2,
             backgroundColor: 'transparent',
                    boxShadow:
@@ -42,30 +45,39 @@ export default function RoomCard({ room }: { room: RoomModel }) {
           }}
         >
           <Box>
-            <CardMedia
-              component="img"
-              height="180px"
-              sx={{
+            <Box   sx={{
                 borderRadius: '8px',
                 width: { sm: '95%' },
                 mb: 1,
                 my: { sm: 1 },
                 mx: 'auto',
-              }}
-                   image={generateImageUrl(room.mainImage,{quality:100,height:180,width:310})}
-       
+              }}>
+            <Image
+            layout="fill"
+              height={180}
+            
+                   src={generateImageUrl(room.mainImage,{quality:100,height:180,width:310})}
+        placeholder="blur"
+
+           blurDataURL={generateImageUrl(room.mainImage,{quality:10,height:180,width:310})}
               alt={room.category}
             />
+            </Box>
             <CardContent
               sx={{
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 padding: '6px 10px',
+                color:'#fff',
+                backdropFilter:'brightness(0.5)',
+                mb:4,
+               mt:1
               }}
             >
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography
+                title={room.name}
                   variant="h6"
                   component="h4"
                   sx={{
@@ -73,6 +85,10 @@ export default function RoomCard({ room }: { room: RoomModel }) {
                     marginBottom: '8px',
                     lineHeight: 1.2,
                     opacity: 0.9,
+                    maxWidth:300,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
                   }}
                 >
                   {room.name}

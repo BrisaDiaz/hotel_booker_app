@@ -78,7 +78,7 @@ if(!isMounted) return <div/>
         width: '100%',
         maxWidth:'900px',
         'overflow':'hidden',
-        height:isInSmScreen ?'400px':'300px',
+ maxHeight:isInSmScreen ?400:300,
         mx:'auto'
       }}
     >
@@ -87,12 +87,18 @@ if(!isMounted) return <div/>
         {[...images,...imagePlaceholders].map((item,index) => (
          
      
-              <Box key={item.image+index}   sx={{ height:isInSmScreen ?400:300, overflow: 'hidden',width:'100%','img':{objectFit:'cover'} }} >
+              <Box key={item.image+index}   sx={{ height:'inherit', overflow: 'hidden',width:'100%' ,'span':{height:'inherit'}}} >
 
                 {item.image ?      <Image
-                  src={generateImageUrl(item.image,{height:isInSmScreen ?400:300,quality:100,width:900,crop:'fill'})}
-           
-                layout='fill'
+                
+                  src={generateImageUrl(item.image,{height:isInSmScreen ?400:300,quality:100,crop:'fill'})}
+           placeholder="blur"
+
+           blurDataURL={generateImageUrl(item.image,{height:isInSmScreen ?400:300,quality:10})}
+             layout='responsive'
+                width={ 900}
+                height={400}
+                 objectFit='contain'
                   alt={item.title}
               loading="eager"
                 />:
@@ -127,7 +133,8 @@ onClick={()=> handleChange(index)}
                   src={generateImageUrl(item.image,{width:150,height:100,quality:90})}
                   layout="fill"
                   width={160}
-       
+        placeholder="blur"
+           blurDataURL={generateImageUrl(item.image,{width:150,height:100,quality:10})}
                   alt={item.title}
           loading="eager"
         

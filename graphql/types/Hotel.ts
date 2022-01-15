@@ -161,7 +161,7 @@ export const Hotel = objectType({
       resolve(root: any): any {
         return prisma.features.findUnique({
           where: {
-            hotelId: root.id * 1,
+            hotelId: root.id ,
           },
         });
       },
@@ -171,7 +171,7 @@ export const Hotel = objectType({
       resolve(root: any): any {
         return prisma.roomModel.findMany({
           where: {
-            hotelId: root.id * 1,
+            hotelId: root.id,
           },
         });
       },

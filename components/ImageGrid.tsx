@@ -14,9 +14,9 @@ export default function StandardImageList(
 
 
  const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
- const mainImageGridHeight= mainImages.length===1 || isInSmScreen ? 400:500
+ const mainImageGridHeight=mainImages.length===1  &&isInSmScreen ?300:  400 
 const mainImagesCols= mainImages.length===1 ? 1: isInSmScreen?2:1
-const rowHeight =mainImages.length===1 || isInSmScreen ? 200:250
+const rowHeight =200
 
 
   return (
@@ -31,7 +31,9 @@ const rowHeight =mainImages.length===1 || isInSmScreen ? 200:250
                  src={generateImageUrl(item.image,{width:900/mainImagesCols ,height:400,quality:100})}
                   layout="fill"
                   width={900}
-              
+                placeholder="blur"
+
+           blurDataURL={generateImageUrl(item.image,{width:900/mainImagesCols ,height:400,quality:10})}
                   alt={item.title}
                   onClick={()=>onClick(item,index)}
                 />
@@ -52,12 +54,14 @@ const rowHeight =mainImages.length===1 || isInSmScreen ? 200:250
                   src={generateImageUrl(item.image,{width:150,height:100,quality:90})}
                   layout="fill"
                   width={150}
-       
+                 placeholder="blur"
+
+           blurDataURL={generateImageUrl(item.image,{width:150,height:100,quality:10})}
                   alt={item.title}
           onClick={()=>onClick(item,index+mainImages.length)}
         
   
-            loading="lazy"
+      
           />
 
           </Box>

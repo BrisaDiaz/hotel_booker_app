@@ -41,11 +41,15 @@ if(!isMounted) return <div/>
               rowHeight={400}
               cols={1}
             >
-              <ImageListItem cols={1} sx={{ alignItems: 'center','img':{objectFit:'cover'} }} >
+              <ImageListItem cols={1} sx={{ alignItems: 'center','span':{height:'inherit'} }} >
                 <Image
+                objectFit='contain'
                   src={generateImageUrl(item.image,{width:800,height:400})}
-           
-                layout='fill'
+           placeholder="blur"
+width={800}
+height={400}
+           blurDataURL={generateImageUrl(item.image,{width:800,height:400,quality:10})}
+                layout='responsive'
                   alt={item.title}
               
                 />

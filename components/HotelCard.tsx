@@ -11,6 +11,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import type { Hotel } from '@/interfaces/index';
 import currencyFixer from '@/utils/currencyFixer'
 import {generateImageUrl} from '@/utils/generateImageUrl'
+import Image from 'next/image'
 export default function MultiActionAreaCard({ hotel ,index}: { hotel: Hotel,index:number }) {
 
   const [cardImage, setCardImage] = React.useState(index%2  === 0 ?  hotel.frameImage: hotel.interiorImage)
@@ -63,8 +64,7 @@ setTimeout(() => {
               position:'relative'
             }}
           >
-            <CardMedia
-              sx={{
+            <Box              sx={{
              
        
                 overflow: 'hidden',
@@ -76,13 +76,17 @@ setTimeout(() => {
                   transform: 'scale(1.15)',
                 },
                 height: { xs: 250, sm: 220 },
-              }}
-              component="img"
-              image={hotel.frameImage}
+              }}>
+     <Image
+            
+
+                     blurDataURL={generateImageUrl(hotel.frameImage,{quality:10,height:250,width:500})}
+              src={generateImageUrl(hotel.frameImage,{quality:80,height:250,width:500})}
               alt={hotel.name}
+            layout="fill"
             />
-            <CardMedia
-              sx={{
+            </Box>
+       <Box   sx={{
 
                 overflow: 'hidden',
                 objectFit: 'cover',
@@ -94,11 +98,19 @@ setTimeout(() => {
                   transform: 'scale(1.15)',
                 },
                 height: { xs: 250, sm: 220 },
-              }}
-              component="img"
-              image={generateImageUrl(hotel.interiorImage,{quality:80,height:250,width:500})}
+              }}>
+<Image
+                 
+            
+          
+               placeholder="blur"
+ layout="fill"
+           blurDataURL={generateImageUrl(hotel.interiorImage,{quality:10,height:250,width:500})}
+              src={generateImageUrl(hotel.interiorImage,{quality:80,height:250,width:500})}
               alt={hotel.name}
             />
+       </Box>
+            
           </Box>
           <CardContent
             sx={{

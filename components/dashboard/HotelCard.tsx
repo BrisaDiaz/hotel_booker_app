@@ -2,7 +2,6 @@ import * as React from 'react';
 import Link from 'next/link';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { CardActionArea } from '@mui/material';
@@ -11,6 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
 import currencyFixer from '@/utils/currencyFixer'
 import {generateImageUrl} from '@/utils/generateImageUrl'
+import Image from 'next/image'
 function EditButtom({ onEdit }: { onEdit: ()=>void }) {
   return (
     <Box
@@ -68,14 +68,18 @@ export default function HotelCard({
         elevation={2}
       >
         <CardActionArea component="div">
-       
-          <CardMedia
-            component="img"
-            height="150px"
-            image={generateImageUrl(hotel.frameImage,{height:150})}
+       <Box sx={{height:150,position:'relative'}}> 
+          <Image
+          height={150}
+            layout="fill"
+          
+            src={generateImageUrl(hotel.frameImage,{height:150,quality:100})}
+            placeholder="blur"
+
+           blurDataURL={generateImageUrl(hotel.frameImage,{height:150,quality:10})}
             alt={hotel.name}
           />
-
+</Box>
           <CardContent sx={{ p: 2 }}>
             <Typography
               sx={{

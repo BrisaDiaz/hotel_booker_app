@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
 
-      backgroundColor: '#f1f3f9',
+      backgroundColor: '#e6e6e6',
       marginBottom: theme.spacing(2),
       padding: theme.spacing(1),
       paddingTop: theme.spacing(0.5),
