@@ -11,13 +11,14 @@ export default function ResponsiveGrid(props:{hotels:Hotel[]}) {
     <Box
       sx={{
         flexGrow: 1,
+        maxWidth:'100vw',
         width: { xs: '100%', md: '90%', lg: '100%' },
-        maxWidth: 1200,
+ 
         minHeight: '65vh',
         margin: '0 auto',
       }}
     >
-      <Grid container spacing={{ xs: 2 }} justifyContent="center">
+      <Grid container spacing={{ xs: 3 }} justifyContent="center">
         {props.hotels.map((hotel:Hotel, index:number) => (
           <Grid
             item

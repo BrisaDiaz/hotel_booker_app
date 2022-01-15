@@ -3,7 +3,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import { useMediaQuery } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { CardActionArea } from '@mui/material';
@@ -11,6 +11,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import type { Hotel } from '@/interfaces/index';
 import currencyFixer from '@/utils/currencyFixer'
 import {generateImageUrl} from '@/utils/generateImageUrl'
+import {Theme}from '@mui/system'
 import Image from 'next/image'
 export default function MultiActionAreaCard({ hotel ,index}: { hotel: Hotel,index:number }) {
 
@@ -21,7 +22,7 @@ export default function MultiActionAreaCard({ hotel ,index}: { hotel: Hotel,inde
 setTimeout(() => {
   setCardImage(cardImage ===hotel.frameImage ? hotel.interiorImage : hotel.frameImage)
 }, 3000);
-
+ const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
 
   return (
     <Box component={Link} href={`/hotel/${hotel.id}`} passHref >
@@ -58,7 +59,7 @@ setTimeout(() => {
             sx={{
               maxWidth: { sm: '250px' },
               minHeight: { sm: '100%' },
-              maxHeight:'220px',
+              maxHeight:{xs:200,sm:220},
               width: { sm: '35%' },
               overflow: 'hidden',
               position:'relative'
@@ -68,22 +69,24 @@ setTimeout(() => {
              
        
                 overflow: 'hidden',
-                objectFit: 'cover',
+            
              display: hotel.frameImage===cardImage? 'block':'none',
     opacity: hotel.frameImage===cardImage? 1:0,
                 transition: 'ease-in-out 0.5s',
                 '&:hover': {
                   transform: 'scale(1.15)',
                 },
-                height: { xs: 250, sm: 220 },
+             
               }}>
      <Image
             
 
-                     blurDataURL={generateImageUrl(hotel.frameImage,{quality:10,height:250,width:500})}
-              src={generateImageUrl(hotel.frameImage,{quality:80,height:250,width:500})}
+                     blurDataURL={generateImageUrl(hotel.frameImage,{quality:10,height:500,width:500})}
+              src={hotel.frameImage}
               alt={hotel.name}
-            layout="fill"
+              height={500}
+              width={500}
+            objectFit='cover'
             />
             </Box>
        <Box   sx={{
@@ -105,23 +108,45 @@ setTimeout(() => {
           
                placeholder="blur"
  layout="fill"
-           blurDataURL={generateImageUrl(hotel.interiorImage,{quality:10,height:250,width:500})}
-              src={generateImageUrl(hotel.interiorImage,{quality:80,height:250,width:500})}
+           blurDataURL={generateImageUrl(hotel.interiorImage,{quality:10,height:500,width:500})}
+              src={hotel.interiorImage}
               alt={hotel.name}
+                     height={500}
+              width={500}
+            objectFit='cover'
             />
        </Box>
             
           </Box>
           <CardContent
             sx={{
-              pt: { sm: 2 },
+              pt: { sm: 1.5 },
               px: { sm: 3 },
+               pb:{xs:1,sm:0},
               width: { sm: '65%' },
             }}
           >
+                 <Box sx={{ marginTop: 'auto', display: 'flex' ,ml:'-4px',mb:1}}>
+              <LocationOnIcon color="secondary" fontSize="small" />
+              <Typography
+              title={hotel.address.holeAddress}
+                variant="body2"
+                sx={{
+                  overflow: 'hidden',
+                  whiteSpace: 'pre',
+                  textOverflow: 'ellipsis',
+m:'3px 0 0 3px',
+                  opacity: '0.8',
+                  fontWeight: 200,
+                }}
+              >
+                {`${hotel.address.holeAddress}`}
+              </Typography>
+            </Box>
             <Typography
               gutterBottom
-              variant="h6"
+                variant="subtitle1"
+                component="h3"
               sx={{
                 mb: 0,
                 fontSize: { sm: '1rem' },
@@ -129,6 +154,7 @@ setTimeout(() => {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'pre',
+              maxWidth:'100%'
               }}
             >
               {hotel.name}
@@ -142,20 +168,24 @@ setTimeout(() => {
                 fontWeight: 500,
                 opacity: 0.75,
                 maxHeight:'50px',
+           
+                lineHeight:1.5,
+                '& > p':{m:0,p:0},
                 'h4':{ 
                   mt:0
                 }
               
               }}
-              dangerouslySetInnerHTML={{__html: hotel.description.substring(0, 120).concat('...')}}
+              dangerouslySetInnerHTML={{__html: hotel.description.substring(0, isInSmScreen?140:100).concat('...')}}
               />
            
             
             <Typography
               variant="h6"
               sx={{
-                margin: ' 0  0 0 auto',
+                ml: 'auto',
                 mb: 0,
+                mt:2,
                 maxWidth: 'fit-content',
                 fontWeight: 700,
               }}
@@ -175,23 +205,7 @@ setTimeout(() => {
             >
              {hotel.taxesAndCharges ? `Taxes ${currencyFixer(hotel.taxesAndCharges)}`:'Taxes Included' } 
             </Typography>
-            <Box sx={{ marginTop: 'auto', display: 'flex' }}>
-              <LocationOnIcon color="secondary" fontSize="small" />
-              <Typography
-              title={hotel.address.holeAddress}
-                variant="body2"
-                sx={{
-                  overflow: 'hidden',
-                  whiteSpace: 'pre',
-                  textOverflow: 'ellipsis',
-
-                  opacity: '0.8',
-                  fontWeight: 200,
-                }}
-              >
-                {`${hotel.address.holeAddress}`}
-              </Typography>
-            </Box>
+       
           </CardContent>
         </CardActionArea>
       </Card>
