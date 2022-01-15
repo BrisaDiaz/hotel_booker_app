@@ -34,6 +34,7 @@ export default function FullScreenDialog({
         fullScreen
         open={isOpen}
         onClose={onClose}
+        sx={{       background: '#f5f5f5'}}
         TransitionComponent={Transition}
       >
         <CloseButton

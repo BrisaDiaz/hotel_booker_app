@@ -50,7 +50,7 @@ if(fetchIndex === carouselIndex && unLoadedImagesCount ){
  requireMore()
 }
 }
-, [carouselIndex])
+, [carouselIndex,images])
 
 const handleChange=(currentIndex:number|undefined)=>{
  if(currentIndex===undefined) return
@@ -58,8 +58,10 @@ const handleChange=(currentIndex:number|undefined)=>{
 setCarouselIndex(currentIndex )
 
 }
- const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
-const miniaturesWidth=150
+ const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'))
+const carouselHeight= 450
+const miniaturesWidth=isInSmScreen ? 150: 100
+const miniaturesHeight=isInSmScreen ? 100: 50
 const miniaturesCenter=isInSmScreen?2:0
 const miniaturesMarginLeft=carouselIndex >miniaturesCenter ?(carouselIndex-miniaturesCenter)*miniaturesWidth:0
 
@@ -69,7 +71,7 @@ if(!isMounted) return <div/>
     <FullScreenModal isOpen={isOpen} onClose={onClose}>
       
   
-        <Box sx={{height:'100%',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',gap:0.5,mt:'-20px'}}>
+        <Box sx={{height:'100%',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',gap:0.5,mt:'-20px',}}>
 
  
         
@@ -77,27 +79,34 @@ if(!isMounted) return <div/>
       sx={{
         width: '100%',
         maxWidth:'900px',
+ mt:2,
         'overflow':'hidden',
- maxHeight:isInSmScreen ?400:300,
-        mx:'auto'
+
+        mx:'auto',
+          '.css-78trlr-MuiButtonBase-root-MuiIconButton-root':{
+          p:{xs:0 ,sm:0.5}
+        },
+  
+        
       }}
     >
-      <Carousel navButtonsAlwaysVisible={true} swipe={true} indicators={false} animation='slide' autoPlay={false} index={carouselIndex} cycleNavigation={false} onChange={(newIndex) =>handleChange(newIndex)}>
+      <Carousel navButtonsAlwaysVisible={true} swipe={true} indicators={false} animation='slide' autoPlay={false} index={carouselIndex||0} cycleNavigation={false} onChange={(newIndex) =>handleChange(newIndex)}>
 
         {[...images,...imagePlaceholders].map((item,index) => (
          
      
-              <Box key={item.image+index}   sx={{ height:'inherit', overflow: 'hidden',width:'100%' ,'span':{height:'inherit'}}} >
+              <Box key={item.image+index}   sx={{     position:'relative',overflow: 'hidden',width:'100%' }} >
 
                 {item.image ?      <Image
                 
-                  src={generateImageUrl(item.image,{height:isInSmScreen ?400:300,quality:100,crop:'fill'})}
+                  src={item.image}
            placeholder="blur"
 
-           blurDataURL={generateImageUrl(item.image,{height:isInSmScreen ?400:300,quality:10})}
+           blurDataURL={generateImageUrl(item.image,{height:carouselHeight,quality:10})}
              layout='responsive'
                 width={ 900}
-                height={400}
+             
+                height={carouselHeight}
                  objectFit='contain'
                   alt={item.title}
               loading="eager"
@@ -106,7 +115,7 @@ if(!isMounted) return <div/>
                 
                 }
            
-                <ImageListItemBar title={index+1+'/'+totalImages }/>
+                <Box sx={{position:'absolute',height:'min-content', zIndex:20,bottom:0,p:1,px:2,color:'#181818',width:'100%',background:'#0000001c',textAlign:'end',fontWeight:800}} >{index+1+'/'+totalImages }</Box>
                 </Box  >
             
       
@@ -117,26 +126,28 @@ if(!isMounted) return <div/>
     </Carousel>
     
         </Box>
-        <Box sx={{width: '100%',maxWidth:'900px',overflow:'hidden'}}>
-        <ImageList sx={ {wrap:'no-wrap',width:'max-content',height: 110, transition: '0.5s ease-in-out', transform: `translateX(-${miniaturesMarginLeft}px)`,my: 0 }} cols={totalImages} rowHeight={100}>
+        <Box sx={{position:'relative',width: '100%',maxWidth:'900px',overflow:'hidden',}}>
+        <ImageList sx={ {wrap:'no-wrap',width:'max-content',height: miniaturesHeight, transition: '0.5s ease-in-out', transform: `translateX(-${miniaturesMarginLeft}px)`,my: 0 }} cols={totalImages} rowHeight={miniaturesHeight}>
       {[...images,...imagePlaceholders].map((item,index) => (
 
-        <ImageListItem key={item.image+index}   sx={{position:'relative', overflow:'hidden',width:'150px',cursor:'pointer','img':{width:'max-content'},transition:'0.2s ease-in-auto','&:hover':{opacity:0.9}}}>
-              <div>
+        <ImageListItem key={item.image+index}   sx={{position:'relative', overflow:'hidden',width:miniaturesWidth ,cursor:'pointer','img':{width:'max-content'},transition:'0.2s ease-in-auto','&:hover':{opacity:0.9}}}>
+      
     <Box  
 onClick={()=> handleChange(index)}
-      sx={{position:'absolute',right:0,top:0,zIndex:100,width:'100%',height:'100%',backdropFilter:carouselIndex===index? 'unset':'brightness(0.5)',cursor:'pointer',}}
+      sx={{position:'absolute',right:0,top:0,zIndex:100,width:miniaturesWidth,height:miniaturesHeight,backdropFilter:carouselIndex===index? 'unset':'brightness(0.5)',cursor:'pointer',}}
       
-      /> 
+      >
       {item.image ?
        <Image
-                  src={generateImageUrl(item.image,{width:150,height:100,quality:90})}
-                  layout="fill"
-                  width={160}
+                  src={item.image}
+                  layout="responsive"
+                  height={miniaturesHeight}
+                  width={miniaturesWidth}
         placeholder="blur"
-           blurDataURL={generateImageUrl(item.image,{width:150,height:100,quality:10})}
+        objectFit="cover"
+           blurDataURL={generateImageUrl(item.image,{width:miniaturesWidth,height:100,quality:10})}
                   alt={item.title}
-          loading="eager"
+        
         
   
           />
@@ -145,7 +156,7 @@ onClick={()=> handleChange(index)}
     : <MiniaturePlaceholder/>
     }
              
-          </div>
+  </Box>
         </ImageListItem>
       
       ))}
@@ -159,24 +170,24 @@ onClick={()=> handleChange(index)}
 
 
 function ImagePlaceholder(){
-   const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
 
 return (
 
       
-        <Box sx={{width:'100%',height:isInSmScreen?'400px':'300px',display:'flex',justifyContent:'center',alignItems:'center',backdropFilter:'contrast(0.5)'}}><CircularProgress sx={{'svg,span':{color:'#fff'}}}/>
+        <Box sx={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backdropFilter:'contrast(0.5)'}}><CircularProgress sx={{'svg,span':{color:'#fff'}}}/>
         </Box>
   
 )
 
 }
 function MiniaturePlaceholder(){
-
-
+ const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+const miniaturesWidth=isInSmScreen ? 150: 100
+const miniaturesHeight=isInSmScreen ? 100: 50
 return (
 
       
-   <Box sx={{width:'150px',height:'100px',display:'flex',justifyContent:'center',alignItems:'center',backdropFilter:'contrast(0.5)'}}><CircularProgress sx={{'svg,span':{color:'#fff'}}}/>
+   <Box sx={{width:miniaturesWidth,height:miniaturesHeight,display:'flex',justifyContent:'center',alignItems:'center',backdropFilter:'contrast(0.5)'}}><CircularProgress sx={{'svg,span':{color:'#fff'}}}/>
         </Box>
 )
 

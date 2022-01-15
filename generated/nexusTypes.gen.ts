@@ -526,11 +526,11 @@ export interface NexusGenFieldTypes {
     hotelRoomModels: Array<NexusGenRootTypes['RoomModel'] | null> | null; // [RoomModel]
     hotelSearch: NexusGenRootTypes['HotelSearch'] | null; // HotelSearch
     languagesList: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
-    romModelImages: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     roomCategoriesList: Array<NexusGenRootTypes['RoomCategory'] | null> | null; // [RoomCategory]
     roomModelAlbum: NexusGenRootTypes['Album'] | null; // Album
     roomModelById: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     roomModelData: NexusGenRootTypes['RoomModelData'] | null; // RoomModelData
+    roomModelImages: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     servicesList: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
   }
   RequestSearch: { // field return type
@@ -845,11 +845,11 @@ export interface NexusGenFieldTypeNames {
     hotelRoomModels: 'RoomModel'
     hotelSearch: 'HotelSearch'
     languagesList: 'Language'
-    romModelImages: 'Image'
     roomCategoriesList: 'RoomCategory'
     roomModelAlbum: 'Album'
     roomModelById: 'RoomModel'
     roomModelData: 'RoomModelData'
+    roomModelImages: 'Image'
     servicesList: 'Service'
   }
   RequestSearch: { // field return type name
@@ -1213,11 +1213,6 @@ export interface NexusGenArgTypes {
       sort?: string | null; // String
       take?: number | null; // Int
     }
-    romModelImages: { // args
-      roomModelId: string; // ID!
-      skip?: number | null; // Int
-      take?: number | null; // Int
-    }
     roomModelAlbum: { // args
       roomModelId: string; // ID!
     }
@@ -1227,6 +1222,11 @@ export interface NexusGenArgTypes {
     roomModelData: { // args
       roomModelId: string; // ID!
       userId: string; // ID!
+    }
+    roomModelImages: { // args
+      roomModelId: string; // ID!
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
   }
 }

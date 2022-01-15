@@ -246,7 +246,7 @@ createdAt:'desc'
     })
   }
 }),
-t.field('romModelImages',{
+t.field('roomModelImages',{
   type:list(Image),
   args:{
     roomModelId:nonNull(idArg()),

@@ -38,5 +38,7 @@ main{
   *::-webkit-scrollbar-thumb {
     background-color: #9c5443;
     border-radius: 10px;
+  height: 50px;
+  cursor: default;
     border: 1px solid #ffffff;
   }

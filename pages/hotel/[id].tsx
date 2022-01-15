@@ -50,11 +50,14 @@ const styles = {
     },
   },
   contactInfo: {
-    p:{xs:2,lg:1},
+    py:1,
+    px:{xs:2,lg:1},
     mb:'-16px',
     display: 'flex',
     columnGap: { xs: 2, sm: 3 },
     rowGap: 0,
+    color:'primary.main',
+    textDecoration:'underline' ,
     flexWrap: 'wrap',
     fontStyle:'inherit',
     background:'#e6e6e6'
@@ -420,7 +423,7 @@ mb:0.5
             >
               Rooms
             </Typography>
-            <Box sx={{ mt:3 ,mb: 3, mx: { sm: 4} }}>
+            <Box sx={{ mt:3 ,mb: 3, mx: {xs:1, sm: 4} }}>
               <Grid container spacing={3} justifyContent="start">
                 {hotel.roomModels.map((room) => (
                   <Grid item xs={12} sm={6}  key={room.id}>

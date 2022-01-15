@@ -24,7 +24,7 @@ export default function RoomCard({ room }: { room: RoomModel }) {
 
         sx={
           {
-            minWidth: '310px',
+            minWidth: '300px',
            
        
             borderRadius: 2,
@@ -55,8 +55,8 @@ export default function RoomCard({ room }: { room: RoomModel }) {
             <Image
             layout="fill"
               height={180}
-            
-                   src={generateImageUrl(room.mainImage,{quality:100,height:180,width:310})}
+            width={310}
+                   src={room.mainImage}
         placeholder="blur"
 
            blurDataURL={generateImageUrl(room.mainImage,{quality:10,height:180,width:310})}
@@ -71,7 +71,7 @@ export default function RoomCard({ room }: { room: RoomModel }) {
                 padding: '6px 10px',
                 color:'#fff',
                 backdropFilter:'brightness(0.5)',
-                mb:4,
+                mb:3,
                mt:1
               }}
             >

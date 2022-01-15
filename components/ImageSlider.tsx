@@ -25,38 +25,42 @@ if(!isMounted) return <div/>
     <Box
       sx={{
         width: '100%',
+ 
+      height:432,
+      
       }}
     >
-      <Carousel navButtonsAlwaysVisible={true} swipe={true} indicators={false} interval={2000}>
+      <Carousel  navButtonsAlwaysVisible={true} swipe={true} indicators={false} interval={2000}>
         {images.map((item) => (
-          <div key={item.image}>
+ 
             <ImageList
+             key={item.image}
               sx={{
                 width: '100%',
-                maxHeight: '400px',
+        height:'inherit',
                 overflow: 'hidden',
                 objectFit: 'cover',
                 alignItems: 'center',
               }}
-              rowHeight={400}
+         rowHeight={400}
               cols={1}
             >
-              <ImageListItem cols={1} sx={{ alignItems: 'center','span':{height:'inherit'} }} >
+              <ImageListItem cols={1} sx={{ alignItems: 'center' }} >
                 <Image
-                objectFit='contain'
-                  src={generateImageUrl(item.image,{width:800,height:400})}
+                objectFit='cover'
+                  src={item.image}
            placeholder="blur"
-width={800}
+
 height={400}
-           blurDataURL={generateImageUrl(item.image,{width:800,height:400,quality:10})}
-                layout='responsive'
+           blurDataURL={generateImageUrl(item.image,{width:750,height:400,quality:10})}
+                layout='fill'
                   alt={item.title}
               
                 />
                 <ImageListItemBar title={item.title} />
               </ImageListItem>
             </ImageList>
-          </div>
+     
         ))}
       </Carousel>
     </Box>

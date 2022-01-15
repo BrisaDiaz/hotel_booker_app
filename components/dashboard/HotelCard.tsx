@@ -73,7 +73,7 @@ export default function HotelCard({
           height={150}
             layout="fill"
           
-            src={generateImageUrl(hotel.frameImage,{height:150,quality:100})}
+            src={hotel.frameImage}
             placeholder="blur"
 
            blurDataURL={generateImageUrl(hotel.frameImage,{height:150,quality:10})}

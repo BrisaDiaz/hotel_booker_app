@@ -1,6 +1,7 @@
 export const styles = {
   root: {
     maxWidth: '900px',
+       background:'inherit',
     width: '100%',
     margin: '0 auto',
     pb: 4,
@@ -31,7 +32,7 @@ export const styles = {
   groupTitle: {
     fontWeight: 500,
     color: '#484848',
-    background: '#fff',
+        
     mb: '10px',
     px: '10px',
     width: 'max-content',
@@ -42,7 +43,8 @@ export const styles = {
     borderRadius: 5,
     border: '1px solid  rgb(0 0 0 / 10%)',
     padding: { xs: '15px', sm: '20px', md: '25px ' },
-    background: '#fff',
+   background: '#fff',
+
     boxShadow:
       '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
       '&:hover':{

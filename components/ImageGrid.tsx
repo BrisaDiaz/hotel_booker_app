@@ -14,7 +14,7 @@ export default function StandardImageList(
 
 
  const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
- const mainImageGridHeight=mainImages.length===1  &&isInSmScreen ?300:  400 
+ const mainImageGridHeight=mainImages.length===1  &&!isInSmScreen ?300:  400 
 const mainImagesCols= mainImages.length===1 ? 1: isInSmScreen?2:1
 const rowHeight =200
 
@@ -28,11 +28,12 @@ const rowHeight =200
         <ImageListItem sx={{cursor:'pointer',overflow:'hidden',transition:'0.2s ease-in-auto','&:hover':{opacity:0.9}}} key={item.image}  rows={mainImages.length===1 ? 2: isInSmScreen ?2:1}>
           <div>
             <Image
-                 src={generateImageUrl(item.image,{width:900/mainImagesCols ,height:400,quality:100})}
+                 src={item.image}
                   layout="fill"
                   width={900}
+                  height={400}
                 placeholder="blur"
-
+objectFit= {isInSmScreen ? 'cover':'contain'}
            blurDataURL={generateImageUrl(item.image,{width:900/mainImagesCols ,height:400,quality:10})}
                   alt={item.title}
                   onClick={()=>onClick(item,index)}
@@ -42,21 +43,25 @@ const rowHeight =200
         </ImageListItem>
       ))}
     </ImageList>
-{miniatures.length ?    <ImageList sx={{width: '100%', height: 110,overflowX:{xs: 'auto',md:'hidden'},overflowY:'hidden',my: 0}} cols={6} rowHeight={100} >
+{miniatures.length ?    <ImageList sx={{width: '100%', height: 110,overflowX:{xs: 'auto',md:'hidden'},overflowY:'hidden',
+  '&::-webkit-scrollbar ':{
+ display:'none'
+  },my: 0}} cols={6} rowHeight={100} >
       {miniatures.map((item,index) => (
 
-        <ImageListItem key={item.image}   sx={{position:'relative', overflow:'hidden',minWidth:'150px',cursor:'pointer','img':{width:'100%'},transition:'0.2s ease-in-auto','&:hover':{opacity:0.9}}}>
+        <ImageListItem key={item.image}   sx={{position:'relative', overflow:'hidden',minWidth:'146px',cursor:'pointer','img':{width:'100%'},transition:'0.2s ease-in-auto','&:hover':{opacity:0.9}}}>
               <Box>
 
       {totalQuantity && index+1 ===miniatures.length ?   <ShowMoreBox quantity={totalQuantity} onClick={onShowMore}/>:null
        }
               <Image
-                  src={generateImageUrl(item.image,{width:150,height:100,quality:90})}
+              objectFit="cover"
                   layout="fill"
-                  width={150}
+                  width={146}
+                  height={100}
                  placeholder="blur"
-
-           blurDataURL={generateImageUrl(item.image,{width:150,height:100,quality:10})}
+        src={item.image}
+           blurDataURL={generateImageUrl(item.image,{width:146,height:100,quality:10})}
                   alt={item.title}
           onClick={()=>onClick(item,index+mainImages.length)}
         

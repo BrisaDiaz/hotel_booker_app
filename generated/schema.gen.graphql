@@ -284,11 +284,11 @@ type Query {
   hotelRoomModels(hotelId: ID!, userId: ID!): [RoomModel]
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
   languagesList: [Language]
-  romModelImages(roomModelId: ID!, skip: Int, take: Int): [Image]
   roomCategoriesList: [RoomCategory]
   roomModelAlbum(roomModelId: ID!): Album
   roomModelById(roomModelId: ID!): RoomModel
   roomModelData(roomModelId: ID!, userId: ID!): RoomModelData
+  roomModelImages(roomModelId: ID!, skip: Int, take: Int): [Image]
   servicesList: [Service]
 }
 
