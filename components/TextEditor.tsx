@@ -35,7 +35,7 @@ if(resetCount)  setEditorState(EditorState.createEmpty())
 
 
 
-useEffect(() => {
+React.useEffect(() => {
 setIsMount(true)
 }, [])
 const handleFocus = ()=>{
