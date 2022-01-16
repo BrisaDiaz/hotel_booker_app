@@ -51,3 +51,7 @@
 - Dinamic layouts.
 - Full guest, hotels, rooms and bookings management system.  
 - Multy hotels suport.
+
+## 🗃 Database ERD:  
+
+![image](https://drive.google.com/uc?export=view&id=1Fnpi7pzcDLktRp9rdkQafaUBlgGlGYkQ)
