@@ -12,18 +12,6 @@
 ![image](https://drive.google.com/uc?export=view&id=10JtbkZQjLCkmUcJax65Kl_iwLeOvUXxY)
 ![image](https://drive.google.com/uc?export=view&id=1lB-2MrAYusnInF_1n-1S81ZVuKm1ZfLa)
   
-
-## 🤐 Environment variables
-
-- `APP_SECRET` _Jwt secret key_
-- `NEXT_PUBLIC_HOST` _Appication hots name_
-- `NEXT_PUBLIC_BACKEND_URL` _HOST/api/graphql_
-- `DATABASE_URL` _Postgresql database connection string_
-- `NODE_ENV` _production/development_
-- `CLOUDINARY_NAME`
-- `CLOUDINARY_API_KEY`
-- `CLOUDINARY_API_SECRET`
-
 ## 💾 Tecnologies and tools:
 
 - Next.js
@@ -51,6 +39,43 @@
 - Dinamic layouts.
 - Full guest, hotels, rooms and bookings management system.  
 - Multy hotels suport.
+
+## 🤐 Environment variables
+
+- `APP_SECRET` _Jwt secret key_
+- `NEXT_PUBLIC_HOST` _Appication hots name_
+- `NEXT_PUBLIC_BACKEND_URL` _HOST/api/graphql_
+- `DATABASE_URL` _Postgresql database connection string_
+- `NODE_ENV` _production/development_
+- `CLOUDINARY_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+
+
+## 🕹Set up project
+
+#### 1. Install my-project with npm
+
+```bash
+  npm install my-project
+  
+  cd my-project
+```
+
+#### 2. Create and seed the database
+
+```bash
+npx prisma migrate dev --name init  
+  
+npx prisma db seed
+
+```
+#### 3. Start the app
+
+```bash
+  npm run dev
+
+```
 
 ## 🗃 Database ERD:  
 
