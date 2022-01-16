@@ -6,11 +6,11 @@
   
 ##  📸 Screenshots  
 
-![image](https://drive.google.com/uc?export=view&id=1MXpnComIXOEDtztrjCU322aT5M8VftWR)
-![image](https://drive.google.com/uc?export=view&id=1uip2SA_QEvyFByFMY3rcZetPUe9obRqM)
-![image](https://drive.google.com/uc?export=view&id=1z25kBK7cQ0_Mkc6A6QdBGzdhWCMtATWt)
-![image](https://drive.google.com/uc?export=view&id=1R_B73P_dSOL8CrtcJSF_Mg23zqvia0LF)
-![image](https://drive.google.com/uc?export=view&id=1N2kGhtQl9kREV3BlQQOHvklx1vCjiA54)
+![image](https://drive.google.com/uc?export=view&id=1BeuzcHiiQB3jrnf3U9NU873S9Hv8dPwO)
+![image](https://drive.google.com/uc?export=view&id=15o9ZMGA8dkih23vmddhdu9AH6Ys3H9IX)
+![image](https://drive.google.com/uc?export=view&id=1SxItKVerWXuiiu4s97-6PnfAJd9w0dkC)
+![image](https://drive.google.com/uc?export=view&id=10JtbkZQjLCkmUcJax65Kl_iwLeOvUXxY)
+![image](https://drive.google.com/uc?export=view&id=1lB-2MrAYusnInF_1n-1S81ZVuKm1ZfLa)
   
 
 ## 🤐 Environment variables
