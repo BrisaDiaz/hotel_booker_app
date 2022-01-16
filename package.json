@@ -35,7 +35,7 @@
     "jsonwebtoken": "^8.5.1",
     "micro": "^9.3.4",
     "moment": "^2.29.1",
-    "next": "12.0.1",
+    "next": "^12.0.8",
     "nexus": "^1.1.0",
     "react": "^17.0.2",
     "react-big-calendar": "^0.38.1",

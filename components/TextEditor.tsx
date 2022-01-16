@@ -26,14 +26,18 @@ export default function MyEditor({placeholder,onChange,error,defaultData,resetCo
   const [editorState, setEditorState] = React.useState<EditorState>(() =>
     EditorState.createEmpty()
   );
+  const [isFocus, setIsFocus] = React.useState<boolean>(false)
+  const [isMount, setIsMount] = React.useState<boolean>(false)
     ////reset text when reset is trigger
   React.useEffect(() => {
 if(resetCount)  setEditorState(EditorState.createEmpty())
   }, [resetCount])
 
-const [isFocus, setIsFocus] = React.useState<boolean>(false)
 
 
+useEffect(() => {
+setIsMount(true)
+}, [])
 const handleFocus = ()=>{
   setIsFocus(true)
 }
@@ -146,7 +150,7 @@ React.useEffect(() => {
   onChange(html)
 }, [editorState])
 
-  
+  if(!isMount) return <div/>
   return (
     <ErrorBoundary>
     <Box sx={{display:'flex',border:error? ' 1px solid #d32f2f': isFocus? '1px solid rgba(0, 0, 0, 0.6)' : '1px solid rgba(0, 0, 0, 0.3)'   ,borderBottom:'transparent'}} >
@@ -196,6 +200,7 @@ React.useEffect(() => {
     >
 
       <Editor
+      editorKey="editor"
         onFocus={handleFocus}
         onBlur={handleBlur}
         editorState={editorState}
