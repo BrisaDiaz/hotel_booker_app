@@ -55,5 +55,12 @@ export const styles = {
   textField: {
     width: '100%',
     my: 1,
+        '*':{
+       fontSize:{xs:'14px',sm:'16px'},
+    },
+'input':{
+
+p:{xs:'10px 14px',sm:'16.5px 14px'},
+},
   },
 } 

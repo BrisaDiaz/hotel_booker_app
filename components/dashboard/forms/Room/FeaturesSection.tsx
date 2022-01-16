@@ -6,7 +6,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { styles } from '@/components/dashboard/forms/styles';
 import { RoomModel, Feature } from '@/interfaces/index';
-
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 export default function FeaturesSection({
   register,
   errors,
@@ -50,7 +51,7 @@ export default function FeaturesSection({
   useEffect(() => {
     setValue('amenities', amenitiesSelected);
   }, [amenitiesSelected]);
-
+   const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Box component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -60,14 +61,17 @@ export default function FeaturesSection({
         onChange={(data: autocompliteData[]) => handleAmenitiesField(data)}
         label="Amenities"
         options={amenities}
-        sx={styles.textField}
+                  sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
         defaultValue={defaultData?.amenities || []}
       />
       <AutocompleteCheckbox
         onChange={(data: autocompliteData[]) => handleServicesField(data)}
         label="Services"
         options={services}
-        sx={styles.textField}
+        
+                      sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
         defaultValue={defaultData?.services || []}
       />
       <Box sx={{ my: 1 }}>
@@ -76,7 +80,7 @@ export default function FeaturesSection({
           {...register('freeCancelation')}
           control={
             <Checkbox
-              color="secondary"
+              color="secondary" size="small" 
             defaultChecked={defaultData?.smooking ? true : false}
             />
           }
@@ -89,7 +93,7 @@ export default function FeaturesSection({
           control={
             <Checkbox
             defaultChecked={defaultData?.smooking ? true : false}
-              color="secondary"
+              color="secondary" size="small" 
            
             />
           }

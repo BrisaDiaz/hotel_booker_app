@@ -6,6 +6,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { styles } from '@/components/dashboard/forms/styles';
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 type Feature = {
   id: number;
   name: string;
@@ -73,6 +75,7 @@ export default function FeaturesSection({
   useEffect(() => {
     setValue('languages', languagesSelected);
   }, [languagesSelected]);
+    const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -84,20 +87,23 @@ export default function FeaturesSection({
         label="Facilities"
         options={facilities}
         defaultValue={defaultData?.facilities || []}
-        sx={styles.textField}
+                 sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
       />
       <AutocompleteCheckbox
         onChange={(data: autocompliteData[]) => handleServicesField(data)}
         label="Services"
         options={services}
-        sx={styles.textField}
+                 sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
         defaultValue={defaultData?.services || []}
       />
       <AutocompleteCheckbox
         onChange={(data: autocompliteData[]) => handleActivitiesField(data)}
         label="Activities"
         options={activities}
-        sx={styles.textField}
+            sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
         defaultValue={defaultData?.activities || []}
       />
 
@@ -105,7 +111,8 @@ export default function FeaturesSection({
         onChange={(data: autocompliteData[]) => handleLanguagesField(data)}
         label="Languages"
         options={languages}
-        sx={styles.textField}
+            sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
         defaultValue={defaultData?.languages || []}
       />
 
@@ -116,6 +123,7 @@ export default function FeaturesSection({
          
               control={
                 <Checkbox
+                  size="small"
                   color="secondary"
                        defaultChecked={defaultData?.smooking ? true : false}
                   {...register('freeCancelation')}
@@ -127,6 +135,7 @@ export default function FeaturesSection({
             control={
                 <Checkbox
                   color="secondary"
+                  size="small"
                   {...register('accessible')}
                   inputProps={{
                     defaultChecked: defaultData?.features?.accessible
@@ -142,6 +151,7 @@ export default function FeaturesSection({
               control={
                 <Checkbox
                   color="secondary"
+                    size="small"
                   inputProps={{
                     defaultChecked: defaultData?.features?.familyFriendly
                       ? true
@@ -160,6 +170,7 @@ export default function FeaturesSection({
      
               control={
                 <Checkbox
+                  size="small"
                        defaultChecked={defaultData?.smooking ? true : false}
                   color="secondary"
                   {...register('petFriendly')}
@@ -171,6 +182,7 @@ export default function FeaturesSection({
  
               control={
                 <Checkbox
+                  size="small"
                   inputProps={{
                     defaultChecked: defaultData?.features?.smokerFriendly
                       ? true
@@ -186,6 +198,7 @@ export default function FeaturesSection({
 
               control={
                 <Checkbox
+                  size="small"
                   inputProps={{
                     defaultChecked: defaultData?.features?.ecoFriendly
                       ? true

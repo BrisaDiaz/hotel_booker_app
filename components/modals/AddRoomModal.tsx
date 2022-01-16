@@ -6,7 +6,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 const styles = {
   modal: {
     position: 'fixed',
@@ -23,10 +24,21 @@ const styles = {
     flexDirection: 'column',
     gap: 3,
     borderRadius: 2,
+
     '& > button': {
       textTransform: 'capitalize',
     },
+   
   },
+       input:{
+    '*':{
+       fontSize:{xs:'14px',sm:'16px'},
+    },
+'input':{
+
+p:{xs:'10px 14px',sm:'16.5px 14px'},
+},
+    },
 } as const;
 
 export default function KeepMountedModal({
@@ -93,7 +105,7 @@ export default function KeepMountedModal({
 
     if (numbers.length) return onSubmit(numbers);
   };
-
+ const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Box sx={{ maxWidth: '100vw', margin: '0 auto' }}>
       <Modal
@@ -128,6 +140,8 @@ export default function KeepMountedModal({
             </Stack>
           )}
           <TextField
+           size={isInSmScreen?'medium':"small"}
+              sx={styles.input}
             type="number"
             id="country"
             inputRef={inputRef}

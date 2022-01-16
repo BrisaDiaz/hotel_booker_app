@@ -13,6 +13,9 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import InputAdornment from '@mui/material/InputAdornment';
 import KingBedIcon from '@mui/icons-material/KingBed';
 import { styles } from './styles';
+import {Theme}from '@mui/system'
+import { useMediaQuery } from '@mui/material';
+
 const PAYMENT_METHODS = [
   { name: 'Cash', value: 'CASH' },
   { name: 'Debit Card', value: 'DEBIT_CARD' },
@@ -62,6 +65,8 @@ export default function BookingClientInputs({
   React.useEffect(() => {
     setValue('roomsIds', numbersSelected);
   }, [numbersSelected]);
+
+  const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Box sx={{ position: 'relative' }}>
       {disable && (
@@ -86,9 +91,11 @@ export default function BookingClientInputs({
           Payment
         </Typography>
       </Box>
-      <Grid container spacing={1} sx={{ my: 1 }}>
-        <Grid item xs={12} sm={6}>
+      <Grid container spacing={1} sx={{ my: 1 }} >
+        <Grid item xs={12} sm={6}  sx={styles.inputGrid} >
           <TextField
+                                size={isInSmScreen?'medium':"small"}
+   sx={styles.input}
             id="totalCost"
             fullWidth
             defaultValue={0}
@@ -114,11 +121,13 @@ export default function BookingClientInputs({
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth>
+        <Grid item xs={12} sm={6}  sx={styles.inputGrid} >
+          <FormControl fullWidth                       size={isInSmScreen?'medium':"small"}
+   sx={styles.input}>
             <InputLabel id="payment-method">Payment Method</InputLabel>
 
             <Select
+            
               labelId="payment-method"
               label="Payment Method"
               value={paymentMethodSelected}

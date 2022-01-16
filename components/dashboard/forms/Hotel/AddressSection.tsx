@@ -5,7 +5,8 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { styles } from '@/components/dashboard/forms/styles';
-
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 export default function AddressSection({
   register,
   errors,
@@ -17,6 +18,7 @@ export default function AddressSection({
   errors: any;
   defaultData?: any;
 }) {
+     const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -41,7 +43,8 @@ export default function AddressSection({
                 : 'Hole Address'
             }
             error={errors['holeAddress'] ? true : false}
-            sx={styles.textField}
+                  sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             variant="outlined"
           />
         </Grid>
@@ -58,7 +61,8 @@ export default function AddressSection({
                 message: 'The address must not exced the 20 character',
               },
             })}
-            sx={styles.textField}
+                       sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             variant="outlined"
           />
         </Grid>
@@ -67,7 +71,8 @@ export default function AddressSection({
         <Grid item xs={12} sm={6}>
           <TextField
             defaultValue={defaultData?.address?.postalCode || ''}
-            sx={styles.textField}
+                        sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="postalCode"
             type="text"
             label={
@@ -88,7 +93,8 @@ export default function AddressSection({
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            sx={styles.textField}
+                        sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="administrativeArea"
             label={
               errors['administrativeArea']
@@ -113,7 +119,8 @@ export default function AddressSection({
       <Grid container spacing={{ sm: 2 }} alignItems="center">
         <Grid item xs={12} sm={6}>
           <TextField
-            sx={styles.textField}
+                        sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="city"
             label={errors['city'] ? errors['city'].message : 'City'}
             error={errors['city'] ? true : false}
@@ -130,7 +137,8 @@ export default function AddressSection({
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            sx={styles.textField}
+                       sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="street"
             type="text"
             defaultValue={defaultData?.address?.street || ''}

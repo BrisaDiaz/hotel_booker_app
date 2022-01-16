@@ -5,13 +5,16 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { styles } from '@/components/dashboard/forms/styles';
 import FileInput from '@/components/FileInput'
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 export default function AspectSection({
   register,
   setError,
 clearErrors,
   errors,
   children,
-  resetCount
+  resetCount,
+ 
 }: {
   children?: React.ReactNode;
   register: (fieldName:string,config?:any)=>void;
@@ -19,6 +22,7 @@ clearErrors,
     clearErrors:(fieldName:string)=>void;
   errors: any;
   resetCount?:number
+ 
 }) {
   const defaultImage =
     'https://www.grancapitan.com.ar/wp-content/uploads/2014/10/default-img.gif';
@@ -45,6 +49,7 @@ React.useEffect(() => {
    setMainImage(defaultImage)
  }
 }, [resetCount])
+   const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -60,7 +65,8 @@ React.useEffect(() => {
                 ? errors['mainImage'].message
                 : 'Main image'
             }
-            sx={styles.textField}
+                 sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             error={errors['mainImage'] ? true : false}
            register={register('mainImage', {
               required: 'The main image is required',

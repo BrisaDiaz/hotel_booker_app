@@ -5,6 +5,8 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { styles } from '@/components/dashboard/forms/styles';
 import { RoomModel, Feature } from '@/interfaces/index';
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 
 export default function CapacitySection({
   register,
@@ -37,38 +39,40 @@ export default function CapacitySection({
           {}
         )
       : null;
-
+    const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Box component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
         Capacity & Stay
       </Typography>
 
-      <Grid container spacing={{ sm: 2 }} alignItems="center">
-        <Grid item xs={12} sm={6}>
-          <TextField
-            sx={styles.textField}
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={6}>
+          <TextField fullWidth 
+                    sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="mts2"
-            defaultValue={defaultData ? defaultData.mts2 : 0}
+            defaultValue={defaultData ? defaultData.mts2 : 1}
             {...register('mts2', {
               required: 'The mts2 are required',
               min: {
-                value: 0,
+                value: 1,
                 message: 'Meters must be positive number',
               },
             })}
-            inputProps={{ min: 0 }}
+            inputProps={{ min: 1 }}
             variant="outlined"
             label={errors['mts2'] ? errors['mts2'].message : 'Quadratic Meters'}
             type="number"
             error={errors['mts2'] ? true : false}
           />
         </Grid>
-        <Grid item xs={12} sm={6} sx={{ width: { md: '50%' } }}>
-          <TextField
-            sx={styles.textField}
+        <Grid item xs={6} >
+          <TextField fullWidth 
+                   sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="maximunGueststs"
-            defaultValue={defaultData ? defaultData.maximunGuests : 0}
+            defaultValue={defaultData ? defaultData.maximunGuests : 1}
             inputProps={{ min: 0 }}
             {...register('maximunGuests', {
               required: 'The guest limit is required',
@@ -88,12 +92,13 @@ export default function CapacitySection({
           />
         </Grid>
       </Grid>
-      <Grid container spacing={{ sm: 2 }} alignItems="center">
-        <Grid item xs={12} sm={6}>
-          <TextField
-            sx={styles.textField}
+      <Grid container spacing={2} alignItems="center">
+        <Grid item  xs={6}>
+          <TextField fullWidth 
+               sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="minimunNights"
-            defaultValue={defaultData ? defaultData.minimunStay : 0}
+            defaultValue={defaultData ? defaultData.minimunStay : 1}
             {...register('minimunNights', {
               required: 'The minimun staying  is required',
               min: {
@@ -112,9 +117,10 @@ export default function CapacitySection({
             error={errors['minimunNights'] ? true : false}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            sx={styles.textField}
+        <Grid item  xs={6}>
+          <TextField fullWidth 
+                   sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="maximunNights"
             {...register('maximunNights', {
               min: {
@@ -162,6 +168,7 @@ export function BedsInputs({
     };
   };
 }) {
+    const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <>
       {beds.map((bed) => (
@@ -177,14 +184,15 @@ export function BedsInputs({
           }}
         >
           <Typography
-            sx={{ mr: 1, width: 'max-content', textTransform: 'capitalize' }}
+            sx={{ mr: 1, width: 'max-content', textTransform: 'capitalize' ,fontSize:{xs:'14px',sm:'16px'}}}
           >
             {bed.name}
             {' :'}
           </Typography>
           <Box sx={{ width: '100px' }}>
-            <TextField
-              sx={styles.textField}
+            <TextField fullWidth 
+                      sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
               id="bedQuantity"
               defaultValue={
                 defaultBeds ? defaultBeds[`${bed.name}`]?.quantity : 0

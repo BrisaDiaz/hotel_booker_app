@@ -15,12 +15,12 @@ export const styles = {
     pt: 2,
        pb: 3.5,
     px: 3.5,
-    maxHeight: '90%',
+    maxHeight: '100%',
     overflowY: 'auto',
   
   },
   leyend: {
-    width: '50%',
+    width: '60%',
     color: 'text.secondary',
     fontSize: '14px',
     fontWeight: 500,
@@ -30,6 +30,16 @@ export const styles = {
     mb: 2,
     mx: 'auto',
   },
+  input:{
+    '*':{
+       fontSize:{xs:'14px',sm:'16px'},
+    },
+'input':{
+
+p:{xs:'10px 14px',sm:'16.5px 14px'},
+},
+  },
+  inputGrid:{mb:0.5},
   withIconLabel: {
     marginBottom: '10px',
     display: 'flex',

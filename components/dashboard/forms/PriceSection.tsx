@@ -4,7 +4,8 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Grid from '@mui/material/Grid';
 import { styles } from '@/components/dashboard/forms/styles';
-
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 export default function PriceSection({
   register,
   errors,
@@ -18,6 +19,7 @@ export default function PriceSection({
   defaultData?: any;
   sourceForm?: 'roomForm' | 'hotelForm';
 }) {
+    const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -27,6 +29,8 @@ export default function PriceSection({
         <Grid item xs={12} sm={6}>
           <TextField
             sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
+
             id="lowestPrice"
             {...register('lowestPrice', {
               required: 'The lowest price is required',
@@ -56,7 +60,9 @@ export default function PriceSection({
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            sx={styles.textField}
+             sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
+     
             id="taxesAndCharges"
             defaultValue={
               defaultData?.taxesAndCharges ? defaultData.taxesAndCharges : 0
@@ -90,6 +96,8 @@ export default function PriceSection({
           <Grid item xs={12} sm={6}>
             <TextField
               sx={styles.textField}
+            
+            size={isInSmScreen?'medium':"small"}
               id="cancelationFee"
               defaultValue={
                 defaultData?.cancelationFee ? defaultData.cancelationFee : 0

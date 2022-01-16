@@ -10,6 +10,8 @@ import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import TitleIcon from '@mui/icons-material/Title';
 import Tooltip from '@mui/material/Tooltip';
 import ErrorBoundary from '@/components/ErrorBoundary'
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 import "draft-js/dist/Draft.css";
 import { Editor, EditorState,RichUtils, ContentState, convertFromHTML,getDefaultKeyBinding ,KeyBindingUtil} from "draft-js";
 const {hasCommandModifier} = KeyBindingUtil;
@@ -101,20 +103,20 @@ const handleBlur= ()=>{
           .getType();
 
    const currentStyle = editorState.getCurrentInlineStyle();
-
+const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
    const BLOCK_TYPES:{icone:React.ReactNode,style:blockStyles}[]  = [
 
-        {icone: <TitleIcon/>, style: 'header-four'},
+        {icone: <TitleIcon fontSize={isInSmScreen? 'medium':'small'}  />, style: 'header-four'},
 
-        {icone: <FormatListBulletedIcon/>, style: 'unordered-list-item'},
-        {icone: < FormatListNumberedIcon/>, style: 'ordered-list-item'},
-                {icone: <FormatQuoteIcon/>, style: 'blockquote'},
+        {icone: <FormatListBulletedIcon fontSize={isInSmScreen? 'medium':'small'} />, style: 'unordered-list-item'},
+        {icone: < FormatListNumberedIcon fontSize={isInSmScreen? 'medium':'small'}/>, style: 'ordered-list-item'},
+                {icone: <FormatQuoteIcon fontSize={isInSmScreen? 'medium':'small'}/>, style: 'blockquote'},
      
       ];
         const   INLINE_STYLES:{icone:React.ReactNode,style:InlineStyles}[] = [
-        {icone: <FormatBoldIcon  />, style: 'BOLD'},
-        {icone: <FormatItalicIcon />, style: 'ITALIC'},
-        {icone:  <FormatUnderlinedIcon />, style: 'UNDERLINE'},
+        {icone: <FormatBoldIcon fontSize={isInSmScreen? 'medium':'small'}  />, style: 'BOLD'},
+        {icone: <FormatItalicIcon fontSize={isInSmScreen? 'medium':'small'} />, style: 'ITALIC'},
+        {icone:  <FormatUnderlinedIcon  fontSize={isInSmScreen? 'medium':'small'}/>, style: 'UNDERLINE'},
       ];
 
 React.useEffect(() => {
@@ -137,6 +139,8 @@ React.useEffect(() => {
   const html = stateToHTML(content);
   onChange(html)
 }, [editorState])
+
+  
   return (
     <ErrorBoundary>
     <Box sx={{display:'flex',border:error? ' 1px solid #d32f2f': isFocus? '1px solid rgba(0, 0, 0, 0.6)' : '1px solid rgba(0, 0, 0, 0.3)'   ,borderBottom:'transparent'}} >
@@ -144,7 +148,7 @@ React.useEffect(() => {
 
       {INLINE_STYLES.map(inlineStyle=> 
       <Tooltip  title={stylesControls[inlineStyle.style]}  key={inlineStyle.style}>
-        <IconButton aria-label={inlineStyle.style}component="span" color={currentStyle.has(inlineStyle.style) ? 'primary': 'default' } onClick={(e:React.MouseEvent<HTMLElement>) =>toggleInlineStyle(e,inlineStyle.style)}>
+        <IconButton size={isInSmScreen? 'medium':'small'} aria-label={inlineStyle.style}component="span" color={currentStyle.has(inlineStyle.style) ? 'primary': 'default' } onClick={(e:React.MouseEvent<HTMLElement>) =>toggleInlineStyle(e,inlineStyle.style)}>
           {inlineStyle.icone}
         </IconButton>
         </Tooltip>
@@ -152,7 +156,7 @@ React.useEffect(() => {
         <Box sx={{borderLeft: '1px solid rgba(0, 0, 0, 0.3)',ml:1}}/>
      {BLOCK_TYPES.map(blockStyle=> 
            <Tooltip title={stylesControls[blockStyle.style]} key={blockStyle.style}>
-        <IconButton  aria-label={blockStyle.style}component="span" color={blockStyle.style === blockType ? 'primary': 'default' }  onClick={(e:React.MouseEvent<HTMLElement>) =>toggleBlockType(e,blockStyle.style)}>
+        <IconButton size={isInSmScreen? 'medium':'small'}  aria-label={blockStyle.style} component="span" color={blockStyle.style === blockType ? 'primary': 'default' }  onClick={(e:React.MouseEvent<HTMLElement>) =>toggleBlockType(e,blockStyle.style)}>
           {blockStyle.icone}
         </IconButton>
         </Tooltip>
@@ -172,6 +176,9 @@ React.useEffect(() => {
         p:1.5,
         pr:0.5,
         fontFamily:'inherit',
+      },
+      '*':{
+        fontSize:{sm:'16px',xs:'14px'}
       },
        '.public-DraftEditorPlaceholder-root':{
           color:error?'#d32f2f':'inherit',

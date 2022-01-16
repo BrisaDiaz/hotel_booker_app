@@ -8,6 +8,8 @@ import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import LanguageIcon from '@mui/icons-material/Language';
 import { styles } from '@/components/dashboard/forms/styles';
 import validations from '@/utils/formValidations';
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 export default function ContactSection({
   register,
   errors,
@@ -19,6 +21,7 @@ export default function ContactSection({
   defaultData?: any;
   children?: React.ReactNode;
 }) {
+  const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -28,6 +31,7 @@ export default function ContactSection({
         <Grid item xs={12} sm={6}>
           <TextField
             id="telephone"
+            
             type="tel"
             defaultValue={defaultData?.telephone || ''}
             label={
@@ -43,13 +47,15 @@ export default function ContactSection({
               ),
             }}
             variant="outlined"
-            sx={styles.textField}
+                    sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             defaultValue={defaultData?.email || ''}
-            sx={styles.textField}
+                     sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="email"
             type="email"
       
@@ -71,7 +77,8 @@ export default function ContactSection({
         <Grid item xs={12} sm={6}>
           <TextField
           type="url"
-            sx={styles.textField}
+                    sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="website"
             defaultValue={defaultData?.website || ''}
             variant="outlined"

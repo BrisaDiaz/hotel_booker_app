@@ -1,11 +1,13 @@
 import React from 'react';
 
 import Typography from '@mui/material/Typography';
-
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { styles } from '@/components/dashboard/forms/styles';
 import TextEditor from '@/components/TextEditor'
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 export default function PoliciesSection({
   register,
   errors,
@@ -25,7 +27,7 @@ setValue,
 const handlePolicies =(text:string)=>{
 setValue('policiesAndRules',text)
 }
-
+   const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -41,7 +43,8 @@ setValue('policiesAndRules',text)
             type="time"
             {...register('checkInHour')}
             variant="outlined"
-            sx={styles.textField}
+                  sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             InputLabelProps={{
               shrink: true,
             }}
@@ -53,13 +56,14 @@ setValue('policiesAndRules',text)
         </Grid>
         <Grid item xs={6}>
           <TextField
-        
+                          sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             variant="outlined"
             id="checkOutHour"
             {...register('checkOutHour')}
             label="Checkout hour"
             type="time"
-            sx={styles.textField}
+  
             InputLabelProps={{
               shrink: true,
             }}
@@ -73,8 +77,9 @@ setValue('policiesAndRules',text)
 <input type="hidden"  {...register('policiesAndRules',{
   require:'The policies and rules are required'
 })}/>
-   
+   <Box sx={{mb:1}}>
       <TextEditor 
+      
         defaultData={defaultData ?defaultData.policiesAndRules:''}
         error={errors['policiesAndRules']? errors['policiesAndRules'].message:''}
         onChange= {handlePolicies}
@@ -84,6 +89,7 @@ setValue('policiesAndRules',text)
             ? errors['policiesAndRules'].message
             : 'Policies and Rules'
         }/>
+        </Box>
       {children}
     </Grid>
   );

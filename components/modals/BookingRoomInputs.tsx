@@ -9,8 +9,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PeopleIcon from '@mui/icons-material/People';
 import { styles } from './styles';
 import { v4 as uuidv4 } from 'uuid';
+import {Theme}from '@mui/system'
 import { getFormatedDate } from '@/utils/ToYearMounthDayFormat';
-
+import { useMediaQuery } from '@mui/material';
 export type Room = {
   children: number;
   adults: number;
@@ -43,6 +44,7 @@ function RoomField({
   onDelete: ()=>void;
   handleChange: (roomId:string,field:'adults'|'children',quantity:number)=>void;
 }) {
+   const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <div>
       <Box component="div" sx={{ my: 2 }}>
@@ -51,7 +53,9 @@ function RoomField({
             Room {index}
           </Typography>
           <TextField
+              size={isInSmScreen?'medium':"small"}
             type="number"
+              sx={styles.input}
             label="Adults"
             fullWidth
             onChange={(e) =>
@@ -61,6 +65,8 @@ function RoomField({
             InputProps={{ inputProps: { min: 0 } }}
           />
           <TextField
+       size={isInSmScreen?'medium':"small"}
+            sx={styles.input}
             type="number"
             label="Children"
             fullWidth
@@ -190,6 +196,7 @@ export default function BookingRoomInputs({
     handleDateChanges();
   }, [checkInDate, checkOutDate]);
 
+     const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <div>
       <Box sx={styles.withIconLabel}>
@@ -201,13 +208,17 @@ export default function BookingRoomInputs({
       <Typography component="div" sx={{ my: 2 }}>
         <Box sx={flexBox}>
           <TextField
+                 size={isInSmScreen?'medium':"small"}
             type="date"
             fullWidth
+              sx={styles.input}
             value={checkInDate}
             onChange={(e) => setCheckInDate(e.target.value)}
             error={errors['checkInDate']?.message}
           />
           <TextField
+               size={isInSmScreen?'medium':"small"}
+                sx={styles.input}
             type="date"
             fullWidth
             value={checkOutDate}

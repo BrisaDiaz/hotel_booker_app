@@ -12,6 +12,8 @@ import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import { styles } from '@/components/dashboard/forms/styles';
 import TextEditor from '@/components/TextEditor'
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 export default function AboutSection({
   register,
   errors,
@@ -45,6 +47,9 @@ setValue('description',text)
   useEffect(() => {
     setValue('category', categorySelected);
   }, [categorySelected]);
+
+     const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+
   return (
     <Box component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -53,7 +58,8 @@ setValue('description',text)
       <Grid container spacing={{ sm: 2 }} alignItems="center">
         <Grid item xs={12} sm={6}>
           <TextField
-            sx={styles.textField}
+                    sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="name"
             defaultValue={defaultData? defaultData.name:''}
             {...register('name', {
@@ -74,17 +80,19 @@ setValue('description',text)
             <InputLabel id="hotel-type">Category</InputLabel>
 
             <Select
+                    sx={{textTransform: 'capitalize' ,...styles.textField}}
+            size={isInSmScreen?'medium':"small"}
               labelId="hotel-type"
               label="Category"
               value={categorySelected}
               onChange={handleCategoryField}
-              sx={{ textTransform: 'capitalize' }}
+           
             >
               {roomCategories.map((type: { name: string; id: number }) => (
                 <MenuItem
                   key={type.id}
                   value={type.name}
-                  sx={{ textTransform: 'capitalize' }}
+                  sx={{ textTransform: 'capitalize' ,'*':{fontSize:'14px'}}}
                 >
                   {type.name}
                 </MenuItem>
@@ -96,7 +104,7 @@ setValue('description',text)
       </Grid>
 
        
-            <Grid item xs={12} sx={{mt:1}}>
+            <Grid item xs={12} sx={{my:1}}>
       <input type="hidden"  {...register('description')}/>
    
       <TextEditor 

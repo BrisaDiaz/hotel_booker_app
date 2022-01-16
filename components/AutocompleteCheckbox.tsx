@@ -19,12 +19,14 @@ export default function CheckboxesTags({
   label,
   onChange,
   defaultValue,
+  size
 }: {
   defaultValue?: Option[];
   options: Option[];
   label: string;
   onChange: (newValues:Option[])=>void;
   sx: any;
+  size?:'small' |'medium'
 }) {
   return (
     <Autocomplete
@@ -48,6 +50,7 @@ export default function CheckboxesTags({
           }}
         >
           <Checkbox
+               size={size}
             icon={icon}
             checkedIcon={checkedIcon}
             style={{ marginRight: 8 }}
@@ -58,7 +61,9 @@ export default function CheckboxesTags({
       )}
       renderInput={(params) => (
         <TextField
+     
           {...params}
+             size={size}
           label={label}
           placeholder={label}
           sx={{ width: '100%', my: 1, textTransform: 'capitalize' }}

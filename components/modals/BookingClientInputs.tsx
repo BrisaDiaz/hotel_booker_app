@@ -6,7 +6,8 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import { styles } from './styles';
-
+import {Theme}from '@mui/system'
+import { useMediaQuery } from '@mui/material';
 export default function BookingClientInputs({
   register,
   errors,
@@ -16,6 +17,7 @@ export default function BookingClientInputs({
   errors: any;
   disable?: boolean;
 }) {
+   const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <div>
       {disable && (
@@ -40,9 +42,11 @@ export default function BookingClientInputs({
           Contact Information
         </Typography>
       </Box>
-      <Grid container spacing={1}>
-        <Grid item xs={12} sm={6}>
+      <Grid  sx={styles.inputGrid} container spacing={1}>
+        <Grid  sx={styles.inputGrid} item xs={12} sm={6}>
           <TextField
+                      size={isInSmScreen?'medium':"small"}
+            sx={styles.input}
             autoComplete="given-name"
             {...register('firstName', { ...validations.name })}
             error={errors['firstName'] && true}
@@ -54,8 +58,10 @@ export default function BookingClientInputs({
             autoFocus
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid  sx={styles.inputGrid} item xs={12} sm={6}>
           <TextField
+                      size={isInSmScreen?'medium':"small"}
+   sx={styles.input}
             fullWidth
             id="lastName"
             {...register('lastName', { ...validations.lastname })}
@@ -66,9 +72,11 @@ export default function BookingClientInputs({
             autoComplete="family-name"
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid  sx={styles.inputGrid} item xs={12}>
           <TextField
             fullWidth
+              size={isInSmScreen?'medium':"small"}
+   sx={styles.input}
             type="email"
             id="email"
             label={errors['email'] ? errors['email'].message : 'Email Address'}
@@ -78,10 +86,13 @@ export default function BookingClientInputs({
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid  sx={styles.inputGrid} item xs={12} sm={6}>
           <TextField
+          
             id="landline"
             fullWidth
+                  size={isInSmScreen?'medium':"small"}
+                                sx={styles.input}
             type="tel"
             label={
               errors['landlineNumber']
@@ -103,9 +114,11 @@ export default function BookingClientInputs({
             variant="outlined"
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid  sx={styles.inputGrid} item xs={12} sm={6}>
           <TextField
             id="mobile"
+                size={isInSmScreen?'medium':"small"}
+                                sx={styles.input}
             type="tel"
             fullWidth
             label={
@@ -126,13 +139,15 @@ export default function BookingClientInputs({
             variant="outlined"
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid  sx={styles.inputGrid} item xs={12}>
           <TextField
             fullWidth
+              size={isInSmScreen?'medium':"small"}
+                                sx={styles.input}
             id="specifications"
             multiline
             {...register('specifications')}
-            rows={5}
+            rows={isInSmScreen?5:8}
             label={'Special requests'}
             variant="outlined"
           />

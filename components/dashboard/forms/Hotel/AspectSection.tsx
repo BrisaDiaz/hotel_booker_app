@@ -5,6 +5,8 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { styles } from '@/components/dashboard/forms/styles';
 import FileInput from '@/components/FileInput'
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 export default function AspectSection({
   register,
   errors,
@@ -51,7 +53,7 @@ React.useEffect(() => {
    setInteriorImage(defaultImage);
  }
 }, [resetCount])
-
+   const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -67,7 +69,8 @@ React.useEffect(() => {
                 : 'Facade image'
             }
            error={errors['frameImage']?.message ? true : false}
-           sx={styles.textField}
+                 sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
            onChange={(e)=>handleOnChange(e)}
            register={register('frameImage', {
               required: 'The facade image is required',
@@ -85,7 +88,8 @@ React.useEffect(() => {
                 : 'Interior image'
             }
            error={errors['interiorImage']?.message ? true : false}
-           sx={styles.textField}
+               sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
            onChange={(e)=>handleOnChange(e)}
            register={register('interiorImage', {
               required: 'The facade image is required',

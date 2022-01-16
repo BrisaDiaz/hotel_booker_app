@@ -9,6 +9,8 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import { styles } from '@/components/dashboard/forms/styles';
 import TextEditor from '@/components/TextEditor'
+import { useMediaQuery } from '@mui/material';
+import {Theme}from '@mui/system'
 export default function AboutSection({
   register,
   errors,
@@ -39,7 +41,7 @@ setValue('description',text)
   useEffect(() => {
     setValue('category', categorySelected);
   }, [categorySelected]);
-
+   const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
   return (
     <Box component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -60,13 +62,15 @@ setValue('description',text)
               },
             })}
             variant="outlined"
-            sx={styles.textField}
+                      sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             defaultValue={defaultData?.name || ''}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            sx={styles.textField}
+                     sx={styles.textField}
+            size={isInSmScreen?'medium':"small"}
             id="brand"
             {...register('brand', {
               required: 'The brand  is required',
@@ -94,7 +98,9 @@ setValue('description',text)
               label="Category"
               value={categorySelected}
               onChange={handleCategoryField}
-               sx={{ textTransform: 'capitalize' }}
+                 
+            size={isInSmScreen?'medium':"small"}
+               sx={{ textTransform: 'capitalize',...styles.textField}}
             >
               { hotelCategories.map((type: { name: string; id: number }) => (
                 <MenuItem
