@@ -88,7 +88,7 @@ const HotelAdmin: WithLayoutPage<Props> = ({
     notification,
     loading,
     roomNumbersUploaded,
-    modalsOpenState,
+    modalsState,
     infoCardsData,
     availableRooms,
   } = useHotelDashboard({
@@ -117,7 +117,7 @@ const HotelAdmin: WithLayoutPage<Props> = ({
       </Box>
       <AddRoomModal
         onSubmit={onAddNewRoom}
-        isOpen={modalsOpenState.addRoom}
+        isOpen={modalsState.addRoom}
         onClose={() => handleCloseModal('addRoom')}
         restrictedNumbers={roomNumbersUploaded}
       />
@@ -128,7 +128,7 @@ const HotelAdmin: WithLayoutPage<Props> = ({
         text={
           'If procced all bookings releted to the rooms are going to be lost.'
         }
-        isDialogOpen={modalsOpenState.deleteRooms}
+        isDialogOpen={modalsState.deleteRooms}
         onAccept={onDeleteRooms}
       />
 
@@ -136,14 +136,14 @@ const HotelAdmin: WithLayoutPage<Props> = ({
         onClose={() => handleCloseModal('addBooking')}
         roomTypeId={selectedRoomTypeId}
         onSubmit={onCreateBooking}
-        isOpen={modalsOpenState.addBooking}
+        isOpen={modalsState.addBooking}
         availableRooms={availableRooms}
         getAvailableRooms={handleGetAvailableRooms}
       />
 
       <RoomModal
         isOpen={
-          !loading && toEditRoomTypeData && modalsOpenState['show/edit']
+          !loading && toEditRoomTypeData && modalsState['show/edit']
             ? true
             : false
         }

@@ -140,7 +140,7 @@ export default function useHotelDashboard({
   const [toEditRoomTypeData, setToEditRoomTypeData] =
     React.useState<RoomModel | null>(null);
 
-  const [modalsOpenState, setModelsOpenState] = React.useState({
+  const [modalsState, setModelsState] = React.useState({
     addRoom: false,
     deleteRooms: false,
     'show/edit': false,
@@ -185,8 +185,8 @@ const { notification,notify} = useNotification({autoClean:true})
   >([]);
 
   const handleCloseModal = (modalType: RoomTypeActions) => {
-    setModelsOpenState({
-      ...modalsOpenState,
+    setModelsState({
+      ...modalsState,
       [modalType]: false,
     });
   };
@@ -491,8 +491,8 @@ const { notification,notify} = useNotification({autoClean:true})
       }
     }
 
-    return setModelsOpenState({
-      ...modalsOpenState,
+    return setModelsState({
+      ...modalsState,
       [action]: true,
     });
   };
@@ -519,7 +519,7 @@ const { notification,notify} = useNotification({autoClean:true})
     loading,
     roomNumbersUploaded,
     availableRooms,
-    modalsOpenState,
+    modalsState,
     infoCardsData,
   };
 }
