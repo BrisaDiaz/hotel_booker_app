@@ -167,7 +167,7 @@ if(imagesRequest.data && 'images' in imagesRequest.data){
         ...notification,
         content: message,
       });
-      return clearNotifications();
+    
     }
   }, [consultResponce]);
 
@@ -178,7 +178,7 @@ if(imagesRequest.data && 'images' in imagesRequest.data){
         ...notification,
         content: message,
       });
-      return clearNotifications();
+
     }
   }, [boolkingResponce]);
   const clearNotifications = () => {
@@ -186,6 +186,11 @@ if(imagesRequest.data && 'images' in imagesRequest.data){
       setNotification({ ...notification, content: '' });
     }, 6000);
   };
+  React.useEffect(() => {
+   if(notification.content){
+     clearNotifications()
+   }
+  }, [notification])
   const handleConsutlSubmit = async (data: {
     checkInDate: string;
     checkOutDate: string;
