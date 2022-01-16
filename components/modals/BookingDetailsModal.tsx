@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
+
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import CloseButton from '@/components/modals/CloseButton';
 import { toDateAndHourFormat } from '@/utils/index';
@@ -17,30 +17,25 @@ import { styles } from './styles';
 import currencyFixer from '@/utils/currencyFixer'
 export default function BasicModal({
   bookingData,
-  isModalOpen,
-  closeModal,
+  isOpen,
+  onClose,
   onCancel,
   cancelationDetails,
 }: {
-  isModalOpen: boolean;
-  closeModal: ()=>void;
+  isOpen: boolean;
+  onClose: ()=>void;
   onCancel: ()=>void;
   bookingData: Booking | null;
   cancelationDetails?: CancelationDetails | null;
 }) {
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+
   const handleClose = () => {
-    setOpen(false);
-    closeModal();
+
+    onClose();
   };
-  React.useEffect(() => {
-    if (isModalOpen) {
-      return handleOpen();
-    }
-    handleClose();
-  }, [isModalOpen]);
+
+
   if (
     !bookingData ||
     (bookingData.status === 'CANCELED' && !cancelationDetails)
@@ -50,7 +45,7 @@ export default function BasicModal({
     <div>
       <Modal
         keepMounted
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-specifications"
@@ -84,17 +79,19 @@ export default function BasicModal({
                 {bookingData?.roomModel?.name}
               </Typography>
             </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Room Numbers:</Typography>
-              <Stack
-                direction="row"
-                sx={{ flexWrap: 'wrap', gap: '6px', py: 1 }}
-              >
-                {bookingData?.reservedRooms?.map((room) => (
-                  <Chip label={room?.number} key={room?.number} />
-                ))}
-              </Stack>
+                  <Box component="li" sx={styles.list}>
+              <Typography sx={styles.leyend}>Check In Date:</Typography>
+              <time>
+                {toDateAndHourFormat(parseInt(bookingData?.checkInDate))}
+              </time>
             </Box>
+            <Box component="li" sx={styles.list}>
+              <Typography sx={styles.leyend}>Check Out Date:</Typography>
+              <time>
+                {toDateAndHourFormat(parseInt(bookingData?.checkOutDate))}
+              </time>
+            </Box>
+         
             <Box component="li" sx={styles.list}>
               <Typography sx={styles.leyend}>Guest/Room: </Typography>
               <Box sx={{ p: 0, gap: 1, display: 'grid' }}>
@@ -116,17 +113,16 @@ export default function BasicModal({
                 ))}
               </Box>
             </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Check In Date:</Typography>
-              <time>
-                {toDateAndHourFormat(parseInt(bookingData?.checkInDate))}
-              </time>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Check Out Date:</Typography>
-              <time>
-                {toDateAndHourFormat(parseInt(bookingData?.checkOutDate))}
-              </time>
+         <Box component="li" sx={styles.list}>
+              <Typography sx={styles.leyend}>Staying Rooms:</Typography>
+              <Stack
+                direction="row"
+                sx={{ flexWrap: 'wrap', gap: '6px', }}
+              >
+                {bookingData?.reservedRooms?.map((room) => (
+                  <Typography sx={{fontSize:'14px'} } key={room?.number} >{room?.number} </Typography>
+                ))}
+              </Stack>
             </Box>
             <Box sx={styles.withIconLabel}>
               <ListAltIcon />
@@ -153,11 +149,11 @@ export default function BasicModal({
                 {bookingData?.paymentMethod.split('_').join(' ').toLowerCase()}
               </Typography>
             </Box>
-            {cancelationDetails && (
+            {bookingData?.status === 'CANCELED' &&  cancelationDetails&& (
               <>
                 <Box sx={styles.withIconLabel}>
                   <DoNotDisturbIcon />
-                  <Typography component="h3">Cancelation Details</Typography>
+                  <Typography component="h3" >Cancelation Details</Typography>
                 </Box>
                 <Box sx={{ my: 1.5, ml: 1 }}>
                   <Typography sx={styles.leyend}>Message:</Typography>
@@ -197,6 +193,7 @@ export default function BasicModal({
                   variant="outlined"
                   size="small"
                   color="secondary"
+                  sx={{textTransform:'capitalize'}}
                   onClick={() => onCancel()}
                 >
                   Cancel Booking

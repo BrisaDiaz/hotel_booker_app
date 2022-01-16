@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: theme.spacing(1),
       backgroundColor: 'background.paper',
 
-      maxHeight: '95%',
+      maxHeight: '100%',
 
       overflowY: 'auto',
      
@@ -125,29 +125,25 @@ const EditButton = ({ onClick }: { onClick: React.MouseEventHandler }) => {
     | 'capacity'
     | '';
 type ComponentProps = {
-  isModalOpend: boolean;
-  closeModal: ()=>void;
+  isOpen: boolean;
+  onClose: ()=>void;
   onEdit:  (sectionName:SectionToEdit)=>void;
   roomType: RoomModel | null;
 };
 
 function TransitionsModal(props: ComponentProps) {
-  const { isModalOpend, closeModal, onEdit, roomType } = props;
+  const { isOpen, onClose, onEdit, roomType } = props;
 
 
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+
+
   const handleClose = () => {
-    setOpen(false), closeModal();
+onClose();
   };
 
-  React.useEffect(() => {
-    if (isModalOpend) {
-      handleOpen();
-    }
-  }, [isModalOpend]);
-  if (!isModalOpend || !roomType) return <div />;
+
+  if (!isOpen || !roomType) return <div />;
   const aditionalQualities = [];
   roomType?.smooking &&
     aditionalQualities.push({
@@ -169,7 +165,7 @@ function TransitionsModal(props: ComponentProps) {
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        open={open}
+        open={isOpen}
         onClose={() => handleClose()}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -177,7 +173,7 @@ function TransitionsModal(props: ComponentProps) {
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={isOpen}>
           <Paper elevation={4} className={classes.modal}>
             <Box sx={{ mt: 0.5 }}>
               <CloseButton handleClose={handleClose} />

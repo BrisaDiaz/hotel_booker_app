@@ -14,23 +14,22 @@ import CloseButton from '@/components/modals/CloseButton';
 import { styles } from './styles';
 import {  Album} from '@/interfaces/index';
 export default function AlbumModal({
-  isModalOpen,
+  isOpen,
   onSubmit,
-  closeModal,
+  onClose,
   defaultValue
 }: {
-  isModalOpen: boolean;
+  isOpen: boolean;
   onSubmit: (formData:any)=>void;
-  closeModal: ()=>void;
+  onClose: ()=>void;
 defaultValue?:Partial<Album>|null
 
 }) {
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+
   
   const handleClose = () => {
-    setOpen(false), closeModal();
+ onClose();
   };
 
   const {
@@ -48,10 +47,7 @@ defaultValue?:Partial<Album>|null
   };
 
  
-React.useEffect(() => {
- if(isModalOpen) return handleOpen()
- handleClose()
-}, [isModalOpen])
+
 React.useEffect(() => {
 
  setValue('name',defaultValue ? defaultValue?.name:'')
@@ -64,7 +60,7 @@ React.useEffect(() => {
     <Modal
       sx={{ zIndex: 2000 }}
       keepMounted
-      open={open}
+      open={isOpen}
       onClose={handleClose}
       aria-labelledby="modal-modal-{styles.title}"
       aria-describedby="modal-modal-specifications"

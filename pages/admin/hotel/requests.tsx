@@ -18,6 +18,7 @@ import RequestsTable from '@/components/dashboard/tables/RequestsTable';
 import Dialog from '@/components/Dialog';
 import SnackBar from '@/components/SnackBar';
 import Backdrop from '@/components/Backdrop';
+import useNotification from '@/hooks/useNotification'
 type PagePromps = {
   requests: BookingRequest[];
   totalResults: number;
@@ -77,13 +78,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
       setTotalResults(searchRequestResponce.data.results.totalResults);
     }
   }, [searchRequestResponce.data]);
-  const [notification, setNotification] = React.useState<{
-    type: 'success' | 'error';
-    content: string;
-  }>({
-    type: 'success',
-    content: '',
-  });
+
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const [modalsState, setModalsState] = React.useState<{
@@ -96,6 +91,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
   const [requestSelected, setRequestSelected] =
     React.useState<BookingRequest | null>(null);
 
+  const { notification,notify} = useNotification({autoClean:true})
   const [declineRequest, declineRequestResponce] = useMutation(
     DECLINE_BOOKING_REQUEST,
     {
@@ -104,18 +100,18 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
           (request) => request.id !== bookingRequest.id
         );
         setRequests(acutalizePendingRequests);
-        setNotification({
+        notify({
           type: 'success',
           content: 'The request was declined successfully.',
         });
-        cleanNotification();
+        
       },
       onError: ({ message }) => {
-        setNotification({
+        notify({
           type: 'error',
           content: message,
         });
-        cleanNotification();
+        
       },
     }
   );
@@ -128,18 +124,18 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
         );
         setModalsState({ ...modalsState, 'show/confirm': false });
         setRequests(acutalizePendingRequests);
-        setNotification({
+        notify({
           type: 'success',
           content: 'The request has been booked successfully.',
         });
-        cleanNotification();
+        
       },
       onError: (graphqlError) => {
-        setNotification({
+        notify({
           type: 'error',
           content: graphqlError.message,
         });
-        cleanNotification();
+        
       },
     }
   );
@@ -237,14 +233,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
     searchRequestResponce,
     confirmBookingRequestResponce,
   ]);
-  const cleanNotification = () => {
-    setTimeout(() => {
-      setNotification({
-        type: 'success',
-        content: '',
-      });
-    }, 6000);
-  };
+
 
   return (
     <div>
@@ -264,9 +253,9 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
 
         {modalsState['show/confirm'] && requestSelected && (
           <ConfimBookingModal
-            closeModal={() => handleCloseModal('show/confirm')}
+            onClose={() => handleCloseModal('show/confirm')}
             requestInfo={requestSelected}
-            isModalOpen={modalsState['show/confirm']}
+            isOpen={modalsState['show/confirm']}
             onSubmit={onConfirmBooking}
           />
         )}

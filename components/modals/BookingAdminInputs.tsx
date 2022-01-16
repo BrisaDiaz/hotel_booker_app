@@ -81,18 +81,19 @@ export default function BookingClientInputs({
           }}
         />
       )}
-      <Box sx={styles.withIconLabel}>
+      <Box sx={{...styles.withIconLabel,mb:3}}>
         <AccountBalanceWalletIcon />
         <Typography
           id="transition-modal-title"
           variant="subtitle1"
           component="h3"
+          
         >
           Payment
         </Typography>
       </Box>
-      <Grid container spacing={1} sx={{ my: 1 }} >
-        <Grid item xs={12} sm={6}  sx={styles.inputGrid} >
+      <Grid container spacing={{sm:1,xs:3}} >
+        <Grid item xs={12} sm={6}  >
           <TextField
                                 size={isInSmScreen?'medium':"small"}
    sx={styles.input}
@@ -121,7 +122,7 @@ export default function BookingClientInputs({
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}  sx={styles.inputGrid} >
+        <Grid item xs={12} sm={6}   >
           <FormControl fullWidth                       size={isInSmScreen?'medium':"small"}
    sx={styles.input}>
             <InputLabel id="payment-method">Payment Method</InputLabel>

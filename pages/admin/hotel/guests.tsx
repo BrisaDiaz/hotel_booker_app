@@ -10,6 +10,7 @@ import Head from 'next/head';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
 import GuestsTable from '@/components/dashboard/tables/GuestsTable';
+
 type PagePromps = {
   guests: HotelGuest[];
   totalResults: number;

@@ -30,10 +30,9 @@ const rowHeight =200
             <Image
                  src={item.image}
                   layout="fill"
-                  width={900}
-                  height={400}
+          
                 placeholder="blur"
-objectFit= {isInSmScreen ? 'cover':'contain'}
+objectFit=  'cover'
            blurDataURL={generateImageUrl(item.image,{width:900/mainImagesCols ,height:400,quality:10})}
                   alt={item.title}
                   onClick={()=>onClick(item,index)}
@@ -56,7 +55,7 @@ objectFit= {isInSmScreen ? 'cover':'contain'}
        }
               <Image
               objectFit="cover"
-                  layout="fill"
+        
                   width={146}
                   height={100}
                  placeholder="blur"

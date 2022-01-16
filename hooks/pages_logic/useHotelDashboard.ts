@@ -15,7 +15,7 @@ import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { NextRouter, useRouter } from 'next/router';
 import { RoomModel } from '@/interfaces/index';
-
+import useNotification from '@/hooks/useNotification'
 export interface Props {
   roomModels: RoomModel[];
   roomTypesCount: number;
@@ -148,12 +148,10 @@ export default function useHotelDashboard({
     addBooking: false,
     displayRoomsStatus: false,
   });
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false)
 
-  const [notification, setNotification] = React.useState<{
-    content: string;
-    type: 'error' | 'success';
-  }>({ content: '', type: 'success' });
+const { notification,notify} = useNotification({autoClean:true})
+
 
   const getAlreadyUploadRoomNumbers = (
     hotelRoomTypes: RoomModel[]
@@ -209,14 +207,14 @@ export default function useHotelDashboard({
             getAlreadyUploadRoomNumbers(actualizedRoomTypes)
           );
           handleCloseModal('addRoom');
-          setNotification({
+          notify({
             content: 'Rooms where added sucessfully',
             type: 'success',
           });
         }
       },
       onError: (error) => {
-        setNotification({
+        notify({
           content: `Rooms could not be added.\n Error:${error.message}`,
           type: 'error',
         });
@@ -240,14 +238,14 @@ export default function useHotelDashboard({
         );
         handleCloseModal('deleteRooms');
         setToDeleteRoomsIds([]);
-        setNotification({
+        notify({
           content: 'Rooms where deleted sucessfully',
           type: 'success',
         });
       },
       onError: (error) => {
         handleCloseModal('deleteRooms');
-        setNotification({
+        notify({
           content: `Rooms could not be deleted.\n Error:${error.message}`,
           type: 'error',
         });
@@ -274,13 +272,13 @@ export default function useHotelDashboard({
       );
       setInfoCardsData(actualizedCards);
       handleCloseModal('addBooking');
-      setNotification({
+      notify({
         content: 'Booking was created sucessfully',
         type: 'success',
       });
     },
     onError: (error) => {
-      setNotification({
+      notify({
         content: `Booking could not be created.\n Error:${error.message}`,
         type: 'error',
       });
@@ -297,13 +295,13 @@ export default function useHotelDashboard({
         );
         setRoomTypes(displayedRoomTypesActualized);
         setToEditSection('');
-        setNotification({
+        notify({
           content: `Update was complited sucessfully`,
           type: 'success',
         });
       },
       onError: (error) => {
-        setNotification({
+        notify({
           content: `Update could not be complited.\n Error:${error.message}`,
           type: 'error',
         });
@@ -382,13 +380,7 @@ export default function useHotelDashboard({
     updateRoomTypeRequest.loading,
   ]);
 
-  React.useEffect(() => {
-    if (notification.content) {
-      setTimeout(() => {
-        setNotification({ content: '', type: 'success' });
-      }, 6000);
-    }
-  }, [notification.content]);
+
   //// actualize room to show/edit data
   React.useEffect(() => {
     if (roomTypeDataRequest.data?.roomModel?.id) {
@@ -456,7 +448,7 @@ export default function useHotelDashboard({
       });
     } catch (err: any) {
       setLoading(false);
-      setNotification({
+      notify({
         content: `Update could not be complited.`,
         type: 'error',
       });

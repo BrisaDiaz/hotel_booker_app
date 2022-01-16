@@ -51,7 +51,7 @@ if(!isMounted) return <div/>
                   src={item.image}
            placeholder="blur"
 
-height={400}
+
            blurDataURL={generateImageUrl(item.image,{width:750,height:400,quality:10})}
                 layout='fill'
                   alt={item.title}

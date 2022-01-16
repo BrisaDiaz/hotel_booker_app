@@ -61,6 +61,15 @@ const handleBlur= ()=>{
  onEditorChange(RichUtils.toggleBlockType(editorState, style));
 
   }
+  const getEditorState = (html:string) => {
+      const blocks = convertFromHTML(html)
+      const content = ContentState.createFromBlockArray(
+        blocks.contentBlocks,
+        blocks.entityMap
+      )
+
+      return EditorState.createWithContent(content)
+    }
  const stylesControls:{[key:string]:string}={
   'BOLD':'Ctr+b',
    'ITALIC':'Ctr+i',
@@ -122,11 +131,8 @@ const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
 React.useEffect(() => {
 
   if(!defaultData)return
-  const data=   convertFromHTML(defaultData) 
 
-if(!data.contentBlocks.length) return
-  const defaultState=  EditorState.createWithContent( 
-    ContentState.createFromBlockArray(data.contentBlocks,data.entityMap))
+  const defaultState=  getEditorState(defaultData)
 
  setEditorState(defaultState)
  

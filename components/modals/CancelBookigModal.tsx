@@ -14,15 +14,15 @@ import currencyFixer from '@/utils/currencyFixer'
 import { styles } from './styles';
 import { Booking } from '@/interfaces/index';
 export default function BasicModal({
-  isModalOpen,
+  isOpen,
   onSubmit,
-  closeModal,
+  onClose,
 
   bookingData,
 }: {
-  isModalOpen: boolean;
+  isOpen: boolean;
   onSubmit: (formData:any)=>void;
-  closeModal: ()=>void;
+  onClose: ()=>void;
 
   bookingData: Booking | null;
 }) {
@@ -30,18 +30,18 @@ export default function BasicModal({
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-    setOpen(false), closeModal();
+    setOpen(false), onClose();
   };
   const [cancelationFee, setCancelationFee] = React.useState<number>(
     bookingData ? bookingData?.roomModel?.cancelationFee : 0
   );
   
   React.useEffect(() => {
-    if (isModalOpen) {
+    if (isOpen) {
       return handleOpen();
     }
     return handleClose();
-  }, [isModalOpen]);
+  }, [isOpen]);
     React.useEffect(() => {
     setCancelationFee(bookingData ? bookingData?.roomModel?.cancelationFee : 0);
   }, [bookingData]);
@@ -153,13 +153,13 @@ export default function BasicModal({
           <Box component="li" sx={styles.list}>
             <Typography sx={styles.leyend}>Current Const:</Typography>
             <Typography component="span">
-               ${currencyFixer(bookingData?.totalCost)}
+               {currencyFixer(bookingData?.totalCost)}
             </Typography>
           </Box>
           <Box component="li" sx={styles.list}>
             <Typography sx={styles.leyend}>Cost after charge:</Typography>
             <Typography component="span">
-               ${currencyFixer(bookingData?.totalCost + cancelationFee)}
+               {currencyFixer(bookingData?.totalCost + cancelationFee)}
             </Typography>
           </Box>
         </Box>

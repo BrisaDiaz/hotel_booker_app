@@ -25,10 +25,9 @@ import SnackBar from '@/components/SnackBar';
 import AsyncCaroucelModal from '@/components/modals/AsyncCaroucelModal';
 import ImageGrid from '@/components/ImageGrid'
 import currencyFixer from '@/utils/currencyFixer'
-
 import { RoomModel, Feature } from '@/interfaces/index';
-
 import { useLazyQuery, useMutation } from '@apollo/client';
+import useNotification from '@/hooks/useNotification'
 import {
   MAKE_ROOM_CONSULT,
   GET_ROOM_MODEL_BY_ID,
@@ -122,20 +121,29 @@ if(imagesRequest.data && 'images' in imagesRequest.data){
 }
 }, [imagesRequest])
 
+const { notification,notify} = useNotification({autoClean:true})
 
-  const [notification, setNotification] = React.useState<{type:"error" | "info" | "success" | "warning",content:string}>({
-    content: '',
-    type: 'info',
-  });
   const [makeRoomConsult, consultResponce] = useLazyQuery(MAKE_ROOM_CONSULT, {
     fetchPolicy: 'network-only',
   });
 
   const [makeBookingRequest, boolkingResponce] = useMutation(
-    MAKE_BOOKING_REQUEST,
-    {
-      fetchPolicy: 'network-only',
-    }
+    MAKE_BOOKING_REQUEST,{
+      onCompleted({responce}:{ responce :{isAvailable:boolean, message:string}} ) {
+   const { isAvailable, message }  =responce
+         if (isAvailable) {
+       return notify({
+          type:'info',
+          content:
+            'There is availability, make your reservation before the quotas run out.',
+        });
+
+      }
+      notify({
+      type:'info',
+        content: message,
+      });
+  }}
   );
 
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -152,45 +160,6 @@ if(imagesRequest.data && 'images' in imagesRequest.data){
     return setLoading(false);
   }, [consultResponce.loading, boolkingResponce.loading]);
 
-  React.useEffect(() => {
-    if (consultResponce.data?.responce) {
-      const { isAvailable, message } = consultResponce.data.responce;
-      if (isAvailable) {
-        setNotification({
-          ...notification,
-          content:
-            'There is availability, make your reservation before the quotas run out.',
-        });
-        return clearNotifications();
-      }
-      setNotification({
-        ...notification,
-        content: message,
-      });
-    
-    }
-  }, [consultResponce]);
-
-  React.useEffect(() => {
-    if (boolkingResponce.data?.responce) {
-      const { message } = boolkingResponce.data.responce;
-      setNotification({
-        ...notification,
-        content: message,
-      });
-
-    }
-  }, [boolkingResponce]);
-  const clearNotifications = () => {
-    setTimeout(() => {
-      setNotification({ ...notification, content: '' });
-    }, 6000);
-  };
-  React.useEffect(() => {
-   if(notification.content){
-     clearNotifications()
-   }
-  }, [notification])
   const handleConsutlSubmit = async (data: {
     checkInDate: string;
     checkOutDate: string;
@@ -228,6 +197,8 @@ if(imagesRequest.data && 'images' in imagesRequest.data){
       console.log(error);
     }
   };
+
+  
   const roomReservationData = {
     price: room.lowestPrice,
     taxes: room.taxesAndCharges,

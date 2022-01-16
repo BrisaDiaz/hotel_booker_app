@@ -117,8 +117,8 @@ const HotelAdmin: WithLayoutPage<Props> = ({
       </Box>
       <AddRoomModal
         onSubmit={onAddNewRoom}
-        isModalOpen={modalsOpenState.addRoom}
-        closeModal={() => handleCloseModal('addRoom')}
+        isOpen={modalsOpenState.addRoom}
+        onClose={() => handleCloseModal('addRoom')}
         restrictedNumbers={roomNumbersUploaded}
       />
       <Dialog
@@ -133,21 +133,21 @@ const HotelAdmin: WithLayoutPage<Props> = ({
       />
 
       <AddBookingModal
-        closeModal={() => handleCloseModal('addBooking')}
+        onClose={() => handleCloseModal('addBooking')}
         roomTypeId={selectedRoomTypeId}
         onSubmit={onCreateBooking}
-        isModalOpen={modalsOpenState.addBooking}
+        isOpen={modalsOpenState.addBooking}
         availableRooms={availableRooms}
         getAvailableRooms={handleGetAvailableRooms}
       />
 
       <RoomModal
-        isModalOpend={
+        isOpen={
           !loading && toEditRoomTypeData && modalsOpenState['show/edit']
             ? true
             : false
         }
-        closeModal={() => handleCloseModal('show/edit')}
+        onClose={() => handleCloseModal('show/edit')}
         onEdit={handleEditSelected}
         roomType={toEditRoomTypeData}
       />

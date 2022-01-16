@@ -484,7 +484,7 @@ export default function EnhancedTable({
                           {row.id}
                         </TableCell>
 
-                        <TableCell align="left" sx={{ minWidth: 120 }}>
+                        <TableCell align="left" sx={{ minWidth: 120,whiteSpace:'pre' }}>
                           {row.sentIn}
                         </TableCell>
                         <TableCell

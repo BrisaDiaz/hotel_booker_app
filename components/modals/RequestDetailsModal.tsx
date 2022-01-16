@@ -14,28 +14,24 @@ import BookingRequesInfo from '@/components/modals/BookingRequesInfo';
 export default function BookingModal({
   isModalOpen,
   requestInfo,
-  closeModal,
+  onClose,
 }: {
   isModalOpen: boolean;
   requestInfo: BookingRequest;
-  closeModal: ()=> void;
+  onClose: ()=> void;
 }) {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+
+
   const handleClose = () => {
-    setOpen(false), closeModal();
+onClose();
   };
-  React.useEffect(() => {
-    if (isModalOpen) {
-      return handleOpen();
-    }
-  }, [isModalOpen]);
+
   return requestInfo ? (
     <Box sx={{ maxWidth: '100vw' }}>
       <Modal
         aria-labelledby="requestInfo-details-title"
         aria-describedby="requestInfo-details"
-        open={open}
+        open={isModalOpen}
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -43,7 +39,7 @@ export default function BookingModal({
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={isModalOpen}>
           <Box sx={styles.modal}>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <IconButton

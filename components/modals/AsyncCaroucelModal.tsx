@@ -126,7 +126,7 @@ if(!isMounted) return <div/>
     </Carousel>
     
         </Box>
-        <Box sx={{position:'relative',width: '100%',maxWidth:'900px',overflow:'hidden',}}>
+{isInSmScreen &&        <Box sx={{position:'relative',width: '100%',maxWidth:'900px',overflow:'hidden',}}>
         <ImageList sx={ {wrap:'no-wrap',width:'max-content',height: miniaturesHeight, transition: '0.5s ease-in-out', transform: `translateX(-${miniaturesMarginLeft}px)`,my: 0 }} cols={totalImages} rowHeight={miniaturesHeight}>
       {[...images,...imagePlaceholders].map((item,index) => (
 
@@ -161,7 +161,7 @@ onClick={()=> handleChange(index)}
       
       ))}
     </ImageList>
-    </Box>
+    </Box>}
     </Box>
 
     </FullScreenModal>

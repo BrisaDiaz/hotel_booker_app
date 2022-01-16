@@ -11,28 +11,23 @@ import BookingAdminInputs from '@/components/modals/BookingAdminInputs';
 import { styles } from './styles';
 
 export default function BasicModal({
-  isModalOpen,
+  isOpen,
   onSubmit,
-  closeModal,
+  onClose,
   requestInfo,
 }: {
-  isModalOpen: boolean;
-  closeModal: ()=>void;
+  isOpen: boolean;
+  onClose: ()=>void;
   requestInfo?: BookingRequest;
   onSubmit: (formData:any)=>void;
 }) {
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+
+
   const handleClose = () => {
-    setOpen(false), closeModal();
+ onClose();
   };
-  React.useEffect(() => {
-    if (isModalOpen && requestInfo) {
-      return handleOpen();
-    }
-    return handleClose();
-  }, [isModalOpen, requestInfo]);
+
 
   const {
     register,
@@ -64,7 +59,7 @@ export default function BasicModal({
     <div>
       <Modal
         keepMounted
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         aria-labelledby="modal-modal-{styles.title}"
         aria-describedby="modal-modal-specifications"

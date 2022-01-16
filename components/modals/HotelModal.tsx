@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
       left: '50%',
       fontWeight: 200,
          background: '#efefef',
-
+      maxHeight: '100%',
       transform: 'translate(-50%, -50%)',
       minWidth: 360,
       width: '100%',
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: theme.spacing(1),
       backgroundColor: 'background.paper',
 
-      maxHeight: '95%',
+      
 
       overflowY: 'auto',
      
@@ -127,28 +127,24 @@ type SectionToEdit =
   | 'address'
   | '';
 type ComponentProps = {
-  isModalOpend: boolean;
-  closeModal: ()=>void;
+  isOpen: boolean;
+  onClose: ()=>void;
   onEdit: (sectionName:SectionToEdit)=>void;
   hotel: Hotel | null;
 };
 
 function TransitionsModal(props: ComponentProps) {
-  const { isModalOpend, closeModal, onEdit, hotel } = props;
+  const { isOpen, onClose, onEdit, hotel } = props;
 
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+
+
   const handleClose = () => {
-    setOpen(false), closeModal();
+onClose();
   };
 
-  React.useEffect(() => {
-    if (isModalOpend) {
-      handleOpen();
-    }
-  }, [isModalOpend]);
-  if (!isModalOpend || !hotel) return <div />;
+
+  if (!isOpen || !hotel) return <div />;
   const TagsWithKeys = hotel.features
     ? getFeaturesTags(hotel.features).map((feature: string) => ({
         id: uuidv4(),
@@ -172,7 +168,7 @@ function TransitionsModal(props: ComponentProps) {
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        open={open}
+        open={isOpen}
         onClose={() => handleClose()}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -180,7 +176,7 @@ function TransitionsModal(props: ComponentProps) {
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={isOpen}>
           <Paper elevation={4} className={classes.modal}>
             <Box sx={{ mt: 0.5 }}>
               <CloseButton handleClose={handleClose} />

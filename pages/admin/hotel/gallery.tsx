@@ -33,7 +33,7 @@ import AlbumModal from '@/components/modals/AlbumModal'
 import Dialog from '@/components/Dialog';
 import FullScreenModal from '@/components/modals/FullScreenModal'
 import ImageManager from '@/components/ImagesAlbunManager'
-
+import useNotification from '@/hooks/useNotification'
 
 type PagePromps = {
 userId:number,
@@ -58,13 +58,6 @@ const [folders, setFolders] = React.useState<Folder[]>(generateFolders(props.alb
 const [albumToEditImages, setAlbumToEditImages] = React.useState<{id:number,src:string}[]|null>(null)
 const [selectedAlbum, setSelectedAlbum] = React.useState<{id:number,name:string}| null>(null)
 
-  const [notification, setNotification] = React.useState<{
-    type: 'success' | 'error'|'warning';
-    content: string;
-  }>({
-    type: 'success',
-    content: '',
-  });
 
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -79,17 +72,17 @@ const [selectedAlbum, setSelectedAlbum] = React.useState<{id:number,name:string}
       manageAlbum: false,
        deleteAlbum: false,
   });
-
+    const { notification,notify} = useNotification({autoClean:true})
 const [createAlbum,createAlbumRequest] = useMutation(CREATE_ALBUM,{
   onCompleted({album}:{album:{id:number,name:string}}){
     const foldersCopy=[...folders]
     foldersCopy[0].subFolders.unshift(album)
      setFolders(foldersCopy)
      handleCloseModal('createAlbum')
-     setNotification({type:'success',content:'Folder created successfully'})
+     notify({type:'success',content:'Folder created successfully'})
   },
   onError({message}){
-      setNotification({type:'error',content:message})
+      notify({type:'error',content:message})
   }
 })
 const [deleteAlbum,deleteAlbumRequest] = useMutation(DELETE_ALBUM,{
@@ -100,10 +93,10 @@ const [deleteAlbum,deleteAlbumRequest] = useMutation(DELETE_ALBUM,{
   
      setFolders(foldersCopy)
      handleCloseModal('deleteAlbum')
-     setNotification({type:'success',content:'Folder deleted successfully'})
+     notify({type:'success',content:'Folder deleted successfully'})
   },
   onError({message}){
-      setNotification({type:'error',content:message})
+      notify({type:'error',content:message})
   }
 })
 const [renameAlbum,renameAlbumRequest] = useMutation(RENAME_ALBUM,{
@@ -114,10 +107,10 @@ foldersCopy[0].subFolders=actualizedSubFolders
   
      setFolders(foldersCopy)
      handleCloseModal('renameAlbum')
-     setNotification({type:'success',content:'Folder renamed successfully'})
+     notify({type:'success',content:'Folder renamed successfully'})
   },
   onError({message}){
-      setNotification({type:'error',content:message})
+      notify({type:'error',content:message})
   }
 })
 const [editAlbumImgs,editAlbumImgsRequest] = useMutation(EDIT_ALBUM,{
@@ -126,10 +119,10 @@ const [editAlbumImgs,editAlbumImgsRequest] = useMutation(EDIT_ALBUM,{
   
      setAlbumToEditImages(album.images)
      handleCloseModal('manageAlbum')
-     setNotification({type:'success',content:'Album updated successfully'})
+     notify({type:'success',content:'Album updated successfully'})
   },
   onError({message}){
-      setNotification({type:'error',content:message})
+      notify({type:'error',content:message})
   }
 })
 
@@ -146,7 +139,7 @@ React.useEffect(() => {
   handleOpenModal('manageAlbum')
   }
  if(albumImagesRequest.error){
-  return  setNotification({type:'error',content:albumImagesRequest.error.message})
+  return  notify({type:'error',content:albumImagesRequest.error.message})
   }
 }, [albumImagesRequest])
 
@@ -164,7 +157,7 @@ React.useEffect(() => {
       const isHotelAlbum = folders[0].subFolders.find((folder:{name:string,id:number})=> selectedAlbum?.id===folder.id)
       
          if(  !isHotelAlbum){
-return setNotification({type:"warning",content:"Room types albums cannot be renamed or deleted."
+return notify({type:"warning",content:"Room types albums cannot be renamed or deleted."
       })
      
     }
@@ -183,19 +176,6 @@ return setNotification({type:"warning",content:"Room types albums cannot be rena
     }
    handleOpenModal(action)
   };
-
-
-  const cleanNotification = () => {
-    setTimeout(() => {
-      setNotification({
-        type: 'success',
-        content: '',
-      });
-    }, 6000);
-  };
-
-
-
 
 
 const onSelectAlbum=(album:{id:number,name:string}|null)=>{
@@ -221,7 +201,7 @@ imagesUrls = [...imagesUrls,...imagesFiltered]
     } catch (err: any) {
 
       setLoading(false);
-      setNotification({type:'error',content:"Album update couldn't be complited, try again later"});
+      notify({type:'error',content:"Album update couldn't be complited, try again later"});
     }
 }
 const onDeleteAlbum=async()=>{
@@ -273,12 +253,6 @@ React.useEffect(() => {
    setLoading(false)
 }, [createAlbumRequest.loading,albumImagesRequest.loading,renameAlbumRequest.loading,editAlbumImgsRequest.loading,deleteAlbumRequest.loading])
 
-React.useEffect(() => {
-  if(notification.content){
-    return cleanNotification()
-  }
-
-}, [notification])
 const ACTION_BOTTOMS=[
   {
     title:'Add a new album',
@@ -338,10 +312,10 @@ const ACTION_BOTTOMS=[
 </FullScreenModal>
         
             
-           <AlbumModal isModalOpen={modalsState.createAlbum} closeModal={()=>handleCloseModal('createAlbum')}
+           <AlbumModal isOpen={modalsState.createAlbum} onClose={()=>handleCloseModal('createAlbum')}
            
            onSubmit={onCreateAlbum}/>
-    <AlbumModal isModalOpen={modalsState.renameAlbum} defaultValue={selectedAlbum} closeModal={()=>handleCloseModal('renameAlbum')}
+    <AlbumModal isOpen={modalsState.renameAlbum} defaultValue={selectedAlbum} onClose={()=>handleCloseModal('renameAlbum')}
            
            onSubmit={onRenameAbum}/>
         <Backdrop loading={loading} />

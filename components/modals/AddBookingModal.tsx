@@ -16,25 +16,24 @@ import { getFormatedDate } from '@/utils/ToYearMounthDayFormat';
 import { styles } from './styles';
 
 export default function BasicModal({
-  isModalOpen,
+  isOpen,
   onSubmit,
-  closeModal,
+  onClose,
   availableRooms,
   getAvailableRooms,
   roomTypeId,
 }: {
-  isModalOpen: boolean;
+  isOpen: boolean;
   onSubmit: (formData:any)=>void;
-  closeModal: ()=>void;
+  onClose: ()=>void;
   getAvailableRooms:  (searchVariables:any)=>void;
   availableRooms: { id: string; number: number }[] | [];
   roomTypeId: number | null;
 }) {
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+ 
   const handleClose = () => {
-    setOpen(false), closeModal();
+   onClose();
   };
 
   const [searchRoomsVariables, setSearchRoomVariables] = React.useState<{
@@ -49,12 +48,7 @@ export default function BasicModal({
     rooms: [{ adults: 1, children: 0 }],
   });
 
-  React.useEffect(() => {
-    if (isModalOpen) {
-      return handleOpen();
-    }
-    return handleClose();
-  }, [isModalOpen]);
+
     React.useEffect(() => {
     if (roomTypeId)
       return getAvailableRooms({
@@ -109,12 +103,12 @@ export default function BasicModal({
     };
     onSubmit(variables);
   };
-    if (!roomTypeId || !isModalOpen) return <div />;
+    if (!roomTypeId || !isOpen) return <div />;
   return (
     <div>
       <Modal
         keepMounted
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         aria-labelledby="modal-modal-{styles.title}"
         aria-describedby="modal-modal-specifications"

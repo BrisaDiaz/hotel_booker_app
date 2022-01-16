@@ -18,6 +18,7 @@ import Backdrop from '@/components/Backdrop';
 import validations from '@/utils/formValidations';
 import AppBar from '@/components/layouts/AppBar';
 import { WithLayoutPage } from '@/interfaces/index';
+import useNotification from '@/hooks/useNotification'
 function Copyright(props: any) {
   return (
     <Typography
@@ -37,8 +38,8 @@ function Copyright(props: any) {
 }
 
 const SignUp: WithLayoutPage = () => {
-  const [errorMessage, setErrorMessage] = React.useState<string>('');
-  const [success, setSuccess] = React.useState<boolean>(false);
+  const { notification,notify} = useNotification({autoClean:true})
+
   const {
     register,
     handleSubmit,
@@ -48,15 +49,12 @@ const SignUp: WithLayoutPage = () => {
   const redirectToSignin = () => {
     router.push('/signin');
   };
-  const [signUp, { error, data, loading }] = useMutation(SIGN_UP, {
+  const [signUp, { loading ,data}] = useMutation(SIGN_UP, {
     onCompleted: () => {
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
+      notify({type:'success',content:'SingUp complited successfully'})
     },
-    onError: (graphError) => {
-      setErrorMessage(graphError.message);
+    onError: ({message}) => {
+      notify( {type:'error', content:message});
     },
   });
 
@@ -87,18 +85,13 @@ const SignUp: WithLayoutPage = () => {
             mt:2
           }}
         >
-          {success && (
+          {notification.content && (
             <SnackBar
-              severity="success"
-              message="hotel was created successfully"
+              severity={notification.type}
+              message={notification.content}
             />
           )}
-          {error && (
-            <SnackBar
-              severity="error"
-              message={errorMessage || "Signup couldn't be complited"}
-            />
-          )}
+      
 
           <Container component="main" maxWidth="xs">
             <Box

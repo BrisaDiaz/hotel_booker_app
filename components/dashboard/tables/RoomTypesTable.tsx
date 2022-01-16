@@ -14,7 +14,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
@@ -28,6 +27,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import {generateImageUrl} from '@/utils/generateImageUrl'
+import Image from 'next/image'
  type RoomTypeActions =
     | 'addRoom'
     | 'deleteRooms'
@@ -308,7 +308,7 @@ function RoomsTable({
           ) : (
             displayedRows.map((row) => (
               <TableRow
-                key={row.name}
+                key={row.name+row.id}
                 sx={{
                   '& td': { borderRight: '1px solid rgba(224, 224, 224, 1)' },
 
@@ -332,16 +332,23 @@ function RoomsTable({
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Card
                       sx={{
-                        maxWidth: '150px',
-                        minWidth: '150px',
-                        height: '100px',
+                     
+                        width: 160,
+                        height: 100,
+                        position:'relative'
                       }}
                     >
-                      <CardMedia
-                        component="img"
-                        image={generateImageUrl(row.caption,{width:150,height:120})}
-                        alt={row.name}
-                      />
+                      <Image
+              objectFit="cover"
+                  layout="fill"
+                  width={160}
+                  height={100}
+                 placeholder="blur"
+        src={row.caption}
+           blurDataURL={generateImageUrl(row.caption,{width:160,height:100,quality:10})}
+                  alt={row.name}
+    
+                   />
                     </Card>
                     <Typography
                       sx={{
@@ -358,7 +365,7 @@ function RoomsTable({
                     </Typography>
                   </Box>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                   {' '}
                   <Typography
                     sx={{ fontSize: '14px', minWidth: 'max-content' }}
@@ -366,7 +373,7 @@ function RoomsTable({
                     USD ${row.lowestPrice}
                   </Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                   <Typography
                     sx={{ fontSize: '14px', minWidth: 'max-content' }}
                   >
@@ -381,7 +388,7 @@ function RoomsTable({
                   </Typography>
                 </TableCell>
 
-                <TableCell align="right">
+                <TableCell align="center">
                   <Box
                     component="ul"
                     sx={{

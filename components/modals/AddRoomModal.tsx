@@ -43,34 +43,29 @@ p:{xs:'10px 14px',sm:'16.5px 14px'},
 
 export default function KeepMountedModal({
   onSubmit,
-  isModalOpen,
-  closeModal,
+  isOpen,
+  onClose,
   restrictedNumbers,
 }: {
   onSubmit: (formData:any)=>void;
-  closeModal: ()=>void;
-  isModalOpen: boolean;
+  onClose: ()=>void;
+  isOpen: boolean;
   restrictedNumbers: number[];
 }) {
   const inputRef: any = React.useRef();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+
+
 
   const handleClose = () => {
     if (inputRef.current) {
       inputRef.current.value = '';
     }
 
-    setOpen(false), closeModal();
+  onClose();
     setRoomNumbers([]);
     setCurrentNumber(null);
   };
-  React.useEffect(() => {
-    if (isModalOpen) {
-      return handleOpen();
-    }
-    return handleClose();
-  }, [isModalOpen]);
+
   const [roomNumbers, setRoomNumbers] = React.useState<number[] | []>([]);
   const [currentNumber, setCurrentNumber] = React.useState<number | null>(null);
   const [error, setError] = React.useState({ message: '' });
@@ -110,7 +105,7 @@ export default function KeepMountedModal({
     <Box sx={{ maxWidth: '100vw', margin: '0 auto' }}>
       <Modal
         keepMounted
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"

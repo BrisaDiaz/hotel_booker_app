@@ -13,7 +13,6 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-
 import validations from '@/utils/formValidations';
 import { SIGN_IN } from '@/queries/index';
 import { useAuth } from '../context/useAuth';
@@ -21,6 +20,8 @@ import Backdrop from '@/components/Backdrop';
 import SnackBar from '@/components/SnackBar';
 import { WithLayoutPage } from '@/interfaces/index';
 import AppBar from '@/components/layouts/AppBar';
+import useNotification from '@/hooks/useNotification'
+
 function Copyright(props: any) {
   return (
     <Typography
@@ -41,11 +42,11 @@ function Copyright(props: any) {
 
 const SignIn: WithLayoutPage = () => {
   const { setSession } = useAuth();
-  const [errorMessage, setErrorMessage] = React.useState<string>('');
 
-  const [signIn, { loading, error }] = useMutation(SIGN_IN, {
-    onError: (graphError) => {
-      setErrorMessage(graphError.message);
+const { notification,notify} = useNotification({autoClean:true})
+  const [signIn, { loading }] = useMutation(SIGN_IN, {
+    onError: ({message}) => {
+      notify({type:'error',content:message|| "Signin couldn't be complited"});
     },
     onCompleted: (data) => {
       const { id, email, firstName, lastName, role } = data.signin.user;
@@ -87,10 +88,10 @@ const SignIn: WithLayoutPage = () => {
             mt:2
           }}
         >
-          {error && (
+          {notification.content && (
             <SnackBar
               severity="error"
-              message={errorMessage || "Signin couldn't be complited"}
+              message={notification.content }
             />
           )}
 

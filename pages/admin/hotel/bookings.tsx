@@ -29,19 +29,19 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import {getMounthDateRanges} from '@/utils/getMounthDateRanges'
+import useNotification from '@/hooks/useNotification'
 type PageProps = {
   hotelId: number;
   userId: number;
-  bookings: Booking[];
   roomModels: { id: number; name: string }[];
 };
 const Bookings: WithLayoutPage<PageProps> = ({
   hotelId,
   userId,
-  bookings,
   roomModels,
 }) => {
-  const [isModalOpen, setIsModalOpen] = React.useState<{
+  const [isOpen, setIsModalOpen] = React.useState<{
     show: boolean;
     cancel: boolean;
   }>({
@@ -49,62 +49,56 @@ const Bookings: WithLayoutPage<PageProps> = ({
     cancel: false,
   });
   const [loading, setLoading] = React.useState(false);
-  const [notification, setNotification] = React.useState<{
-    type: 'success' | 'error';
-    content: string;
-  }>({
-    type: 'success',
-    content: '',
-  });
-  const clearNotification = () => {
-    setTimeout(() => {
-      setNotification({
-        type: 'success',
-        content: '',
-      });
-    }, 6000);
-  };
+    const { notification,notify} = useNotification({autoClean:true})
+
+
   const [displayedBookings, setDisplayedBookings] =
-    React.useState<Booking[]>(bookings);
+    React.useState<Booking[]>([]);
+ 
   const [selectedBooking, setSelectedBooking] = React.useState<Booking | null>(
     null
   );
+
   const [cancelationDetails, setCancelationDetails] =
     React.useState<CancelationDetails | null>(null);
-  const [bookingsStatus, setBookingsStatus] = React.useState('active');
+  const [bookingsStatus, setBookingsStatus] = React.useState('all');
+   const [firstDayOfMonth,lastDayOfMonth ] =getMounthDateRanges()
+   
   const [dateRanges, setDateRanges] = React.useState<
-    { from: Date; until: Date } | null
-  >(null);
+    { from: Date; until: Date } 
+  >(  { from: firstDayOfMonth, until: lastDayOfMonth } );
 
   const closeModal = (modalName: string) => {
-    setIsModalOpen({ ...isModalOpen, [modalName]: false });
+    setIsModalOpen({ ...isOpen, [modalName]: false });
   };
   const openModal = (modalName: string) => {
-    setIsModalOpen({ ...isModalOpen, [modalName]: true });
+    setIsModalOpen({ ...isOpen, [modalName]: true });
   };
   const [getBookingById, bookingDataRequest] = useLazyQuery(GET_BOOKING_BY_ID);
-  const [getBookings, bookingsRequest] = useLazyQuery(GET_HOTEL_BOOKINGS);
+  const [getBookings, bookingsRequest] = useLazyQuery(GET_HOTEL_BOOKINGS, {
+   fetchPolicy: 'network-only',
+  });
   const [getCancelationDetails, cancelationDetailsRequest] = useLazyQuery(
-    GET_BOOKING_CANCELATION_DETAILS
+    GET_BOOKING_CANCELATION_DETAILS,{  fetchPolicy: 'network-only',}
   );
 
   const [cancelBooking, cancelBookingRequest] = useMutation(CANCEL_BOOKING, {
     onCompleted() {
-      setNotification({
+      notify({
         type: 'success',
         content: 'Booking was canceled successfully',
       });
-      clearNotification();
+      
       setBookingsStatus('CANCELED');
       closeModal('cancel');
       closeModal('show');
     },
     onError({ message }) {
-      setNotification({
+      notify({
         type: 'success',
         content: `Booking couldn't be canceled, Error: ${message}`,
       });
-      clearNotification();
+
     },
   });
 
@@ -120,11 +114,10 @@ const Bookings: WithLayoutPage<PageProps> = ({
     }
     if (bookingDataRequest.data?.booking) {
       setSelectedBooking(bookingDataRequest.data.booking);
+      
       openModal('show');
     }
   }, [bookingDataRequest, cancelationDetailsRequest]);
-
-  React.useEffect(() => {
       const handleGetBookings = async () => {
     if (dateRanges) {
       const variables: { [key: string]: number | string | Date } = {
@@ -143,9 +136,12 @@ const Bookings: WithLayoutPage<PageProps> = ({
       }
     }
   };
+  React.useEffect(() => {
+
 
     handleGetBookings();
   }, [bookingsStatus, dateRanges]);
+
   React.useEffect(() => {
     if (
       bookingDataRequest.loading ||
@@ -168,6 +164,7 @@ const Bookings: WithLayoutPage<PageProps> = ({
     const bookingId = parseInt(bookingEvent.id.split('+')[0]);
     try {
       setCancelationDetails(null);
+      setCancelationDetails(null)
       if (bookingEvent.status === 'CANCELED') {
         await Promise.all([
           getBookingById({
@@ -198,7 +195,7 @@ const Bookings: WithLayoutPage<PageProps> = ({
 
   const handleStatusChange = (event: SelectChangeEvent) => {
     setBookingsStatus(event.target.value);
-  };
+  }
   const handleRangeChanges = (range: { start: Date; end: Date }) => {
     setDateRanges({
       from: range.start,
@@ -288,17 +285,17 @@ const Bookings: WithLayoutPage<PageProps> = ({
 
         <BookingDetailsModal
           bookingData={selectedBooking}
-          isModalOpen={isModalOpen.show}
-          closeModal={() => closeModal('show')}
+          isOpen={isOpen.show}
+          onClose={() => closeModal('show')}
           onCancel={() => openModal('cancel')}
           cancelationDetails={cancelationDetails}
         />
       </Box>
       <CancelBookigModal
-        isModalOpen={isModalOpen.cancel}
+        isOpen={isOpen.cancel}
         onSubmit={onCancelBooking}
         bookingData={selectedBooking}
-        closeModal={() => closeModal('cancel')}
+        onClose={() => closeModal('cancel')}
       />
       <Backdrop loading={loading} />
       {notification.content && (
@@ -328,13 +325,7 @@ export const getServerSideProps = async ({
     const user = await getUser(req, res);
 
     if (user.role === 'ADMIN') {
-      const bookingResponce = await client.query({
-        query: GET_HOTEL_BOOKINGS,
-        variables: {
-          userId: user.id,
-          hotelId: query.hotelId,
-        },
-      });
+  
       const RoomModelsResponce = await client.query({
         query: GET_HOTEL_ROOM_MODELS_LIST,
         variables: {
@@ -347,7 +338,6 @@ export const getServerSideProps = async ({
           hotelId: query.hotelId,
           userId: user.id,
 
-          bookings: bookingResponce.data.bookings,
           roomModels: RoomModelsResponce.data.hotel.roomModels,
         },
       };

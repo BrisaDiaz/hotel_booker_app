@@ -12,7 +12,7 @@ import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import { prisma } from '@/lib/prisma';
 import { CREATE_ROOM_MODEL } from '@/queries/index';
 import { Feature } from '@/interfaces/index';
-
+import useNotification from '@/hooks/useNotification'
 type PageProps = {
   amenitiesList: Feature[];
   servicesList: Feature[];
@@ -31,21 +31,20 @@ const RoomUploadPage: any = ({
 
 
   const { hotelId } = router.query;
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false); 
+  const { notification,notify} = useNotification({autoClean:true})
   const [createRoomUploadPageModel, { error }] = useMutation(
     CREATE_ROOM_MODEL,
     {
       onCompleted: () => {
         setIsLoading(false);
-        setSuccess(true);
-        setTimeout(() => {
-          setSuccess(false);
-        }, 5000);
-      },
-      onError: (graphError) => {
-        setIsLoading(false);
+          notify({type:'success',content:'Room created successfully'});
 
-        setErrorMessage(graphError.message);
+      },
+      onError: ({message}) => {
+        setIsLoading(false);
+console.log(message)
+      notify({type:'error',content:"Room couldn't be created, please try later"});
       },
     }
   );
@@ -68,7 +67,7 @@ const RoomUploadPage: any = ({
     } catch (err: any) {
       console.log(err);
       setIsLoading(false);
-      setErrorMessage(JSON.stringify(err));
+      notify({type:'error',content:"Room couldn't be created, please try later"});
     }
   };
 
@@ -86,16 +85,10 @@ if (!authContext.session.loading && !authContext.session.user)  router.push('/si
       </Head>
 
       <main>
-        {error && (
+          {notification.content && (
           <SnackBar
-            severity="error"
-            message={errorMessage || "Request couldn't be complited"}
-          />
-        )}
-        {success && (
-          <SnackBar
-            severity="success"
-            message="hotel was created successfully"
+            severity={notification.type}
+            message={notification.content}
           />
         )}
         <RoomForm

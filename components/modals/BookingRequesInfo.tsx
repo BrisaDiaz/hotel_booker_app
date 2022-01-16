@@ -23,7 +23,7 @@ export default function RequestInfo({
       <Box component="ul" sx={{ mb: 2, px: 0 }}>
         {' '}
         <Box component="li" sx={styles.list}>
-          <Typography sx={styles.leyend}>Room Type:</Typography>
+          <Typography sx={styles.leyend} title={requestInfo?.roomModel?.name}>Room Type:</Typography>
           <Typography component="span">
             {requestInfo?.roomModel?.name}
           </Typography>
@@ -36,7 +36,7 @@ export default function RequestInfo({
           </Typography>
         </Box>
         <Box component="li" sx={styles.list}>
-          <Typography sx={styles.leyend}>Taxes And Charges:</Typography>
+          <Typography sx={styles.leyend}>Taxes:</Typography>
           <Typography component="span">
             {' '}
             USD {currencyFixer(requestInfo?.roomModel?.taxesAndCharges)}
@@ -87,7 +87,8 @@ export default function RequestInfo({
         {' '}
         <Box component="li" sx={styles.list}>
           <Typography sx={styles.leyend}>Name:</Typography>
-          <Typography component="span">
+          <Typography component="span" title={requestInfo?.client?.firstName+' '+
+requestInfo?.client?.lastName}>
             {requestInfo?.client?.firstName} {requestInfo?.client?.lastName}
           </Typography>
         </Box>
@@ -105,7 +106,7 @@ export default function RequestInfo({
             {requestInfo?.client?.landlineNumber}
           </Typography>
         </Box>
-        <Box component="li" sx={styles.list}>
+        <Box component="li" sx={styles.list} title={requestInfo?.client?.email}>
           <Typography sx={styles.leyend}>Email: </Typography>
           <Typography
             component="span"

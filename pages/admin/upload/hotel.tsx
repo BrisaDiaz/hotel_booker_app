@@ -12,7 +12,7 @@ import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import { prisma } from '@/lib/prisma';
 import { CREATE_HOTEL } from '@/queries/index';
 import type { Hotel } from '@/interfaces/index';
-
+import useNotification from '@/hooks/useNotification'
 type Option = {
   id: number;
   name: string;
@@ -37,22 +37,17 @@ const HotelUploadPage: any = ({
   const router = useRouter();
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = React.useState<string>('');
-
- 
-  
-  const [createHotel,{error}] = useMutation(CREATE_HOTEL, {
+  const { notification,notify} = useNotification({autoClean:true})
+    
+  const [createHotel] = useMutation(CREATE_HOTEL, {
     onCompleted: () => {
       setIsLoading(false);
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
+      notify({type:'success',content:'Hotel created successfully'});
     },
-    onError: (graphError) => {
+    onError: ({message}) => {
+      console.log(message)
       setIsLoading(false);
-      setErrorMessage(graphError.message);
+      notify({type:'error',content:"Hotel couldn't be created, please try later"});
     },
   });
 
@@ -83,7 +78,7 @@ const HotelUploadPage: any = ({
       const images = await uploadToCloudinary(toUploadImages);
       if (!images.length) {
         setIsLoading(false);
-        return setErrorMessage('There was an error on the images upload.');
+        return notify({type:'error',content:'There was an error on the images upload'});
       }
 
       await createHotel({
@@ -96,7 +91,7 @@ const HotelUploadPage: any = ({
       });
     } catch (err: any) {
       setIsLoading(false);
-      setErrorMessage(JSON.stringify(err));
+      notify({type:'error',content:"Hotel couldn't be created, try later"});
       console.log(err);
     }
   };
@@ -116,16 +111,11 @@ if (!authContext.session.loading && !authContext.session.user)  router.push('/si
       </Head>
 
       <main>
-        {error && (
+  
+        {notification.content && (
           <SnackBar
-            severity="error"
-            message={errorMessage || "Request couldn't be complited"}
-          />
-        )}
-        {success && (
-          <SnackBar
-            severity="success"
-            message="hotel was created successfully"
+            severity={notification.type}
+            message={notification.content}
           />
         )}
 

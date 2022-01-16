@@ -89,26 +89,26 @@ export default function BasicModal({
           <Box component="ul" sx={{ mb: 2, px: 0 }}>
             {' '}
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Price:</Typography>
+              <Typography sx={{...styles.leyend,width: '60%'}}>Price:</Typography>
               <Typography component="span">USD {currencyFixer(roomData?.price)}</Typography>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Taxes and Charges: </Typography>
+              <Typography sx={{...styles.leyend,width: '60%'}}>Taxes: </Typography>
               <Typography component="span">USD {currencyFixer(roomData?.taxes)}</Typography>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Maximun Guests:</Typography>
+              <Typography sx={{...styles.leyend,width: '60%'}}>Max. Guests:</Typography>
               <Typography component="span">
                 {' '}
                 {roomData?.maximunGuests}
               </Typography>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Check In Hour:</Typography>
+              <Typography sx={{...styles.leyend,width: '60%'}}>Check In Hour:</Typography>
               <time>{roomData?.checkInHour}</time>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Check Out Hour:</Typography>
+              <Typography sx={{...styles.leyend,width: '60%'}}>Check Out Hour:</Typography>
               <time>{roomData?.checkOutHour}</time>
             </Box>
           </Box>

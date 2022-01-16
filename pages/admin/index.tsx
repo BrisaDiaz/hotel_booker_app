@@ -26,7 +26,7 @@ import Box from '@mui/material/Box';
 import ActionCard from '@/components/dashboard/ActionCard';
 import HotelCard from '@/components/dashboard/HotelCard';
 import HotelModal from '@/components/modals/HotelModal';
-
+import useNotification from '@/hooks/useNotification'
 type SectionToEdit =
   | 'about'
   | 'contact'
@@ -81,10 +81,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
   );
 
   const [toEditSection, setToEditSection] = React.useState<SectionToEdit>('');
-  const [notification, setNotification] = React.useState<{
-    content: string;
-    type: 'success' | 'error';
-  }>({ content: '', type: 'success' });
+  const { notification,notify} = useNotification({autoClean:true})
   const formRef = React.useRef(null);
   const [getHotelToEdit, hotelDataRequest] = useLazyQuery(GET_HOTEL_BY_ID, {
     fetchPolicy: 'no-cache',
@@ -136,17 +133,17 @@ website:hotel.website
         setHotelCards(updatedHotelsCards);
       }
       setIsLoading(false);
-      setNotification({
+      notify({
         content: 'Hotel updated successfully',
         type: 'success',
       });
       setToEditSection('');
-      cleanNotification();
+      
     },
     onError: (graphError) => {
       setIsLoading(false);
-      setNotification({ content: graphError.message, type: 'error' });
-      cleanNotification();
+      notify({ content: graphError.message, type: 'error' });
+      
     },
   });
 
@@ -191,14 +188,6 @@ website:hotel.website
   const closeHotelModal = () => {
     setIsHotelModalOpen(false);
   };
-  const cleanNotification = () => {
-    setTimeout(() => {
-      setNotification({
-        content: '',
-        type: 'success',
-      });
-    }, 3000);
-  };
 
   const handleSubmit = async (hotelVariables: any) => {
     if (!toEditHotelData) return false;
@@ -236,8 +225,7 @@ website:hotel.website
       });
     } catch (err: any) {
       setIsLoading(false);
-      setNotification({ type: 'error', content: JSON.stringify(err) });
-      cleanNotification();
+      notify({ type: 'error', content: JSON.stringify(err) });
       console.log(err);
     }
   };
@@ -291,10 +279,10 @@ website:hotel.website
         </Box>
 
         <HotelModal
-          isModalOpend={
+          isOpen={
             !isLoading && toEditHotelData && isHotelModalOpen ? true : false
           }
-          closeModal={closeHotelModal}
+          onClose={closeHotelModal}
           onEdit={handleEditSelected}
           hotel={toEditHotelData}
         />
