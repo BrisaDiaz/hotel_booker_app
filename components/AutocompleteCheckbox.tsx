@@ -66,7 +66,7 @@ export default function CheckboxesTags({
              size={size}
           label={label}
           placeholder={label}
-          sx={{ width: '100%', my: 1, textTransform: 'capitalize','*':{     fontSize:{sx:'14px',sm:'16px'},} }}
+          sx={{ width: '100%', my: 1, textTransform: 'capitalize','*':{     fontSize:'14px'} }}
         />
       )}
     />
