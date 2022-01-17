@@ -1,7 +1,6 @@
 import {
   objectType,
   extendType,
-  intArg,
   stringArg,
   idArg,
   nonNull,

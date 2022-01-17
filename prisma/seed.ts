@@ -22,7 +22,7 @@ async function seed() {
     const salt = await genSalt(saltRounds);
     const encryptedPasswod = await hash(adminUser.password, salt);
 
-    const admin = await prisma.user.create({
+   const user = await prisma.user.create({
       data: {
         firstName: adminUser.firstName,
         lastName: adminUser.lastName,
@@ -31,9 +31,9 @@ async function seed() {
         role: 'ADMIN',
       },
     });
-    await prisma.administrator.create({
+  const admin =await prisma.administrator.create({
       data: {
-        userId: admin.id,
+        userId: user.id,
       },
     });
 

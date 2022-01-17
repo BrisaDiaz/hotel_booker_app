@@ -112,7 +112,7 @@ const SignUp: WithLayoutPage = () => {
                 component="form"
                 noValidate
                 onSubmit={handleSubmit(onSubmit)}
-                sx={{ mt: 3 }}
+                  sx={{ mt: 3 ,      'input':{background:'#fff'}}}
               >
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>

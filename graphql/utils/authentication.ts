@@ -89,7 +89,8 @@ export async function getAdminInfo(
       },
     },
   });
-  if (!admin) throw new ForbiddenError('Forbiden');
+
+  if (!admin) throw new ForbiddenError('Unauthenticated');
   return admin;
 }
 export async function getUserProfile(
@@ -111,6 +112,7 @@ export async function getUserProfile(
   return userProfile;
 }
 export async function verifyIsHotelAdmin(userId: number, hotelId: number) {
+
   const admin = await getAdminInfo(userId);
 
   const isHotelAdmin = admin.hotels.find(

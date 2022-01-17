@@ -217,8 +217,8 @@ export const Mutation = extendType({
         const userId = parseInt(args.userId);
 
         const createHotelRoomModel = async (
+        userId: number,
           hotelId: number,
-          userId: number,
           args: any
         ) => {
           await verifyIsHotelAdmin(userId, hotelId);
@@ -363,8 +363,8 @@ export const Mutation = extendType({
           });
         };
         return updateRoomModel(
+        parseInt(args.userId),
           parseInt(args.hotelId),
-          parseInt(args.userId),
           parseInt(args.roomModelId),
           args
         );

@@ -85,7 +85,8 @@ const { notification,notify} = useNotification({autoClean:true})
           sx={{
             maxWidth: '1200px',
             mx: 'auto',
-            mt:2
+            mt:2,
+      
           }}
         >
           {notification.content && (
@@ -115,7 +116,7 @@ const { notification,notify} = useNotification({autoClean:true})
                 component="form"
                 noValidate
                 onSubmit={handleSubmit(onSubmit)}
-                sx={{ mt: 3 }}
+                sx={{ mt: 3 ,      'input':{background:'#fff'}}}
               >
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
