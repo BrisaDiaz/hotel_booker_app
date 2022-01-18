@@ -13,7 +13,6 @@ import {
 import { verifyIsHotelAdmin, deleteImage } from '../utils/index';
 import { prisma } from '../../lib/prisma';
 
-
 export const Amenity = objectType({
   name: 'Amenity',
   definition(t) {
@@ -95,34 +94,33 @@ export const RoomModel = objectType({
         });
       },
     });
-    t.int('imagesCount',{
-      resolve(root:any):any{
-   return prisma.image.count({
-          where: {
-            album:{
-              roomModelId: root.id,
-            }
-          },
-        });
-      }
-    }),
-     t.list.field('miniatures', {
-      type: 'Image',
+    t.int('imagesCount', {
       resolve(root: any): any {
-        return prisma.image.findMany({
-          take:6,
-                  orderBy:{
-createdAt:'desc'
-        },
+        return prisma.image.count({
           where: {
-            album:{
+            album: {
               roomModelId: root.id,
-            }
+            },
           },
-          
         });
       },
-    });
+    }),
+      t.list.field('miniatures', {
+        type: 'Image',
+        resolve(root: any): any {
+          return prisma.image.findMany({
+            take: 6,
+            orderBy: {
+              createdAt: 'desc',
+            },
+            where: {
+              album: {
+                roomModelId: root.id,
+              },
+            },
+          });
+        },
+      });
     t.list.field('services', { type: 'Service' });
     t.list.field('amenities', { type: 'Amenity' });
     t.list.field('rooms', {
@@ -217,7 +215,7 @@ export const Mutation = extendType({
         const userId = parseInt(args.userId);
 
         const createHotelRoomModel = async (
-        userId: number,
+          userId: number,
           hotelId: number,
           args: any
         ) => {
@@ -261,12 +259,12 @@ export const Mutation = extendType({
               })
           );
           await prisma.album.create({
-            data:{
-              hotelId:hotelId,
-              roomModelId:roomModel.id,
-              name:`Room Type ${roomModel.id}`
-            }
-          })
+            data: {
+              hotelId: hotelId,
+              roomModelId: roomModel.id,
+              name: `Room Type ${roomModel.id}`,
+            },
+          });
           await Promise.all(roomBeds);
           return roomModel;
         };
@@ -319,6 +317,24 @@ export const Mutation = extendType({
 
             mainImage = args.mainImage;
           }
+          if (args.beds.length) {
+            await prisma.roomBed.deleteMany({
+              where: {
+                roomModelId: roomModelId,
+              },
+            });
+            const promices = args.beds.map(
+              (bed: { type: string; quantity: number }) =>
+                prisma.roomBed.create({
+                  data: {
+                    roomModelId: roomModelId,
+                    type: bed.type,
+                    quantity: bed.quantity,
+                  },
+                })
+            );
+            await Promise.all(promices);
+          }
           return prisma.roomModel.update({
             where: {
               id: roomModelId,
@@ -363,7 +379,7 @@ export const Mutation = extendType({
           });
         };
         return updateRoomModel(
-        parseInt(args.userId),
+          parseInt(args.userId),
           parseInt(args.hotelId),
           parseInt(args.roomModelId),
           args
@@ -397,7 +413,9 @@ export const Mutation = extendType({
             },
           });
 
-          const roomsNumbersInHotel = roomsInHotel.map((room:{number:number}) => room.number);
+          const roomsNumbersInHotel = roomsInHotel.map(
+            (room: { number: number }) => room.number
+          );
 
           const roomsAllowed = roomNumbers.filter(
             (number) => !roomsNumbersInHotel.includes(number)

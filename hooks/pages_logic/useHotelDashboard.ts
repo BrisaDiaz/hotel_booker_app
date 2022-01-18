@@ -15,7 +15,7 @@ import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { NextRouter, useRouter } from 'next/router';
 import { RoomModel } from '@/interfaces/index';
-import useNotification from '@/hooks/useNotification'
+import useNotification from '@/hooks/useNotification';
 export interface Props {
   roomModels: RoomModel[];
   roomTypesCount: number;
@@ -148,10 +148,9 @@ export default function useHotelDashboard({
     addBooking: false,
     displayRoomsStatus: false,
   });
-  const [loading, setLoading] = React.useState<boolean>(false)
+  const [loading, setLoading] = React.useState<boolean>(false);
 
-const { notification,notify} = useNotification({autoClean:true})
-
+  const { notification, notify } = useNotification({ autoClean: true });
 
   const getAlreadyUploadRoomNumbers = (
     hotelRoomTypes: RoomModel[]
@@ -380,7 +379,6 @@ const { notification,notify} = useNotification({autoClean:true})
     updateRoomTypeRequest.loading,
   ]);
 
-
   //// actualize room to show/edit data
   React.useEffect(() => {
     if (roomTypeDataRequest.data?.roomModel?.id) {
@@ -479,11 +477,11 @@ const { notification,notify} = useNotification({autoClean:true})
   const handleActions = async (
     roomModelId: number,
     action: RoomTypeActions,
-    roomsToDelete?: number[] 
+    roomsToDelete?: number[]
   ) => {
     setSelectedRoomTypeId(roomModelId);
     if (action === 'deleteRooms') {
-     roomsToDelete && setToDeleteRoomsIds(roomsToDelete);
+      roomsToDelete && setToDeleteRoomsIds(roomsToDelete);
     }
     if (action === 'show/edit') {
       if (!toEditRoomTypeData || toEditRoomTypeData.id != roomModelId) {
