@@ -42,15 +42,14 @@ export default function MultilineTextFields({
   amenities: Feature[];
   roomCategories: Feature[];
   bedTypes: Feature[];
-  submitHandler: (formData:any)=>void;
-  abortHandler: ()=>void;
+  submitHandler: (formData: any) => void;
+  abortHandler: () => void;
 }) {
-
   const {
     register,
     setValue,
-      setError,
-clearErrors,
+    setError,
+    clearErrors,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: 'onChange' });
@@ -73,8 +72,16 @@ clearErrors,
       return submitHandler(variables);
     }
     if (toEditSection === 'capacity') {
+      const pickedBedQuantities = bedTypes
+        .map((bed) => ({
+          type: bed.name,
+          quantity: data[bed.name] * 1,
+        }))
+        .filter((bed) => bed.quantity > 0);
+
       variables = {
-        mts2: data.mts2 * 2,
+        mts2: data.mts2 * 1,
+        beds: pickedBedQuantities,
         maximunGuests: data.maximunGuests * 1,
         maximunStay: data.maximunNights * 1 || 0,
         minimunStay: data.minimunNights * 1,
@@ -173,7 +180,12 @@ clearErrors,
         )}
 
         {toEditSection === 'aspect' && (
-          <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors}>
+          <AspectSection
+            register={register}
+            errors={errors}
+            setError={setError}
+            clearErrors={clearErrors}
+          >
             <FormBottons onAbort={abortHandler} />
           </AspectSection>
         )}
