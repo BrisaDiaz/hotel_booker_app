@@ -86,6 +86,7 @@ setTimeout(() => {
               alt={hotel.name}
               height={500}
               width={500}
+              loading="eager"
             objectFit='cover'
             />
             </Box>
@@ -105,7 +106,7 @@ setTimeout(() => {
 <Image
                  
             
-          
+              loading="eager"
                placeholder="blur"
  layout="fill"
            blurDataURL={generateImageUrl(hotel.interiorImage,{quality:10,height:500,width:500})}
