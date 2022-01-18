@@ -333,7 +333,8 @@ function RoomsTable({
                     <Card
                       sx={{
                      
-                        width: 160,
+                        maxWidth: 300,
+                        minWidth:130,
                         height: 100,
                         position:'relative'
                       }}
@@ -341,7 +342,7 @@ function RoomsTable({
                       <Image
               objectFit="cover"
                   layout="fill"
-                  width={160}
+                  width={150}
                   height={100}
                  placeholder="blur"
         src={row.caption}
