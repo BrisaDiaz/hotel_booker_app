@@ -317,7 +317,7 @@ export const Mutation = extendType({
 
             mainImage = args.mainImage;
           }
-          if (args.beds.length) {
+          if (args.beds?.length) {
             await prisma.roomBed.deleteMany({
               where: {
                 roomModelId: roomModelId,
