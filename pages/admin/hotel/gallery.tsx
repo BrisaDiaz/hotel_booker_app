@@ -185,8 +185,8 @@ const onEditAlbumImgs=async(toUploadFiles:File[] ,imagesFiltered?:string[])=>{
   if(!selectedAlbum)return
 setLoading(true);
     try {
- const uploadedImgs= await uploadToCloudinary(toUploadFiles);
-let imagesUrls= uploadedImgs.map(img=> img.secure_url)
+ const uploadedImgs= toUploadFiles.length ? await uploadToCloudinary(toUploadFiles) :[]
+let imagesUrls=uploadedImgs.length ? uploadedImgs.map(img=> img.secure_url):[]
 if(imagesFiltered){
 imagesUrls = [...imagesUrls,...imagesFiltered]
 }
