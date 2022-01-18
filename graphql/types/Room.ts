@@ -55,7 +55,7 @@ export const RoomModel = objectType({
       resolve: (root: any): any => {
         return prisma.hotel.findUnique({
           where: {
-            id: root.id,
+            id: root.hotelId,
           },
         });
       },
