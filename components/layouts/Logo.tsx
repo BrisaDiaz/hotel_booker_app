@@ -17,13 +17,13 @@ export default function Logo() {
         variant="h5"
         component="a"
       >
-        Booker{' '}
+        Hotel{' '}
         <Typography
           variant="h5"
           component="span"
           sx={{ px: '5px', fontWeight: 300 }}
         >
-          App
+          Booker
         </Typography>
       </Typography>
     </Box>
