@@ -6,7 +6,7 @@ import useHotelDashboard, {
 import { GET_DASHBOARD_HOTEL_DATA } from '@/queries/index';
 import { client } from '@/lib/apollo';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getUser } from '@/graphql/utils';
+import { getCookie } from '@/graphql/utils';
 import Head from 'next/head';
 import Backdrop from '@/components/Backdrop';
 import AdminMenu from '@/components/layouts/AdminMenu';
@@ -22,7 +22,7 @@ import DinamicForm from '@/components/dashboard/forms/Room/DinamicForm';
 import RoomModal from '@/components/modals/RoomModal';
 interface ActionCard {
   title: string;
-  actions: Array<{ name: string; callback: ()=>void }>;
+  actions: Array<{ name: string; callback: () => void }>;
   count: number;
   color?: string;
 }
@@ -65,7 +65,7 @@ const HotelAdmin: WithLayoutPage<Props> = ({
   guestsCount,
   requestsCount,
   hotelId,
-  userId,
+  token,
 }) => {
   const {
     onDeleteRooms,
@@ -98,7 +98,7 @@ const HotelAdmin: WithLayoutPage<Props> = ({
     guestsCount,
     requestsCount,
     hotelId,
-    userId,
+    token,
   });
 
   return (
@@ -193,31 +193,23 @@ export const getServerSideProps = async ({
   };
 }) => {
   try {
-    const user = await getUser(req, res);
-    if (user.role === 'ADMIN') {
-      const { data } = await client.query({
-        query: GET_DASHBOARD_HOTEL_DATA,
-        variables: { userId: user.id, hotelId: query.hotelId },
-      });
+    const token = getCookie(req, res);
 
-      return {
-        props: {
-          hotelId: query.hotelId,
-          userId: user.id,
-          roomModels: data.hotelData.roomModels,
-          roomTypesCount: data.hotelData.roomModelsCount,
-          guestsCount: data.hotelData.guestsCount,
-          requestsCount: data.hotelData.requestsCount,
-          bookingsCount: data.hotelData.bookingsCount,
-        },
-      };
-    }
+    const { data } = await client.query({
+      query: GET_DASHBOARD_HOTEL_DATA,
+      variables: { token: token, hotelId: query.hotelId },
+    });
+
     return {
-      redirect: {
-        permanent: false,
-        destination: '/signin',
+      props: {
+        hotelId: query.hotelId,
+        token: token,
+        roomModels: data.hotelData.roomModels,
+        roomTypesCount: data.hotelData.roomModelsCount,
+        guestsCount: data.hotelData.guestsCount,
+        requestsCount: data.hotelData.requestsCount,
+        bookingsCount: data.hotelData.bookingsCount,
       },
-      props: {},
     };
   } catch (e: any) {
     console.log(e.networkError ? e.networkError?.result?.errors : e);

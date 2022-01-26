@@ -13,7 +13,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import InputAdornment from '@mui/material/InputAdornment';
 import KingBedIcon from '@mui/icons-material/KingBed';
 import { styles } from './styles';
-import {Theme}from '@mui/system'
+import { Theme } from '@mui/system';
 import { useMediaQuery } from '@mui/material';
 
 const PAYMENT_METHODS = [
@@ -32,8 +32,8 @@ export default function BookingClientInputs({
 
   disable,
 }: {
-  register: (fieldName:string,config?:any)=>void;
-  setValue: (fieldName:string,value:any)=>void;
+  register: (fieldName: string, config?: any) => void;
+  setValue: (fieldName: string, value: any) => void;
 
   errors: any;
   disable?: boolean;
@@ -66,7 +66,9 @@ export default function BookingClientInputs({
     setValue('roomsIds', numbersSelected);
   }, [numbersSelected]);
 
-  const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+  const isInSmScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('sm')
+  );
   return (
     <Box sx={{ position: 'relative' }}>
       {disable && (
@@ -81,22 +83,21 @@ export default function BookingClientInputs({
           }}
         />
       )}
-      <Box sx={{...styles.withIconLabel,mb:3}}>
+      <Box sx={{ ...styles.withIconLabel, mb: 3 }}>
         <AccountBalanceWalletIcon />
         <Typography
           id="transition-modal-title"
           variant="subtitle1"
           component="h3"
-          
         >
           Payment
         </Typography>
       </Box>
-      <Grid container spacing={{sm:1,xs:3}} >
-        <Grid item xs={12} sm={6}  >
+      <Grid container spacing={{ sm: 1, xs: 3 }}>
+        <Grid item xs={12} sm={6}>
           <TextField
-                                size={isInSmScreen?'medium':"small"}
-   sx={styles.input}
+            size={isInSmScreen ? 'medium' : 'small'}
+            sx={styles.input}
             id="totalCost"
             fullWidth
             defaultValue={0}
@@ -122,13 +123,15 @@ export default function BookingClientInputs({
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}   >
-          <FormControl fullWidth                       size={isInSmScreen?'medium':"small"}
-   sx={styles.input}>
+        <Grid item xs={12} sm={6}>
+          <FormControl
+            fullWidth
+            size={isInSmScreen ? 'medium' : 'small'}
+            sx={styles.input}
+          >
             <InputLabel id="payment-method">Payment Method</InputLabel>
 
             <Select
-            
               labelId="payment-method"
               label="Payment Method"
               value={paymentMethodSelected}
@@ -186,7 +189,7 @@ export default function BookingClientInputs({
             fontSize: '12px',
             mt: '-18px',
             width: 'max-content',
-            backgroundColor: '#fff',
+            background: '#efefef',
             textTransform: 'capitalize',
           }}
         >
@@ -214,11 +217,10 @@ export default function BookingClientInputs({
         ) : (
           <Typography
             color="secondary.main"
-            align='center'
+            align="center"
             sx={{
-        
               fontWeight: 500,
-              py: disable ? 1:0,
+              py: disable ? 1 : 0,
             }}
           >
             {disable ? '' : 'No available rooms were found.'}

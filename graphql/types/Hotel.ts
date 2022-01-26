@@ -18,6 +18,7 @@ import {
   deleteImage,
   getHotelFieldsToEdit,
   HotelQueryArgs,
+  getUser,
 } from '../utils/index';
 
 export const Address = objectType({
@@ -43,7 +44,7 @@ export const Administrator = objectType({
       resolve(root: any): any {
         return prisma.user.findUnique({
           where: {
-            id: root.userId,
+            id: root.user.id,
           },
         });
       },
@@ -161,7 +162,7 @@ export const Hotel = objectType({
       resolve(root: any): any {
         return prisma.features.findUnique({
           where: {
-            hotelId: root.id ,
+            hotelId: root.id,
           },
         });
       },
@@ -186,35 +187,33 @@ export const Hotel = objectType({
         });
       },
     });
-    t.int('imagesCount',{
-          resolve(root: any): any {
+    t.int('imagesCount', {
+      resolve(root: any): any {
         return prisma.image.count({
           where: {
-            album:{
+            album: {
               hotelId: root.id,
-            }
+            },
           },
-          
         });
       },
     }),
- t.list.field('miniatures', {
-      type: 'Image',
-      resolve(root: any): any {
-        return prisma.image.findMany({
-                  orderBy:{
-createdAt:'desc'
+      t.list.field('miniatures', {
+        type: 'Image',
+        resolve(root: any): any {
+          return prisma.image.findMany({
+            orderBy: {
+              createdAt: 'desc',
+            },
+            take: 6,
+            where: {
+              album: {
+                hotelId: root.id,
+              },
+            },
+          });
         },
-          take:6,
-          where: {
-            album:{
-              hotelId: root.id,
-            }
-          },
-          
-        });
-      },
-    });
+      });
     t.field('address', {
       type: 'Address',
       resolve(root: any): any {
@@ -300,7 +299,7 @@ export const Mutation = extendType({
     t.field('createHotel', {
       type: 'Hotel',
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         name: nonNull(stringArg()),
         brand: stringArg(),
         category: stringArg(),
@@ -333,8 +332,9 @@ export const Mutation = extendType({
         street: stringArg(),
       },
       resolve(_, args, ctx): any {
-        const createHotel = async (userId: number, args: any) => {
-          const admin = await getAdminInfo(userId);
+        const createHotel = async (token: string, args: any) => {
+          const user = await getUser(token);
+          const admin = await getAdminInfo(user.id);
 
           const hotel = await prisma.hotel.create({
             data: {
@@ -400,13 +400,13 @@ export const Mutation = extendType({
           return hotel;
         };
 
-        return createHotel(parseInt(args.userId), args);
+        return createHotel(args.token, args);
       },
     });
     t.field('updateHotel', {
       type: 'Hotel',
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         hotelId: nonNull(idArg()),
         name: stringArg(),
         brand: stringArg(),
@@ -440,8 +440,9 @@ export const Mutation = extendType({
         street: stringArg(),
       },
       resolve(_, args, ctx): any {
-        const update = async (userId: number, hotelId: number, args: any) => {
-          verifyIsHotelAdmin(userId, hotelId);
+        const update = async (token: string, hotelId: number, args: any) => {
+          const user = await getUser(token);
+          verifyIsHotelAdmin(user.id, hotelId);
           const toEditFields = getHotelFieldsToEdit(args);
           let hotelUpdated;
           console.log(toEditFields);
@@ -465,10 +466,10 @@ export const Mutation = extendType({
               where: {
                 id: hotelId,
               },
-              include:{
-                features:true,
-                address:true
-              }
+              include: {
+                features: true,
+                address: true,
+              },
             });
           }
           return hotelUpdated;
@@ -573,12 +574,12 @@ export const Mutation = extendType({
                   }
                 : undefined,
             },
-            include:{
-              services:true,
-              languages:true,
-              activities:true,
-              facilities:true
-            }
+            include: {
+              services: true,
+              languages: true,
+              activities: true,
+              facilities: true,
+            },
           });
         };
         const updateGenericData = async (hotelId: number, args: any) => {
@@ -628,7 +629,7 @@ export const Mutation = extendType({
             },
           });
         };
-        return update(parseInt(args.userId), parseInt(args.hotelId), args);
+        return update(args.token, parseInt(args.hotelId), args);
       },
     });
   },

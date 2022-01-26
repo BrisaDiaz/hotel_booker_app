@@ -15,23 +15,30 @@ export default function AuthProvider({
   /// check if the session exist and set the state acordingly
   const { data } = useQuery(GET_USER_SESSION);
   const initialState = {
-    loading:true,
+    loading: true,
     user: null,
+    token: '',
   };
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const setSession = (user: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: 'ADMIN' | 'USER';
+  const setSession = ({
+    user,
+    token,
+  }: {
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      role: 'ADMIN' | 'USER';
+    };
+    token: string;
   }) => {
     const userData = { ...user, id: parseInt(user.id) };
 
     dispatch({
       type: SET_SESSION,
-      payload: { loading:false,user: userData },
+      payload: { loading: false, user: userData, token },
     });
   };
   const resetSession = () => {
@@ -42,8 +49,9 @@ export default function AuthProvider({
   };
 
   useEffect(() => {
-    if (data?.authentication?.email) {
-      setSession(data.authentication);
+    if (data?.authentication?.user) {
+      const { token, user } = data?.authentication;
+      setSession({ token, user });
     }
   }, [data]);
 

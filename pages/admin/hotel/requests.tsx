@@ -6,7 +6,7 @@ import {
   DECLINE_BOOKING_REQUEST,
   CONFIRM_BOOKING_REQUEST,
 } from '@/queries/index';
-import { getUser } from '@/graphql/utils';
+import { getCookie } from '@/graphql/utils';
 import { BookingRequest } from '@/interfaces/index';
 import { useMutation, useLazyQuery } from '@apollo/client';
 import { client } from '@/lib/apollo';
@@ -18,11 +18,11 @@ import RequestsTable from '@/components/dashboard/tables/RequestsTable';
 import Dialog from '@/components/Dialog';
 import SnackBar from '@/components/SnackBar';
 import Backdrop from '@/components/Backdrop';
-import useNotification from '@/hooks/useNotification'
+import useNotification from '@/hooks/useNotification';
 type PagePromps = {
   requests: BookingRequest[];
   totalResults: number;
-  userId: number;
+  token: number;
   hotelId: number;
 };
 const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
@@ -38,7 +38,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
   const [page, setPage] = React.useState<number>(0);
 
   const [query, setQuery] = React.useState<{
-    userId: number;
+    token: number;
     hotelId: number;
     take: number;
     skip: number;
@@ -47,7 +47,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
       value: string;
     };
   }>({
-    userId: props.userId,
+    token: props.token,
     hotelId: props.hotelId,
     take: resultsPerPage,
     skip: 0,
@@ -91,7 +91,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
   const [requestSelected, setRequestSelected] =
     React.useState<BookingRequest | null>(null);
 
-  const { notification,notify} = useNotification({autoClean:true})
+  const { notification, notify } = useNotification({ autoClean: true });
   const [declineRequest, declineRequestResponce] = useMutation(
     DECLINE_BOOKING_REQUEST,
     {
@@ -104,14 +104,12 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
           type: 'success',
           content: 'The request was declined successfully.',
         });
-        
       },
       onError: ({ message }) => {
         notify({
           type: 'error',
           content: message,
         });
-        
       },
     }
   );
@@ -128,14 +126,12 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
           type: 'success',
           content: 'The request has been booked successfully.',
         });
-        
       },
       onError: (graphqlError) => {
         notify({
           type: 'error',
           content: graphqlError.message,
         });
-        
       },
     }
   );
@@ -147,7 +143,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
       await declineRequest({
         variables: {
           bookingRequestId: requestSelected.id,
-          userId: props.userId,
+          token: props.token,
         },
       });
     } catch (error) {
@@ -162,7 +158,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
     if (requestSelected === null) return null;
     const variables = {
       ...data,
-      userId: props.userId,
+      token: props.token,
       bookingRequestId: requestSelected.id,
     };
     try {
@@ -234,7 +230,6 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
     confirmBookingRequestResponce,
   ]);
 
-
   return (
     <div>
       <Head>
@@ -294,29 +289,20 @@ type PageContext = {
 };
 export const getServerSideProps = async ({ req, res, query }: PageContext) => {
   try {
-    const user = await getUser(req, res);
-    if (user.role === 'ADMIN') {
-      const { data, error } = await client.query({
-        query: GET_HOTEL_BOOKING_REQUESTS,
-        variables: { userId: user.id, hotelId: query.hotelId },
-      });
+    const token = getCookie(req, res);
 
-      return {
-        props: {
-          hotelId: query.hotelId,
-          userId: user.id,
-          requests: data.results.requests,
-          totalResults: data.results.totalResults,
-        },
-      };
-    }
+    const { data, error } = await client.query({
+      query: GET_HOTEL_BOOKING_REQUESTS,
+      variables: { token: token, hotelId: query.hotelId },
+    });
 
     return {
-      redirect: {
-        permanent: false,
-        destination: '/signin',
+      props: {
+        hotelId: query.hotelId,
+        token: token,
+        requests: data.results.requests,
+        totalResults: data.results.totalResults,
       },
-      props: {},
     };
   } catch (e) {
     console.log(e);

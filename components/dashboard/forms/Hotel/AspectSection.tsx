@@ -29,6 +29,8 @@ export default function AspectSection({
 
   function handleOnChange(changeEvent: any) {
 
+
+    
 if(!changeEvent.target.files[0]) {
   return  changeEvent.target.name === 'frameImage'? setFrameImage(defaultImage):setInteriorImage(defaultImage);
       

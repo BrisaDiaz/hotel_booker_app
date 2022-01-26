@@ -34,8 +34,8 @@ export default function MultilineTextFields(props: {
   facilities: Feature[] | [];
   languages: Feature[] | [];
   hotelCategories: Feature[] | [];
-  submitHandler: (formData:any)=>void;
-  abortHandler: ()=>void;
+  submitHandler: (formData: any) => void;
+  abortHandler: () => void;
 }) {
   const {
     hotel,
@@ -51,6 +51,7 @@ export default function MultilineTextFields(props: {
   const {
     register,
     setValue,
+
     handleSubmit,
     setError,
     clearErrors,
@@ -61,11 +62,12 @@ export default function MultilineTextFields(props: {
     let variables: { [key: string]: number | string | File };
 
     if (toEditSection === 'policies') {
-      if(!data.policiesAndRules)return setError('policiesAndRules',{
-  type:'required',
-  message:'The policies and rules are required'
-})
-clearErrors('policiesAndRules')
+      if (!data.policiesAndRules)
+        return setError('policiesAndRules', {
+          type: 'required',
+          message: 'The policies and rules are required',
+        });
+      clearErrors('policiesAndRules');
       variables = {
         checkInHour: data?.checkInHour,
         checkOutHour: data?.checkOutHour,
@@ -85,11 +87,12 @@ clearErrors('policiesAndRules')
       return props.submitHandler(variables);
     }
     if (toEditSection === 'about') {
-            if(!data.description)return setError('description',{
-  type:'required',
-  message:'A description required'
-})
-clearErrors('description')
+      if (!data.description)
+        return setError('description', {
+          type: 'required',
+          message: 'A description required',
+        });
+      clearErrors('description');
       variables = {
         name: data?.name,
 
@@ -117,6 +120,17 @@ clearErrors('description')
       return props.submitHandler(variables);
     }
     if (toEditSection === 'aspect') {
+      if (
+        data.frameImage[0] &&
+        data.frameImage[0].name === data.interiorImage[0].name
+      ) {
+        return setError('interiorImage', {
+          type: 'manual',
+          message: 'The facade e interior images must be differents.',
+        });
+      } else {
+        clearErrors('interiorImage');
+      }
       variables = {
         frameImage: data?.frameImage ? data?.frameImage[0] : null,
         interiorImage: data?.interiorImage ? data?.interiorImage[0] : null,
@@ -202,17 +216,21 @@ clearErrors('description')
         )}
         {toEditSection === 'policies' && (
           <PoliciesSection
-            setValue={setValue}  
+            setValue={setValue}
             register={register}
             errors={errors}
             defaultData={hotel}
-     
           >
             <FormBottons onAbort={abortHandler} />
           </PoliciesSection>
         )}
         {toEditSection === 'aspect' && (
-          <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors}>
+          <AspectSection
+            register={register}
+            errors={errors}
+            setError={setError}
+            clearErrors={clearErrors}
+          >
             <FormBottons onAbort={abortHandler} />
           </AspectSection>
         )}

@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React from 'react';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { client } from '@/lib/apollo';
-import { getUser } from '@/graphql/utils';
+import { getCookie } from '@/graphql/utils';
 import {
   WithLayoutPage,
   Booking,
@@ -33,12 +33,12 @@ import {getMounthDateRanges} from '@/utils/getMounthDateRanges'
 import useNotification from '@/hooks/useNotification'
 type PageProps = {
   hotelId: number;
-  userId: number;
+  token: number;
   roomModels: { id: number; name: string }[];
 };
 const Bookings: WithLayoutPage<PageProps> = ({
   hotelId,
-  userId,
+  token,
   roomModels,
 }) => {
   const [isOpen, setIsModalOpen] = React.useState<{
@@ -121,7 +121,7 @@ const Bookings: WithLayoutPage<PageProps> = ({
       const handleGetBookings = async () => {
     if (dateRanges) {
       const variables: { [key: string]: number | string | Date } = {
-        userId,
+        token,
         hotelId,
         ...dateRanges,
       };
@@ -170,7 +170,7 @@ const Bookings: WithLayoutPage<PageProps> = ({
           getBookingById({
             variables: {
               bookingId,
-              userId,
+              token,
             },
           }),
           getCancelationDetails({
@@ -185,7 +185,7 @@ const Bookings: WithLayoutPage<PageProps> = ({
       await getBookingById({
         variables: {
           bookingId,
-          userId,
+          token,
         },
       });
     } catch (err) {
@@ -208,7 +208,7 @@ const Bookings: WithLayoutPage<PageProps> = ({
   }) => {
     if (!selectedBooking) return;
     try {
-      const variables = { ...data, userId, bookingId: selectedBooking.id };
+      const variables = { ...data, token, bookingId: selectedBooking.id };
       await cancelBooking({ variables });
     } catch (err) {
       console.log(err);
@@ -322,9 +322,9 @@ export const getServerSideProps = async ({
   query,
 }: PbookingsStatusContext) => {
   try {
-    const user = await getUser(req, res);
+    const token = getCookie(req, res);
 
-    if (user.role === 'ADMIN') {
+
   
       const RoomModelsResponce = await client.query({
         query: GET_HOTEL_ROOM_MODELS_LIST,
@@ -336,20 +336,14 @@ export const getServerSideProps = async ({
       return {
         props: {
           hotelId: query.hotelId,
-          userId: user.id,
+          token: token,
 
           roomModels: RoomModelsResponce.data.hotel.roomModels,
         },
       };
-    }
+  
 
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/signin',
-      },
-      props: {},
-    };
+
   } catch (e: any) {
     console.log(e.networkError ? e.networkError?.result?.errors : e);
     return {

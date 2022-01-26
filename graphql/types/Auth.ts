@@ -9,6 +9,7 @@ import {
   deleteCookie,
   getUser,
   getUserProfile,
+  getCookie,
 } from '../utils/index';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -126,18 +127,38 @@ export const Query = extendType({
   type: 'Query',
   definition(t) {
     t.field('authentication', {
-      type: 'User',
+      type: 'AuthPayload',
       resolve(root, args, ctx): any {
-        const getUserSession = async (
-          req: NextApiRequest,
-          res: NextApiResponse
-        ) => {
-          const user = await getUser(req, res);
-          if (!user) throw new AuthenticationError('Unauthenticated');
+        const getUserSession = async () => {
+          const cookie = await getCookie(ctx.req, ctx.res);
+          if (!cookie)
+            return {
+              user: null,
+              token: '',
+            };
+          const cookiePayload = await getUser(cookie);
+          if (!cookiePayload)
+            return {
+              user: null,
+              token: '',
+            };
+          const user = await getUserProfile(cookiePayload.id);
+          if (!user)
+            return {
+              user: null,
+              token: '',
+            };
 
-          return getUserProfile(user.id);
+          const token = await signToken(cookiePayload.id, user.role);
+
+          setCookie(ctx.req, ctx.res, token);
+          return {
+            user,
+            token,
+          };
         };
-        return getUserSession(ctx.req, ctx.res);
+
+        return getUserSession();
       },
     });
   },

@@ -3,16 +3,20 @@ import { createContext } from 'react';
 
 const AuthContext = createContext({
   session: {
-    loading:true,
+    loading: true,
     user: null,
+    token: '',
   },
-  setSession(user: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: 'ADMIN' | 'USER';
-  }){},
-  resetSession(){} ,
+  setSession(authPayload: {
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      role: 'ADMIN' | 'USER';
+    };
+    token: string;
+  }) {},
+  resetSession() {},
 });
 export default AuthContext;

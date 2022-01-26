@@ -2,7 +2,7 @@ import '../styles/globals.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { ReactNode } from 'react';
-import type { AppProps } from 'next/app';
+
 import Head from 'next/head';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,12 +11,11 @@ import theme from '../styles/theme';
 import createEmotionCache from '../styles/createEmotionCache';
 import { client } from '../lib/apollo';
 import { ApolloProvider } from '@apollo/client';
-import { WithLayoutPage } from '@/interfaces/index';
+
 import AuthProvider from '../context/AuthProvider';
 import LoadingBar from '@/components/layouts/LoadingBar';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
-
 
 function MyApp(props: any) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;

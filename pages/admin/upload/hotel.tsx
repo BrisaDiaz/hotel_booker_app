@@ -12,7 +12,7 @@ import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import { prisma } from '@/lib/prisma';
 import { CREATE_HOTEL } from '@/queries/index';
 import type { Hotel } from '@/interfaces/index';
-import useNotification from '@/hooks/useNotification'
+import useNotification from '@/hooks/useNotification';
 type Option = {
   id: number;
   name: string;
@@ -37,23 +37,23 @@ const HotelUploadPage: any = ({
   const router = useRouter();
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const { notification,notify} = useNotification({autoClean:true})
-    
+  const { notification, notify } = useNotification({ autoClean: true });
+
   const [createHotel] = useMutation(CREATE_HOTEL, {
     onCompleted: () => {
       setIsLoading(false);
-      notify({type:'success',content:'Hotel created successfully'});
+      notify({ type: 'success', content: 'Hotel created successfully' });
     },
-    onError: ({message}) => {
-      console.log(message)
+    onError: ({ message }) => {
+      console.log(message);
       setIsLoading(false);
-      notify({type:'error',content:"Hotel couldn't be created, please try later"});
+      notify({
+        type: 'error',
+        content: "Hotel couldn't be created, please try later",
+      });
     },
   });
 
-
-
-  
   type HotelVariables = Modify<
     Hotel,
     {
@@ -61,7 +61,6 @@ const HotelUploadPage: any = ({
       interiorImage: File;
     }
   >;
-
 
   const onSubmit = async (hotelVariables: HotelVariables) => {
     if (!authContext.session.user) return router.push('/signin');
@@ -74,11 +73,13 @@ const HotelUploadPage: any = ({
     setIsLoading(true);
 
     try {
-
       const images = await uploadToCloudinary(toUploadImages);
       if (!images.length) {
         setIsLoading(false);
-        return notify({type:'error',content:'There was an error on the images upload'});
+        return notify({
+          type: 'error',
+          content: 'There was an error on the images upload',
+        });
       }
 
       await createHotel({
@@ -86,22 +87,25 @@ const HotelUploadPage: any = ({
           ...hotelVariables,
           interiorImage: images[0].secure_url,
           frameImage: images[1].secure_url,
-          userId: authContext.session.user.id,
+          token: authContext.session.token,
         },
       });
     } catch (err: any) {
       setIsLoading(false);
-      notify({type:'error',content:"Hotel couldn't be created, try later"});
+      notify({
+        type: 'error',
+        content: "Hotel couldn't be created, try later",
+      });
       console.log(err);
     }
   };
-  
 
-React.useEffect(() => {
-if (!authContext.session.loading && !authContext.session.user)  router.push('/signin');
-}, [authContext])
+  React.useEffect(() => {
+    if (!authContext.session.loading && !authContext.session.user)
+      router.push('/signin');
+  }, [authContext]);
 
- if (authContext.session.loading) return <Backdrop loading={true} />;
+  if (authContext.session.loading) return <Backdrop loading={true} />;
   return (
     <div>
       <Head>
@@ -111,7 +115,6 @@ if (!authContext.session.loading && !authContext.session.user)  router.push('/si
       </Head>
 
       <main>
-  
         {notification.content && (
           <SnackBar
             severity={notification.type}
@@ -137,7 +140,7 @@ HotelUploadPage.getLayout = function getLayout(page: React.ReactNode) {
 };
 export default HotelUploadPage;
 
-export const getStaticProps = async ()=> {
+export const getStaticProps = async () => {
   const activitiesRequest = prisma.activity.findMany({});
   const servicesRequest = prisma.service.findMany({});
   const facilitiesRequest = prisma.facility.findMany({});
@@ -155,21 +158,20 @@ export const getStaticProps = async ()=> {
     servicesRequest,
     languagesRequest,
     categoriesRequest,
-  
   ]);
 
   const props = {
-    facilitiesList:JSON.parse (JSON.stringify(facilitiesList)),
-    activitiesList:JSON.parse ( JSON.stringify(activitiesList)),
-    servicesList:JSON.parse ( JSON.stringify(servicesList)),
-    languagesList:JSON.parse ( JSON.stringify(languagesList)),
-    hotelCategoriesList: JSON.parse (JSON.stringify(hotelCategoriesList)),
+    facilitiesList: JSON.parse(JSON.stringify(facilitiesList)),
+    activitiesList: JSON.parse(JSON.stringify(activitiesList)),
+    servicesList: JSON.parse(JSON.stringify(servicesList)),
+    languagesList: JSON.parse(JSON.stringify(languagesList)),
+    hotelCategoriesList: JSON.parse(JSON.stringify(hotelCategoriesList)),
   };
 
   return {
     props: {
       ...props,
-       revalidate: 60,
+      revalidate: 60,
     },
   };
 };

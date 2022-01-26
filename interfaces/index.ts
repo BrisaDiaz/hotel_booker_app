@@ -21,8 +21,8 @@ export type WithQuantityFeature = {
 };
 export interface Image {
   id: number;
-albumId:number;
-src:string
+  albumId: number;
+  src: string;
 }
 export interface RoomModel {
   id: number;
@@ -45,10 +45,9 @@ export interface RoomModel {
   services: Feature[];
   beds: WithQuantityFeature[];
   rooms: { id: string; number: number }[];
-    miniatures:Image[]
-  imagesCount:number
+  miniatures: Image[];
+  imagesCount: number;
 }
-
 
 export interface Hotel {
   id: number;
@@ -80,8 +79,8 @@ export interface Hotel {
   services: Feature[];
   languages: Feature[];
   roomModels: RoomModel[];
-  miniatures:Image[]
-  imagesCount:number
+  miniatures: Image[];
+  imagesCount: number;
 }
 export interface RoomBuildierVariables {
   hotelId?: number;
@@ -102,7 +101,8 @@ export interface RoomBuildierVariables {
   taxesAndCharges?: number;
 }
 export interface SessionPayload {
-  loading:boolean;
+  loading: boolean;
+  token: string;
   user: {
     id: number;
     firstName: string;
@@ -168,7 +168,7 @@ export interface Booking {
   paymentMethod: string;
   specifications: number;
   clientId: number;
-  client:HotelGuest;
+  client: HotelGuest;
   checkInDate: string;
   checkOutDate: string;
   status: string;
@@ -193,11 +193,11 @@ export interface Album {
   id: number;
   createdAt: string;
   hotelId: number;
-  roomModelId: number|null;
-  name:string;
+  roomModelId: number | null;
+  name: string;
   images: {
-    id:number,
-    src:string
+    id: number;
+    src: string;
   };
 }
 export interface BookingEvent {
@@ -215,7 +215,8 @@ export interface BookingResourceMap {
   resourceId: number;
   resourceTitle: string;
 }
-export type WithLayoutPage<P =null> = NextPage<P> & {
+export type WithLayoutPage<P = null> = NextPage<P> & {
   getLayout?: (page: React.ReactNode) => React.ReactNode;
 };
+
 export type Modify<T, R> = Omit<T, keyof R> & R;

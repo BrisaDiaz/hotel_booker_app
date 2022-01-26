@@ -20,11 +20,11 @@ export default function MultilineTextFields(props: {
   facilities: Feature[];
   languages: Feature[];
   hotelCategories: Feature[];
-  submitHandler: (formData:any)=>void;
+  submitHandler: (formData: any) => void;
 }) {
   const { services, activities, facilities, languages, hotelCategories } =
     props;
-const  [resetCount, setResetCount] = React.useState(0)
+  const [resetCount, setResetCount] = React.useState(0);
 
   const {
     register,
@@ -33,29 +33,42 @@ const  [resetCount, setResetCount] = React.useState(0)
     setError,
     clearErrors,
     getValues,
-     formState,
+    formState,
     formState: { errors },
   } = useForm({ mode: 'onChange' });
-React.useEffect(() => {
-  if(!formState.isValidating) return 
-  if(!getValues('policiesAndRules') ){
- setError('policiesAndRules',{
-  type:'required',
-  message:'The policies and rules are required'
-})}else{
-  clearErrors('policiesAndRules');
-}
-if(!getValues('description')){
-setError('description',{
-  type:'required',
-  message:'A description is required'
-})}else{
-clearErrors('description');
-}
-}, [formState.isValidating])
+  React.useEffect(() => {
+    if (!formState.isValidating) return;
+    if (!getValues('policiesAndRules')) {
+      setError('policiesAndRules', {
+        type: 'required',
+        message: 'The policies and rules are required',
+      });
+    } else {
+      clearErrors('policiesAndRules');
+    }
+    if (!getValues('description')) {
+      setError('description', {
+        type: 'required',
+        message: 'A description is required',
+      });
+    } else {
+      clearErrors('description');
+    }
+    if (
+      getValues('frameImage')[0] &&
+      getValues('frameImage')[0]?.name === getValues('interiorImage')[0]?.name
+    ) {
+      setError('interiorImage', {
+        type: 'manual',
+        message: 'The facade e interior images must be differents.',
+      });
+    } else {
+      clearErrors('interiorImage');
+    }
+  }, [formState.isValidating]);
   const submitMiddleware = async (data: any, e: any) => {
     e.preventDefault();
-  
+
     const hotelVariables = {
       name: data.name,
       telephone: data.telephone,
@@ -100,13 +113,12 @@ clearErrors('description');
       autoComplete="off"
       onSubmit={handleSubmit(submitMiddleware)}
     >
-
       <AboutSection
         register={register}
         setValue={setValue}
         hotelCategories={hotelCategories}
         errors={errors}
-  resetCount={resetCount}
+        resetCount={resetCount}
       />
       <PriceSection register={register} errors={errors} />
       <ContactSection register={register} errors={errors} />
@@ -120,10 +132,21 @@ clearErrors('description');
         facilities={facilities}
       />
 
-      <PoliciesSection register={register} errors={errors}   setValue={setValue}   resetCount={resetCount}/>
-      <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors} resetCount={resetCount}/>
+      <PoliciesSection
+        register={register}
+        errors={errors}
+        setValue={setValue}
+        resetCount={resetCount}
+      />
+      <AspectSection
+        register={register}
+        errors={errors}
+        setError={setError}
+        clearErrors={clearErrors}
+        resetCount={resetCount}
+      />
 
-      <FormBottons onAbort={()=>setResetCount(resetCount+1)}/>
+      <FormBottons onAbort={() => setResetCount(resetCount + 1)} />
     </Box>
   );
 }

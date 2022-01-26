@@ -10,7 +10,7 @@ import {
   floatArg,
   inputObjectType,
 } from 'nexus';
-import { verifyIsHotelAdmin, deleteImage } from '../utils/index';
+import { verifyIsHotelAdmin, deleteImage, getUser } from '../utils/index';
 import { prisma } from '../../lib/prisma';
 
 export const Amenity = objectType({
@@ -191,7 +191,7 @@ export const Mutation = extendType({
     t.field('creatHotelRoomModel', {
       type: 'RoomModel',
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         hotelId: nonNull(idArg()),
         lowestPrice: nonNull(floatArg()),
         taxesAndCharges: nonNull(floatArg()),
@@ -212,14 +212,14 @@ export const Mutation = extendType({
       },
       resolve(root, args, ctx): any {
         const hotelId = parseInt(args.hotelId);
-        const userId = parseInt(args.userId);
 
         const createHotelRoomModel = async (
-          userId: number,
+          token: string,
           hotelId: number,
           args: any
         ) => {
-          await verifyIsHotelAdmin(userId, hotelId);
+          const user = await getUser(token);
+          await verifyIsHotelAdmin(user.id, hotelId);
           const roomModel = await prisma.roomModel.create({
             data: {
               hotel: { connect: { id: hotelId } },
@@ -268,14 +268,14 @@ export const Mutation = extendType({
           await Promise.all(roomBeds);
           return roomModel;
         };
-        return createHotelRoomModel(userId, hotelId, args);
+        return createHotelRoomModel(args.token, hotelId, args);
       },
     });
 
     t.field('updateRoomModel', {
       type: 'RoomModel',
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         hotelId: nonNull(idArg()),
         roomModelId: nonNull(idArg()),
         lowestPrice: floatArg(),
@@ -297,12 +297,13 @@ export const Mutation = extendType({
       },
       resolve(root, args, ctx): any {
         const updateRoomModel = async (
-          userId: number,
+          token: string,
           hotelId: number,
           roomModelId: number,
           args: any
         ) => {
-          await verifyIsHotelAdmin(userId, hotelId);
+          const user = await getUser(token);
+          await verifyIsHotelAdmin(user.id, hotelId);
           let mainImage;
           if (args.mainImage) {
             const roomModel = await prisma.roomModel.findUnique({
@@ -379,7 +380,7 @@ export const Mutation = extendType({
           });
         };
         return updateRoomModel(
-          parseInt(args.userId),
+          args.token,
           parseInt(args.hotelId),
           parseInt(args.roomModelId),
           args
@@ -390,23 +391,24 @@ export const Mutation = extendType({
     t.field('addRoomToModel', {
       type: list('Room'),
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         hotelId: nonNull(idArg()),
         roomModelId: nonNull(idArg()),
         roomNumbers: nonNull(list(nonNull(intArg()))),
       },
       resolve: (root, args, ctx): any => {
-        const userId = parseInt(args.userId);
+        const userId = args.token;
         const hotelId = parseInt(args.hotelId);
         const roomModelId = parseInt(args.roomModelId);
 
         const deleteRooms = async (
-          userId: number,
+          token: string,
           hotelId: number,
           roomModelId: number,
           roomNumbers: number[]
         ) => {
-          await verifyIsHotelAdmin(userId, hotelId);
+          const user = await getUser(token);
+          await verifyIsHotelAdmin(user.id, hotelId);
           const roomsInHotel = await prisma.room.findMany({
             where: {
               hotelId: hotelId,
@@ -444,23 +446,23 @@ export const Mutation = extendType({
     t.field('deleteRoomOfModel', {
       type: list('Room'),
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         hotelId: nonNull(idArg()),
         roomModelId: nonNull(idArg()),
         roomsIds: nonNull(list(nonNull(intArg()))),
       },
       resolve: (root, args, ctx): any => {
-        const userId = parseInt(args.userId);
         const hotelId = parseInt(args.hotelId);
         const roomModelId = parseInt(args.roomModelId);
 
         const deleteRooms = async (
-          userId: number,
+          token: string,
           hotelId: number,
           roomModelId: number,
           roomsIds: number[]
         ) => {
-          await verifyIsHotelAdmin(userId, hotelId);
+          const user = await getUser(token);
+          await verifyIsHotelAdmin(user.id, hotelId);
 
           await prisma.room.deleteMany({
             where: {
@@ -474,7 +476,7 @@ export const Mutation = extendType({
             },
           });
         };
-        return deleteRooms(userId, hotelId, roomModelId, args.roomsIds);
+        return deleteRooms(args.token, hotelId, roomModelId, args.roomsIds);
       },
     });
   },

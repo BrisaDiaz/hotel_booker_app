@@ -60,7 +60,7 @@ console.log(message)
         variables: {
           ...variables,
           hotelId: hotelId,
-          userId: authContext.session.user.id,
+          token:authContext.session.token,
           mainImage: mainImageData.secure_url,
         },
       });

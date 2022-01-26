@@ -16,16 +16,18 @@ import ImageList from '@mui/material/ImageList';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Paper from '@mui/material/Paper';
 import CloseButton from '@/components/modals/CloseButton';
-import currencyFixer from '@/utils/currencyFixer'
+import currencyFixer from '@/utils/currencyFixer';
+import { generateImageUrl } from '@/utils/generateImageUrl';
+import Image from 'next/image';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modal: {
-      position: 'absolute' ,
+      position: 'absolute',
       borderRadius: theme.spacing(1),
       top: '50%',
       left: '50%',
       fontWeight: 200,
-         background: '#efefef',
+      background: '#efefef',
       transform: 'translate(-50%, -50%)',
       minWidth: 360,
       width: '100%',
@@ -38,7 +40,6 @@ const useStyles = makeStyles((theme: Theme) =>
       maxHeight: '100%',
 
       overflowY: 'auto',
-     
     },
     modalContent: {
       '& > section': {
@@ -95,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(1),
       paddingTop: theme.spacing(0.5),
       paddingBottom: theme.spacing(0.5),
-   
+
       '& > *': {
         fontWeight: 600,
       },
@@ -117,31 +118,28 @@ const EditButton = ({ onClick }: { onClick: React.MouseEventHandler }) => {
     </Tooltip>
   );
 };
- type SectionToEdit =
-    | 'about'
-    | 'price'
-    | 'aspect'
-    | 'features'
-    | 'capacity'
-    | '';
+type SectionToEdit =
+  | 'about'
+  | 'price'
+  | 'aspect'
+  | 'features'
+  | 'capacity'
+  | '';
 type ComponentProps = {
   isOpen: boolean;
-  onClose: ()=>void;
-  onEdit:  (sectionName:SectionToEdit)=>void;
+  onClose: () => void;
+  onEdit: (sectionName: SectionToEdit) => void;
   roomType: RoomModel | null;
 };
 
 function TransitionsModal(props: ComponentProps) {
   const { isOpen, onClose, onEdit, roomType } = props;
 
-
   const classes = useStyles();
 
-
   const handleClose = () => {
-onClose();
+    onClose();
   };
-
 
   if (!isOpen || !roomType) return <div />;
   const aditionalQualities = [];
@@ -200,12 +198,15 @@ onClose();
                   cols={1}
                 >
                   <ImageListItem cols={1}>
-                    <img
-                    
+                    <Image
+                      placeholder="blur"
                       src={`${roomType.mainImage}`}
-                      srcSet={`${roomType.mainImage}`}
                       alt={`${roomType.name}`}
                       loading="lazy"
+                      blurDataURL={generateImageUrl(roomType.mainImage, {
+                        quality: 10,
+                      })}
+                      layout="fill"
                     />
                   </ImageListItem>
                 </ImageList>
@@ -246,8 +247,10 @@ onClose();
                     >
                       Description
                     </Typography>
-                    <Box sx={{fontSize:'14px'}}  dangerouslySetInnerHTML={{__html: roomType.description}}/>
-                    
+                    <Box
+                      sx={{ fontSize: '14px' }}
+                      dangerouslySetInnerHTML={{ __html: roomType.description }}
+                    />
                   </Box>
                 </Box>
 
@@ -349,7 +352,9 @@ onClose();
                     >
                       Lowest price
                     </Typography>
-                    <Typography>USD {currencyFixer(roomType.lowestPrice)}</Typography>
+                    <Typography>
+                      USD {currencyFixer(roomType.lowestPrice)}
+                    </Typography>
                   </Box>
 
                   <Box className={classes.rowField}>
@@ -360,7 +365,9 @@ onClose();
                     >
                       Taxes and Charges
                     </Typography>
-                    <Typography>USD {currencyFixer(roomType.taxesAndCharges)}</Typography>
+                    <Typography>
+                      USD {currencyFixer(roomType.taxesAndCharges)}
+                    </Typography>
                   </Box>
                   <Box className={classes.rowField}>
                     <Typography
@@ -370,7 +377,9 @@ onClose();
                     >
                       Cancelation Fee
                     </Typography>
-                    <Typography>USD {currencyFixer(roomType.cancelationFee)}</Typography>
+                    <Typography>
+                      USD {currencyFixer(roomType.cancelationFee)}
+                    </Typography>
                   </Box>
                 </Box>
 

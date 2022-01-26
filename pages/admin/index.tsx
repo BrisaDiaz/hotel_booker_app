@@ -1,12 +1,12 @@
 import React from 'react';
-import type {  NextApiRequest, NextApiResponse } from 'next';
-import { getUser } from '@/graphql/utils';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getCookie } from '@/graphql/utils';
 import { client } from '@/lib/apollo';
 import { GET_ADMIN_HOTELS, GET_HOTEL_BY_ID } from '@/queries/index';
 import { useLazyQuery } from '@apollo/client';
 import { Hotel } from '@/interfaces/index';
 import SnackBar from '@/components/SnackBar';
-import { useMutation} from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import {
   GET_ALL_SERVICES,
@@ -26,7 +26,7 @@ import Box from '@mui/material/Box';
 import ActionCard from '@/components/dashboard/ActionCard';
 import HotelCard from '@/components/dashboard/HotelCard';
 import HotelModal from '@/components/modals/HotelModal';
-import useNotification from '@/hooks/useNotification'
+import useNotification from '@/hooks/useNotification';
 type SectionToEdit =
   | 'about'
   | 'contact'
@@ -37,6 +37,7 @@ type SectionToEdit =
   | 'address'
   | '';
 type PageProps = {
+  token: string;
   hotels: Array<{
     id: number;
     name: string;
@@ -48,13 +49,12 @@ type PageProps = {
     };
   }>;
   hotelsCount: number;
-  userId: number;
 };
 
 const Dashboard: WithLayoutPage<PageProps> = ({
   hotels,
   hotelsCount,
-  userId,
+  token,
 }) => {
   const router = useRouter();
   const cardData = {
@@ -70,7 +70,6 @@ const Dashboard: WithLayoutPage<PageProps> = ({
     ],
   };
 
-
   const [isHotelModalOpen, setIsHotelModalOpen] =
     React.useState<boolean>(false);
   const [hotelCards, setHotelCards] =
@@ -81,7 +80,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
   );
 
   const [toEditSection, setToEditSection] = React.useState<SectionToEdit>('');
-  const { notification,notify} = useNotification({autoClean:true})
+  const { notification, notify } = useNotification({ autoClean: true });
   const formRef = React.useRef(null);
   const [getHotelToEdit, hotelDataRequest] = useLazyQuery(GET_HOTEL_BY_ID, {
     fetchPolicy: 'no-cache',
@@ -98,16 +97,51 @@ const Dashboard: WithLayoutPage<PageProps> = ({
     onCompleted: ({ hotel }: { hotel: Hotel }) => {
       setToEditHotelData(hotel);
       ///// update hotel card data
-if(! toEditHotelData) return
-toEditSection === 'about'  ? setToEditHotelData({...toEditHotelData,description:hotel.description,brand: hotel.brand,category:hotel.category,name:hotel.name}):toEditSection === 'address' ? setToEditHotelData({...toEditHotelData,address:hotel.address}):toEditSection === 'price'? setToEditHotelData({...toEditHotelData,lowestPrice:hotel.lowestPrice,taxesAndCharges:hotel.taxesAndCharges}):toEditSection === 'aspect'? setToEditHotelData({...toEditHotelData,frameImage:hotel.frameImage,interiorImage:hotel.interiorImage}):toEditSection === 'features'? setToEditHotelData({...toEditHotelData,services:hotel.services,activities:hotel.activities,languages:hotel.languages,facilities:hotel.facilities,features:hotel.features}):toEditSection === 'policies'? setToEditHotelData({...toEditHotelData,
-checkInHour:hotel.checkInHour,
-checkOutHour:hotel.checkOutHour,
-policiesAndRules:hotel.policiesAndRules
-}):setToEditHotelData({...toEditHotelData,
-telephone:hotel.telephone,
-email:hotel.email,
-website:hotel.website
-})
+      if (!toEditHotelData) return;
+      toEditSection === 'about'
+        ? setToEditHotelData({
+            ...toEditHotelData,
+            description: hotel.description,
+            brand: hotel.brand,
+            category: hotel.category,
+            name: hotel.name,
+          })
+        : toEditSection === 'address'
+        ? setToEditHotelData({ ...toEditHotelData, address: hotel.address })
+        : toEditSection === 'price'
+        ? setToEditHotelData({
+            ...toEditHotelData,
+            lowestPrice: hotel.lowestPrice,
+            taxesAndCharges: hotel.taxesAndCharges,
+          })
+        : toEditSection === 'aspect'
+        ? setToEditHotelData({
+            ...toEditHotelData,
+            frameImage: hotel.frameImage,
+            interiorImage: hotel.interiorImage,
+          })
+        : toEditSection === 'features'
+        ? setToEditHotelData({
+            ...toEditHotelData,
+            services: hotel.services,
+            activities: hotel.activities,
+            languages: hotel.languages,
+            facilities: hotel.facilities,
+            features: hotel.features,
+          })
+        : toEditSection === 'policies'
+        ? setToEditHotelData({
+            ...toEditHotelData,
+            checkInHour: hotel.checkInHour,
+            checkOutHour: hotel.checkOutHour,
+            policiesAndRules: hotel.policiesAndRules,
+          })
+        : setToEditHotelData({
+            ...toEditHotelData,
+            telephone: hotel.telephone,
+            email: hotel.email,
+            website: hotel.website,
+          });
 
       if (
         toEditSection === 'about' ||
@@ -138,12 +172,10 @@ website:hotel.website
         type: 'success',
       });
       setToEditSection('');
-      
     },
     onError: (graphError) => {
       setIsLoading(false);
       notify({ content: graphError.message, type: 'error' });
-      
     },
   });
 
@@ -209,18 +241,18 @@ website:hotel.website
           await updateHotel({
             variables: {
               hotelId: toEditHotelData.id,
+              token,
               interiorImage: images[1].secure_url,
               frameImage: images[0].secure_url,
-              userId: userId,
             },
           });
         }
       }
       return await updateHotel({
         variables: {
+          token,
           hotelId: toEditHotelData.id,
           ...hotelVariables,
-          userId: userId,
         },
       });
     } catch (err: any) {
@@ -269,12 +301,7 @@ website:hotel.website
           }}
         >
           {hotelCards.map((hotel) => (
-            <HotelCard
-              key={hotel.id}
-              hotel={hotel}
-      
-              onEdit={openHotelModal}
-            />
+            <HotelCard key={hotel.id} hotel={hotel} onEdit={openHotelModal} />
           ))}
         </Box>
 
@@ -324,23 +351,21 @@ export const getServerSideProps = async ({
   res: NextApiResponse;
 }) => {
   try {
-    const user = await getUser(req, res);
-
+    const token = getCookie(req, res);
     const { data } = await client.query({
       query: GET_ADMIN_HOTELS,
-      variables: { userId: user.id },
+      variables: { token },
     });
 
     return {
       props: {
         hotels: data?.adminHotels.hotels,
         hotelsCount: data?.adminHotels.hotelsCount,
-        userId: user.id,
+        token,
       },
     };
   } catch (e) {
     console.log(e);
-
     return {
       redirect: {
         permanent: false,

@@ -11,13 +11,10 @@ import {
 import { prisma } from '@/lib/prisma';
 
 export interface User {
-  id: Number;
-  role: Role;
+  id: number;
+  role: 'ADMIN' | 'USER';
 }
-enum Role {
-  ADMIN,
-  USER,
-}
+
 type Token = {
   user: User;
 };
@@ -42,7 +39,9 @@ export function setCookie(
 ) {
   const cookies = new Cookies(req, res);
   cookies.set('bookingApp-token', token, {
-    httpOnly: true, // true by default
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== 'development',
+    maxAge: 60 * 60 * 24 * 31,
   });
 }
 export function getCookie(req: NextApiRequest, res: NextApiResponse) {
@@ -53,29 +52,24 @@ export function deleteCookie(req: NextApiRequest, res: NextApiResponse) {
   const cookies = new Cookies(req, res);
   cookies.set('bookingApp-token');
 }
-async function verifyToken(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<Token | ApolloError> {
-  const token = getCookie(req, res);
-  if (!token) throw new AuthenticationError('Unauthenticated');
+async function verifyToken(token: string): Promise<Token | ApolloError> {
   const verifiedToken: any = await verify(token, env.APP_SECRET);
+
   if (!verifiedToken || !verifiedToken?.user)
     throw new ForbiddenError('Forbidden');
   return verifiedToken;
 }
-export async function getUser(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<User | ApolloError> {
-  const token = await verifyToken(req, res);
 
-  return token.user;
+export async function getUser(token: string): Promise<User | ApolloError> {
+  const tokenPayload = await verifyToken(token);
+
+  return tokenPayload.user;
 }
 
 export async function getAdminInfo(
   userId: number
 ): Promise<AdminPayload | ApolloError> {
+  if (!userId) throw new ForbiddenError('Unauthenticated');
   const admin = await prisma.administrator.findUnique({
     where: {
       userId: userId,
@@ -90,7 +84,7 @@ export async function getAdminInfo(
     },
   });
 
-  if (!admin) throw new ForbiddenError('Unauthenticated');
+  if (!admin) throw new ForbiddenError('Forbiden');
   return admin;
 }
 export async function getUserProfile(
@@ -112,7 +106,6 @@ export async function getUserProfile(
   return userProfile;
 }
 export async function verifyIsHotelAdmin(userId: number, hotelId: number) {
-
   const admin = await getAdminInfo(userId);
 
   const isHotelAdmin = admin.hotels.find(

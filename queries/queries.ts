@@ -164,9 +164,9 @@ export const GET_HOTEL_BY_ID = gql`
         ecoFriendly
       }
       imagesCount
-      miniatures{
-      id
-    src
+      miniatures {
+        id
+        src
       }
       roomModels {
         id
@@ -199,10 +199,10 @@ export const GET_ROOM_MODEL_BY_ID = gql`
       name
       mts2
       mainImage
-          imagesCount
-      miniatures{
-      id
-    src
+      imagesCount
+      miniatures {
+        id
+        src
       }
       lowestPrice
       taxesAndCharges
@@ -230,8 +230,8 @@ export const GET_ROOM_MODEL_BY_ID = gql`
   }
 `;
 export const GET_ADMIN_HOTELS = gql`
-  query adminHotels($userId: ID!) {
-    adminHotels(userId: $userId) {
+  query adminHotels($token: String!) {
+    adminHotels(token: $token) {
       hotels {
         id
         name
@@ -247,8 +247,8 @@ export const GET_ADMIN_HOTELS = gql`
   }
 `;
 export const GET_DASHBOARD_HOTEL_DATA = gql`
-  query hotelData($userId: ID!, $hotelId: ID!) {
-    hotelData(userId: $userId, hotelId: $hotelId) {
+  query hotelData($token: String!, $hotelId: ID!) {
+    hotelData(token: $token, hotelId: $hotelId) {
       roomModels {
         id
         name
@@ -277,14 +277,14 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
 `;
 export const GET_HOTEL_BOOKING_REQUESTS = gql`
   query hotelRequests(
-    $userId: ID!
+    $token: String!
     $hotelId: ID!
     $take: Int
     $skip: Int
     $search: searchFilter
   ) {
     results: hotelRequests(
-      userId: $userId
+      token: $token
       hotelId: $hotelId
       take: $take
       skip: $skip
@@ -330,14 +330,14 @@ export const GET_HOTEL_BOOKING_REQUESTS = gql`
 export const GET_HOTEL_GUESTS = gql`
   query hotelGuests(
     $hotelId: ID!
-    $userId: ID!
+    $token: String!
     $skip: Int
     $take: Int
     $search: searchFilter
   ) {
     results: hotelGuests(
       hotelId: $hotelId
-      userId: $userId
+      token: $token
       skip: $skip
       take: $take
       search: $search
@@ -365,11 +365,14 @@ export const GET_HOTEL_GUESTS = gql`
 export const GET_USER_SESSION = gql`
   query authentication {
     authentication {
-      id
-      firstName
-      lastName
-      email
-      role
+      user {
+        id
+        firstName
+        lastName
+        email
+        role
+      }
+      token
     }
   }
 `;
@@ -395,14 +398,14 @@ export const MAKE_ROOM_CONSULT = gql`
 export const GET_HOTEL_BOOKINGS = gql`
   query hotelBookings(
     $hotelId: ID!
-    $userId: ID!
+    $token: String!
     $status: String
     $from: String
     $until: String
   ) {
     bookings: hotelBookings(
       hotelId: $hotelId
-      userId: $userId
+      token: $token
       status: $status
       from: $from
       until: $until
@@ -433,8 +436,8 @@ export const GET_HOTEL_ROOM_MODELS_LIST = gql`
 `;
 
 export const GET_BOOKING_BY_ID = gql`
-  query bookingById($bookingId: ID!, $userId: ID!) {
-    booking: bookingById(bookingId: $bookingId, userId: $userId) {
+  query bookingById($bookingId: ID!, $token: String!) {
+    booking: bookingById(bookingId: $bookingId, token: $token) {
       id
       clientId
       specifications
@@ -489,33 +492,33 @@ export const GET_BOOKING_CANCELATION_DETAILS = gql`
 export const GET_HOTEL_ALBUMS = gql`
   query hotelAlbums($hotelId: ID!) {
     albums: hotelAlbums(hotelId: $hotelId) {
-   id
-   name
-   roomModelId
+      id
+      name
+      roomModelId
     }
   }
 `;
 export const GET_ALBUM_IMAGES = gql`
   query albumImages($albumId: ID!) {
     images: albumImages(albumId: $albumId) {
-   id
-  src
+      id
+      src
     }
   }
 `;
 export const GET_HOTEL_IMAGES = gql`
   query hotelImages($hotelId: ID!) {
     images: hotelImages(hotelId: $hotelId) {
-   id
-  src
+      id
+      src
     }
   }
 `;
 export const GET_ROOM_MODEL_IMAGES = gql`
   query roomModelImages($roomModelId: ID!) {
     images: roomModelImages(roomModelId: $roomModelId) {
-   id
-  src
+      id
+      src
     }
   }
 `;

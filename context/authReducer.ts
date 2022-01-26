@@ -10,7 +10,7 @@ export default function authReducer(state: any, action: Action) {
     return action.payload;
   }
   if (action.type === RESET_SESSION) {
-    return {loading:false, user: null };
+    return { loading: false, user: null, token: '' };
   }
   return state;
 }

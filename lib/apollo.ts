@@ -10,16 +10,22 @@ const isBrowser = typeof window !== undefined;
 const httpLink = createHttpLink({
   uri: env.BACKEND_URL,
 
-  credentials: 'include',
+  credentials: 'same-origin',
 });
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
+  let token;
+
+  if (typeof window !== 'undefined') {
+    token = localStorage.getItem('token');
+  }
 
   return {
     headers: {
       ...headers,
+      authorization: token ? `Bearer ${token}` : '',
     },
   };
 });

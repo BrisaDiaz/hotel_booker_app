@@ -23,7 +23,7 @@ export interface Props {
   guestsCount: number;
   requestsCount: number;
   hotelId: number;
-  userId: number;
+  token: string;
 }
 export default function useHotelDashboard({
   roomModels,
@@ -32,7 +32,7 @@ export default function useHotelDashboard({
   guestsCount,
   requestsCount,
   hotelId,
-  userId,
+  token,
 }: Props) {
   const router = useRouter();
   function generateCardsData({
@@ -390,7 +390,7 @@ export default function useHotelDashboard({
     if (!roomNumbers.length) return null;
     const variables = {
       hotelId,
-      userId,
+      token,
       roomModelId: selectedRoomTypeId,
       roomNumbers,
     };
@@ -404,7 +404,7 @@ export default function useHotelDashboard({
     if (!toDeleteRoomsIds.length) return null;
     const variables = {
       hotelId,
-      userId,
+      token,
       roomModelId: selectedRoomTypeId,
       roomsIds: toDeleteRoomsIds,
     };
@@ -417,7 +417,7 @@ export default function useHotelDashboard({
   const onCreateBooking = async (data: any) => {
     const variables = {
       hotelId,
-      userId,
+      token,
       roomModelId: selectedRoomTypeId,
       ...data,
     };
@@ -440,7 +440,7 @@ export default function useHotelDashboard({
         variables: {
           ...variables,
           hotelId: hotelId,
-          userId: userId,
+          token: token,
           roomModelId: selectedRoomTypeId,
         },
       });

@@ -10,6 +10,7 @@ export const SIGN_OUT = gql`
 export const SIGN_IN = gql`
   mutation signin($email: String!, $password: String!) {
     signin(email: $email, password: $password) {
+      token
       user {
         id
         firstName
@@ -41,7 +42,7 @@ export const SIGN_UP = gql`
 `;
 export const CREATE_HOTEL = gql`
   mutation createHotel(
-    $userId: ID!
+    $token: String!
     $name: String!
     $brand: String!
     $category: String!
@@ -74,7 +75,7 @@ export const CREATE_HOTEL = gql`
     $street: String!
   ) {
     createHotel(
-      userId: $userId
+      token: $token
       name: $name
       telephone: $telephone
       email: $email
@@ -112,7 +113,7 @@ export const CREATE_HOTEL = gql`
 `;
 export const UPDATE_HOTEL = gql`
   mutation updateHotel(
-    $userId: ID!
+    $token: String!
     $hotelId: ID!
     $name: String
     $brand: String
@@ -146,7 +147,7 @@ export const UPDATE_HOTEL = gql`
     $street: String
   ) {
     hotel: updateHotel(
-      userId: $userId
+      token: $token
       hotelId: $hotelId
       name: $name
       telephone: $telephone
@@ -227,7 +228,7 @@ export const UPDATE_HOTEL = gql`
 
 export const CREATE_ROOM_MODEL = gql`
   mutation creatHotelRoomModel(
-    $userId: ID!
+    $token: String!
     $hotelId: ID!
     $lowestPrice: Float!
     $cancelationFee: Float
@@ -247,7 +248,7 @@ export const CREATE_ROOM_MODEL = gql`
     $amenities: [String]!
   ) {
     creatHotelRoomModel(
-      userId: $userId
+      token: $token
       hotelId: $hotelId
       lowestPrice: $lowestPrice
       taxesAndCharges: $taxesAndCharges
@@ -273,7 +274,7 @@ export const CREATE_ROOM_MODEL = gql`
 `;
 export const UPDATE_ROOM_MODEL = gql`
   mutation updateRoomModel(
-    $userId: ID!
+    $token: String!
     $hotelId: ID!
     $roomModelId: ID!
     $lowestPrice: Float
@@ -294,7 +295,7 @@ export const UPDATE_ROOM_MODEL = gql`
     $amenities: [String]
   ) {
     roomModel: updateRoomModel(
-      userId: $userId
+      token: $token
       hotelId: $hotelId
       roomModelId: $roomModelId
       lowestPrice: $lowestPrice
@@ -352,13 +353,13 @@ export const UPDATE_ROOM_MODEL = gql`
 `;
 export const ADD_ROOMS_TO_MODEL = gql`
   mutation addRoomToModel(
-    $userId: ID!
+    $token: String!
     $hotelId: ID!
     $roomModelId: ID!
     $roomNumbers: [Int!]!
   ) {
     addRoomToModel(
-      userId: $userId
+      token: $token
       hotelId: $hotelId
       roomModelId: $roomModelId
       roomNumbers: $roomNumbers
@@ -371,13 +372,13 @@ export const ADD_ROOMS_TO_MODEL = gql`
 `;
 export const DELETE_ROOMS_OF_MODEL = gql`
   mutation deleteRoomOfModel(
-    $userId: ID!
+    $token: String!
     $hotelId: ID!
     $roomModelId: ID!
     $roomsIds: [Int!]!
   ) {
     deleteRoomOfModel(
-      userId: $userId
+      token: $token
       hotelId: $hotelId
 
       roomModelId: $roomModelId
@@ -422,14 +423,14 @@ export const MAKE_BOOKING_REQUEST = gql`
 
 export const CONFIRM_BOOKING_REQUEST = gql`
   mutation confirmBookingRequest(
-    $userId: ID!
+    $token: String!
     $bookingRequestId: ID!
     $totalCost: Float!
     $paymentMethod: String!
     $roomsIds: [Int!]!
   ) {
     booking: confirmBookingRequest(
-      userId: $userId
+      token: $token
       bookingRequestId: $bookingRequestId
       totalCost: $totalCost
       paymentMethod: $paymentMethod
@@ -441,9 +442,9 @@ export const CONFIRM_BOOKING_REQUEST = gql`
 `;
 
 export const DECLINE_BOOKING_REQUEST = gql`
-  mutation declineBookingRequest($userId: ID!, $bookingRequestId: ID!) {
+  mutation declineBookingRequest($token: String!, $bookingRequestId: ID!) {
     bookingRequest: declineBookingRequest(
-      userId: $userId
+      token: $token
       bookingRequestId: $bookingRequestId
     ) {
       id
@@ -452,7 +453,7 @@ export const DECLINE_BOOKING_REQUEST = gql`
 `;
 export const MAKE_BOOKING = gql`
   mutation makeBooking(
-    $userId: ID!
+    $token: String!
     $roomModelId: ID!
     $firstName: String!
     $lastName: String!
@@ -468,7 +469,7 @@ export const MAKE_BOOKING = gql`
     $roomsIds: [Int!]!
   ) {
     booking: makeBooking(
-      userId: $userId
+      token: $token
       roomModelId: $roomModelId
       firstName: $firstName
       lastName: $lastName
@@ -489,13 +490,13 @@ export const MAKE_BOOKING = gql`
 `;
 export const CANCEL_BOOKING = gql`
   mutation cancelBooking(
-    $userId: ID!
+    $token: String!
     $bookingId: ID!
     $message: String!
     $cancelationFee: Float!
   ) {
     cancelationDetails: cancelBooking(
-      userId: $userId
+      token: $token
       bookingId: $bookingId
       message: $message
       cancelationFee: $cancelationFee
@@ -509,73 +510,50 @@ export const CANCEL_BOOKING = gql`
 `;
 export const CREATE_ALBUM = gql`
   mutation createAlbum(
-    $userId: ID!
+    $token: String!
     $hotelId: ID!
     $roomModelId: ID
     $name: String!
-    $images:[String]
+    $images: [String]
   ) {
     album: createAlbum(
-      userId: $userId
+      token: $token
       hotelId: $hotelId
       roomModelId: $roomModelId
       name: $name
 
       images: $images
     ) {
-     id
-     name
+      id
+      name
     }
   }
 `;
 export const EDIT_ALBUM = gql`
-  mutation updateAlbum(
-    $userId: ID!
-    $albumId: ID!
-    $images:[String]
-  ) {
-    album: updateAlbum(
-      userId: $userId
-      albumId: $albumId
-      images: $images
-    ) {
-     id
-     name
-     images{
-       id
-       src
-     }
+  mutation updateAlbum($token: String!, $albumId: ID!, $images: [String]) {
+    album: updateAlbum(token: $token, albumId: $albumId, images: $images) {
+      id
+      name
+      images {
+        id
+        src
+      }
     }
   }
 `;
 export const RENAME_ALBUM = gql`
-  mutation updateAlbum(
-    $userId: ID!
-    $albumId: ID!
-    $name: String
-  ) {
-    album: updateAlbum(
-      userId: $userId
-      albumId: $albumId
-      name: $name
-    ) {
-     id
-     name
+  mutation updateAlbum($token: String!, $albumId: ID!, $name: String) {
+    album: updateAlbum(token: $token, albumId: $albumId, name: $name) {
+      id
+      name
     }
   }
 `;
 export const DELETE_ALBUM = gql`
-  mutation deleteAlbum(
-    $userId: ID!
-    $albumId: ID!
-  ) {
-    album: deleteAlbum(
-      userId: $userId
-      albumId: $albumId
-      
-    ) {
-     id
-     name
+  mutation deleteAlbum($token: String!, $albumId: ID!) {
+    album: deleteAlbum(token: $token, albumId: $albumId) {
+      id
+      name
     }
   }
 `;

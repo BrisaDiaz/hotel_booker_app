@@ -20,7 +20,7 @@ import Backdrop from '@/components/Backdrop';
 import SnackBar from '@/components/SnackBar';
 import { WithLayoutPage } from '@/interfaces/index';
 import AppBar from '@/components/layouts/AppBar';
-import useNotification from '@/hooks/useNotification'
+import useNotification from '@/hooks/useNotification';
 
 function Copyright(props: any) {
   return (
@@ -43,14 +43,19 @@ function Copyright(props: any) {
 const SignIn: WithLayoutPage = () => {
   const { setSession } = useAuth();
 
-const { notification,notify} = useNotification({autoClean:true})
+  const { notification, notify } = useNotification({ autoClean: true });
   const [signIn, { loading }] = useMutation(SIGN_IN, {
-    onError: ({message}) => {
-      notify({type:'error',content:message|| "Signin couldn't be complited"});
+    onError: ({ message }) => {
+      notify({
+        type: 'error',
+        content: message || "Signin couldn't be complited",
+      });
     },
     onCompleted: (data) => {
-      const { id, email, firstName, lastName, role } = data.signin.user;
-      setSession({ id,email, firstName, lastName, role });
+      const { token, user } = data.signin;
+      const { id, email, firstName, lastName, role } = user;
+      setSession({ user: { id, email, firstName, lastName, role }, token });
+
       role === 'ADMIN' ? router.push('/admin') : router.push('/search');
     },
   });
@@ -85,15 +90,11 @@ const { notification,notify} = useNotification({autoClean:true})
           sx={{
             maxWidth: '1200px',
             mx: 'auto',
-            mt:2,
-      
+            mt: 2,
           }}
         >
           {notification.content && (
-            <SnackBar
-              severity="error"
-              message={notification.content }
-            />
+            <SnackBar severity="error" message={notification.content} />
           )}
 
           <Container component="main" maxWidth="xs">
@@ -116,7 +117,7 @@ const { notification,notify} = useNotification({autoClean:true})
                 component="form"
                 noValidate
                 onSubmit={handleSubmit(onSubmit)}
-                sx={{ mt: 3 ,      'input':{background:'#fff'}}}
+                sx={{ mt: 3, input: { background: '#fff' } }}
               >
                 <Grid container spacing={2}>
                   <Grid item xs={12}>

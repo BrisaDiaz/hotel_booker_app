@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { WithLayoutPage, HotelGuest } from '@/interfaces/index';
 import { GET_HOTEL_GUESTS } from '@/queries/index';
 import { useLazyQuery } from '@apollo/client';
-import { getUser } from '@/graphql/utils';
+import { getCookie } from '@/graphql/utils';
 import { client } from '@/lib/apollo';
 import Backdrop from '@/components/Backdrop';
 import Head from 'next/head';
@@ -14,7 +14,7 @@ import GuestsTable from '@/components/dashboard/tables/GuestsTable';
 type PagePromps = {
   guests: HotelGuest[];
   totalResults: number;
-  userId: number;
+  token: number;
   hotelId: number;
 };
 const resultsPerPage = 6;
@@ -27,7 +27,7 @@ const Guest: WithLayoutPage<PagePromps> = (props) => {
 
   const [page, setPage] = React.useState<number>(0);
   const [query, setQuery] = React.useState<{
-    userId: number;
+    token: number;
     hotelId: number;
     take: number;
     skip: number;
@@ -36,7 +36,7 @@ const Guest: WithLayoutPage<PagePromps> = (props) => {
       value: string;
     };
   }>({
-    userId: props.userId,
+    token: props.token,
     hotelId: props.hotelId,
     take: resultsPerPage,
     skip: 0,
@@ -48,7 +48,7 @@ const Guest: WithLayoutPage<PagePromps> = (props) => {
       if (!value) {
         setPage(0);
         return setQuery({
-          userId: props.userId,
+          token: props.token,
           hotelId: props.hotelId,
           take: resultsPerPage,
           skip: 0,
@@ -74,8 +74,7 @@ const Guest: WithLayoutPage<PagePromps> = (props) => {
       });
     }
   };
-  const [searchGuest, { data, loading }] =
-    useLazyQuery(GET_HOTEL_GUESTS);
+  const [searchGuest, { data, loading }] = useLazyQuery(GET_HOTEL_GUESTS);
   const handleGuestsSearch = async () => {
     try {
       await searchGuest({
@@ -132,35 +131,25 @@ type PageContext = {
 };
 export const getServerSideProps = async ({ req, res, query }: PageContext) => {
   try {
-    const user = await getUser(req, res);
+    const token = await getCookie(req, res);
 
-    if (user.role === 'ADMIN') {
-      const { data, error } = await client.query({
-        query: GET_HOTEL_GUESTS,
-        variables: {
-          userId: user.id,
-          hotelId: query.hotelId,
-          take: 6,
-          skip: 0,
-        },
-      });
-
-      return {
-        props: {
-          hotelId: query.hotelId,
-          userId: user.id,
-          guests: data.results.guests,
-          totalResults: data.results.totalResults,
-        },
-      };
-    }
+    const { data, error } = await client.query({
+      query: GET_HOTEL_GUESTS,
+      variables: {
+        token: token,
+        hotelId: query.hotelId,
+        take: 6,
+        skip: 0,
+      },
+    });
 
     return {
-      redirect: {
-        permanent: false,
-        destination: '/signin',
+      props: {
+        hotelId: query.hotelId,
+        token: token,
+        guests: data.results.guests,
+        totalResults: data.results.totalResults,
       },
-      props: {},
     };
   } catch (e: any) {
     console.log(e.networkError ? e.networkError?.result?.errors : e);

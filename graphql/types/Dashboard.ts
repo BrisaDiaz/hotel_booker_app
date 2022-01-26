@@ -12,6 +12,7 @@ import { prisma } from '@/lib/prisma';
 import { UserInputError, ForbiddenError } from 'apollo-server-micro';
 import {
   getAdminInfo,
+  getUser,
   verifyIsHotelAdmin,
   checkRoomsAvailable,
   checkIsValidRoomRequest,
@@ -60,11 +61,49 @@ export const RequestSearch = objectType({
 export const HotelData = objectType({
   name: 'HotelData',
   definition(t) {
-    t.id('id')
-    t.int('roomModelsCount');
-    t.int('requestsCount');
-    t.int('bookingsCount');
-    t.int('guestsCount');
+    t.id('id');
+    t.int('roomModelsCount', {
+      resolve(root: any, args, ctx): any {
+        return prisma.roomModel.count({
+          where: {
+            hotelId: root.id,
+          },
+        });
+      },
+    });
+    t.int('requestsCount', {
+      resolve(root: any, args, ctx): any {
+        return prisma.bookingRequest.count({
+          where: {
+            hotelId: root.id,
+            status: 'PENDING',
+          },
+        });
+      },
+    });
+    t.int('bookingsCount', {
+      resolve(root: any, args, ctx): any {
+        return prisma.booking.count({
+          where: {
+            hotelId: root.id,
+          },
+        });
+      },
+    });
+    t.int('guestsCount', {
+      resolve(root: any, args, ctx): any {
+        return prisma.client.count({
+          where: {
+            bookings: {
+              some: {
+                hotelId: root.id,
+                status: 'ACTIVE',
+              },
+            },
+          },
+        });
+      },
+    });
     t.list.field('roomModels', {
       type: 'RoomModel',
       resolve(root: any, args, ctx): any {
@@ -145,11 +184,12 @@ export const Query = extendType({
     t.field('adminHotels', {
       type: AdminHotels,
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
       },
       resolve(root, args, ctx): any {
-        const getAdimHotels = async (userId: number) => {
-          const admin = await getAdminInfo(userId);
+        const getAdimHotels = async (token: string) => {
+          const user = await getUser(token);
+          const admin = await getAdminInfo(user.id);
           const hotels = await prisma.hotel.findMany({
             where: {
               administratorId: admin.id,
@@ -157,74 +197,56 @@ export const Query = extendType({
           });
           return { hotels, hotelsCount: hotels.length };
         };
-        return getAdimHotels(parseInt(args.userId));
+        return getAdimHotels(args.token);
       },
     });
     t.field('hotelData', {
       type: HotelData,
       args: {
-        userId: nonNull(idArg()),
         hotelId: nonNull(idArg()),
+        token: nonNull(stringArg()),
       },
       resolve(root, args, ctx): any {
-        const getAdimHotel = async (userId: number, hotelId: number) => {
-          await verifyIsHotelAdmin(userId, hotelId);
+        const getAdimHotel = async (token: string, hotelId: number) => {
+          const user = await getUser(token);
+          await verifyIsHotelAdmin(user.id, hotelId);
 
-          const bookingsCount = await prisma.booking.count({
-            where: {
-              hotelId: hotelId,
-            },
-          });
-          const roomModelsCount = await prisma.roomModel.count({
-            where: {
-              hotelId: hotelId,
-            },
-          });
-
-          const requestsCount = await prisma.bookingRequest.count({
-            where: {
-              hotelId: hotelId,
-              status: 'PENDING',
-            },
-          });
           return {
-            id:hotelId,
-            roomModelsCount,
-            requestsCount,
-            bookingsCount,
-            guestsCount: bookingsCount,
+            id: hotelId,
           };
         };
-        return getAdimHotel(parseInt(args.userId), parseInt(args.hotelId));
+        return getAdimHotel(args.token, parseInt(args.hotelId));
       },
     });
     t.field('hotelRoomModels', {
       type: list('RoomModel'),
       args: {
-        userId: nonNull(idArg()),
         hotelId: nonNull(idArg()),
+        token: nonNull(stringArg()),
       },
       resolve(root, args, ctx): any {
-        const getAdimHotel = async (userId: number, hotelId: number) => {
-          await verifyIsHotelAdmin(userId, hotelId);
+        const getAdimHotel = async (token: string, hotelId: number) => {
+          const user = await getUser(token);
+          await verifyIsHotelAdmin(user.id, hotelId);
           return prisma.roomModel.findMany({
             where: {
               hotelId: hotelId,
             },
           });
         };
-        return getAdimHotel(parseInt(args.userId), parseInt(args.hotelId));
+        return getAdimHotel(args.token, parseInt(args.hotelId));
       },
     });
     t.field('roomModelData', {
       type: RoomModelData,
       args: {
-        userId: nonNull(idArg()),
         roomModelId: nonNull(idArg()),
+        token: nonNull(stringArg()),
       },
       resolve(root, args, ctx): any {
-        const getData = async (userId: number, roomModelId: number) => {
-          const admin = await getAdminInfo(userId);
+        const getData = async (token: string, roomModelId: number) => {
+          const user = await getUser(token);
+          const admin = await getAdminInfo(user.id);
 
           const roomModel = await prisma.roomModel.findUnique({
             where: {
@@ -257,7 +279,7 @@ export const Query = extendType({
             },
           });
 
-          const guests = bookings.map((booking:any) => booking.client);
+          const guests = bookings.map((booking: any) => booking.client);
 
           return {
             roomModel,
@@ -269,7 +291,7 @@ export const Query = extendType({
             guestsCount: guests.length,
           };
         };
-        return getData(parseInt(args.userId), parseInt(args.roomModelId));
+        return getData(args.token, parseInt(args.roomModelId));
       },
     });
 
@@ -294,12 +316,13 @@ export const Query = extendType({
     t.field('bookingById', {
       type: 'Booking',
       args: {
+        token: nonNull(stringArg()),
         bookingId: nonNull(idArg()),
-        userId: nonNull(idArg()),
       },
       resolve(root, args, ctx): any {
-        const getBooking = async (userId: number, bookingId: number) => {
-          const admin = await getAdminInfo(userId);
+        const getBooking = async (token: string, bookingId: number) => {
+          const user = await getUser(token);
+          const admin = await getAdminInfo(user.id);
           const booking = await prisma.booking.findUnique({
             where: {
               id: bookingId,
@@ -320,14 +343,14 @@ export const Query = extendType({
 
           return booking;
         };
-        return getBooking(parseInt(args.userId), parseInt(args.bookingId));
+        return getBooking(args.token, parseInt(args.bookingId));
       },
     });
     t.field('hotelRequests', {
       type: RequestSearch,
       args: {
         hotelId: nonNull(idArg()),
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         sort: stringArg(),
         search: searchFilter,
         take: intArg({ default: 8 }),
@@ -335,11 +358,12 @@ export const Query = extendType({
       },
       resolve(root, args, ctx): any {
         const getRequests = async (
-          userId: number,
+          token: string,
           hotelId: number,
           args: any
         ) => {
-          await verifyIsHotelAdmin(userId, hotelId);
+          const user = await getUser(token);
+          await verifyIsHotelAdmin(user.id, hotelId);
           const query = bookingRequestQueryConstructor(
             hotelId,
             args as BookingRequestQueryArgs
@@ -379,7 +403,7 @@ export const Query = extendType({
           return { requests, totalResults, pageCount };
         };
 
-        return getRequests(parseInt(args.userId), parseInt(args.hotelId), args);
+        return getRequests(args.token, parseInt(args.hotelId), args);
       },
     });
 
@@ -388,18 +412,19 @@ export const Query = extendType({
 
       args: {
         hotelId: nonNull(idArg()),
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         status: stringArg(),
         from: stringArg(),
         until: stringArg(),
       },
       resolve(root, args, ctx): any {
         const getBookings = async (
-          userId: number,
+          token: string,
           hotelId: number,
           args: any
         ) => {
-          await verifyIsHotelAdmin(userId, hotelId);
+          const user = await getUser(token);
+          await verifyIsHotelAdmin(user.id, hotelId);
 
           const query = bookingQueryConstructor(
             hotelId,
@@ -408,7 +433,7 @@ export const Query = extendType({
 
           return prisma.booking.findMany(query);
         };
-        return getBookings(parseInt(args.userId), parseInt(args.hotelId), args);
+        return getBookings(args.token, parseInt(args.hotelId), args);
       },
     });
 
@@ -416,19 +441,16 @@ export const Query = extendType({
       type: GuestSearch,
       args: {
         hotelId: nonNull(idArg()),
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         sort: stringArg(),
         search: searchFilter,
         take: intArg({ default: 6 }),
         skip: intArg({ default: 0 }),
       },
       resolve(root, args, ctx): any {
-        const getGuests = async (
-          userId: number,
-          hotelId: number,
-          args: any
-        ) => {
-          await verifyIsHotelAdmin(userId, hotelId);
+        const getGuests = async (token: string, hotelId: number, args: any) => {
+          const user = await getUser(token);
+          await verifyIsHotelAdmin(user.id, hotelId);
           const query = clientQueryConstructor(hotelId, args);
           if ('clientId' in query.where.bookings.some) {
             const guests = await prisma.client.findMany(
@@ -447,7 +469,7 @@ export const Query = extendType({
           return { guests, totalResults };
         };
 
-        return getGuests(parseInt(args.userId), parseInt(args.hotelId), args);
+        return getGuests(args.token, parseInt(args.hotelId), args);
       },
     });
   },
@@ -458,7 +480,7 @@ export const Mutation = extendType({
     t.field('makeBooking', {
       type: 'Booking',
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         roomModelId: nonNull(idArg()),
         firstName: nonNull(stringArg()),
         lastName: nonNull(stringArg()),
@@ -475,10 +497,11 @@ export const Mutation = extendType({
       },
       resolve(root, args, ctx): any {
         const makeBooking = async (
-          userId: number,
+          token: string,
           roomModelId: number,
           args: any
         ) => {
+          const user = await getUser(token);
           const roomModel = await prisma.roomModel.findUnique({
             where: {
               id: roomModelId,
@@ -486,7 +509,7 @@ export const Mutation = extendType({
           });
           if (!roomModel) throw new UserInputError('Room type dose not exist.');
           const hotelId = roomModel.hotelId;
-          const admin = await verifyIsHotelAdmin(userId, hotelId);
+          const admin = await verifyIsHotelAdmin(user.id, hotelId);
           const availabilityResponce = await checkIsValidRoomRequest({
             roomDetails: roomModel,
             rooms: args.guestsDistribution,
@@ -555,17 +578,13 @@ export const Mutation = extendType({
           );
           return booking;
         };
-        return makeBooking(
-          parseInt(args.userId),
-          parseInt(args.roomModelId),
-          args
-        );
+        return makeBooking(args.token, parseInt(args.roomModelId), args);
       },
     });
     t.field('confirmBookingRequest', {
       type: 'Booking',
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         bookingRequestId: nonNull(idArg()),
         roomsIds: nonNull(list(nonNull(intArg()))),
         totalCost: nonNull(floatArg()),
@@ -573,10 +592,11 @@ export const Mutation = extendType({
       },
       resolve(root, args, ctx): any {
         const makeBooking = async (
-          userId: number,
+          token: string,
           bookingRequestId: number,
           args: any
         ) => {
+          const user = await getUser(token);
           const bookingRequest = await prisma.bookingRequest.findUnique({
             where: {
               id: bookingRequestId,
@@ -588,7 +608,7 @@ export const Mutation = extendType({
           if (!bookingRequest)
             throw new UserInputError('Invalid booking request identifyer.');
           const admin = await verifyIsHotelAdmin(
-            userId,
+            user.id,
             bookingRequest.hotelId
           );
 
@@ -602,7 +622,9 @@ export const Mutation = extendType({
           if (!roomsAvailables.length)
             throw new UserInputError('There is not enought rooms available.');
 
-          const roomsAvailablesIds = roomsAvailables.map((room:{id:number}) => room.id);
+          const roomsAvailablesIds = roomsAvailables.map(
+            (room: { id: number }) => room.id
+          );
           const matchRoomsRequestedWithAvailablesOnes = args.roomsIds.every(
             (id: number) => roomsAvailablesIds.includes(id)
           );
@@ -667,21 +689,17 @@ export const Mutation = extendType({
           );
           return createdBooking;
         };
-        return makeBooking(
-          parseInt(args.userId),
-          parseInt(args.bookingRequestId),
-          args
-        );
+        return makeBooking(args.token, parseInt(args.bookingRequestId), args);
       },
     });
     t.field('declineBookingRequest', {
       type: 'BookingRequest',
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         bookingRequestId: nonNull(idArg()),
       },
       resolve(root, args, ctx): any {
-        const declineRequest = async (userId: number, requestId: number) => {
+        const declineRequest = async (token: string, requestId: number) => {
           const request = await prisma.bookingRequest.findUnique({
             where: {
               id: requestId,
@@ -689,8 +707,8 @@ export const Mutation = extendType({
           });
           if (!request)
             throw new UserInputError('Invalid booking request identifyer.');
-
-          await verifyIsHotelAdmin(userId, request.hotelId);
+          const user = await getUser(token);
+          await verifyIsHotelAdmin(user.id, request.hotelId);
           return prisma.bookingRequest.update({
             where: {
               id: requestId,
@@ -700,26 +718,24 @@ export const Mutation = extendType({
             },
           });
         };
-        return declineRequest(
-          parseInt(args.userId),
-          parseInt(args.bookingRequestId)
-        );
+        return declineRequest(args.token, parseInt(args.bookingRequestId));
       },
     });
     t.field('cancelBooking', {
       type: 'CancelationDetails',
       args: {
-        userId: nonNull(idArg()),
+        token: nonNull(stringArg()),
         bookingId: nonNull(idArg()),
         message: nonNull(stringArg()),
         cancelationFee: nonNull(floatArg()),
       },
       resolve(root, args, ctx): any {
         const declineRequest = async (
-          userId: number,
+          token: string,
           bookingId: number,
           args: any
         ) => {
+          const user = await getUser(token);
           const booking = await prisma.booking.findUnique({
             where: {
               id: bookingId,
@@ -737,7 +753,7 @@ export const Mutation = extendType({
             throw new UserInputError(
               'The operation can`t be made over a not active booking.'
             );
-          await verifyIsHotelAdmin(userId, booking.hotelId);
+          await verifyIsHotelAdmin(user.id, booking.hotelId);
           await prisma.booking.update({
             where: {
               id: bookingId,
@@ -748,11 +764,7 @@ export const Mutation = extendType({
           });
           return cancelationDetails;
         };
-        return declineRequest(
-          parseInt(args.userId),
-          parseInt(args.bookingId),
-          args
-        );
+        return declineRequest(args.token, parseInt(args.bookingId), args);
       },
     });
   },
