@@ -149,8 +149,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
         if (isAvailable) {
           return notify({
             type: 'info',
-            content:
-              'There is availability, make your reservation before the quotas run out.',
+            content: 'Your booking request was send successfully.',
           });
         }
         notify({
@@ -174,6 +173,23 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
     }
     return setLoading(false);
   }, [consultResponce.loading, boolkingResponce.loading]);
+
+  React.useEffect(() => {
+    if (!consultResponce.loading && consultResponce.data) {
+      const { isAvailable, message } = consultResponce.data.responce;
+      if (isAvailable) {
+        return notify({
+          type: 'info',
+          content:
+            'There is availability, make your reservation before the quotas run out.',
+        });
+      }
+      notify({
+        type: 'info',
+        content: message,
+      });
+    }
+  }, [consultResponce]);
 
   const handleConsutlSubmit = async (data: {
     checkInDate: string;
