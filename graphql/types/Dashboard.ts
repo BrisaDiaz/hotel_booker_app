@@ -184,7 +184,7 @@ export const Query = extendType({
             where: {
               bookings: {
                 some: {
-                  hotelId: root.id,
+                  hotelId: hotelId,
                   status: 'ACTIVE',
                 },
               },
