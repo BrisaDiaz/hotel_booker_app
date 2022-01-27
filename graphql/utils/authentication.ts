@@ -40,7 +40,6 @@ export function setCookie(
   const cookies = new Cookies(req, res);
   cookies.set('bookingApp-token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== 'development',
     maxAge: 60 * 60 * 24 * 31,
   });
 }
