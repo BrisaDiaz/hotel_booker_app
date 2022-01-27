@@ -60,7 +60,7 @@ export const RequestSearch = objectType({
 export const HotelData = objectType({
   name: 'HotelData',
   definition(t) {
-    t.id('id')
+    t.id('id');
     t.int('roomModelsCount');
     t.int('requestsCount');
     t.int('bookingsCount');
@@ -180,7 +180,16 @@ export const Query = extendType({
               hotelId: hotelId,
             },
           });
-
+          const guestsCount = await prisma.client.count({
+            where: {
+              bookings: {
+                some: {
+                  hotelId: root.id,
+                  status: 'ACTIVE',
+                },
+              },
+            },
+          });
           const requestsCount = await prisma.bookingRequest.count({
             where: {
               hotelId: hotelId,
@@ -188,11 +197,11 @@ export const Query = extendType({
             },
           });
           return {
-            id:hotelId,
+            id: hotelId,
             roomModelsCount,
             requestsCount,
             bookingsCount,
-            guestsCount: bookingsCount,
+            guestsCount,
           };
         };
         return getAdimHotel(parseInt(args.userId), parseInt(args.hotelId));
@@ -257,7 +266,7 @@ export const Query = extendType({
             },
           });
 
-          const guests = bookings.map((booking:any) => booking.client);
+          const guests = bookings.map((booking: any) => booking.client);
 
           return {
             roomModel,
@@ -602,7 +611,9 @@ export const Mutation = extendType({
           if (!roomsAvailables.length)
             throw new UserInputError('There is not enought rooms available.');
 
-          const roomsAvailablesIds = roomsAvailables.map((room:{id:number}) => room.id);
+          const roomsAvailablesIds = roomsAvailables.map(
+            (room: { id: number }) => room.id
+          );
           const matchRoomsRequestedWithAvailablesOnes = args.roomsIds.every(
             (id: number) => roomsAvailablesIds.includes(id)
           );
