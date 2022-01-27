@@ -50,7 +50,6 @@ export const Features = objectType({
   },
 });
 
-
 export const Query = extendType({
   type: 'Query',
   definition(t) {
