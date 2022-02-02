@@ -130,9 +130,9 @@ function NavLink({ link }: { link: Link }) {
               ? '2px solid rgba(255,255,255,0.8)'
               : '1px solid rgba(255,255,255,0.3)'
           }`,
-'&:hover':{
-border:'1px solid rgba(255,255,255,0.8)'
-},
+          '&:hover': {
+            border: '1px solid rgba(255,255,255,0.8)',
+          },
           m: '10px 0 10px 0',
           width: `${link.level === 1 ? '90%' : '100%'}`,
         }}
@@ -159,9 +159,8 @@ export default function ResponsiveDrawer(props: Props) {
   const { children } = props;
   const { activeLink } = props;
 
-
   const router: {
-    push: (url:string)=>void;
+    push: (url: string) => void;
     query: any;
   } = useRouter();
 
@@ -187,7 +186,7 @@ export default function ResponsiveDrawer(props: Props) {
       icone: <ApartmentIcon />,
       selected: activeLink === 'hotel',
       sub: false,
-      family: ['requests', 'guests', 'rooms', 'bookings','gallery'],
+      family: ['requests', 'guests', 'rooms', 'bookings', 'gallery'],
       url: hotelId ? '/admin/hotel' : '/admin',
       query: hotelId
         ? {
@@ -239,7 +238,7 @@ export default function ResponsiveDrawer(props: Props) {
           }
         : {},
     },
-     {
+    {
       label: 'gallery',
       icone: <CollectionsIcon />,
       selected: activeLink === 'gallery',
@@ -273,7 +272,9 @@ export default function ResponsiveDrawer(props: Props) {
         {activeLink === 'dashboard' ? (
           <NavLink link={NAVEGATION_LINKS[0]} />
         ) : (
-          NAVEGATION_LINKS.map((link: Link) => <NavLink key={link.label} link={link} />)
+          NAVEGATION_LINKS.map((link: Link) => (
+            <NavLink key={link.label} link={link} />
+          ))
         )}
       </List>
     </Box>
@@ -288,7 +289,10 @@ export default function ResponsiveDrawer(props: Props) {
       <AppBar
         position="fixed"
         sx={{
-      '.css-42gggb-MuiPaper-root-MuiAppBar-root':{boxShadow:'0px 1px 2px -1px rgb(0 0 0 / 10%), 0px 4px 3px 0px rgb(0 0 0 / 8%), 0px 1px 5px 0px rgb(0 0 0 / 6%)'},
+          '.css-42gggb-MuiPaper-root-MuiAppBar-root': {
+            boxShadow:
+              '0px 1px 2px -1px rgb(0 0 0 / 10%), 0px 4px 3px 0px rgb(0 0 0 / 8%), 0px 1px 5px 0px rgb(0 0 0 / 6%)',
+          },
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
         }}
@@ -368,7 +372,7 @@ export default function ResponsiveDrawer(props: Props) {
         component="div"
         sx={{
           flexGrow: 1,
-          mt: {xs:'55px',sm:8},
+          mt: { xs: '55px', sm: 8 },
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           overflow: 'hidden',
         }}

@@ -112,7 +112,15 @@ export const GET_HOTELS = gql`
     }
   }
 `;
-
+export const GET_HOTEL_SEARCH_SUGGESTIONS = gql`
+  query hotelSearchSuggestions($take: Int, $search: String!) {
+    suggestions: hotelSearchSuggestions(take: $take, search: $search) {
+      id
+      name
+      address
+    }
+  }
+`;
 export const GET_HOTEL_BY_ID = gql`
   query hotelById($hotelId: ID!) {
     hotelById(hotelId: $hotelId) {

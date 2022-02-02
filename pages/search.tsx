@@ -4,6 +4,7 @@ import { client } from '@/lib/apollo';
 import { useLazyQuery } from '@apollo/client';
 import Head from 'next/head';
 import Typography from '@mui/material/Typography';
+
 import HotelsGrid from '@/components/HotelsGrid';
 import FilterMenu from '@/components/layouts/FilterMenu';
 import Pagination from '@/components/Pagination';
@@ -16,6 +17,7 @@ import {
   GET_ALL_ACTIVITIES,
   GET_ALL_LANGUAGES,
   GET_ALL_HOTEL_CATEGORIES,
+  GET_HOTEL_SEARCH_SUGGESTIONS,
   GET_HOTELS,
 } from '@/queries/index';
 
@@ -41,7 +43,6 @@ const Search = ({
   hotelCategoriesList,
   hotelSearch,
 }: Props) => {
-
   const [page, setPage] = React.useState<number>(1);
   const [pageCount, setPageCount] = React.useState<number>(
     hotelSearch.pageCount
@@ -49,6 +50,39 @@ const Search = ({
   const [displayHotels, setDisplayHotels] = React.useState<Hotel[]>(
     hotelSearch.hotels
   );
+
+  const [getSuggestions, suggestionsRequest] = useLazyQuery(
+    GET_HOTEL_SEARCH_SUGGESTIONS
+  );
+
+  const formatHotelSuggestions = (
+    suggestions: {
+      id: number;
+      name: string;
+      address: string;
+    }[]
+  ) => {
+    return suggestions.map((hotel) => ({
+      primary: hotel.name,
+      secondary: hotel.address,
+    }));
+  };
+  const [hotelSuggestions, setHotelSuggestions] = React.useState<
+    { primary: string; secondary: string }[]
+  >([]);
+
+  const SUGGESTIONS_QUANTITY = 4;
+
+  const onSearchFilter = async (search: string) => {
+    await getSuggestions({ variables: { take: SUGGESTIONS_QUANTITY, search } });
+  };
+  React.useEffect(() => {
+    if (suggestionsRequest.data?.suggestions) {
+      setHotelSuggestions(
+        formatHotelSuggestions(suggestionsRequest.data.suggestions)
+      );
+    }
+  }, [suggestionsRequest.data]);
 
   const [requestHotels, { data, error, loading }] = useLazyQuery(GET_HOTELS, {
     fetchPolicy: 'no-cache',
@@ -62,21 +96,21 @@ const Search = ({
     sort: string;
     search: string | null;
   }) => {
-    const skipe: number = page - 1 * 6;
+    const skip: number = (page - 1) * 6;
 
-    const  serchVariables = { ...variables, take: 6, skipe };
+    const searchVariables = { ...variables, take: 6, skip };
 
     try {
       await requestHotels({
-        variables: serchVariables,
+        variables: searchVariables,
       });
-    } catch (err) {   
+    } catch (err) {
       console.log(err);
       console.log(error?.graphQLErrors);
     }
   };
   React.useEffect(() => {
-    if (data?.hotelSearch && !loading) {
+    if (data?.hotelSearch) {
       setDisplayHotels(data?.hotelSearch.hotels);
       setPageCount(data?.hotelSearch.pageCount);
     }
@@ -92,6 +126,8 @@ const Search = ({
 
       <main>
         <FilterMenu
+          onSearchFilter={onSearchFilter}
+          searchOptions={hotelSuggestions}
           facilities={facilitiesList}
           activities={activitiesList}
           languages={languagesList}
@@ -121,18 +157,18 @@ const Search = ({
             <Pagination setPage={setPage} count={pageCount} />
           </Box>
         </FilterMenu>
-        <Backdrop loading={loading}/>
+        <Backdrop loading={loading} />
       </main>
     </div>
   );
 };
 
 export default Search;
-export const getServerSideProps = async ({res}:{res:NextApiResponse}) => {
-    res.setHeader(
+export const getServerSideProps = async ({ res }: { res: NextApiResponse }) => {
+  res.setHeader(
     'Cache-Control',
     'public, s-maxage=10, stale-while-revalidate=59'
-  )
+  );
   const activitiesRequest = await client.query({
     query: GET_ALL_ACTIVITIES,
   });
@@ -142,7 +178,7 @@ export const getServerSideProps = async ({res}:{res:NextApiResponse}) => {
   const facilitiesRequest = await client.query({
     query: GET_ALL_FACILITIES,
   });
-    const languagesRequest = await client.query({
+  const languagesRequest = await client.query({
     query: GET_ALL_LANGUAGES,
   });
   const categoriesRequest = await client.query({

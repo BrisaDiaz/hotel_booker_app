@@ -16,61 +16,16 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import SearchIcon from '@mui/icons-material/Search';
-import InputBase from '@mui/material/InputBase';
+import SuggestionsSearchBar from '@/components/SuggestionsSearchBar';
 import CheckboxGroup from '@/components/CheckboxGroup';
-import Accordion from '@/components/Acconrdion';
+import Accordion from '@/components/Accordion';
 import SortIcon from '@mui/icons-material/Sort';
 import { toCamelCase } from '@/utils/index';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Logo from '@/components/layouts/Logo';
 import { Feature } from '@/interfaces/index';
+
 const drawerWidth = 240;
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('xs')]: {
-    marginLeft: 'auto',
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  cursor: 'pointer',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  zIndex: 50,
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
-  },
-}));
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -91,12 +46,16 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }),
 }));
 
-const SortSelect = ({ handdleChange }: { handdleChange: (sortOption:string)=>void }) => {
+const SortSelect = ({
+  handleChange,
+}: {
+  handleChange: (sortOption: string) => void;
+}) => {
   const [sort, setSort] = React.useState('price');
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleSortChange = (event: SelectChangeEvent) => {
     setSort(event.target.value as string);
-    handdleChange(event.target.value);
+    handleChange(event.target.value);
   };
 
   return (
@@ -112,7 +71,7 @@ const SortSelect = ({ handdleChange }: { handdleChange: (sortOption:string)=>voi
           id="select-sort"
           value={sort}
           sx={{ maxHeight: '45px' }}
-          onChange={handleChange}
+          onChange={handleSortChange}
           IconComponent={() => <SortIcon sx={{ mr: 1.5 }} />}
         >
           <MenuItem value="price">Lowest Price</MenuItem>
@@ -152,16 +111,16 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end',
 }));
- interface Query {
-    features: string[];
-    categories: string[];
-    services: string[];
-    activities: string[];
-    facilities: string[];
-    languages: string[];
-    sort: string;
-    search: string ;
-  }
+interface Query {
+  features: string[];
+  categories: string[];
+  services: string[];
+  activities: string[];
+  facilities: string[];
+  languages: string[];
+  sort: string;
+  search: string;
+}
 export default function PersistentDrawerLeft({
   children,
   facilities,
@@ -170,14 +129,18 @@ export default function PersistentDrawerLeft({
   services,
   hotelCategories,
   handleSubmit,
+  searchOptions,
+  onSearchFilter,
 }: {
+  searchOptions: { primary: string; secondary: string }[];
+  onSearchFilter: (search: string) => void;
   children: React.ReactNode;
   facilities: Feature[];
   activities: Feature[];
   languages: Feature[];
   services: Feature[];
   hotelCategories: Feature[];
-  handleSubmit: (query:Query)=>void;
+  handleSubmit: (query: Query) => void;
 }) {
   const matchesSize = useMediaQuery('(min-width:900px)');
   const theme = useTheme();
@@ -204,9 +167,7 @@ export default function PersistentDrawerLeft({
     { id: 6, name: 'smoker friendly' },
   ];
 
- 
-
-  const [query, setQuery] = React.useState<Query>({
+  const defaultQuery = {
     features: [],
     categories: [],
     services: [],
@@ -215,11 +176,13 @@ export default function PersistentDrawerLeft({
     languages: [],
     sort: 'price',
     search: '',
-  });
+  };
+
+  const [query, setQuery] = React.useState<Query>(defaultQuery);
   const handleSort = (newValue: string) => {
     setQuery({ ...query, sort: newValue });
   };
-  const handdleCategories = (checked: boolean, value: string) => {
+  const handleCategories = (checked: boolean, value: string) => {
     if (checked) {
       return setQuery({
         ...query,
@@ -231,7 +194,7 @@ export default function PersistentDrawerLeft({
       categories: query.categories.filter((name: string) => name === value),
     });
   };
-  const handdleLanguages = (checked: boolean, value: string) => {
+  const handleLanguages = (checked: boolean, value: string) => {
     if (checked) {
       return setQuery({
         ...query,
@@ -243,7 +206,7 @@ export default function PersistentDrawerLeft({
       languages: query.languages.filter((name: string) => name === value),
     });
   };
-  const handdleActivities = (checked: boolean, value: string) => {
+  const handleActivities = (checked: boolean, value: string) => {
     if (checked) {
       return setQuery({
         ...query,
@@ -255,7 +218,7 @@ export default function PersistentDrawerLeft({
       activities: query.activities.filter((name: string) => name === value),
     });
   };
-  const handdleFacilities = (checked: boolean, value: string) => {
+  const handleFacilities = (checked: boolean, value: string) => {
     if (checked) {
       return setQuery({
         ...query,
@@ -267,7 +230,7 @@ export default function PersistentDrawerLeft({
       facilities: query.facilities.filter((name: string) => name !== value),
     });
   };
-  const handdleServices = (checked: boolean, value: string) => {
+  const handleServices = (checked: boolean, value: string) => {
     if (checked) {
       return setQuery({
         ...query,
@@ -279,7 +242,7 @@ export default function PersistentDrawerLeft({
       services: query.services.filter((name: string) => name === value),
     });
   };
-  const handdleFeatures = (checked: boolean, value: string) => {
+  const handleFeatures = (checked: boolean, value: string) => {
     const valueToCamelCase = toCamelCase(value);
 
     if (checked) {
@@ -296,25 +259,14 @@ export default function PersistentDrawerLeft({
     });
   };
 
-  const handleSearchValue = (newValue: string) => {
-    setQuery({ ...query, search: newValue });
-  };
+  const handleSearch = (newSearch?: string) => {
+    const searchParams = newSearch
+      ? { ...defaultQuery, search: newSearch }
+      : { ...query, search: '' };
 
-  const handdleSearch = () => {
-    setQuery({
-      features: [],
-      categories: [],
-      facilities: [],
-      services: [],
-      activities: [],
-      languages: [],
-      sort: 'price',
-      search: query.search,
-    });
-    submitMiddleware();
-  };
-  const submitMiddleware = () => {
-    handleSubmit(query);
+    setQuery(searchParams);
+    !matchesSize && handleDrawerClose();
+    handleSubmit(searchParams);
   };
 
   return (
@@ -336,25 +288,19 @@ export default function PersistentDrawerLeft({
           <Box sx={{ mr: 2, display: { xs: 'none', sm: 'flex' } }}>
             <Logo />
           </Box>
-
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              onKeyPress={(e) => e.key === 'Enter' && handdleSearch()}
-              placeholder="Search…"
-              onChange={(e) => handleSearchValue(e.target.value)}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+          <SuggestionsSearchBar
+            options={searchOptions}
+            onFilter={onSearchFilter}
+            onSearch={handleSearch}
+            delay={100}
+          />
         </Toolbar>
       </AppBar>
       <Drawer
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-
+          height: 'maxContent',
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
@@ -392,7 +338,7 @@ export default function PersistentDrawerLeft({
         </Typography>
 
         <Divider />
-        <SortSelect handdleChange={handleSort} />
+        <SortSelect handleChange={handleSort} />
 
         <Divider />
 
@@ -413,30 +359,51 @@ export default function PersistentDrawerLeft({
         <Accordion title={'Category'}>
           <CheckboxGroup
             items={hotelCategories}
-            handleChanges={handdleCategories}
+            value={query.categories}
+            handleChanges={handleCategories}
           />
         </Accordion>
         <Divider />
         <Accordion title={'Facilities'}>
-          <CheckboxGroup items={facilities} handleChanges={handdleFacilities} />
+          <CheckboxGroup
+            items={facilities}
+            handleChanges={handleFacilities}
+            value={query.facilities}
+          />
         </Accordion>
         <Divider />
         <Accordion title={'Services'}>
-          <CheckboxGroup items={services} handleChanges={handdleServices} />
+          <CheckboxGroup
+            items={services}
+            handleChanges={handleServices}
+            value={query.services}
+          />
         </Accordion>
         <Divider />
         <Accordion title={'Activities'}>
-          <CheckboxGroup items={activities} handleChanges={handdleActivities} />
+          <CheckboxGroup
+            items={activities}
+            handleChanges={handleActivities}
+            value={query.activities}
+          />
         </Accordion>
 
         <Divider />
         <Accordion title={'Languages'}>
-          <CheckboxGroup items={languages} handleChanges={handdleLanguages} />
+          <CheckboxGroup
+            items={languages}
+            handleChanges={handleLanguages}
+            value={query.languages}
+          />
         </Accordion>
         <Divider />
 
         <Accordion title={'Other Features'}>
-          <CheckboxGroup items={features} handleChanges={handdleFeatures} />
+          <CheckboxGroup
+            items={features}
+            handleChanges={handleFeatures}
+            value={query.features}
+          />
         </Accordion>
         <Divider />
         <Button
@@ -444,12 +411,12 @@ export default function PersistentDrawerLeft({
           color="secondary"
           sx={{
             width: '80%',
+            margin: '0 auto',
             my: 3,
-            mx: 'auto',
             p: 1,
-            color: 'common.white',
+            color: '#fff',
           }}
-          onClick={submitMiddleware}
+          onClick={() => handleSearch()}
         >
           Apply
         </Button>
@@ -457,6 +424,7 @@ export default function PersistentDrawerLeft({
 
       <Main open={open} sx={{ mt: { sm: 0 } }}>
         <DrawerHeader />
+
         {children}
       </Main>
     </Box>

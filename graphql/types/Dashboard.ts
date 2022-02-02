@@ -28,7 +28,7 @@ import {
   BookingQueryArgs,
 } from '../utils/index';
 import { roomSpecifications, Client } from './Booking';
-import { searchFilter } from './Commun';
+import { searchFilter } from './Common';
 
 export const AdminHotels = objectType({
   name: 'AdminHotels',

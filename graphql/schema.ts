@@ -7,7 +7,7 @@ export const schema = makeSchema({
   shouldGenerateArtifacts: process.env.NODE_ENV === 'development',
   outputs: {
     // I tend to use `.gen` to denote "auto-generated" files, but this is not a requirement.
-    schema: path.join(process.cwd(), 'generated/schema.gen.graphql'),
-    typegen: path.join(process.cwd(), 'generated/nexusTypes.gen.ts'),
+    schema: path.join(process.cwd(), 'graphql/schema.gen.graphql'),
+    typegen: path.join(process.cwd(), 'graphql/nexusTypes.gen.ts'),
   },
 });

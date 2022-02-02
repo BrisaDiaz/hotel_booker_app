@@ -18,12 +18,12 @@ export default function SimpleAccordion({
     <div>
       <Accordion sx={{ boxShadow: 'none' }}>
         <AccordionSummary
-          sx={{ margin: 0,maxHeight:'48px' }}
+          sx={{ margin: 0, maxHeight: '48px' }}
           expandIcon={<ExpandMoreIcon color="primary" />}
           aria-controls={`${title}-panel`}
           id={`${title}-panel`}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center',}}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {DinamicFieldIcone(title)}
             <Typography
               variant="subtitle1"
@@ -31,7 +31,6 @@ export default function SimpleAccordion({
                 fontWeight: 200,
                 padding: '0 10px',
                 opacity: '0.8',
-              
               }}
             >
               {title}
