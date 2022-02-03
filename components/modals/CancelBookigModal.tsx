@@ -10,7 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 
 import CloseButton from '@/components/modals/CloseButton';
-import currencyFixer from '@/utils/currencyFixer'
+import currencyFixer from '@/utils/currencyFixer';
 import { styles } from './styles';
 import { Booking } from '@/interfaces/index';
 export default function BasicModal({
@@ -21,31 +21,32 @@ export default function BasicModal({
   bookingData,
 }: {
   isOpen: boolean;
-  onSubmit: (formData:any)=>void;
-  onClose: ()=>void;
+  onSubmit: (formData: any) => void;
+  onClose: () => void;
 
   bookingData: Booking | null;
 }) {
-
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false), onClose();
   };
-  const [cancelationFee, setCancelationFee] = React.useState<number>(
-    bookingData ? bookingData?.roomModel?.cancelationFee : 0
+  const [cancellationFee, setcancellationFee] = React.useState<number>(
+    bookingData ? bookingData?.roomModel?.cancellationFee : 0
   );
-  
+
   React.useEffect(() => {
     if (isOpen) {
       return handleOpen();
     }
     return handleClose();
   }, [isOpen]);
-    React.useEffect(() => {
-    setCancelationFee(bookingData ? bookingData?.roomModel?.cancelationFee : 0);
+  React.useEffect(() => {
+    setcancellationFee(
+      bookingData ? bookingData?.roomModel?.cancellationFee : 0
+    );
   }, [bookingData]);
- 
+
   const {
     register,
     handleSubmit,
@@ -54,17 +55,17 @@ export default function BasicModal({
 
   const submitMiddleware = (data: {
     message: number[];
-    cancelationFee: string;
+    cancellationFee: string;
   }) => {
-    onSubmit({ ...data, cancelationFee: cancelationFee });
+    onSubmit({ ...data, cancellationFee: cancellationFee });
   };
 
-  const handleCancelationFee = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.value) return setCancelationFee(0);
-    setCancelationFee(parseInt(e.target.value));
+  const handlecancellationFee = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.value) return setcancellationFee(0);
+    setcancellationFee(parseInt(e.target.value));
   };
 
- if (!bookingData) return <div />;
+  if (!bookingData) return <div />;
   return (
     <Modal
       sx={{ zIndex: 2000 }}
@@ -90,21 +91,21 @@ export default function BasicModal({
           Cancel Reservation
         </Typography>
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Write a message explaining the reason of the cancelation.
+          Write a message explaining the reason of the cancellation.
         </Typography>
         <TextField
           fullWidth
           id="message"
           multiline
           {...register('message', {
-            required: 'A explenatory message is required',
+            required: 'A explanatory message is required',
             minLength: {
               value: 20,
-              message: 'Message should be of a 20 characters length minimun.',
+              message: 'Message should be of a 20 characters length minimum.',
             },
             maxLength: {
               value: 300,
-              message: 'Message should be of a 300 characters length maximun.',
+              message: 'Message should be of a 300 characters length maximum.',
             },
           })}
           rows={5}
@@ -114,25 +115,25 @@ export default function BasicModal({
           label={errors['message'] ? errors['message'].message : 'Message'}
         />
         <Typography variant="body2" sx={{ mb: 2 }}>
-          Set the ammount to charge
+          Set the amount to charge
         </Typography>
         <TextField
-          id="cancelationFee"
+          id="cancellationFee"
           sx={{
             maxWidth: 150,
             width: '100%',
             mb: 1,
           }}
-          onChange={handleCancelationFee}
-          defaultValue={cancelationFee}
+          onChange={handlecancellationFee}
+          defaultValue={cancellationFee}
           variant="outlined"
           label={
-            errors['cancelationFee']
-              ? errors['cancelationFee'].message
-              : 'Cancelation Fee'
+            errors['cancellationFee']
+              ? errors['cancellationFee'].message
+              : 'Cancellation Fee'
           }
           type="number"
-          error={errors['cancelationFee'] ? true : false}
+          error={errors['cancellationFee'] ? true : false}
           InputProps={{
             inputProps: { min: 0 },
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -140,26 +141,26 @@ export default function BasicModal({
         />
         <input
           type="hidden"
-          value={cancelationFee}
-          {...register('cancelationFee', {
-            required: 'The cancelation fee is required',
+          value={cancellationFee}
+          {...register('cancellationFee', {
+            required: 'The cancellation fee is required',
             min: {
               value: 0,
-              message: 'The cancelation fee must be a positive number',
+              message: 'The cancellation fee must be a positive number',
             },
           })}
         />
         <Box component="ul" sx={{ mb: 2, px: 0 }}>
           <Box component="li" sx={styles.list}>
-            <Typography sx={styles.leyend}>Current Const:</Typography>
+            <Typography sx={styles.legend}>Current Const:</Typography>
             <Typography component="span">
-               {currencyFixer(bookingData?.totalCost)}
+              {currencyFixer(bookingData?.totalCost)}
             </Typography>
           </Box>
           <Box component="li" sx={styles.list}>
-            <Typography sx={styles.leyend}>Cost after charge:</Typography>
+            <Typography sx={styles.legend}>Cost after charge:</Typography>
             <Typography component="span">
-               {currencyFixer(bookingData?.totalCost + cancelationFee)}
+              {currencyFixer(bookingData?.totalCost + cancellationFee)}
             </Typography>
           </Box>
         </Box>

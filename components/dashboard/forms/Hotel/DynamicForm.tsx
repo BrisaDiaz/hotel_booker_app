@@ -9,7 +9,7 @@ import PriceSection from '../PriceSection';
 import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
-import FormBottons from '@/components/dashboard/forms/FormBottons';
+import FormButtons from '@/components/dashboard/forms/FormButtons';
 import { Hotel } from '@/interfaces/index';
 import { styles } from '@/components/dashboard/forms/styles';
 import FullScreenModal from '@/components/modals/FullScreenModal';
@@ -147,7 +147,7 @@ export default function MultilineTextFields(props: {
         familyFriendly: data?.familyFriendly,
         petFriendly: data?.petFriendly,
         ecoFriendly: data?.ecoFriendly,
-        freeCancelation: data?.freeCancelation,
+        freeCancellation: data?.freeCancellation,
         accessible: data?.accessible,
       };
       return props.submitHandler(variables);
@@ -175,12 +175,12 @@ export default function MultilineTextFields(props: {
             errors={errors}
             defaultData={hotel}
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </AboutSection>
         )}
         {toEditSection === 'price' && (
           <PriceSection register={register} errors={errors} defaultData={hotel}>
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </PriceSection>
         )}
         {toEditSection === 'contact' && (
@@ -189,7 +189,7 @@ export default function MultilineTextFields(props: {
             errors={errors}
             defaultData={hotel}
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </ContactSection>
         )}
         {toEditSection === 'address' && (
@@ -198,7 +198,7 @@ export default function MultilineTextFields(props: {
             errors={errors}
             defaultData={hotel}
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </AddressSection>
         )}
         {toEditSection === 'features' && (
@@ -211,7 +211,7 @@ export default function MultilineTextFields(props: {
             facilities={facilities}
             defaultData={hotel}
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </FeaturesSection>
         )}
         {toEditSection === 'policies' && (
@@ -221,7 +221,7 @@ export default function MultilineTextFields(props: {
             errors={errors}
             defaultData={hotel}
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </PoliciesSection>
         )}
         {toEditSection === 'aspect' && (
@@ -231,7 +231,7 @@ export default function MultilineTextFields(props: {
             setError={setError}
             clearErrors={clearErrors}
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </AspectSection>
         )}
       </Box>

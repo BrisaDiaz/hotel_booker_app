@@ -18,7 +18,7 @@ import Backdrop from '@/components/Backdrop';
 import validations from '@/utils/formValidations';
 import AppBar from '@/components/layouts/AppBar';
 import { WithLayoutPage } from '@/interfaces/index';
-import useNotification from '@/hooks/useNotification'
+import useNotification from '@/hooks/useNotification';
 function Copyright(props: any) {
   return (
     <Typography
@@ -38,7 +38,7 @@ function Copyright(props: any) {
 }
 
 const SignUp: WithLayoutPage = () => {
-  const { notification,notify} = useNotification({autoClean:true})
+  const { notification, notify } = useNotification({ autoClean: true });
 
   const {
     register,
@@ -49,12 +49,12 @@ const SignUp: WithLayoutPage = () => {
   const redirectToSignin = () => {
     router.push('/signin');
   };
-  const [signUp, { loading ,data}] = useMutation(SIGN_UP, {
+  const [signUp, { loading, data }] = useMutation(SIGN_UP, {
     onCompleted: () => {
-      notify({type:'success',content:'SingUp complited successfully'})
+      notify({ type: 'success', content: 'SingUp completed successfully' });
     },
-    onError: ({message}) => {
-      notify( {type:'error', content:message});
+    onError: ({ message }) => {
+      notify({ type: 'error', content: message });
     },
   });
 
@@ -82,7 +82,7 @@ const SignUp: WithLayoutPage = () => {
           sx={{
             maxWidth: '1200px',
             mx: 'auto',
-            mt:2
+            mt: 2,
           }}
         >
           {notification.content && (
@@ -91,7 +91,6 @@ const SignUp: WithLayoutPage = () => {
               message={notification.content}
             />
           )}
-      
 
           <Container component="main" maxWidth="xs">
             <Box
@@ -112,7 +111,7 @@ const SignUp: WithLayoutPage = () => {
                 component="form"
                 noValidate
                 onSubmit={handleSubmit(onSubmit)}
-                  sx={{ mt: 3 ,      'input':{background:'#fff'}}}
+                sx={{ mt: 3, input: { background: '#fff' } }}
               >
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>

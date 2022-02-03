@@ -11,9 +11,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import { styles } from '@/components/dashboard/forms/styles';
-import TextEditor from '@/components/TextEditor'
+import TextEditor from '@/components/TextEditor';
 import { useMediaQuery } from '@mui/material';
-import {Theme}from '@mui/system'
+import { Theme } from '@mui/system';
 export default function AboutSection({
   register,
   errors,
@@ -21,34 +21,36 @@ export default function AboutSection({
   setValue,
   children,
   defaultData,
-  resetCount
+  resetCount,
 }: {
   defaultData?: RoomModel;
   children?: React.ReactNode;
-  register: (fieldName:string,config?:any)=>void;
-  setValue: (fieldName:string,value:any)=>void;
+  register: (fieldName: string, config?: any) => void;
+  setValue: (fieldName: string, value: any) => void;
   errors: any;
   roomCategories: Array<{
     id: number;
     name: string;
   }>;
-      resetCount?:number
+  resetCount?: number;
 }) {
-  const [categorySelected, setCategorieSelected] = useState<string>(
-   defaultData?defaultData.category: roomCategories[0].name
+  const [categorySelected, setCategorySelected] = useState<string>(
+    defaultData ? defaultData.category : roomCategories[0].name
   );
 
-const handlePolicies =(text:string)=>{
-setValue('description',text)
-}
+  const handlePolicies = (text: string) => {
+    setValue('description', text);
+  };
   const handleCategoryField = (event: SelectChangeEvent) => {
-    setCategorieSelected(event.target.value as string);
+    setCategorySelected(event.target.value as string);
   };
   useEffect(() => {
     setValue('category', categorySelected);
   }, [categorySelected]);
 
-     const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+  const isInSmScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('sm')
+  );
 
   return (
     <Box component="fieldset" sx={styles.fieldset}>
@@ -58,15 +60,15 @@ setValue('description',text)
       <Grid container spacing={{ sm: 2 }} alignItems="center">
         <Grid item xs={12} sm={6}>
           <TextField
-                    sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
+            sx={styles.textField}
+            size={isInSmScreen ? 'medium' : 'small'}
             id="name"
-            defaultValue={defaultData? defaultData.name:''}
+            defaultValue={defaultData ? defaultData.name : ''}
             {...register('name', {
               required: 'The name  is required',
               maxLength: {
                 value: 50,
-                message: 'The name must not exced the 50 character',
+                message: 'The name must not exceed the 50 character',
               },
             })}
             variant="outlined"
@@ -76,23 +78,25 @@ setValue('description',text)
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <FormControl fullWidth    sx={styles.textField}>
+          <FormControl fullWidth sx={styles.textField}>
             <InputLabel id="hotel-type">Category</InputLabel>
 
             <Select
-                    sx={{textTransform: 'capitalize' ,...styles.textField}}
-            size={isInSmScreen?'medium':"small"}
+              sx={{ textTransform: 'capitalize', ...styles.textField }}
+              size={isInSmScreen ? 'medium' : 'small'}
               labelId="hotel-type"
               label="Category"
               value={categorySelected}
               onChange={handleCategoryField}
-           
             >
               {roomCategories.map((type: { name: string; id: number }) => (
                 <MenuItem
                   key={type.id}
                   value={type.name}
-                  sx={{ textTransform: 'capitalize' ,'*':{fontSize:'14px'}}}
+                  sx={{
+                    textTransform: 'capitalize',
+                    '*': { fontSize: '14px' },
+                  }}
                 >
                   {type.name}
                 </MenuItem>
@@ -103,20 +107,20 @@ setValue('description',text)
         <input type="hidden" {...register('category')} />
       </Grid>
 
-       
-            <Grid item xs={12} sx={{my:1}}>
-      <input type="hidden"  {...register('description')}/>
-   
-      <TextEditor 
-        resetCount={resetCount}
-        defaultData={defaultData ?defaultData.description:''}
-        error={errors['description']? errors['description'].message:''}
-        onChange= {handlePolicies}
-      placeholder={
-          errors['description']
-            ? errors['description'].message
-            : 'Description'
-        }/>
+      <Grid item xs={12} sx={{ my: 1 }}>
+        <input type="hidden" {...register('description')} />
+
+        <TextEditor
+          resetCount={resetCount}
+          defaultData={defaultData ? defaultData.description : ''}
+          error={errors['description'] ? errors['description'].message : ''}
+          onChange={handlePolicies}
+          placeholder={
+            errors['description']
+              ? errors['description'].message
+              : 'Description'
+          }
+        />
       </Grid>
       {children}
     </Box>

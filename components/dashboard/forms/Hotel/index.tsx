@@ -9,7 +9,7 @@ import PoliciesSection from './PoliciesSection';
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
 import { styles } from '@/components/dashboard/forms/styles';
-import FormBottons from '@/components/dashboard/forms/FormBottons';
+import FormButtons from '@/components/dashboard/forms/FormButtons';
 type Feature = {
   id: number;
   name: string;
@@ -92,7 +92,7 @@ export default function MultilineTextFields(props: {
       familyFriendly: data.familyFriendly,
       petFriendly: data.petFriendly,
       ecoFriendly: data.ecoFriendly,
-      freeCancelation: data.freeCancelation,
+      freeCancellation: data.freeCancellation,
       accessible: data.accessible,
       holeAddress: data.holeAddress,
       country: data.country,
@@ -146,7 +146,7 @@ export default function MultilineTextFields(props: {
         resetCount={resetCount}
       />
 
-      <FormBottons onAbort={() => setResetCount(resetCount + 1)} />
+      <FormButtons onAbort={() => setResetCount(resetCount + 1)} />
     </Box>
   );
 }

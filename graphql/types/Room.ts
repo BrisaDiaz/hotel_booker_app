@@ -63,17 +63,17 @@ export const RoomModel = objectType({
     t.string('name');
     t.int('mts2');
     t.string('category');
-    t.boolean('canselationFree');
+    t.boolean('FreeCancellation');
     t.float('lowestPrice');
     t.float('taxesAndCharges');
-    t.float('cancelationFee');
+    t.float('cancellationFee');
     t.string('description');
     t.string('mainImage');
-    t.int('maximunGuests');
-    t.int('maximunStay');
-    t.int('minimunStay');
-    t.boolean('freeCancelation');
-    t.boolean('smooking');
+    t.int('maximumGuests');
+    t.int('maximumStay');
+    t.int('minimumStay');
+    t.boolean('freeCancellation');
+    t.boolean('smocking');
     t.list.field('beds', {
       type: 'RoomBed',
       resolve: (root: any): any => {
@@ -195,19 +195,19 @@ export const Mutation = extendType({
         hotelId: nonNull(idArg()),
         lowestPrice: nonNull(floatArg()),
         taxesAndCharges: nonNull(floatArg()),
-        cancelationFee: floatArg(),
+        cancellationFee: floatArg(),
         name: nonNull(stringArg()),
         mts2: nonNull(intArg()),
         category: nonNull(stringArg()),
         description: nonNull(stringArg()),
-        minimunStay: nonNull(intArg()),
-        maximunStay: intArg(),
-        maximunGuests: nonNull(intArg()),
+        minimumStay: nonNull(intArg()),
+        maximumStay: intArg(),
+        maximumGuests: nonNull(intArg()),
         mainImage: nonNull(stringArg()),
         services: nonNull(list(stringArg())),
         amenities: nonNull(list(stringArg())),
-        freeCancelation: nonNull(booleanArg()),
-        smooking: nonNull(booleanArg()),
+        freeCancellation: nonNull(booleanArg()),
+        smocking: nonNull(booleanArg()),
         beds: nonNull(list(bedsSpecifications)),
       },
       resolve(root, args, ctx): any {
@@ -228,14 +228,14 @@ export const Mutation = extendType({
               roomCategory: { connect: { name: args.category } },
               lowestPrice: args.lowestPrice,
               taxesAndCharges: args.taxesAndCharges,
-              cancelationFee: args.cancelationFee,
+              cancellationFee: args.cancellationFee,
               description: args.description,
-              maximunStay: args.maximunStay,
-              minimunStay: args.maximunStay,
-              maximunGuests: args.maximunGuests,
+              maximumStay: args.maximumStay,
+              minimumStay: args.maximumStay,
+              maximumGuests: args.maximumGuests,
               mainImage: args.mainImage,
-              freeCancelation: args.freeCancelation,
-              smooking: args.smooking,
+              freeCancellation: args.freeCancellation,
+              smocking: args.smocking,
               services: {
                 connect: args?.services?.map((service: string) => ({
                   name: service,
@@ -280,19 +280,19 @@ export const Mutation = extendType({
         roomModelId: nonNull(idArg()),
         lowestPrice: floatArg(),
         taxesAndCharges: floatArg(),
-        cancelationFee: floatArg(),
+        cancellationFee: floatArg(),
         name: stringArg(),
         mts2: intArg(),
         category: stringArg(),
         description: stringArg(),
-        minimunStay: intArg(),
-        maximunStay: intArg(),
-        maximunGuests: intArg(),
+        minimumStay: intArg(),
+        maximumStay: intArg(),
+        maximumGuests: intArg(),
         mainImage: stringArg(),
         services: list(stringArg()),
         amenities: list(stringArg()),
-        freeCancelation: booleanArg(),
-        smooking: booleanArg(),
+        freeCancellation: booleanArg(),
+        smocking: booleanArg(),
         beds: list(bedsSpecifications),
       },
       resolve(root, args, ctx): any {
@@ -324,7 +324,7 @@ export const Mutation = extendType({
                 roomModelId: roomModelId,
               },
             });
-            const promices = args.beds.map(
+            const promises = args.beds.map(
               (bed: { type: string; quantity: number }) =>
                 prisma.roomBed.create({
                   data: {
@@ -334,7 +334,7 @@ export const Mutation = extendType({
                   },
                 })
             );
-            await Promise.all(promices);
+            await Promise.all(promises);
           }
           return prisma.roomModel.update({
             where: {
@@ -350,14 +350,14 @@ export const Mutation = extendType({
                 : undefined,
               lowestPrice: args.lowestPrice,
               taxesAndCharges: args.taxesAndCharges,
-              cancelationFee: args.cancelationFee,
+              cancellationFee: args.cancellationFee,
               description: args.description,
-              maximunStay: args.maximunStay,
-              minimunStay: args.maximunStay,
-              maximunGuests: args.maximunGuests,
+              maximumStay: args.maximumStay,
+              minimumStay: args.maximumStay,
+              maximumGuests: args.maximumGuests,
               mainImage,
-              freeCancelation: args.freeCancelation,
-              smooking: args.smooking,
+              freeCancellation: args.freeCancellation,
+              smocking: args.smocking,
               services: args.services?.length
                 ? {
                     connect: args?.services?.map((service: string) => ({

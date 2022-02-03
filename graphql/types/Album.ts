@@ -123,15 +123,15 @@ export const Mutation = extendType({
             });
           }
           const toDeleteImgs: { id: number; src: string }[] = [];
-          const storagedUrls: string[] = [];
+          const savedUrls: string[] = [];
           const toCreateImagesUrls: string[] = [];
 
           albumFound.images.forEach((img: { id: number; src: string }) => {
             !args.images.includes(img.src) && toDeleteImgs.push(img);
-            storagedUrls.push(img.src);
+            savedUrls.push(img.src);
           });
           args.images.forEach((url: string) => {
-            !storagedUrls.includes(url) && toCreateImagesUrls.push(url);
+            !savedUrls.includes(url) && toCreateImagesUrls.push(url);
           });
 
           //// delete the removed images

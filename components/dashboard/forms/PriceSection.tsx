@@ -5,7 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Grid from '@mui/material/Grid';
 import { styles } from '@/components/dashboard/forms/styles';
 import { useMediaQuery } from '@mui/material';
-import {Theme}from '@mui/system'
+import { Theme } from '@mui/system';
 export default function PriceSection({
   register,
   errors,
@@ -14,12 +14,14 @@ export default function PriceSection({
   children,
 }: {
   children?: React.ReactNode;
-  register: (fieldName:string,config?:any)=>void;
+  register: (fieldName: string, config?: any) => void;
   errors: any;
   defaultData?: any;
   sourceForm?: 'roomForm' | 'hotelForm';
 }) {
-    const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+  const isInSmScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('sm')
+  );
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -29,14 +31,13 @@ export default function PriceSection({
         <Grid item xs={12} sm={6}>
           <TextField
             sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
-
+            size={isInSmScreen ? 'medium' : 'small'}
             id="lowestPrice"
             {...register('lowestPrice', {
               required: 'The lowest price is required',
               min: {
                 value: 0,
-                message: 'The ammount must be a positive number',
+                message: 'The amount must be a positive number',
               },
             })}
             variant="outlined"
@@ -51,7 +52,6 @@ export default function PriceSection({
             type="number"
             error={errors['lowestPrice'] ? true : false}
             InputProps={{
-      
               startAdornment: (
                 <InputAdornment position="start">$</InputAdornment>
               ),
@@ -60,9 +60,8 @@ export default function PriceSection({
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-             sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
-     
+            sx={styles.textField}
+            size={isInSmScreen ? 'medium' : 'small'}
             id="taxesAndCharges"
             defaultValue={
               defaultData?.taxesAndCharges ? defaultData.taxesAndCharges : 0
@@ -71,7 +70,7 @@ export default function PriceSection({
               required: 'The taxes are required',
               min: {
                 value: 0,
-                message: 'The ammount must be a positive number',
+                message: 'The amount must be a positive number',
               },
             })}
             variant="outlined"
@@ -83,7 +82,6 @@ export default function PriceSection({
             type="number"
             error={errors['taxesAndCharges'] ? true : false}
             InputProps={{
-       
               startAdornment: (
                 <InputAdornment position="start">$</InputAdornment>
               ),
@@ -96,28 +94,26 @@ export default function PriceSection({
           <Grid item xs={12} sm={6}>
             <TextField
               sx={styles.textField}
-            
-            size={isInSmScreen?'medium':"small"}
-              id="cancelationFee"
+              size={isInSmScreen ? 'medium' : 'small'}
+              id="cancellationFee"
               defaultValue={
-                defaultData?.cancelationFee ? defaultData.cancelationFee : 0
+                defaultData?.cancellationFee ? defaultData.cancellationFee : 0
               }
-              {...register('cancelationFee', {
+              {...register('cancellationFee', {
                 min: {
                   value: 0,
-                  message: 'The ammount must be a positive number',
+                  message: 'The amount must be a positive number',
                 },
               })}
               variant="outlined"
               label={
-                errors['cancelationFee']
-                  ? errors['cancelationFee'].message
-                  : 'Cancelation Fee'
+                errors['cancellationFee']
+                  ? errors['cancellationFee'].message
+                  : 'cancellation Fee'
               }
               type="number"
-              error={errors['cancelationFee'] ? true : false}
+              error={errors['cancellationFee'] ? true : false}
               InputProps={{
-           
                 startAdornment: (
                   <InputAdornment position="start">$</InputAdornment>
                 ),

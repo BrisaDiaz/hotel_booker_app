@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import BookingRequesInfo from '@/components/modals/BookingRequesInfo';
+import BookingRequestInfo from '@/components/modals/BookingRequestInfo';
 import CloseButton from '@/components/modals/CloseButton';
 import BookingAdminInputs from '@/components/modals/BookingAdminInputs';
 import { styles } from './styles';
@@ -79,7 +79,7 @@ export default function BasicModal({
           >
             Confirm Reservation
           </Typography>
-          <BookingRequesInfo requestInfo={requestInfo} />
+          <BookingRequestInfo requestInfo={requestInfo} />
           <Box sx={{ my: 2 }} />
           <BookingAdminInputs
             errors={errors}

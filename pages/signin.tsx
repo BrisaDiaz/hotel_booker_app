@@ -48,7 +48,7 @@ const SignIn: WithLayoutPage = () => {
     onError: ({ message }) => {
       notify({
         type: 'error',
-        content: message || "Signin couldn't be complited",
+        content: message || "Signin couldn't be completed",
       });
     },
     onCompleted: (data) => {

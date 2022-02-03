@@ -7,8 +7,8 @@ export type Feature = {
 };
 export type Features = {
   __typename: string;
-  accesible: boolean;
-  freeCancelation: boolean;
+  accessible: boolean;
+  freeCancellation: boolean;
   familyFriendly: boolean;
   petFriendly: boolean;
   smokerFriendly: boolean;
@@ -33,14 +33,14 @@ export interface RoomModel {
   mts2: number;
   mainImage: string;
   lowestPrice: number;
-  cancelationFee: number;
+  cancellationFee: number;
   taxesAndCharges: number;
-  maximunGuests: number;
-  maximunStay: number;
-  minimunStay: number;
+  maximumGuests: number;
+  maximumStay: number;
+  minimumStay: number;
   description: string;
-  freeCancelation: boolean;
-  smooking: boolean;
+  freeCancellation: boolean;
+  smocking: boolean;
   amenities: Feature[];
   services: Feature[];
   beds: WithQuantityFeature[];
@@ -82,21 +82,21 @@ export interface Hotel {
   miniatures: Image[];
   imagesCount: number;
 }
-export interface RoomBuildierVariables {
+export interface RoomBuilderVariables {
   hotelId?: number;
   beds: Array<{ type: string; quantity: number }>;
   services: string[];
   amenities: string[];
   name: string;
   description: string;
-  smooking: boolean;
-  freeCancelation: boolean;
+  smocking: boolean;
+  freeCancellation: boolean;
   category: string;
   mts2: number;
   mainImage: File;
-  maximunGuests: number;
-  maximunNights?: number;
-  minimunNights: number;
+  maximumGuests: number;
+  maximumNights?: number;
+  minimumNights: number;
   lowestPrice: number;
   taxesAndCharges?: number;
 }
@@ -182,10 +182,10 @@ export interface Booking {
     children: number;
   }[];
 }
-export interface CancelationDetails {
+export interface CancellationDetails {
   id: number;
   createdAt: string;
-  cancelationFee: number;
+  cancellationFee: number;
   message: string;
   bookingId: number;
 }

@@ -65,7 +65,7 @@ const HotelUploadPage: any = ({
   const onSubmit = async (hotelVariables: HotelVariables) => {
     if (!authContext.session.user) return router.push('/signin');
 
-    const toUploadImages = [
+    const toUploAdminages = [
       hotelVariables.interiorImage,
       hotelVariables.frameImage,
     ];
@@ -73,7 +73,7 @@ const HotelUploadPage: any = ({
     setIsLoading(true);
 
     try {
-      const images = await uploadToCloudinary(toUploadImages);
+      const images = await uploadToCloudinary(toUploAdminages);
       if (!images.length) {
         setIsLoading(false);
         return notify({

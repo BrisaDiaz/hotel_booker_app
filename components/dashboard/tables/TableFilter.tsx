@@ -14,8 +14,8 @@ export default function TableFilter({
   isModalOpen,
 }: {
   searchFields: { label: string; value: string; type: string }[];
-  onSearch: (fieldToSearchAt:string,value:string)=>void;
-  closeModal: ()=>void;
+  onSearch: (fieldToSearchAt: string, value: string) => void;
+  closeModal: () => void;
   isModalOpen: boolean;
 }) {
   const [open, setOpen] = React.useState(false);

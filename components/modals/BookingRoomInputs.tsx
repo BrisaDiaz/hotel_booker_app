@@ -9,8 +9,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PeopleIcon from '@mui/icons-material/People';
 import { styles } from './styles';
 import { v4 as uuidv4 } from 'uuid';
-import {Theme}from '@mui/system'
-import { getFormatedDate } from '@/utils/ToYearMounthDayFormat';
+import { Theme } from '@mui/system';
+import { getFormattedDate } from '@/utils/ToYearMonthDayFormat';
 import { useMediaQuery } from '@mui/material';
 export type Room = {
   children: number;
@@ -41,10 +41,16 @@ function RoomField({
 }: {
   room: Room;
   index: number;
-  onDelete: ()=>void;
-  handleChange: (roomId:string,field:'adults'|'children',quantity:number)=>void;
+  onDelete: () => void;
+  handleChange: (
+    roomId: string,
+    field: 'adults' | 'children',
+    quantity: number
+  ) => void;
 }) {
-   const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+  const isInSmScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('sm')
+  );
   return (
     <div>
       <Box component="div" sx={{ my: 2 }}>
@@ -53,9 +59,9 @@ function RoomField({
             Room {index}
           </Typography>
           <TextField
-              size={isInSmScreen?'medium':"small"}
+            size={isInSmScreen ? 'medium' : 'small'}
             type="number"
-              sx={styles.input}
+            sx={styles.input}
             label="Adults"
             fullWidth
             onChange={(e) =>
@@ -65,7 +71,7 @@ function RoomField({
             InputProps={{ inputProps: { min: 0 } }}
           />
           <TextField
-       size={isInSmScreen?'medium':"small"}
+            size={isInSmScreen ? 'medium' : 'small'}
             sx={styles.input}
             type="number"
             label="Children"
@@ -99,17 +105,17 @@ export default function BookingRoomInputs({
   setValue,
   defaultValues,
 }: {
-  register: (fieldName:string,config?:any)=>void;
-  setError:  (fieldName:string,error?:any)=>void;
+  register: (fieldName: string, config?: any) => void;
+  setError: (fieldName: string, error?: any) => void;
   errors: any;
-  setValue: (fieldName:string,value:any)=>void;
+  setValue: (fieldName: string, value: any) => void;
   defaultValues?: {
     checkInDate?: string;
     checkOutDate?: string;
     rooms?: { adults: number; children: number }[];
   };
 }) {
-  const minDate = getFormatedDate(new Date(Date.now()).getTime());
+  const minDate = getFormattedDate(new Date(Date.now()).getTime());
   const [rooms, setRooms] = React.useState<Room[]>(
     defaultValues?.rooms
       ? defaultValues.rooms.map((room) => ({
@@ -126,8 +132,8 @@ export default function BookingRoomInputs({
   const [checkOutDate, setCheckOutDate] = React.useState<string>(
     defaultValues?.checkOutDate ? defaultValues?.checkOutDate : minDate
   );
-  const handdleAddRoom = () => {
-    // verify user is not adding emty rooms
+  const handleAddRoom = () => {
+    // verify user is not adding empty rooms
     if (
       rooms[rooms.length - 1].children > 0 ||
       rooms[rooms.length - 1].adults > 0
@@ -196,7 +202,9 @@ export default function BookingRoomInputs({
     handleDateChanges();
   }, [checkInDate, checkOutDate]);
 
-     const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+  const isInSmScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('sm')
+  );
   return (
     <div>
       <Box sx={styles.withIconLabel}>
@@ -208,17 +216,17 @@ export default function BookingRoomInputs({
       <Typography component="div" sx={{ my: 2 }}>
         <Box sx={flexBox}>
           <TextField
-                 size={isInSmScreen?'medium':"small"}
+            size={isInSmScreen ? 'medium' : 'small'}
             type="date"
             fullWidth
-              sx={styles.input}
+            sx={styles.input}
             value={checkInDate}
             onChange={(e) => setCheckInDate(e.target.value)}
             error={errors['checkInDate']?.message}
           />
           <TextField
-               size={isInSmScreen?'medium':"small"}
-                sx={styles.input}
+            size={isInSmScreen ? 'medium' : 'small'}
+            sx={styles.input}
             type="date"
             fullWidth
             value={checkOutDate}
@@ -260,7 +268,7 @@ export default function BookingRoomInputs({
       </Box>
       <Button
         sx={{ marginLeft: 'auto', mt: 1, display: 'flex' }}
-        onClick={() => handdleAddRoom()}
+        onClick={() => handleAddRoom()}
       >
         Add Room
       </Button>
@@ -277,7 +285,7 @@ export default function BookingRoomInputs({
           required: true,
         })}
       />
-      <input defaultValue={1} type="hidden" {...register('requiedRooms')} />
+      <input defaultValue={1} type="hidden" {...register('requiredRooms')} />
     </div>
   );
 }

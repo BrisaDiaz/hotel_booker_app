@@ -147,7 +147,7 @@ const Search = ({
             ) : (
               <Box>
                 <Typography>
-                  {"There wasn't any coincidens for the search"}
+                  {"There wasn't any coincidence for the search"}
                 </Typography>
               </Box>
             )}

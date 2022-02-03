@@ -1,8 +1,8 @@
 /*
   Warnings:
 
-  - A unique constraint covering the columns `[roomModelId]` on the table `Albun` will be added. If there are existing duplicate values, this will fail.
+  - A unique constraint covering the columns `[roomModelId]` on the table `Album` will be added. If there are existing duplicate values, this will fail.
 
 */
 -- CreateIndex
-CREATE UNIQUE INDEX "Albun_roomModelId_key" ON "Albun"("roomModelId");
+CREATE UNIQUE INDEX "Album_roomModelId_key" ON "Album"("roomModelId");

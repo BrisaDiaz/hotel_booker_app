@@ -18,7 +18,7 @@ const MenuProps = {
   },
 };
 
-export default function MultipleSelectCheckmarks({
+export default function MultipleSelectCheckMarks({
   items,
   fieldName,
 }: {

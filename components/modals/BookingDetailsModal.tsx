@@ -12,33 +12,29 @@ import { toDateAndHourFormat } from '@/utils/index';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
-import { Booking, CancelationDetails } from '@/interfaces/index';
+import { Booking, CancellationDetails } from '@/interfaces/index';
 import { styles } from './styles';
-import currencyFixer from '@/utils/currencyFixer'
+import currencyFixer from '@/utils/currencyFixer';
 export default function BasicModal({
   bookingData,
   isOpen,
   onClose,
   onCancel,
-  cancelationDetails,
+  cancellationDetails,
 }: {
   isOpen: boolean;
-  onClose: ()=>void;
-  onCancel: ()=>void;
+  onClose: () => void;
+  onCancel: () => void;
   bookingData: Booking | null;
-  cancelationDetails?: CancelationDetails | null;
+  cancellationDetails?: CancellationDetails | null;
 }) {
-
-
   const handleClose = () => {
-
     onClose();
   };
 
-
   if (
     !bookingData ||
-    (bookingData.status === 'CANCELED' && !cancelationDetails)
+    (bookingData.status === 'CANCELED' && !cancellationDetails)
   )
     return <div />;
   return (
@@ -66,34 +62,34 @@ export default function BasicModal({
           </Box>
           <Box component="ul" sx={{ mb: 2, px: 0 }}>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Booking ID:</Typography>
+              <Typography sx={styles.legend}>Booking ID:</Typography>
               <Typography component="span">{bookingData?.id}</Typography>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Guest ID:</Typography>
+              <Typography sx={styles.legend}>Guest ID:</Typography>
               <Typography component="span">{bookingData?.clientId}</Typography>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Room Type:</Typography>
+              <Typography sx={styles.legend}>Room Type:</Typography>
               <Typography component="span">
                 {bookingData?.roomModel?.name}
               </Typography>
             </Box>
-                  <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Check In Date:</Typography>
+            <Box component="li" sx={styles.list}>
+              <Typography sx={styles.legend}>Check In Date:</Typography>
               <time>
                 {toDateAndHourFormat(parseInt(bookingData?.checkInDate))}
               </time>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Check Out Date:</Typography>
+              <Typography sx={styles.legend}>Check Out Date:</Typography>
               <time>
                 {toDateAndHourFormat(parseInt(bookingData?.checkOutDate))}
               </time>
             </Box>
-         
+
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Guest/Room: </Typography>
+              <Typography sx={styles.legend}>Guest/Room: </Typography>
               <Box sx={{ p: 0, gap: 1, display: 'grid' }}>
                 {bookingData?.guestsDistribution?.map((room, index) => (
                   <Box key={index} sx={styles.roomGuests}>
@@ -113,14 +109,13 @@ export default function BasicModal({
                 ))}
               </Box>
             </Box>
-         <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Staying Rooms:</Typography>
-              <Stack
-                direction="row"
-                sx={{ flexWrap: 'wrap', gap: '6px', }}
-              >
+            <Box component="li" sx={styles.list}>
+              <Typography sx={styles.legend}>Staying Rooms:</Typography>
+              <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '6px' }}>
                 {bookingData?.reservedRooms?.map((room) => (
-                  <Typography sx={{fontSize:'14px'} } key={room?.number} >{room?.number} </Typography>
+                  <Typography sx={{ fontSize: '14px' }} key={room?.number}>
+                    {room?.number}{' '}
+                  </Typography>
                 ))}
               </Stack>
             </Box>
@@ -136,7 +131,7 @@ export default function BasicModal({
               <Typography component="h3">Payment</Typography>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>
+              <Typography sx={styles.legend}>
                 {bookingData?.status === 'CANCELED' ? 'Cost:' : 'Total Cost:'}
               </Typography>
               <Typography component="span">
@@ -144,45 +139,47 @@ export default function BasicModal({
               </Typography>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={styles.leyend}>Payment Method: </Typography>
+              <Typography sx={styles.legend}>Payment Method: </Typography>
               <Typography component="span">
                 {bookingData?.paymentMethod.split('_').join(' ').toLowerCase()}
               </Typography>
             </Box>
-            {bookingData?.status === 'CANCELED' &&  cancelationDetails&& (
+            {bookingData?.status === 'CANCELED' && cancellationDetails && (
               <>
                 <Box sx={styles.withIconLabel}>
                   <DoNotDisturbIcon />
-                  <Typography component="h3" >Cancelation Details</Typography>
+                  <Typography component="h3">Cancellation Details</Typography>
                 </Box>
                 <Box sx={{ my: 1.5, ml: 1 }}>
-                  <Typography sx={styles.leyend}>Message:</Typography>
+                  <Typography sx={styles.legend}>Message:</Typography>
                   <Typography variant="body2" sx={{ mt: 1.5 }}>
-                    {cancelationDetails?.message}
+                    {cancellationDetails?.message}
                   </Typography>
                 </Box>
 
                 <Box component="li" sx={styles.list}>
-                  <Typography sx={styles.leyend}>Cancelation Date:</Typography>
+                  <Typography sx={styles.legend}>Cancellation Date:</Typography>
                   <time>
                     {toDateAndHourFormat(
-                      parseInt(cancelationDetails?.createdAt)
+                      parseInt(cancellationDetails?.createdAt)
                     )}
                   </time>
                 </Box>
 
                 <Box component="li" sx={styles.list}>
-                  <Typography sx={styles.leyend}>cancelation Fee</Typography>
+                  <Typography sx={styles.legend}>cancellation Fee</Typography>
                   <Typography component="span">
-                    USD {currencyFixer(cancelationDetails.cancelationFee)}
+                    USD {currencyFixer(cancellationDetails.cancellationFee)}
                   </Typography>
                 </Box>
                 <Box component="li" sx={styles.list}>
-                  <Typography sx={styles.leyend}>Total Const</Typography>
+                  <Typography sx={styles.legend}>Total Const</Typography>
                   <Typography component="span">
-                    USD 
-                    {currencyFixer(bookingData?.totalCost +
-                      cancelationDetails?.cancelationFee)}
+                    USD
+                    {currencyFixer(
+                      bookingData?.totalCost +
+                        cancellationDetails?.cancellationFee
+                    )}
                   </Typography>
                 </Box>
               </>
@@ -193,7 +190,7 @@ export default function BasicModal({
                   variant="outlined"
                   size="small"
                   color="secondary"
-                  sx={{textTransform:'capitalize'}}
+                  sx={{ textTransform: 'capitalize' }}
                   onClick={() => onCancel()}
                 >
                   Cancel Booking

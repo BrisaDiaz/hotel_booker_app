@@ -5,46 +5,46 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { styles } from '@/components/dashboard/forms/styles';
-import TextEditor from '@/components/TextEditor'
+import TextEditor from '@/components/TextEditor';
 import { useMediaQuery } from '@mui/material';
-import {Theme}from '@mui/system'
+import { Theme } from '@mui/system';
 export default function PoliciesSection({
   register,
   errors,
   defaultData,
   children,
-setValue,
-  resetCount
+  setValue,
+  resetCount,
 }: {
   children?: React.ReactNode;
-  register: (fieldName:string,config?:any)=>void;
-  setValue: (fieldName:string,value:any)=>void;
+  register: (fieldName: string, config?: any) => void;
+  setValue: (fieldName: string, value: any) => void;
   errors: any;
   defaultData?: any;
-  resetCount?:number
+  resetCount?: number;
 }) {
-
-const handlePolicies =(text:string)=>{
-setValue('policiesAndRules',text)
-}
-   const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+  const handlePolicies = (text: string) => {
+    setValue('policiesAndRules', text);
+  };
+  const isInSmScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('sm')
+  );
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
         Policies and Rules
       </Typography>
 
-      <Grid container spacing={2} alignItems="center" sx={ { mb:1}}>
+      <Grid container spacing={2} alignItems="center" sx={{ mb: 1 }}>
         <Grid item xs={6}>
           <TextField
-          
             id="checkInHour"
-            label="Checkin hour"
+            label="Check-in hour"
             type="time"
             {...register('checkInHour')}
             variant="outlined"
-                  sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
+            sx={styles.textField}
+            size={isInSmScreen ? 'medium' : 'small'}
             InputLabelProps={{
               shrink: true,
             }}
@@ -56,14 +56,13 @@ setValue('policiesAndRules',text)
         </Grid>
         <Grid item xs={6}>
           <TextField
-                          sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
+            sx={styles.textField}
+            size={isInSmScreen ? 'medium' : 'small'}
             variant="outlined"
             id="checkOutHour"
             {...register('checkOutHour')}
-            label="Checkout hour"
+            label="Check-out hour"
             type="time"
-  
             InputLabelProps={{
               shrink: true,
             }}
@@ -74,22 +73,27 @@ setValue('policiesAndRules',text)
           />
         </Grid>
       </Grid>
-<input type="hidden"  {...register('policiesAndRules',{
-  require:'The policies and rules are required'
-})}/>
-   <Box sx={{mb:1}}>
-      <TextEditor 
-      
-        defaultData={defaultData ?defaultData.policiesAndRules:''}
-        error={errors['policiesAndRules']? errors['policiesAndRules'].message:''}
-        onChange= {handlePolicies}
+      <input
+        type="hidden"
+        {...register('policiesAndRules', {
+          require: 'The policies and rules are required',
+        })}
+      />
+      <Box sx={{ mb: 1 }}>
+        <TextEditor
+          defaultData={defaultData ? defaultData.policiesAndRules : ''}
+          error={
+            errors['policiesAndRules'] ? errors['policiesAndRules'].message : ''
+          }
+          onChange={handlePolicies}
           resetCount={resetCount}
-      placeholder={
-          errors['policiesAndRules']
-            ? errors['policiesAndRules'].message
-            : 'Policies and Rules'
-        }/>
-        </Box>
+          placeholder={
+            errors['policiesAndRules']
+              ? errors['policiesAndRules'].message
+              : 'Policies and Rules'
+          }
+        />
+      </Box>
       {children}
     </Grid>
   );

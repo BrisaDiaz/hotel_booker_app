@@ -5,7 +5,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 export default function ResponsiveDialog({
@@ -21,13 +20,12 @@ export default function ResponsiveDialog({
   acceptLabel: string;
   rejectLabel: string;
   text: string;
-  onAccept: ()=>void;
-  onCancel?: ()=>void;
+  onAccept: () => void;
+  onCancel?: () => void;
   isDialogOpen: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
-  
 
   const handleClose = () => {
     setOpen(false);
@@ -41,8 +39,8 @@ export default function ResponsiveDialog({
     }
     handleClose();
   }, [isDialogOpen]);
-  const hadleResponce = (responce: 'accept' | 'reject') => {
-    if (responce === 'accept') {
+  const handleResponse = (Response: 'accept' | 'reject') => {
+    if (Response === 'accept') {
       onAccept();
       return handleClose();
     }
@@ -66,11 +64,11 @@ export default function ResponsiveDialog({
           <DialogContentText>{text}</DialogContentText>
         </DialogContent>
         <DialogActions sx={{ mb: 1, mr: 1 }}>
-          <Button autoFocus onClick={() => hadleResponce('reject')}>
+          <Button autoFocus onClick={() => handleResponse('reject')}>
             {rejectLabel}
           </Button>
           <Button
-            onClick={() => hadleResponce('accept')}
+            onClick={() => handleResponse('accept')}
             autoFocus
             variant="outlined"
           >

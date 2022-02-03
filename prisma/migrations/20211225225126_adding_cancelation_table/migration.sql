@@ -2,8 +2,8 @@
   Warnings:
 
   - The values [FINISH] on the enum `BookingStatus` will be removed. If these variants are still used in the database, this will fail.
-  - Added the required column `cancelationDetailsId` to the `Booking` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `cancelationFee` to the `RoomModel` table without a default value. This is not possible if the table is not empty.
+  - Added the required column `cancellationDetailsId` to the `Booking` table without a default value. This is not possible if the table is not empty.
+  - Added the required column `cancellationFee` to the `RoomModel` table without a default value. This is not possible if the table is not empty.
 
 */
 -- AlterEnum
@@ -18,25 +18,25 @@ ALTER TABLE "Booking" ALTER COLUMN "status" SET DEFAULT 'ACTIVE';
 COMMIT;
 
 -- AlterTable
-ALTER TABLE "Booking" ADD COLUMN     "cancelationDetailsId" INTEGER NOT NULL;
+ALTER TABLE "Booking" ADD COLUMN     "cancellationDetailsId" INTEGER NOT NULL;
 
 -- AlterTable
-ALTER TABLE "RoomModel" ADD COLUMN     "cancelationFee" DOUBLE PRECISION NOT NULL;
+ALTER TABLE "RoomModel" ADD COLUMN     "cancellationFee" DOUBLE PRECISION NOT NULL;
 
 -- CreateTable
-CREATE TABLE "CancelationDetails" (
+CREATE TABLE "CancellationDetails" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "message" TEXT NOT NULL,
-    "cancelationFee" DOUBLE PRECISION NOT NULL,
+    "cancellationFee" DOUBLE PRECISION NOT NULL,
     "bookingId" INTEGER NOT NULL,
 
-    CONSTRAINT "CancelationDetails_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "CancellationDetails_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CancelationDetails_bookingId_key" ON "CancelationDetails"("bookingId");
+CREATE UNIQUE INDEX "CancellationDetails_bookingId_key" ON "CancellationDetails"("bookingId");
 
 -- AddForeignKey
-ALTER TABLE "CancelationDetails" ADD CONSTRAINT "CancelationDetails_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CancellationDetails" ADD CONSTRAINT "CancellationDetails_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

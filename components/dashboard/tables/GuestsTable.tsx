@@ -147,7 +147,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number | null;
-  handleActions: (action:'search' |'pageChange',value:string[]|number )=>void;
+  handleActions: (
+    action: 'search' | 'pageChange',
+    value: string[] | number
+  ) => void;
 }
 ///// TOGGLE ON CHECK
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
@@ -225,7 +228,10 @@ export default function EnhancedTable({
   currentPage,
 }: {
   data?: Array<HotelGuest>;
-  handleActions: (action:'search' |'pageChange',value:string[]|number )=>void;
+  handleActions: (
+    action: 'search' | 'pageChange',
+    value: string[] | number
+  ) => void;
   totalResults: number;
   currentPage: number;
 }) {
@@ -382,21 +388,21 @@ export default function EnhancedTable({
 
                         <TableCell
                           align="left"
-                          sx={{ minWidth: 'max-content' ,whiteSpace:'pre'}}
+                          sx={{ minWidth: 'max-content', whiteSpace: 'pre' }}
                         >
                           {row.mobileNumber}
                         </TableCell>
 
                         <TableCell
                           align="left"
-                          sx={{ minWidth: 'max-content' ,whiteSpace:'pre'}}
+                          sx={{ minWidth: 'max-content', whiteSpace: 'pre' }}
                         >
                           {row.landlineNumber}
                         </TableCell>
 
                         <TableCell
                           align="left"
-                          sx={{ minWidth: 'max-content' ,whiteSpace:'pre'}}
+                          sx={{ minWidth: 'max-content', whiteSpace: 'pre' }}
                         >
                           {row.email}
                         </TableCell>

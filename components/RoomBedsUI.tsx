@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import BedIcone from '@/components/BedIcone';
-type IconeSize = 'small' | 'inherit' | 'medium' | 'large';
-interface withIconeBed {
+import BedIcon from '@/components/BedIcon';
+type IconSize = 'small' | 'inherit' | 'medium' | 'large';
+interface withIconBed {
   label: string;
-  Icone: JSX.Element;
+  Icon: JSX.Element;
 }
 interface withQuantityFeature {
   id: number;
@@ -13,26 +13,26 @@ interface withQuantityFeature {
 }
 const getBedsInterface = (
   beds: withQuantityFeature[],
-  size?: IconeSize
-): withIconeBed[] => {
+  size?: IconSize
+): withIconBed[] => {
   const bedsInterface = beds.map((bedInfo) => ({
     label: `${bedInfo.quantity} ${bedInfo.type} ${
       bedInfo.quantity > 1 ? 'beds' : 'bed'
     }`,
-    Icone: <BedIcone type={bedInfo.type} size={size} />,
+    Icon: <BedIcon type={bedInfo.type} size={size} />,
   }));
   return bedsInterface;
 };
 export default function RoomBedsUI({
   beds,
   size,
-  fontSize
+  fontSize,
 }: {
   beds: withQuantityFeature[];
-  size: IconeSize;
-  fontSize?:string
+  size: IconSize;
+  fontSize?: string;
 }) {
-  const bedsWidthIcon: withIconeBed[] = getBedsInterface(beds, size);
+  const bedsWidthIcon: withIconBed[] = getBedsInterface(beds, size);
   return (
     <Box sx={{ display: 'flex', columnGap: '8px' }}>
       <Box
@@ -53,12 +53,12 @@ export default function RoomBedsUI({
                 mr: 0.5,
               }}
             >
-              {bed.Icone}
+              {bed.Icon}
               <Typography
                 variant={size === 'small' ? 'body2' : 'subtitle1'}
                 sx={{
                   minWidth: 'max-content',
-                  fontSize:fontSize ? fontSize : 'inherit'
+                  fontSize: fontSize ? fontSize : 'inherit',
                 }}
               >
                 {bed.label}

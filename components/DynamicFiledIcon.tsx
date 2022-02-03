@@ -11,7 +11,7 @@ import SmokingRoomsIcon from '@mui/icons-material/SmokingRooms';
 import PaidIcon from '@mui/icons-material/Paid';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 
-const DinamicIcons = (subject: string) => {
+const dynamicIcons = (subject: string) => {
   const subjectName = subject.toLowerCase().trim();
   return subjectName == 'facilities' ? (
     <ApartmentIcon />
@@ -39,4 +39,4 @@ const DinamicIcons = (subject: string) => {
     <LocalFloristIcon color="primary" fontSize="small" />
   ) : null;
 };
-export default DinamicIcons;
+export default dynamicIcons;

@@ -159,7 +159,7 @@ export default function PersistentDrawerLeft({
     setOpen(false);
   };
   const features = [
-    { id: 1, name: 'free cancelation' },
+    { id: 1, name: 'free cancellation' },
     { id: 2, name: 'accessible' },
     { id: 3, name: 'family friendly' },
     { id: 4, name: 'pet friendly' },

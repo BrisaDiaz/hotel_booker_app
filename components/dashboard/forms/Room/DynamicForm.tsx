@@ -9,7 +9,7 @@ import PriceSection from '../PriceSection';
 
 import FeaturesSection from './FeaturesSection';
 import AspectSection from './AspectSection';
-import FormBottons from '../FormBottons';
+import FormButtons from '../FormButtons';
 import { RoomModel } from '@/interfaces/index';
 import { styles } from '@/components/dashboard/forms/styles';
 import FullScreenModal from '@/components/modals/FullScreenModal';
@@ -82,9 +82,9 @@ export default function MultilineTextFields({
       variables = {
         mts2: data.mts2 * 1,
         beds: pickedBedQuantities,
-        maximunGuests: data.maximunGuests * 1,
-        maximunStay: data.maximunNights * 1 || 0,
-        minimunStay: data.minimunNights * 1,
+        maximumGuests: data.maximumGuests * 1,
+        maximumStay: data.maximumNights * 1 || 0,
+        minimumStay: data.minimumNights * 1,
       };
       return submitHandler(variables);
     }
@@ -92,7 +92,7 @@ export default function MultilineTextFields({
       variables = {
         lowestPrice: data.lowestPrice * 1,
         taxesAndCharges: data.taxesAndCharges * 1,
-        cancelationFee: data.cancelationFee * 1,
+        cancellationFee: data.cancellationFee * 1,
       };
       return submitHandler(variables);
     }
@@ -114,8 +114,8 @@ export default function MultilineTextFields({
         beds: pickedBedQuantities,
         services: data.services,
         amenities: data.amenities,
-        smooking: data.smooking,
-        freeCancelation: data.freeCancelation,
+        smocking: data.smocking,
+        freeCancellation: data.freeCancellation,
       };
       return submitHandler(variables);
     }
@@ -142,7 +142,7 @@ export default function MultilineTextFields({
             errors={errors}
             defaultData={roomType}
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </AboutSection>
         )}
         {toEditSection === 'price' && (
@@ -152,7 +152,7 @@ export default function MultilineTextFields({
             defaultData={roomType}
             sourceForm="roomForm"
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </PriceSection>
         )}
         {toEditSection === 'capacity' && (
@@ -162,7 +162,7 @@ export default function MultilineTextFields({
             errors={errors}
             defaultData={roomType}
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </CapacitySection>
         )}
 
@@ -175,7 +175,7 @@ export default function MultilineTextFields({
             setValue={setValue}
             errors={errors}
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </FeaturesSection>
         )}
 
@@ -186,7 +186,7 @@ export default function MultilineTextFields({
             setError={setError}
             clearErrors={clearErrors}
           >
-            <FormBottons onAbort={abortHandler} />
+            <FormButtons onAbort={abortHandler} />
           </AspectSection>
         )}
       </Box>

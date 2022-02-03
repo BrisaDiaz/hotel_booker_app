@@ -18,7 +18,7 @@ import AddRoomModal from '@/components/modals/AddRoomModal';
 import SnackBar from '@/components/SnackBar';
 import Dialog from '@/components/Dialog';
 import AddBookingModal from '@/components/modals/AddBookingModal';
-import DinamicForm from '@/components/dashboard/forms/Room/DinamicForm';
+import DynamicForm from '@/components/dashboard/forms/Room/DynamicForm';
 import RoomModal from '@/components/modals/RoomModal';
 interface ActionCard {
   title: string;
@@ -153,7 +153,7 @@ const HotelAdmin: WithLayoutPage<Props> = ({
       />
 
       {!loading && toEditSection && toEditRoomTypeData && (
-        <DinamicForm
+        <DynamicForm
           toEditSection={toEditSection}
           roomType={toEditRoomTypeData}
           submitHandler={onEditSection}
@@ -169,7 +169,7 @@ const HotelAdmin: WithLayoutPage<Props> = ({
       {notification.content && (
         <SnackBar
           severity={notification.type}
-          message={notification.content || 'Oparation succesfully complited'}
+          message={notification.content || 'Oparation succesfully completed'}
         />
       )}
     </div>

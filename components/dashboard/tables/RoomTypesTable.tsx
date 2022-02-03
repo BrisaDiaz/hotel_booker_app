@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-
 import TablePaginationActions from './TablePaginationActions';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
@@ -26,16 +25,16 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import MenuItem from '@mui/material/MenuItem';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import {generateImageUrl} from '@/utils/generateImageUrl'
-import Image from 'next/image'
- type RoomTypeActions =
-    | 'addRoom'
-    | 'deleteRooms'
-    | 'show/edit'
-    | 'edit'
-    | 'addBooking';
+import { generateImageUrl } from '@/utils/generateImageUrl';
+import Image from 'next/image';
+type RoomTypeActions =
+  | 'addRoom'
+  | 'deleteRooms'
+  | 'show/edit'
+  | 'edit'
+  | 'addBooking';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import BedIcone from '@/components/BedIcone';
+import BedIcon from '@/components/BedIcon';
 import { RoomModel } from '@/interfaces/index';
 export function ActionsMenu({
   children,
@@ -44,8 +43,11 @@ export function ActionsMenu({
   selectedRoomsIds,
 }: {
   children: React.ReactNode;
-  handleActions: (roomModelId:number,
-action:RoomTypeActions,roomsToDelete?:number[])=>void;
+  handleActions: (
+    roomModelId: number,
+    action: RoomTypeActions,
+    roomsToDelete?: number[]
+  ) => void;
   selectedRoomModelId: number;
   selectedRoomsIds: number[];
 }) {
@@ -130,7 +132,7 @@ interface Row {
   caption: string;
   lowestPrice: number;
   taxes: number;
-  cancelationFee: number;
+  cancellationFee: number;
   maxGuests: number;
   beds: Array<{ id: number; type: string; quantity: number }>;
   rooms: Array<{ id: number; number: number }>;
@@ -140,7 +142,11 @@ function RoomsTable({
   handleActions,
 }: {
   roomTypes: RoomModel[];
-  handleActions: (roomModelId:number,action:RoomTypeActions,roomsToDelete?:number[])=>void;
+  handleActions: (
+    roomModelId: number,
+    action: RoomTypeActions,
+    roomsToDelete?: number[]
+  ) => void;
 }) {
   ////data
   function createData(
@@ -149,7 +155,7 @@ function RoomsTable({
     caption: string,
     lowestPrice: number,
     taxes: number,
-    cancelationFee: number,
+    cancellationFee: number,
     maxGuests: number,
     beds: Array<{ id: number; type: string; quantity: number }>,
     rooms: Array<{ number: number; id: number }>
@@ -163,7 +169,7 @@ function RoomsTable({
       maxGuests,
       beds,
       rooms,
-      cancelationFee,
+      cancellationFee,
     };
   }
   const generateRows = (roomTypes: RoomModel[] | []) => {
@@ -175,8 +181,8 @@ function RoomsTable({
             roomType.mainImage,
             roomType.lowestPrice,
             roomType.taxesAndCharges,
-            roomType.cancelationFee,
-            roomType.maximunGuests,
+            roomType.cancellationFee,
+            roomType.maximumGuests,
             roomType.beds,
             roomType.rooms.map((room: { id: string; number: number }) => ({
               id: parseInt(room.id),
@@ -212,7 +218,7 @@ function RoomsTable({
       disablePadding: false,
     },
     {
-      label: 'Cancelation Fee',
+      label: 'Cancellation Fee',
       disablePadding: false,
     },
     {
@@ -308,7 +314,7 @@ function RoomsTable({
           ) : (
             displayedRows.map((row) => (
               <TableRow
-                key={row.name+row.id}
+                key={row.name + row.id}
                 sx={{
                   '& td': { borderRight: '1px solid rgba(224, 224, 224, 1)' },
 
@@ -332,24 +338,26 @@ function RoomsTable({
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Card
                       sx={{
-                     
                         maxWidth: 300,
-                        minWidth:130,
+                        minWidth: 130,
                         height: 100,
-                        position:'relative'
+                        position: 'relative',
                       }}
                     >
                       <Image
-              objectFit="cover"
-                  layout="fill"
-                  width={150}
-                  height={100}
-                 placeholder="blur"
-        src={row.caption}
-           blurDataURL={generateImageUrl(row.caption,{width:160,height:100,quality:10})}
-                  alt={row.name}
-    
-                   />
+                        objectFit="cover"
+                        layout="fill"
+                        width={150}
+                        height={100}
+                        placeholder="blur"
+                        src={row.caption}
+                        blurDataURL={generateImageUrl(row.caption, {
+                          width: 160,
+                          height: 100,
+                          quality: 10,
+                        })}
+                        alt={row.name}
+                      />
                     </Card>
                     <Typography
                       sx={{
@@ -385,7 +393,7 @@ function RoomsTable({
                   <Typography
                     sx={{ fontSize: '14px', minWidth: 'max-content' }}
                   >
-                    USD ${row.cancelationFee}
+                    USD ${row.cancellationFee}
                   </Typography>
                 </TableCell>
 
@@ -415,7 +423,7 @@ function RoomsTable({
                         sx={{ display: 'flex' }}
                         component="li"
                       >
-                        <BedIcone type={bed.type} size="small" />
+                        <BedIcon type={bed.type} size="small" />
                         <Typography
                           sx={{ minWidth: 'max-content', fontSize: '14px' }}
                         >
@@ -458,7 +466,7 @@ function RoomsTable({
         <TableFooter>
           <TableRow>
             <TablePagination
-            sx={{overflow:'unset'}}
+              sx={{ overflow: 'unset' }}
               rowsPerPageOptions={[]}
               colSpan={3}
               count={rows.length}

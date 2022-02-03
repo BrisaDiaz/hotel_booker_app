@@ -142,21 +142,21 @@ function TransitionsModal(props: ComponentProps) {
   };
 
   if (!isOpen || !roomType) return <div />;
-  const aditionalQualities = [];
-  roomType?.smooking &&
-    aditionalQualities.push({
+  const additionalQualities = [];
+  roomType?.smocking &&
+    additionalQualities.push({
       id: uuidv4(),
-      name: 'smooking allowed',
+      name: 'smocking allowed',
     });
-  roomType?.freeCancelation &&
-    aditionalQualities.push({
+  roomType?.freeCancellation &&
+    additionalQualities.push({
       id: uuidv4(),
-      name: 'free cancelation',
+      name: 'free cancellation',
     });
   const features = [
     { title: 'Services', items: roomType?.services },
     { title: 'Activities', items: roomType?.amenities },
-    { title: 'Others Qualities', items: aditionalQualities },
+    { title: 'Others Qualities', items: additionalQualities },
   ];
   return (
     <div>
@@ -280,9 +280,9 @@ function TransitionsModal(props: ComponentProps) {
                       variant="subtitle2"
                       color="text.secondary"
                     >
-                      maximun guests
+                      maximum guests
                     </Typography>
-                    <Typography>{roomType.maximunGuests}</Typography>
+                    <Typography>{roomType.maximumGuests}</Typography>
                   </Box>
                   <Box className={classes.rowField}>
                     <Typography
@@ -290,12 +290,12 @@ function TransitionsModal(props: ComponentProps) {
                       variant="subtitle2"
                       color="text.secondary"
                     >
-                      minimun nights
+                      minimum nights
                     </Typography>
                     <Typography>
                       {' '}
-                      {roomType.minimunStay
-                        ? roomType.minimunStay
+                      {roomType.minimumStay
+                        ? roomType.minimumStay
                         : 'not specified'}
                     </Typography>
                   </Box>
@@ -306,11 +306,11 @@ function TransitionsModal(props: ComponentProps) {
                       variant="subtitle2"
                       color="text.secondary"
                     >
-                      maximun nights
+                      maximum nights
                     </Typography>
                     <Typography>
-                      {roomType.maximunStay
-                        ? roomType.maximunStay
+                      {roomType.maximumStay
+                        ? roomType.maximumStay
                         : 'not specified'}
                     </Typography>
                   </Box>
@@ -375,10 +375,10 @@ function TransitionsModal(props: ComponentProps) {
                       variant="subtitle2"
                       color="text.secondary"
                     >
-                      Cancelation Fee
+                      Cancellation Fee
                     </Typography>
                     <Typography>
-                      USD {currencyFixer(roomType.cancelationFee)}
+                      USD {currencyFixer(roomType.cancellationFee)}
                     </Typography>
                   </Box>
                 </Box>

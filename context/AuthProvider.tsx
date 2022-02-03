@@ -12,7 +12,7 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  /// check if the session exist and set the state acordingly
+  /// check if the session exist and set the state accordingly
   const { data } = useQuery(GET_USER_SESSION);
   const initialState = {
     loading: true,

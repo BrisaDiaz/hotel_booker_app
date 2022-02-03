@@ -24,9 +24,11 @@ async function deleteLocalFiles(paths: string[]) {
   paths.forEach((path) => fs.unlinkSync(path));
 }
 async function upload(paths: string[]) {
-  const imgePromices = paths.map((path) => cloudinary.v2.uploader.upload(path));
+  const imagesPromises = paths.map((path) =>
+    cloudinary.v2.uploader.upload(path)
+  );
   let imagesUploaded: UploadApiResponse[] = [];
-  await Promise.all(imgePromices).then(
+  await Promise.all(imagesPromises).then(
     (images: any) => {
       imagesUploaded = images;
     },
@@ -47,10 +49,10 @@ export default async function handler(
       form.parse(req, async (err: any, fields: any, files: FormidableFile) => {
         if (err) reject(err?.message || err);
         const filesKeys = Object.keys(files);
-        const pahts: string[] = [];
+        const paths: string[] = [];
         filesKeys.forEach((key) => {
           if ('path' in files[key]) {
-            pahts.push(files[key].path);
+            paths.push(files[key].path);
           } else {
             reject(
               `A duplication of the file ${files[key].name} was provided.`
@@ -58,7 +60,7 @@ export default async function handler(
           }
         });
 
-        resolve(pahts);
+        resolve(paths);
       });
     });
     //// upload to cloudinary

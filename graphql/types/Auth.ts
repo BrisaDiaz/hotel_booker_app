@@ -3,7 +3,7 @@ import { AuthenticationError, UserInputError } from 'apollo-server-micro';
 import { prisma } from '../../lib/prisma';
 import {
   hashPassword,
-  compirePassword,
+  comparePassword,
   signToken,
   setCookie,
   deleteCookie,
@@ -52,7 +52,7 @@ export const Mutation = extendType({
               `No user was found with email: ${args.email}`
             );
           }
-          const isValidPassword = await compirePassword({
+          const isValidPassword = await comparePassword({
             plain: args.password,
             hash: user.password,
           });

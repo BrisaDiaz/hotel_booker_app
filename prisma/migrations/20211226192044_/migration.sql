@@ -1,2 +1,2 @@
 -- DropForeignKey
-ALTER TABLE "CancelationDetails" DROP CONSTRAINT "CancelationDetails_bookingId_fkey";
+ALTER TABLE "CancellationDetails" DROP CONSTRAINT "CancellationDetails_bookingId_fkey";

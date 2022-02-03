@@ -8,10 +8,10 @@ import { CardActionArea } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
-import currencyFixer from '@/utils/currencyFixer'
-import {generateImageUrl} from '@/utils/generateImageUrl'
-import Image from 'next/image'
-function EditButtom({ onEdit }: { onEdit: ()=>void }) {
+import currencyFixer from '@/utils/currencyFixer';
+import { generateImageUrl } from '@/utils/generateImageUrl';
+import Image from 'next/image';
+function EditButton({ onEdit }: { onEdit: () => void }) {
   return (
     <Box
       sx={{ position: 'absolute', zIndex: 30, m: 1 }}
@@ -29,7 +29,6 @@ function EditButtom({ onEdit }: { onEdit: ()=>void }) {
 export default function HotelCard({
   hotel,
   onEdit,
-
 }: {
   hotel: {
     id: number;
@@ -42,109 +41,120 @@ export default function HotelCard({
     };
   };
 
-  onEdit: (hotelId:number)=>void;
+  onEdit: (hotelId: number) => void;
 }) {
   return (
-    <Box sx={{ position: 'relative'}}> 
-       <EditButtom onEdit={() => onEdit(hotel.id)} />
+    <Box sx={{ position: 'relative' }}>
+      <EditButton onEdit={() => onEdit(hotel.id)} />
 
       <Box
         component={Link}
-            href={{
-            pathname: '/admin/hotel',
-            query: { hotelId: hotel.id},
-          }}
-      
-     passHref
+        href={{
+          pathname: '/admin/hotel',
+          query: { hotelId: hotel.id },
+        }}
+        passHref
       >
-             <Box  component="a" href="">
-      <Card
-        sx={{ width: '300px', position: 'relative',background:'transparent',    boxShadow:
-      '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
-      '&:hover':{
-        boxShadow:'0px 3px 20px -2px rgb(0 0 0 / 14%), 0px 3px 20px 0px rgb(0 0 0 / 8%), 0px 1px 20px 0px rgb(0 0 0 / 8%)'
-      } }}
-        component="article"
-        elevation={2}
-      >
-        <CardActionArea component="div">
-       <Box sx={{height:150,position:'relative'}}> 
-          <Image
-          height={150}
-            layout="fill"
-          
-            src={hotel.frameImage}
-            placeholder="blur"
+        <Box component="a" href="">
+          <Card
+            sx={{
+              width: '300px',
+              position: 'relative',
+              background: 'transparent',
+              boxShadow:
+                '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
+              '&:hover': {
+                boxShadow:
+                  '0px 3px 20px -2px rgb(0 0 0 / 14%), 0px 3px 20px 0px rgb(0 0 0 / 8%), 0px 1px 20px 0px rgb(0 0 0 / 8%)',
+              },
+            }}
+            component="article"
+            elevation={2}
+          >
+            <CardActionArea component="div">
+              <Box sx={{ height: 150, position: 'relative' }}>
+                <Image
+                  height={150}
+                  layout="fill"
+                  src={hotel.frameImage}
+                  placeholder="blur"
+                  blurDataURL={generateImageUrl(hotel.frameImage, {
+                    height: 150,
+                    quality: 10,
+                  })}
+                  alt={hotel.name}
+                />
+              </Box>
+              <CardContent sx={{ p: 2 }}>
+                <Typography
+                  sx={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'pre',
+                    fontWeight: 500,
+                  }}
+                >
+                  {hotel.name}
+                </Typography>
+                <Box
+                  sx={{
+                    marginTop: 'auto',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <LocationOnIcon color="secondary" fontSize="small" />
+                  <Typography
+                    title={hotel.address.holeAddress}
+                    variant="body2"
+                    sx={{
+                      overflow: 'hidden',
+                      whiteSpace: 'pre',
+                      textOverflow: 'ellipsis',
+                      paddingTop: 1,
 
-           blurDataURL={generateImageUrl(hotel.frameImage,{height:150,quality:10})}
-            alt={hotel.name}
-          />
-</Box>
-          <CardContent sx={{ p: 2 }}>
-            <Typography
-              sx={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'pre',
-                fontWeight: 500,
-              }}
-            >
-              {hotel.name}
-            </Typography>
-            <Box
-              sx={{ marginTop: 'auto', display: 'flex', alignItems: 'center' }}
-            >
-              <LocationOnIcon color="secondary" fontSize="small" />
-              <Typography
-                title={hotel.address.holeAddress}
-                variant="body2"
-                sx={{
-                  overflow: 'hidden',
-                  whiteSpace: 'pre',
-                  textOverflow: 'ellipsis',
-                  paddingTop: 1,
+                      opacity: 0.8,
+                      fontWeight: 200,
+                    }}
+                  >
+                    {hotel.address.holeAddress}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'grid',
 
-                  opacity: 0.8,
-                  fontWeight: 200,
-                }}
-              >
-                {hotel.address.holeAddress}
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: 'grid',
-
-                mt: 1,
-                px: 1,
-                justifyContent: 'flex-end',
-                textAlign: 'right',
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 700, minWidth: 'max-content' }}
-              >
-                USD {currencyFixer(hotel.lowestPrice)}
-              </Typography>
-              <Typography
-                variant="subtitle2"
-                sx={{
-       
-                  lineHeight: 1.3,
-                  fontWeight: 200,
-                  opacity: 0.8,
-                  alignSelf: 'center',
-                }}
-              >
-             {hotel.taxesAndCharges ?`Taxes ${currencyFixer(hotel.taxesAndCharges)}`:'Taxes Included' }   
-              </Typography>
-            </Box>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+                    mt: 1,
+                    px: 1,
+                    justifyContent: 'flex-end',
+                    textAlign: 'right',
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 700, minWidth: 'max-content' }}
+                  >
+                    USD {currencyFixer(hotel.lowestPrice)}
+                  </Typography>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      lineHeight: 1.3,
+                      fontWeight: 200,
+                      opacity: 0.8,
+                      alignSelf: 'center',
+                    }}
+                  >
+                    {hotel.taxesAndCharges
+                      ? `Taxes ${currencyFixer(hotel.taxesAndCharges)}`
+                      : 'Taxes Included'}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </CardActionArea>
+          </Card>
         </Box>
-  </Box>
       </Box>
+    </Box>
   );
 }

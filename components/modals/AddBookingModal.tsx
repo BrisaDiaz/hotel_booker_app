@@ -12,7 +12,7 @@ import BookingAdminInputs from '@/components/modals/BookingAdminInputs';
 import BookingClientInputs from '@/components/modals/BookingClientInputs';
 import BookingRoomInputs from '@/components/modals/BookingRoomInputs';
 import Steps from '@/components/Steps';
-import { getFormatedDate } from '@/utils/ToYearMounthDayFormat';
+import { getFormattedDate } from '@/utils/ToYearMonthDayFormat';
 import { styles } from './styles';
 
 export default function BasicModal({
@@ -24,39 +24,35 @@ export default function BasicModal({
   roomTypeId,
 }: {
   isOpen: boolean;
-  onSubmit: (formData:any)=>void;
-  onClose: ()=>void;
-  getAvailableRooms:  (searchVariables:any)=>void;
+  onSubmit: (formData: any) => void;
+  onClose: () => void;
+  getAvailableRooms: (searchVariables: any) => void;
   availableRooms: { id: string; number: number }[] | [];
   roomTypeId: number | null;
 }) {
-
- 
   const handleClose = () => {
-   onClose();
+    onClose();
   };
 
   const [searchRoomsVariables, setSearchRoomVariables] = React.useState<{
-    roomModelId: number| null  ;
+    roomModelId: number | null;
     checkInDate: string;
     checkOutDate: string;
     rooms: { adults: number; children: number }[];
   }>({
     roomModelId: roomTypeId,
-    checkInDate: getFormatedDate(new Date(Date.now()).getTime()),
-    checkOutDate: getFormatedDate(new Date(Date.now()).getTime()),
+    checkInDate: getFormattedDate(new Date(Date.now()).getTime()),
+    checkOutDate: getFormattedDate(new Date(Date.now()).getTime()),
     rooms: [{ adults: 1, children: 0 }],
   });
 
-
-    React.useEffect(() => {
+  React.useEffect(() => {
     if (roomTypeId)
       return getAvailableRooms({
         ...searchRoomsVariables,
         roomModelId: roomTypeId,
       });
   }, [searchRoomsVariables, roomTypeId]);
-  
 
   const {
     register,
@@ -80,8 +76,6 @@ export default function BasicModal({
     setActiveStep(step);
   };
 
-
-
   const handleCreateBooking = (data: any) => {
     //// default room quantity === 1
     const quantityOfRoomsRequired = searchRoomsVariables.rooms.length;
@@ -103,7 +97,7 @@ export default function BasicModal({
     };
     onSubmit(variables);
   };
-    if (!roomTypeId || !isOpen) return <div />;
+  if (!roomTypeId || !isOpen) return <div />;
   return (
     <div>
       <Modal
@@ -133,7 +127,7 @@ export default function BasicModal({
             Add Booking
           </Typography>
           <Steps
-            steps={['Search availables rooms.', 'Add bookings details.']}
+            steps={['Search Available rooms.', 'Add bookings details.']}
             activeStep={activeStep}
             setStep={handleStepChange}
           />

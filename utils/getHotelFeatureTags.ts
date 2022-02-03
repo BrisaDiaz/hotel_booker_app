@@ -5,12 +5,12 @@ export function getFeaturesTags(features: { [key: string]: boolean | string }) {
       features[featureName] !== true && featureName !== '__typename'
   );
 
-  const formattedAdditonalFeatures: string[] = includedFeatures.map(
+  const formattedAdditionalFeatures: string[] = includedFeatures.map(
     (featureName) =>
       featureName
         .split(/(?=[A-Z])/)
         .join(' ')
         .toLowerCase()
   );
-  return formattedAdditonalFeatures;
+  return formattedAdditionalFeatures;
 }

@@ -1,5 +1,5 @@
 export function toCamelCase(string: string) {
-  let toCamelCaseString = string
+  const toCamelCaseString = string
     .split(' ')
     .map((word, index) => {
       if (index > 0) {

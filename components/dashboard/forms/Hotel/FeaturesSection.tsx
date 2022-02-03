@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { styles } from '@/components/dashboard/forms/styles';
 import { useMediaQuery } from '@mui/material';
-import {Theme}from '@mui/system'
+import { Theme } from '@mui/system';
 type Feature = {
   id: number;
   name: string;
@@ -23,20 +23,20 @@ export default function FeaturesSection({
   children,
 }: {
   children?: React.ReactNode;
-  register: (fieldName:string,config?:any)=>void;
-  setValue: (fieldName:string,value:any)=>void;
+  register: (fieldName: string, config?: any) => void;
+  setValue: (fieldName: string, value: any) => void;
   services: Feature[];
   activities: Feature[];
   facilities: Feature[];
   languages: Feature[];
   defaultData?: any;
 }) {
-  const getOptionsNames = (data: autocompliteData[]): string[] => {
+  const getOptionsNames = (data: autocompleteData[]): string[] => {
     return data.map((option) => option.name);
   };
 
   const [servicesSelected, setServicesSelected] = useState<string[]>(
-    defaultData?.sevices ? getOptionsNames(defaultData?.sevices) : []
+    defaultData?.services ? getOptionsNames(defaultData?.services) : []
   );
   const [facilitiesSelected, setFacilitiesSelected] = useState<string[]>(
     defaultData?.facilities ? getOptionsNames(defaultData?.facilities) : []
@@ -48,18 +48,18 @@ export default function FeaturesSection({
     defaultData?.languages ? getOptionsNames(defaultData?.languages) : []
   );
 
-  type autocompliteData = { name: string };
+  type autocompleteData = { name: string };
 
-  const handleFacilitiesField = (data: autocompliteData[]) => {
+  const handleFacilitiesField = (data: autocompleteData[]) => {
     setFacilitiesSelected(getOptionsNames(data));
   };
-  const handleServicesField = (data: autocompliteData[]) => {
+  const handleServicesField = (data: autocompleteData[]) => {
     setServicesSelected(getOptionsNames(data));
   };
-  const handleActivitiesField = (data: autocompliteData[]) => {
+  const handleActivitiesField = (data: autocompleteData[]) => {
     setActivitiesSelected(getOptionsNames(data));
   };
-  const handleLanguagesField = (data: autocompliteData[]) => {
+  const handleLanguagesField = (data: autocompleteData[]) => {
     setLanguageSelected(getOptionsNames(data));
   };
 
@@ -75,7 +75,9 @@ export default function FeaturesSection({
   useEffect(() => {
     setValue('languages', languagesSelected);
   }, [languagesSelected]);
-    const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+  const isInSmScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('sm')
+  );
   return (
     <Grid component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -83,56 +85,55 @@ export default function FeaturesSection({
       </Typography>
 
       <AutocompleteCheckbox
-        onChange={(data: autocompliteData[]) => handleFacilitiesField(data)}
+        onChange={(data: autocompleteData[]) => handleFacilitiesField(data)}
         label="Facilities"
         options={facilities}
         defaultValue={defaultData?.facilities || []}
-                 sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
+        sx={styles.textField}
+        size={isInSmScreen ? 'medium' : 'small'}
       />
       <AutocompleteCheckbox
-        onChange={(data: autocompliteData[]) => handleServicesField(data)}
+        onChange={(data: autocompleteData[]) => handleServicesField(data)}
         label="Services"
         options={services}
-                 sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
+        sx={styles.textField}
+        size={isInSmScreen ? 'medium' : 'small'}
         defaultValue={defaultData?.services || []}
       />
       <AutocompleteCheckbox
-        onChange={(data: autocompliteData[]) => handleActivitiesField(data)}
+        onChange={(data: autocompleteData[]) => handleActivitiesField(data)}
         label="Activities"
         options={activities}
-            sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
+        sx={styles.textField}
+        size={isInSmScreen ? 'medium' : 'small'}
         defaultValue={defaultData?.activities || []}
       />
 
       <AutocompleteCheckbox
-        onChange={(data: autocompliteData[]) => handleLanguagesField(data)}
+        onChange={(data: autocompleteData[]) => handleLanguagesField(data)}
         label="Languages"
         options={languages}
-            sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
+        sx={styles.textField}
+        size={isInSmScreen ? 'medium' : 'small'}
         defaultValue={defaultData?.languages || []}
       />
 
       <Grid container spacing={{ sm: 2 }} alignItems="center" sx={{ mb: 1.5 }}>
         <Grid item xs={12} sm={6}>
-          <FormGroup sx={{ px: 1 ,'& span':{ fontSize:'14px'}}} >
+          <FormGroup sx={{ px: 1, '& span': { fontSize: '14px' } }}>
             <FormControlLabel
-         
               control={
                 <Checkbox
                   size="small"
                   color="secondary"
-                       defaultChecked={defaultData?.smooking ? true : false}
-                  {...register('freeCancelation')}
+                  defaultChecked={defaultData?.smocking ? true : false}
+                  {...register('freeCancellation')}
                 />
               }
-              label="Free Cancelation"
+              label="Free Cancellation"
             />
             <FormControlLabel
-            control={
+              control={
                 <Checkbox
                   color="secondary"
                   size="small"
@@ -147,11 +148,10 @@ export default function FeaturesSection({
               label="Accessible"
             />
             <FormControlLabel
-      
               control={
                 <Checkbox
                   color="secondary"
-                    size="small"
+                  size="small"
                   inputProps={{
                     defaultChecked: defaultData?.features?.familyFriendly
                       ? true
@@ -165,13 +165,12 @@ export default function FeaturesSection({
           </FormGroup>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <FormGroup sx={{ px: 1 ,'& span':{ fontSize:'14px'}}}>
+          <FormGroup sx={{ px: 1, '& span': { fontSize: '14px' } }}>
             <FormControlLabel
-     
               control={
                 <Checkbox
                   size="small"
-                       defaultChecked={defaultData?.smooking ? true : false}
+                  defaultChecked={defaultData?.smocking ? true : false}
                   color="secondary"
                   {...register('petFriendly')}
                 />
@@ -179,7 +178,6 @@ export default function FeaturesSection({
               label="Pet Friendly"
             />
             <FormControlLabel
- 
               control={
                 <Checkbox
                   size="small"
@@ -195,7 +193,6 @@ export default function FeaturesSection({
               label="Smoker Friendly"
             />
             <FormControlLabel
-
               control={
                 <Checkbox
                   size="small"

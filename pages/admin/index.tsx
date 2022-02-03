@@ -20,7 +20,7 @@ import { WithLayoutPage } from '@/interfaces/index';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Backdrop from '@/components/Backdrop';
-import DinamicForm from '@/components/dashboard/forms/Hotel/DinamicForm';
+import DynamicForm from '@/components/dashboard/forms/Hotel/DynamicForm';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
 import ActionCard from '@/components/dashboard/ActionCard';
@@ -227,12 +227,12 @@ const Dashboard: WithLayoutPage<PageProps> = ({
     try {
       setIsLoading(true);
       if (toEditSection === 'aspect') {
-        const toUploadImages = [
+        const toUploAdminages = [
           hotelVariables.frameImage,
           hotelVariables.interiorImage,
         ];
 
-        const images = await uploadToCloudinary(toUploadImages);
+        const images = await uploadToCloudinary(toUploAdminages);
         if (
           images?.length === 2 &&
           images[1]?.secure_url &&
@@ -315,7 +315,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
         />
       </Box>
       {!isLoading && toEditSection && toEditHotelData && (
-        <DinamicForm
+        <DynamicForm
           toEditSection={toEditSection}
           hotel={toEditHotelData}
           submitHandler={handleSubmit}

@@ -11,34 +11,37 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-  
 }
-main{
+main {
   background: '#efefef !important';
 }
 * {
   box-sizing: border-box;
-  
-        scrollbar-width: thin;
-  
-    scrollbar-color: #563d06 #ffffff;
+
+  scrollbar-width: thin;
+
+  scrollbar-color: #563d06 #ffffff;
 }
 
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  display: none;
+}
 
- 
-  *::-webkit-scrollbar {
-    width: 8px;
-        height: 8px;
-  }
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  *::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  *::-webkit-scrollbar-thumb {
-    background-color: #9c5443;
-    border-radius: 10px;
+*::-webkit-scrollbar-thumb {
+  background-color: #9c5443;
+  border-radius: 10px;
   height: 50px;
   cursor: default;
-    border: 1px solid #ffffff;
+  border: 1px solid #ffffff;
+}
+@media (min-width: 768px) {
+  *::-webkit-scrollbar {
+    display: block;
   }
+}

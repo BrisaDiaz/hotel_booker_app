@@ -1,7 +1,7 @@
 export const styles = {
   root: {
     maxWidth: '900px',
-       background:'inherit',
+    background: 'inherit',
     width: '100%',
     margin: '0 auto',
     pb: 4,
@@ -15,14 +15,14 @@ export const styles = {
     opacity: 0.8,
   },
 
-  formBottons: {
+  formButtons: {
     display: 'flex',
     justifyContent: 'center',
     gap: '10px',
     padding: 2,
     mt: 1.5,
   },
-  bottons: {
+  buttons: {
     padding: '10px 40px',
     margin: 0,
   },
@@ -32,7 +32,7 @@ export const styles = {
   groupTitle: {
     fontWeight: 500,
     color: '#484848',
-        
+
     mb: '10px',
     px: '10px',
     width: 'max-content',
@@ -43,24 +43,24 @@ export const styles = {
     borderRadius: 5,
     border: '1px solid  rgb(0 0 0 / 10%)',
     padding: { xs: '15px', sm: '20px', md: '25px ' },
-   background: '#fff',
+    background: '#fff',
 
     boxShadow:
       '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
-      '&:hover':{
-        boxShadow:'0px 3px 20px -2px rgb(0 0 0 / 14%), 0px 3px 20px 0px rgb(0 0 0 / 8%), 0px 1px 20px 0px rgb(0 0 0 / 8%)'
-      }
+    '&:hover': {
+      boxShadow:
+        '0px 3px 20px -2px rgb(0 0 0 / 14%), 0px 3px 20px 0px rgb(0 0 0 / 8%), 0px 1px 20px 0px rgb(0 0 0 / 8%)',
+    },
   },
 
   textField: {
     width: '100%',
     my: 1,
-        '*':{
-       fontSize:{xs:'14px',sm:'16px'},
+    '*': {
+      fontSize: { xs: '14px', sm: '16px' },
     },
-'input':{
-
-p:{xs:'10px 14px',sm:'16.5px 14px'},
-},
+    input: {
+      p: { xs: '10px 14px', sm: '16.5px 14px' },
+    },
   },
-} 
+};

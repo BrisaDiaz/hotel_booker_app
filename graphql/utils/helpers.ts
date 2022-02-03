@@ -11,9 +11,9 @@ async function checkRoomsAvailable({
   checkOutDate: string;
   roomsRequired: number;
 }) {
-  const requiredDates = inBetweenDates([checkInDate, checkOutDate]);
+  const requiredDates = InBetweenDates([checkInDate, checkOutDate]);
 
-  const roomsWithRequiredDatesAvailables = await prisma.room.findMany({
+  const roomsWithRequiredDatesAvailable = await prisma.room.findMany({
     where: {
       roomModelId: roomModelId,
       NOT: [
@@ -38,9 +38,9 @@ async function checkRoomsAvailable({
   });
 
   /// check if there is the number of rooms required
-  if (roomsWithRequiredDatesAvailables.length < roomsRequired) return [];
+  if (roomsWithRequiredDatesAvailable.length < roomsRequired) return [];
 
-  return roomsWithRequiredDatesAvailables;
+  return roomsWithRequiredDatesAvailable;
 }
 async function checkIsValidRoomRequest({
   roomDetails,
@@ -56,19 +56,22 @@ async function checkIsValidRoomRequest({
   checkOutDate: string;
   checkInDate: string;
 }) {
-  const totalNights = inBetweenDates([checkInDate, checkOutDate]).length;
+  const totalNights = InBetweenDates([checkInDate, checkOutDate]).length;
 
   const totalChildren = rooms.reduce(
-    (acum, room) => (acum += room.children),
+    (accumulated, room) => (accumulated += room.children),
     0
   );
-  const totalAdults = rooms.reduce((acum, room) => (acum += room.adults), 0);
+  const totalAdults = rooms.reduce(
+    (accumulated, room) => (accumulated += room.adults),
+    0
+  );
   const guestPerRoom = rooms.map((room) => room.adults + room.children);
 
-  if (roomDetails.maximunNights > 0 && totalNights > roomDetails.maximunNights)
+  if (roomDetails.maximumNights > 0 && totalNights > roomDetails.maximumNights)
     return {
       isAvailable: false,
-      message: `The limit of nights to reserve the room is ${roomDetails.maximunNights}.`,
+      message: `The limit of nights to reserve the room is ${roomDetails.maximumNights}.`,
       requestData: {
         nights: totalNights,
         totalRooms: rooms.length,
@@ -78,10 +81,10 @@ async function checkIsValidRoomRequest({
       },
     };
 
-  if (guestPerRoom.some((guests: number) => guests > roomDetails.maximunGuests))
+  if (guestPerRoom.some((guests: number) => guests > roomDetails.maximumGuests))
     return {
       isAvailable: false,
-      message: `The number of guest in a room most be equeal or inferior to ${roomDetails.maximunGuests}.`,
+      message: `The number of guest in a room most be equal or inferior to ${roomDetails.maximumGuests}.`,
       requestData: {
         nights: totalNights,
         checkInDate,
@@ -104,7 +107,7 @@ async function checkIsValidRoomRequest({
     return {
       isAvailable: false,
       rooms: availableRooms,
-      message: 'The number of rooms availables dose not match the required.',
+      message: 'The number of rooms Available dose not match the required.',
       requestData: {
         nights: totalNights,
         checkInDate,
@@ -130,19 +133,20 @@ async function checkIsValidRoomRequest({
     },
   };
 }
-function inBetweenDates(range: string[] | Date[]) {
+function InBetweenDates(range: string[] | Date[]) {
   const [startDate, endDate] = range;
 
-  const startDateInMiliseconds = new Date(startDate).getTime();
-  const endDateInMiliseconds = new Date(endDate).getTime();
-  const inBetweenPeriod = endDateInMiliseconds - startDateInMiliseconds;
-  const aDayInMiliseconds = 24 * 60 * 60 * 1000;
-  const InbetweenNumberOfDays = inBetweenPeriod / aDayInMiliseconds;
+  const startDateInMilliseconds = new Date(startDate).getTime();
+  const endDateInMilliseconds = new Date(endDate).getTime();
+  const InBetweenPeriod = endDateInMilliseconds - startDateInMilliseconds;
+  const aDayInMilliseconds = 24 * 60 * 60 * 1000;
+  const InBetweenNumberOfDays = InBetweenPeriod / aDayInMilliseconds;
 
-  const dates = new Array(InbetweenNumberOfDays)
+  const dates = new Array(InBetweenNumberOfDays)
     .fill(0)
     .map(
-      (_, index) => new Date(startDateInMiliseconds + index * aDayInMiliseconds)
+      (_, index) =>
+        new Date(startDateInMilliseconds + index * aDayInMilliseconds)
     );
 
   return dates;
@@ -166,7 +170,7 @@ function hotelQueryConstructor(args: HotelQueryArgs) {
     };
   }
 
-  interface PropietyFilter {
+  interface ProprietyFilter {
     [key: string]: { equals: string };
   }
 
@@ -193,7 +197,7 @@ function hotelQueryConstructor(args: HotelQueryArgs) {
     [key: string]: 'desc' | 'asc';
   }
 
-  type OR = (PropietyFilter | searchFilter)[];
+  type OR = (ProprietyFilter | searchFilter)[];
   type AND = (ArrayFilter | BooleanFilter)[];
 
   interface Query {
@@ -283,7 +287,7 @@ type ToEditHotelField =
   | 'address'
   | 'aspect'
   | 'staticFeatures'
-  | 'dinamicFeatures'
+  | 'dynamicFeatures'
   | 'genericData';
 
 function getHotelFieldsToEdit(args: any): ToEditHotelField[] {
@@ -303,7 +307,7 @@ function getHotelFieldsToEdit(args: any): ToEditHotelField[] {
     fields.push('aspect');
   }
   if (
-    args.freeCancelation ||
+    args.freeCancellation ||
     args.accessible ||
     args.familyFriendly ||
     args.petFriendly ||
@@ -312,7 +316,7 @@ function getHotelFieldsToEdit(args: any): ToEditHotelField[] {
     fields.push('staticFeatures');
   }
   if (args.facilities || args.services || args.activities || args.languages) {
-    fields.push('dinamicFeatures');
+    fields.push('dynamicFeatures');
   }
   if (
     args.name ||
@@ -447,10 +451,10 @@ function clientQueryConstructor(
 
       return query;
     }
-    aplayDinamicFilters(args.search.field, args.search.value);
+    applyDynamicFilters(args.search.field, args.search.value);
   }
 
-  function aplayDinamicFilters(field: ClientField, value: string) {
+  function applyDynamicFilters(field: ClientField, value: string) {
     if (field === 'firstName' || field === 'lastName') {
       return (where['AND'] = [
         {
@@ -567,10 +571,10 @@ function bookingRequestQueryConstructor(
       };
       return query;
     }
-    aplayDinamicFilters(args.search.field, args.search.value);
+    applyDynamicFilters(args.search.field, args.search.value);
   }
 
-  function aplayDinamicFilters(field: BookingRequestField, value: string) {
+  function applyDynamicFilters(field: BookingRequestField, value: string) {
     if (field === 'clientName') {
       const [firstName, lastName] = value.trim().split(' ');
       return (where['some'] = {
@@ -618,14 +622,14 @@ function bookingRequestQueryConstructor(
   return query;
 }
 
-function schechuleBookingStatusUpdate(
+function scheduleBookingStatusUpdate(
   bookingId: number,
   newStatus: 'FINISHED' | 'CANCELED',
   date: Date
 ) {
   const currentDate = new Date();
-  const schechuleDate = new Date(date);
-  const timeToDate = schechuleDate.getTime() - currentDate.getTime();
+  const scheduleDate = new Date(date);
+  const timeToDate = scheduleDate.getTime() - currentDate.getTime();
   setTimeout(async () => {
     await prisma.booking.update({
       where: {
@@ -711,6 +715,6 @@ export {
   hotelQueryConstructor,
   clientQueryConstructor,
   bookingRequestQueryConstructor,
-  schechuleBookingStatusUpdate,
+  scheduleBookingStatusUpdate,
   bookingQueryConstructor,
 };

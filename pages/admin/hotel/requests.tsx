@@ -52,7 +52,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
     take: resultsPerPage,
     skip: 0,
   });
-  const [searchRequests, searchRequestResponce] = useLazyQuery(
+  const [searchRequests, searchRequestResponse] = useLazyQuery(
     GET_HOTEL_BOOKING_REQUESTS
   );
 
@@ -73,11 +73,11 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
   }, [query]);
 
   React.useEffect(() => {
-    if (searchRequestResponce.data?.results) {
-      setRequests(searchRequestResponce.data.results.requests);
-      setTotalResults(searchRequestResponce.data.results.totalResults);
+    if (searchRequestResponse.data?.results) {
+      setRequests(searchRequestResponse.data.results.requests);
+      setTotalResults(searchRequestResponse.data.results.totalResults);
     }
-  }, [searchRequestResponce.data]);
+  }, [searchRequestResponse.data]);
 
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -92,7 +92,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
     React.useState<BookingRequest | null>(null);
 
   const { notification, notify } = useNotification({ autoClean: true });
-  const [declineRequest, declineRequestResponce] = useMutation(
+  const [declineRequest, declineRequestResponse] = useMutation(
     DECLINE_BOOKING_REQUEST,
     {
       onCompleted: ({ bookingRequest }) => {
@@ -113,7 +113,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
       },
     }
   );
-  const [confirmBookingRequest, confirmBookingRequestResponce] = useMutation(
+  const [confirmBookingRequest, confirmBookingRequestResponse] = useMutation(
     CONFIRM_BOOKING_REQUEST,
     {
       onCompleted: ({ booking }) => {
@@ -217,17 +217,17 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
 
   React.useEffect(() => {
     if (
-      declineRequestResponce.loading ||
-      confirmBookingRequestResponce.loading ||
-      searchRequestResponce.loading
+      declineRequestResponse.loading ||
+      confirmBookingRequestResponse.loading ||
+      searchRequestResponse.loading
     ) {
       return setLoading(true);
     }
     return setLoading(false);
   }, [
-    declineRequestResponce,
-    searchRequestResponce,
-    confirmBookingRequestResponce,
+    declineRequestResponse,
+    searchRequestResponse,
+    confirmBookingRequestResponse,
   ]);
 
   return (
@@ -269,7 +269,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
         {notification.content && (
           <SnackBar
             severity={notification.type}
-            message={notification.content || 'Oparation succesfully complited'}
+            message={notification.content || 'Oparation succesfully completed'}
           />
         )}
       </Box>

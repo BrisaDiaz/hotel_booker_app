@@ -20,7 +20,7 @@ import {
   MultipleClientQuery,
   SingleClientQuery,
   bookingRequestQueryConstructor,
-  schechuleBookingStatusUpdate,
+  scheduleBookingStatusUpdate,
   bookingQueryConstructor,
   BookingRequestQueryArgs,
   SingleBookingRequestQuery,
@@ -187,7 +187,7 @@ export const Query = extendType({
         token: nonNull(stringArg()),
       },
       resolve(root, args, ctx): any {
-        const getAdimHotels = async (token: string) => {
+        const getAdminHotels = async (token: string) => {
           const user = await getUser(token);
           const admin = await getAdminInfo(user.id);
           const hotels = await prisma.hotel.findMany({
@@ -197,7 +197,7 @@ export const Query = extendType({
           });
           return { hotels, hotelsCount: hotels.length };
         };
-        return getAdimHotels(args.token);
+        return getAdminHotels(args.token);
       },
     });
     t.field('hotelData', {
@@ -207,7 +207,7 @@ export const Query = extendType({
         token: nonNull(stringArg()),
       },
       resolve(root, args, ctx): any {
-        const getAdimHotel = async (token: string, hotelId: number) => {
+        const getAdminHotel = async (token: string, hotelId: number) => {
           const user = await getUser(token);
           await verifyIsHotelAdmin(user.id, hotelId);
 
@@ -215,7 +215,7 @@ export const Query = extendType({
             id: hotelId,
           };
         };
-        return getAdimHotel(args.token, parseInt(args.hotelId));
+        return getAdminHotel(args.token, parseInt(args.hotelId));
       },
     });
     t.field('hotelRoomModels', {
@@ -225,7 +225,7 @@ export const Query = extendType({
         token: nonNull(stringArg()),
       },
       resolve(root, args, ctx): any {
-        const getAdimHotel = async (token: string, hotelId: number) => {
+        const getAdminHotel = async (token: string, hotelId: number) => {
           const user = await getUser(token);
           await verifyIsHotelAdmin(user.id, hotelId);
           return prisma.roomModel.findMany({
@@ -234,7 +234,7 @@ export const Query = extendType({
             },
           });
         };
-        return getAdimHotel(args.token, parseInt(args.hotelId));
+        return getAdminHotel(args.token, parseInt(args.hotelId));
       },
     });
     t.field('roomModelData', {
@@ -510,18 +510,18 @@ export const Mutation = extendType({
           if (!roomModel) throw new UserInputError('Room type dose not exist.');
           const hotelId = roomModel.hotelId;
           const admin = await verifyIsHotelAdmin(user.id, hotelId);
-          const availabilityResponce = await checkIsValidRoomRequest({
+          const availabilityResponse = await checkIsValidRoomRequest({
             roomDetails: roomModel,
             rooms: args.guestsDistribution,
             checkOutDate: args.checkOutDate,
             checkInDate: args.checkInDate,
           });
 
-          if (!availabilityResponce.isAvailable)
-            throw new UserInputError('There is not enought rooms available.');
+          if (!availabilityResponse.isAvailable)
+            throw new UserInputError('There is not enoughs rooms available.');
 
           const { children, adults, nights, guestsDistribution } =
-            availabilityResponce.requestData;
+            availabilityResponse.requestData;
 
           const client = await prisma.client.create({
             data: {
@@ -571,7 +571,7 @@ export const Mutation = extendType({
               })
             ),
           });
-          schechuleBookingStatusUpdate(
+          scheduleBookingStatusUpdate(
             booking.id,
             'FINISHED',
             booking.checkOutDate
@@ -605,31 +605,30 @@ export const Mutation = extendType({
               guestsDistribution: true,
             },
           });
-          if (!bookingRequest)
-            throw new UserInputError('Invalid booking request identifyer.');
+          if (!bookingRequest) throw new UserInputError('Not Found.');
           const admin = await verifyIsHotelAdmin(
             user.id,
             bookingRequest.hotelId
           );
 
-          const roomsAvailables = await checkRoomsAvailable({
+          const roomsAvailable = await checkRoomsAvailable({
             roomModelId: bookingRequest.roomModelId,
             checkInDate: bookingRequest.checkInDate.toString(),
             checkOutDate: bookingRequest.checkOutDate.toString(),
             roomsRequired: bookingRequest.guestsDistribution.length,
           });
 
-          if (!roomsAvailables.length)
-            throw new UserInputError('There is not enought rooms available.');
+          if (!roomsAvailable.length)
+            throw new UserInputError('There is not enoughs rooms available.');
 
-          const roomsAvailablesIds = roomsAvailables.map(
+          const roomsAvailableIds = roomsAvailable.map(
             (room: { id: number }) => room.id
           );
-          const matchRoomsRequestedWithAvailablesOnes = args.roomsIds.every(
-            (id: number) => roomsAvailablesIds.includes(id)
+          const matchRoomsRequestedWithAvailableOnes = args.roomsIds.every(
+            (id: number) => roomsAvailableIds.includes(id)
           );
 
-          if (!matchRoomsRequestedWithAvailablesOnes)
+          if (!matchRoomsRequestedWithAvailableOnes)
             throw new UserInputError(
               'Some of the requested rooms is not available.'
             );
@@ -682,7 +681,7 @@ export const Mutation = extendType({
               status: 'ACCEPTED',
             },
           });
-          schechuleBookingStatusUpdate(
+          scheduleBookingStatusUpdate(
             createdBooking.id,
             'FINISHED',
             createdBooking.checkOutDate
@@ -705,8 +704,7 @@ export const Mutation = extendType({
               id: requestId,
             },
           });
-          if (!request)
-            throw new UserInputError('Invalid booking request identifyer.');
+          if (!request) throw new UserInputError('Not Found');
           const user = await getUser(token);
           await verifyIsHotelAdmin(user.id, request.hotelId);
           return prisma.bookingRequest.update({
@@ -722,12 +720,12 @@ export const Mutation = extendType({
       },
     });
     t.field('cancelBooking', {
-      type: 'CancelationDetails',
+      type: 'CancellationDetails',
       args: {
         token: nonNull(stringArg()),
         bookingId: nonNull(idArg()),
         message: nonNull(stringArg()),
-        cancelationFee: nonNull(floatArg()),
+        cancellationFee: nonNull(floatArg()),
       },
       resolve(root, args, ctx): any {
         const declineRequest = async (
@@ -741,14 +739,14 @@ export const Mutation = extendType({
               id: bookingId,
             },
           });
-          const cancelationDetails = await prisma.cancelationDetails.create({
+          const cancellationDetails = await prisma.cancellationDetails.create({
             data: {
               bookingId: bookingId,
-              cancelationFee: args.cancelationFee,
+              cancellationFee: args.cancellationFee,
               message: args.message,
             },
           });
-          if (!booking) throw new UserInputError('Invalid booking identifyer.');
+          if (!booking) throw new UserInputError('Not Found');
           if (booking.status !== 'ACTIVE')
             throw new UserInputError(
               'The operation can`t be made over a not active booking.'
@@ -762,7 +760,7 @@ export const Mutation = extendType({
               status: 'CANCELED',
             },
           });
-          return cancelationDetails;
+          return cancellationDetails;
         };
         return declineRequest(args.token, parseInt(args.bookingId), args);
       },

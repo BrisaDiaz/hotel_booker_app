@@ -1,7 +1,7 @@
 import BedIcon from '@mui/icons-material/Bed';
 import KingBedIcon from '@mui/icons-material/KingBed';
 import SingleBedIcon from '@mui/icons-material/SingleBed';
-export default function BedIcone({
+export default function DynamicBedIcon({
   type,
   size,
   color,

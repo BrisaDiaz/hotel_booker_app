@@ -4,7 +4,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DinamicFieldIcone from '@/components/DinamicFieldIcone';
+import dynamicFieldIcon from '@/components/DynamicFiledIcon';
 import Box from '@mui/material/Box';
 
 export default function SimpleAccordion({
@@ -24,7 +24,7 @@ export default function SimpleAccordion({
           id={`${title}-panel`}
         >
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {DinamicFieldIcone(title)}
+            {dynamicFieldIcon(title)}
             <Typography
               variant="subtitle1"
               sx={{

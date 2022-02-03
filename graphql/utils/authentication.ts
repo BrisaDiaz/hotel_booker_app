@@ -68,7 +68,7 @@ export async function getUser(token: string): Promise<User | ApolloError> {
 export async function getAdminInfo(
   userId: number
 ): Promise<AdminPayload | ApolloError> {
-  if (!userId) throw new ForbiddenError('Unauthenticated');
+  if (!userId) throw new AuthenticationError('Unauthenticated');
   const admin = await prisma.administrator.findUnique({
     where: {
       userId: userId,
@@ -83,7 +83,7 @@ export async function getAdminInfo(
     },
   });
 
-  if (!admin) throw new ForbiddenError('Forbiden');
+  if (!admin) throw new ForbiddenError('Forbidden');
   return admin;
 }
 export async function getUserProfile(
@@ -111,7 +111,7 @@ export async function verifyIsHotelAdmin(userId: number, hotelId: number) {
     (hotel: { id: number }) => hotel.id === hotelId
   );
 
-  if (!isHotelAdmin) throw new ForbiddenError('Forbiden');
+  if (!isHotelAdmin) throw new ForbiddenError('Forbidden');
   return admin;
 }
 
@@ -122,7 +122,7 @@ export async function hashPassword(password: string): Promise<string> {
   return hashPassword;
 }
 
-export async function compirePassword({
+export async function comparePassword({
   hash,
   plain,
 }: {

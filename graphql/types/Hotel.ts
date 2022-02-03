@@ -125,7 +125,7 @@ export const Hotel = objectType({
   definition(t) {
     t.nonNull.id('id');
     t.nonNull.int('administratorId');
-    t.field('adminstrator', {
+    t.field('administrator', {
       type: 'Administrator',
 
       resolve(root: any): any {
@@ -318,7 +318,7 @@ export const Mutation = extendType({
         services: nonNull(list(stringArg())),
         activities: nonNull(list(stringArg())),
         languages: nonNull(list(stringArg())),
-        freeCancelation: nonNull(booleanArg()),
+        freeCancellation: nonNull(booleanArg()),
         accessible: nonNull(booleanArg()),
         familyFriendly: nonNull(booleanArg()),
         petFriendly: nonNull(booleanArg()),
@@ -389,7 +389,7 @@ export const Mutation = extendType({
           await prisma.features.create({
             data: {
               hotelId: hotel.id * 1,
-              freeCancelation: args.freeCancelation,
+              freeCancellation: args.freeCancellation,
               accessible: args.accessible,
               familyFriendly: args.familyFriendly,
               petFriendly: args.petFriendly,
@@ -426,7 +426,7 @@ export const Mutation = extendType({
         services: list(stringArg()),
         activities: list(stringArg()),
         languages: list(stringArg()),
-        freeCancelation: booleanArg(),
+        freeCancellation: booleanArg(),
         accessible: booleanArg(),
         familyFriendly: booleanArg(),
         petFriendly: booleanArg(),
@@ -452,8 +452,8 @@ export const Mutation = extendType({
           if (toEditFields.includes('staticFeatures')) {
             await updateStaticFeatures(hotelId, args);
           }
-          if (toEditFields.includes('dinamicFeatures')) {
-            hotelUpdated = await updateDinamicFeatures(hotelId, args);
+          if (toEditFields.includes('dynamicFeatures')) {
+            hotelUpdated = await updateDynamicFeatures(hotelId, args);
           }
           if (toEditFields.includes('genericData')) {
             hotelUpdated = await updateGenericData(hotelId, args);
@@ -495,7 +495,7 @@ export const Mutation = extendType({
               id: hotelId,
             },
             data: {
-              freeCancelation: args.freeCancelation,
+              freeCancellation: args.freeCancellation,
               accessible: args.accessible,
               familyFriendly: args.familyFriendly,
               petFriendly: args.petFriendly,
@@ -539,7 +539,7 @@ export const Mutation = extendType({
             },
           });
         };
-        const updateDinamicFeatures = async (hotelId: number, args: any) => {
+        const updateDynamicFeatures = async (hotelId: number, args: any) => {
           return await prisma.hotel.update({
             where: {
               id: hotelId,

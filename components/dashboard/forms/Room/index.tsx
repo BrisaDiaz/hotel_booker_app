@@ -7,7 +7,7 @@ import CapacitySection from './CapacitySection';
 import FeaturesSection from './FeaturesSection';
 import PriceSection from '../PriceSection';
 import { styles } from '@/components/dashboard/forms/styles';
-import FormBottons from '../FormBottons';
+import FormButtons from '../FormButtons';
 interface Feature {
   id: number;
   name: string;
@@ -18,9 +18,9 @@ export default function MultilineTextFields(props: {
   amenities: Feature[];
   roomCategories: Feature[];
   bedTypes: Feature[];
-  submitHandler: (formData:any)=>void;
+  submitHandler: (formData: any) => void;
 }) {
-const  [resetCount, setResetCount] = React.useState(0)
+  const [resetCount, setResetCount] = React.useState(0);
   const { services, amenities, roomCategories, submitHandler, bedTypes } =
     props;
 
@@ -28,23 +28,24 @@ const  [resetCount, setResetCount] = React.useState(0)
     register,
     handleSubmit,
     setValue,
-      setError,
-      getValues,
-clearErrors,
-formState,
+    setError,
+    getValues,
+    clearErrors,
+    formState,
     formState: { errors },
   } = useForm({ mode: 'onChange' });
 
-React.useEffect(() => {
-    if(!formState.isValidating) return 
-if(!getValues('description')){
-setError('description',{
-  type:'required',
-  message:'A description is required'
-})}else{
-clearErrors('description');
-}
-}, [formState.isValidating])
+  React.useEffect(() => {
+    if (!formState.isValidating) return;
+    if (!getValues('description')) {
+      setError('description', {
+        type: 'required',
+        message: 'A description is required',
+      });
+    } else {
+      clearErrors('description');
+    }
+  }, [formState.isValidating]);
 
   const submitMiddleware = (data: any) => {
     const pickedBedQuantities = bedTypes
@@ -60,17 +61,17 @@ clearErrors('description');
       amenities: data.amenities,
       name: data.name,
       description: data.description,
-      smooking: data.smooking,
-      freeCancelation: data.freeCancelation,
+      smocking: data.smocking,
+      freeCancellation: data.freeCancellation,
       category: data.category,
       mts2: data.mts2 * 2,
       mainImage: data.mainImage[0],
-      maximunGuests: data.maximunGuests * 1,
-      maximunStay: data.maximunNights * 1 || 0,
-      minimunStay: data.minimunNights * 1,
+      maximumGuests: data.maximumGuests * 1,
+      maximumStay: data.maximumNights * 1 || 0,
+      minimumStay: data.minimumNights * 1,
       lowestPrice: data.lowestPrice * 1,
       taxesAndCharges: data.taxesAndCharges * 1,
-      cancelationFee: data.cancelationFee * 1,
+      cancellationFee: data.cancellationFee * 1,
     };
 
     submitHandler(variables);
@@ -105,8 +106,14 @@ clearErrors('description');
         amenities={amenities}
       />
 
-      <AspectSection register={register} errors={errors} setError={setError} clearErrors={clearErrors} resetCount={resetCount}/>
-      <FormBottons  onAbort={()=>setResetCount(resetCount+1)}/>
+      <AspectSection
+        register={register}
+        errors={errors}
+        setError={setError}
+        clearErrors={clearErrors}
+        resetCount={resetCount}
+      />
+      <FormButtons onAbort={() => setResetCount(resetCount + 1)} />
     </Box>
   );
 }

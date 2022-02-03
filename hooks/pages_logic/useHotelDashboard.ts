@@ -207,7 +207,7 @@ export default function useHotelDashboard({
           );
           handleCloseModal('addRoom');
           notify({
-            content: 'Rooms where added sucessfully',
+            content: 'Rooms where added successfully',
             type: 'success',
           });
         }
@@ -238,7 +238,7 @@ export default function useHotelDashboard({
         handleCloseModal('deleteRooms');
         setToDeleteRoomsIds([]);
         notify({
-          content: 'Rooms where deleted sucessfully',
+          content: 'Rooms where deleted successfully',
           type: 'success',
         });
       },
@@ -272,7 +272,7 @@ export default function useHotelDashboard({
       setInfoCardsData(actualizedCards);
       handleCloseModal('addBooking');
       notify({
-        content: 'Booking was created sucessfully',
+        content: 'Booking was created successfully',
         type: 'success',
       });
     },
@@ -295,19 +295,19 @@ export default function useHotelDashboard({
         setRoomTypes(displayedRoomTypesActualized);
         setToEditSection('');
         notify({
-          content: `Update was complited sucessfully`,
+          content: `Update was completed successfully`,
           type: 'success',
         });
       },
       onError: (error) => {
         notify({
-          content: `Update could not be complited.\n Error:${error.message}`,
+          content: `Update could not be completed.\n Error:${error.message}`,
           type: 'error',
         });
       },
     }
   );
-  const [getRoomsAvailable, roomsAvailablesRequest] = useLazyQuery(
+  const [getRoomsAvailable, roomsAvailableRequest] = useLazyQuery(
     GET_ROOM_MODEL_AVAILABLE_ROOMS
   );
 
@@ -331,12 +331,12 @@ export default function useHotelDashboard({
       console.log(err);
     }
   };
-  //// actualize rooms availables
+  //// actualize rooms Available
   React.useEffect(() => {
-    if (roomsAvailablesRequest.data?.rooms) {
-      return setAvailableRooms(roomsAvailablesRequest.data?.rooms);
+    if (roomsAvailableRequest.data?.rooms) {
+      return setAvailableRooms(roomsAvailableRequest.data?.rooms);
     }
-  }, [roomsAvailablesRequest.data]);
+  }, [roomsAvailableRequest.data]);
 
   const getRoomModelToEditData = async (roomModelId: number) => {
     try {
@@ -354,7 +354,7 @@ export default function useHotelDashboard({
     if (
       addRoomRequest.loading ||
       deleteRoomsResults.loading ||
-      roomsAvailablesRequest.loading ||
+      roomsAvailableRequest.loading ||
       creatBookingResults.loading ||
       roomTypeDataRequest.loading ||
       servicesRequest.loading ||
@@ -369,7 +369,7 @@ export default function useHotelDashboard({
   }, [
     addRoomRequest.loading,
     deleteRoomsResults.loading,
-    roomsAvailablesRequest.loading,
+    roomsAvailableRequest.loading,
     creatBookingResults.loading,
     roomTypeDataRequest.loading,
     servicesRequest.loading,
@@ -447,7 +447,7 @@ export default function useHotelDashboard({
     } catch (err: any) {
       setLoading(false);
       notify({
-        content: `Update could not be complited.`,
+        content: `Update could not be completed.`,
         type: 'error',
       });
     }

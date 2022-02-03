@@ -17,7 +17,7 @@ export const User = objectType({
 });
 
 export const Mutation = extendType({
-  type: 'Mutetion',
+  type: 'Mutation',
   definition(t) {
     t.field('updateMyAccount', {
       type: 'User',
@@ -36,7 +36,7 @@ export const Mutation = extendType({
         ) {
           if (!user) throw new AuthenticationError('Unauthenticated');
 
-          const encryptedPasswod = args.password
+          const encryptedPassword = args.password
             ? await hashPassword(args.password)
             : undefined;
           return await prisma.user.update({
@@ -47,7 +47,7 @@ export const Mutation = extendType({
               firstName: args.firstName,
               lastName: args.lastName,
               email: args.email,
-              password: encryptedPasswod,
+              password: encryptedPassword,
             },
           });
         }

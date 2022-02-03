@@ -25,8 +25,8 @@ export const Client = objectType({
     t.list.field('bookings', { type: 'Booking' });
   },
 });
-export const RoomConsultResponce = objectType({
-  name: 'RoomConsultResponceResponce',
+export const RoomConsultResponse = objectType({
+  name: 'RoomConsultResponse',
   definition(t) {
     t.string('message');
     t.boolean('isAvailable');
@@ -47,13 +47,13 @@ export const GuestsDistribution = objectType({
     t.int('children');
   },
 });
-export const CancelationDetails = objectType({
-  name: 'CancelationDetails',
+export const CancellationDetails = objectType({
+  name: 'CancellationDetails',
   definition(t) {
     t.id('id');
     t.int('bookingId');
     t.string('message');
-    t.float('cancelationFee');
+    t.float('cancellationFee');
     t.string('createdAt');
   },
 });
@@ -209,7 +209,7 @@ export const ConsultQuery = extendType({
   type: 'Query',
   definition(t) {
     t.field('checkRoomAvailability', {
-      type: RoomConsultResponce,
+      type: RoomConsultResponse,
       args: {
         roomModelId: nonNull(idArg()),
         checkOutDate: nonNull(stringArg()),
@@ -248,13 +248,13 @@ export const ConsultQuery = extendType({
         return makeConsult(parseInt(args.roomModelId), args);
       },
     });
-    t.field('getBookingCancelationDetails', {
-      type: CancelationDetails,
+    t.field('getBookingCancellationDetails', {
+      type: CancellationDetails,
       args: {
         bookingId: nonNull(idArg()),
       },
       resolve(root, args, ctx): any {
-        return prisma.cancelationDetails.findUnique({
+        return prisma.cancellationDetails.findUnique({
           where: {
             bookingId: parseInt(args.bookingId),
           },
@@ -267,7 +267,7 @@ export const Mutation = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('makeBookingRequest', {
-      type: RoomConsultResponce,
+      type: RoomConsultResponse,
       args: {
         roomModelId: nonNull(idArg()),
         firstName: nonNull(stringArg()),
@@ -295,7 +295,7 @@ export const Mutation = extendType({
             checkInDate: args.checkInDate,
           });
           if (!result.isAvailable)
-            return { isAvailtable: false, message: result.message };
+            return { isAvailable: false, message: result.message };
 
           const client = await await prisma.client.create({
             data: {

@@ -31,7 +31,7 @@ import FolderDirectory from '@/components/dashboard/FoldersDirectory';
 import AlbumModal from '@/components/modals/AlbumModal';
 import Dialog from '@/components/Dialog';
 import FullScreenModal from '@/components/modals/FullScreenModal';
-import ImageManager from '@/components/ImagesAlbunManager';
+import ImageManager from '@/components/ImagesAlbumManager';
 import useNotification from '@/hooks/useNotification';
 
 type PagePromps = {
@@ -235,7 +235,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
       setLoading(false);
       notify({
         type: 'error',
-        content: "Album update couldn't be complited, try again later",
+        content: "Album update couldn't be completed, try again later",
       });
     }
   };
@@ -303,25 +303,25 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
       title: 'Add a new album',
       onClick: () => handleActions('createAlbum'),
       disabled: false,
-      icone: <CreateNewFolderIcon />,
+      icon: <CreateNewFolderIcon />,
     },
     {
       title: 'Rename album',
       onClick: () => selectedAlbum && handleActions('renameAlbum'),
       disabled: selectedAlbum ? false : true,
-      icone: <EditIcon />,
+      icon: <EditIcon />,
     },
     {
       title: 'Manage album',
       onClick: () => selectedAlbum && handleActions('manageAlbum'),
       disabled: selectedAlbum ? false : true,
-      icone: <CollectionsIcon />,
+      icon: <CollectionsIcon />,
     },
     {
       title: 'Delete album',
       onClick: () => selectedAlbum && handleActions('deleteAlbum'),
       disabled: selectedAlbum ? false : true,
-      icone: <DeleteIcon />,
+      icon: <DeleteIcon />,
     },
   ];
   return (
@@ -341,14 +341,14 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
           }}
         >
           <Stack direction="row" justifyContent="end" spacing={1} sx={{ p: 1 }}>
-            {ACTION_BOTTOMS.map((buttom) => (
-              <Tooltip title={buttom.title} key={buttom.title}>
+            {ACTION_BOTTOMS.map((button) => (
+              <Tooltip title={button.title} key={button.title}>
                 <span>
                   <IconButton
-                    disabled={buttom.disabled}
-                    onClick={buttom.onClick}
+                    disabled={button.disabled}
+                    onClick={button.onClick}
                   >
-                    {buttom.icone}
+                    {button.icon}
                   </IconButton>
                 </span>
               </Tooltip>
@@ -394,7 +394,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
         {notification.content && (
           <SnackBar
             severity={notification.type}
-            message={notification.content || 'Oparation succesfully complited'}
+            message={notification.content || 'Oparation succesfully completed'}
           />
         )}
       </Box>

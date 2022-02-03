@@ -49,8 +49,8 @@ model Hotel {
   hotelCategory    HotelCategory? @relation(fields: [category], references: [name])
   category         String
   telephone        String
-  email            String
-  website          String
+  email            String?
+  website          String?
   description      String?
   lowestPrice      Float
   taxesAndCharges  Float
@@ -125,14 +125,14 @@ model RoomModel {
   category        String
   lowestPrice     Float            @default(0)
   taxesAndCharges Float            @default(0)
-  cancelationFee  Float            @default(0)
-  freeCancelation Boolean
-  smooking        Boolean
+  cancellationFee  Float            @default(0)
+  freeCancellation Boolean
+  smocking        Boolean
   mainImage       String
   description     String?
-  maximunStay     Int              @default(0)
-  minimunStay     Int              @default(1)
-  maximunGuests   Int
+  maximumStay     Int              @default(0)
+  minimumStay     Int              @default(1)
+  maximumGuests   Int
   amenities       Amenity[]
   services        Service[]
   rooms           Room[]
@@ -146,7 +146,7 @@ model Features {
   updatedAt       DateTime @updatedAt
   hotelId         Int      @unique
   hotel           Hotel    @relation(fields: [hotelId], references: [id])
-  freeCancelation Boolean  @default(false)
+  freeCancellation Boolean  @default(false)
   accessible      Boolean  @default(false)
   petFriendly     Boolean  @default(false)
   familyFriendly  Boolean  @default(false)
@@ -219,12 +219,12 @@ model Booking {
 
 }
 
-model CancelationDetails {
+model CancellationDetails {
   id             Int      @id @default(autoincrement())
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   message        String
-  cancelationFee Float
+  cancellationFee Float
   bookingId      Int      @unique
 }
 model Album {

@@ -9,7 +9,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { BookingRequest } from '@/interfaces/index';
 import Typography from '@mui/material/Typography';
 import { styles } from './styles';
-import BookingRequesInfo from '@/components/modals/BookingRequesInfo';
+import BookingRequestInfo from '@/components/modals/BookingRequestInfo';
 
 export default function BookingModal({
   isModalOpen,
@@ -18,12 +18,10 @@ export default function BookingModal({
 }: {
   isModalOpen: boolean;
   requestInfo: BookingRequest;
-  onClose: ()=> void;
+  onClose: () => void;
 }) {
-
-
   const handleClose = () => {
-onClose();
+    onClose();
   };
 
   return requestInfo ? (
@@ -57,9 +55,9 @@ onClose();
               component="h2"
               sx={styles.title}
             >
-              Boking Request
+              Booking Request
             </Typography>
-            <BookingRequesInfo requestInfo={requestInfo} />
+            <BookingRequestInfo requestInfo={requestInfo} />
           </Box>
         </Fade>
       </Modal>

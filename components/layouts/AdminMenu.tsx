@@ -31,7 +31,7 @@ import Logo from '@/components/layouts/Logo';
 const drawerWidth = 240;
 interface Link {
   label: string;
-  icone: React.ReactNode;
+  icon: React.ReactNode;
   selected: boolean;
   sub: boolean;
   family?: string[];
@@ -52,7 +52,7 @@ function UserMenu() {
   const [signOut] = useMutation(SIGN_OUT);
   const { resetSession } = useAuth();
   const router = useRouter();
-  const handdleSignOut = async () => {
+  const handleSignOut = async () => {
     try {
       handleClose();
       await signOut({
@@ -100,7 +100,7 @@ function UserMenu() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={() => handdleSignOut()}>Logout</MenuItem>
+        <MenuItem onClick={() => handleSignOut()}>Logout</MenuItem>
       </Menu>
     </>
   );
@@ -144,7 +144,7 @@ function NavLink({ link }: { link: Link }) {
             color: '#fff',
           }}
         >
-          {link.icone}
+          {link.icon}
         </ListItemIcon>
         <ListItemText
           primary={link.label}
@@ -172,10 +172,10 @@ export default function ResponsiveDrawer(props: Props) {
     setMobileOpen(!mobileOpen);
   };
 
-  const NAVEGATION_LINKS: Link[] = [
+  const NAVIGATION_LINKS: Link[] = [
     {
       label: 'Dashboard',
-      icone: <DashboardIcon />,
+      icon: <DashboardIcon />,
       selected: activeLink === 'dashboard',
       sub: false,
       url: '/admin',
@@ -183,7 +183,7 @@ export default function ResponsiveDrawer(props: Props) {
     },
     {
       label: 'hotel',
-      icone: <ApartmentIcon />,
+      icon: <ApartmentIcon />,
       selected: activeLink === 'hotel',
       sub: false,
       family: ['requests', 'guests', 'rooms', 'bookings', 'gallery'],
@@ -197,7 +197,7 @@ export default function ResponsiveDrawer(props: Props) {
 
     {
       label: 'requests',
-      icone: <NotificationsIcon />,
+      icon: <NotificationsIcon />,
       selected: activeLink === 'requests',
       sub: true,
       family: ['hotel'],
@@ -211,7 +211,7 @@ export default function ResponsiveDrawer(props: Props) {
     },
     {
       label: 'guests',
-      icone: <PeopleAltIcon />,
+      icon: <PeopleAltIcon />,
       selected: activeLink === 'guests',
       sub: true,
       family: ['hotel'],
@@ -225,7 +225,7 @@ export default function ResponsiveDrawer(props: Props) {
     },
     {
       label: 'bookings',
-      icone: <CalendarTodayIcon />,
+      icon: <CalendarTodayIcon />,
       selected: activeLink === 'bookings',
       sub: true,
       family: ['hotel'],
@@ -240,7 +240,7 @@ export default function ResponsiveDrawer(props: Props) {
     },
     {
       label: 'gallery',
-      icone: <CollectionsIcon />,
+      icon: <CollectionsIcon />,
       selected: activeLink === 'gallery',
       sub: true,
       family: ['hotel'],
@@ -270,9 +270,9 @@ export default function ResponsiveDrawer(props: Props) {
       />
       <List sx={{ mx: '10px' }} component="nav">
         {activeLink === 'dashboard' ? (
-          <NavLink link={NAVEGATION_LINKS[0]} />
+          <NavLink link={NAVIGATION_LINKS[0]} />
         ) : (
-          NAVEGATION_LINKS.map((link: Link) => (
+          NAVIGATION_LINKS.map((link: Link) => (
             <NavLink key={link.label} link={link} />
           ))
         )}
@@ -335,7 +335,7 @@ export default function ResponsiveDrawer(props: Props) {
         }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of NAVEGATION_LINKS. */}
+        {/* The implementation can be swapped with js to avoid SEO duplication of NAVIGATION_LINKS. */}
         <Drawer
           container={container}
           variant="temporary"

@@ -164,7 +164,7 @@ export const GET_HOTEL_BY_ID = gql`
         name
       }
       features {
-        freeCancelation
+        freeCancellation
         accessible
         familyFriendly
         petFriendly
@@ -182,7 +182,7 @@ export const GET_HOTEL_BY_ID = gql`
         mts2
         lowestPrice
         taxesAndCharges
-        cancelationFee
+        cancellationFee
         mainImage
         beds {
           id
@@ -214,13 +214,13 @@ export const GET_ROOM_MODEL_BY_ID = gql`
       }
       lowestPrice
       taxesAndCharges
-      cancelationFee
-      maximunGuests
-      maximunStay
-      minimunStay
+      cancellationFee
+      maximumGuests
+      maximumStay
+      minimumStay
       description
-      freeCancelation
-      smooking
+      freeCancellation
+      smocking
       amenities {
         id
         name
@@ -262,9 +262,9 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
         name
         mainImage
         lowestPrice
-        cancelationFee
+        cancellationFee
         taxesAndCharges
-        maximunGuests
+        maximumGuests
         beds {
           id
           type
@@ -326,7 +326,7 @@ export const GET_HOTEL_BOOKING_REQUESTS = gql`
           name
           lowestPrice
           taxesAndCharges
-          cancelationFee
+          cancellationFee
         }
       }
       totalResults
@@ -391,7 +391,7 @@ export const MAKE_ROOM_CONSULT = gql`
     $checkOutDate: String!
     $rooms: [roomSpecifications!]!
   ) {
-    responce: checkRoomAvailability(
+    Response: checkRoomAvailability(
       roomModelId: $roomModelId
       checkInDate: $checkInDate
       checkOutDate: $checkOutDate
@@ -461,7 +461,7 @@ export const GET_BOOKING_BY_ID = gql`
       }
       roomModel {
         name
-        cancelationFee
+        cancellationFee
       }
       reservedRooms {
         number
@@ -487,13 +487,13 @@ export const GET_ROOM_MODEL_AVAILABLE_ROOMS = gql`
     }
   }
 `;
-export const GET_BOOKING_CANCELATION_DETAILS = gql`
-  query getBookingCancelationDetails($bookingId: ID!) {
-    cancelationDetails: getBookingCancelationDetails(bookingId: $bookingId) {
+export const GET_BOOKING_CANCELLATION_DETAILS = gql`
+  query getBookingCancellationDetails($bookingId: ID!) {
+    cancellationDetails: getBookingCancellationDetails(bookingId: $bookingId) {
       bookingId
       createdAt
       message
-      cancelationFee
+      cancellationFee
     }
   }
 `;

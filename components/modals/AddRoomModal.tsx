@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { useMediaQuery } from '@mui/material';
-import {Theme}from '@mui/system'
+import { Theme } from '@mui/system';
 const styles = {
   modal: {
     position: 'fixed',
@@ -16,7 +16,7 @@ const styles = {
     maxWidth: '320px',
     transform: 'translate(-50%, -50%)',
     width: 400,
-    bgcolor: 'background.paper',
+
     border: '1px solid rgba(244,244,244,1)',
     boxShadow: 24,
     p: 4,
@@ -28,17 +28,15 @@ const styles = {
     '& > button': {
       textTransform: 'capitalize',
     },
-   
   },
-       input:{
-    '*':{
-       fontSize:{xs:'14px',sm:'16px'},
+  input: {
+    '*': {
+      fontSize: { xs: '14px', sm: '16px' },
     },
-'input':{
-
-p:{xs:'10px 14px',sm:'16.5px 14px'},
-},
+    input: {
+      p: { xs: '10px 14px', sm: '16.5px 14px' },
     },
+  },
 } as const;
 
 export default function KeepMountedModal({
@@ -47,21 +45,19 @@ export default function KeepMountedModal({
   onClose,
   restrictedNumbers,
 }: {
-  onSubmit: (formData:any)=>void;
-  onClose: ()=>void;
+  onSubmit: (formData: any) => void;
+  onClose: () => void;
   isOpen: boolean;
   restrictedNumbers: number[];
 }) {
   const inputRef: any = React.useRef();
-
-
 
   const handleClose = () => {
     if (inputRef.current) {
       inputRef.current.value = '';
     }
 
-  onClose();
+    onClose();
     setRoomNumbers([]);
     setCurrentNumber(null);
   };
@@ -75,7 +71,7 @@ export default function KeepMountedModal({
     }
     if (restrictedNumbers.includes(newNumber)) {
       return setError({
-        message: 'Room numeber already registred',
+        message: 'Room number already registered',
       });
     }
     setError({ message: '' });
@@ -100,7 +96,9 @@ export default function KeepMountedModal({
 
     if (numbers.length) return onSubmit(numbers);
   };
- const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+  const isInSmScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('sm')
+  );
   return (
     <Box sx={{ maxWidth: '100vw', margin: '0 auto' }}>
       <Modal
@@ -135,8 +133,8 @@ export default function KeepMountedModal({
             </Stack>
           )}
           <TextField
-           size={isInSmScreen?'medium':"small"}
-              sx={styles.input}
+            size={isInSmScreen ? 'medium' : 'small'}
+            sx={styles.input}
             type="number"
             id="country"
             inputRef={inputRef}

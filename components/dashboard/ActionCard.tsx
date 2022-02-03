@@ -17,23 +17,23 @@ import ListItemText from '@mui/material/ListItemText';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 type Action = {
   name: string;
-  callback: ()=>void;
+  callback: () => void;
 };
-const getIcone = (title: string) => {
-  const formatedTitle = title.trim().toLocaleLowerCase();
-  return formatedTitle.includes('room type') ? (
+const getIcon = (title: string) => {
+  const formattedTitle = title.trim().toLocaleLowerCase();
+  return formattedTitle.includes('room type') ? (
     <MeetingRoomIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
-  ) : formatedTitle.includes('room') ? (
+  ) : formattedTitle.includes('room') ? (
     <VpnKeyIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
-  ) : formatedTitle.includes('guest') ? (
+  ) : formattedTitle.includes('guest') ? (
     <PeopleAltIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
-  ) : formatedTitle.includes('hotel') ? (
+  ) : formattedTitle.includes('hotel') ? (
     <ApartmentIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
-  ) : formatedTitle.includes('request') ? (
+  ) : formattedTitle.includes('request') ? (
     <NotificationsIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
-  ) : formatedTitle.includes('booking') ? (
+  ) : formattedTitle.includes('booking') ? (
     <InboxIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
-  ) : formatedTitle.includes('calendar') ? (
+  ) : formattedTitle.includes('calendar') ? (
     <CalendarTodayIcon sx={{ transform: 'scale(4)', opacity: 0.4, ml: 2.7 }} />
   ) : null;
 };
@@ -50,16 +50,16 @@ export default function DashboardCard({
   return (
     <div key={card.title}>
       <Paper
-
         sx={{
           width: '240px',
           borderRadius: '20px',
           backgroundColor: ` ${card.color || '#795548'}`,
-           boxShadow:
-      '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
-      '&:hover':{
-        boxShadow:'0px 3px 20px -2px rgb(0 0 0 / 14%), 0px 3px 20px 0px rgb(0 0 0 / 8%), 0px 1px 20px 0px rgb(0 0 0 / 8%)'
-      } 
+          boxShadow:
+            '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
+          '&:hover': {
+            boxShadow:
+              '0px 3px 20px -2px rgb(0 0 0 / 14%), 0px 3px 20px 0px rgb(0 0 0 / 8%), 0px 1px 20px 0px rgb(0 0 0 / 8%)',
+          },
         }}
       >
         <Box
@@ -72,7 +72,7 @@ export default function DashboardCard({
             p: 3,
           }}
         >
-          {getIcone(card.title)}
+          {getIcon(card.title)}
           <Box
             sx={{
               display: 'flex',
@@ -106,7 +106,7 @@ export default function DashboardCard({
             }}
           >
             {card.actions.map(
-              (action: { name: string; callback: ()=>void }) => (
+              (action: { name: string; callback: () => void }) => (
                 <ListItem
                   disablePadding
                   onClick={() => action.callback()}

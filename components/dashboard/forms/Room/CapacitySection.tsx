@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import { styles } from '@/components/dashboard/forms/styles';
 import { RoomModel, Feature } from '@/interfaces/index';
 import { useMediaQuery } from '@mui/material';
-import {Theme}from '@mui/system'
+import { Theme } from '@mui/system';
 
 export default function CapacitySection({
   register,
@@ -18,7 +18,7 @@ export default function CapacitySection({
   defaultData?: RoomModel;
   children?: React.ReactNode;
   bedTypes: Feature[];
-  register: (fieldName:string,config?:any)=>void;
+  register: (fieldName: string, config?: any) => void;
   errors: any;
 }) {
   type DefaultBeds = {
@@ -28,18 +28,20 @@ export default function CapacitySection({
     defaultData && defaultData.beds
       ? defaultData.beds.reduce(
           (
-            defaulValues: any,
+            defaultValues: any,
             bed: { type: keyof DefaultBeds; quantity: number }
           ) => {
-            defaulValues[`${bed.type}`] = {
+            defaultValues[`${bed.type}`] = {
               quantity: bed.quantity,
             };
-            return defaulValues;
+            return defaultValues;
           },
           {}
         )
       : null;
-    const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+  const isInSmScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('sm')
+  );
   return (
     <Box component="fieldset" sx={styles.fieldset}>
       <Typography component="h3" variant="h6" sx={styles.groupTitle}>
@@ -48,9 +50,10 @@ export default function CapacitySection({
 
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={6}>
-          <TextField fullWidth 
-                    sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
+          <TextField
+            fullWidth
+            sx={styles.textField}
+            size={isInSmScreen ? 'medium' : 'small'}
             id="mts2"
             defaultValue={defaultData ? defaultData.mts2 : 1}
             {...register('mts2', {
@@ -67,14 +70,14 @@ export default function CapacitySection({
             error={errors['mts2'] ? true : false}
           />
         </Grid>
-        <Grid item xs={6} >
-          <TextField fullWidth 
-                   sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
-            id="maximunGueststs"
-            defaultValue={defaultData ? defaultData.maximunGuests : 1}
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            sx={styles.textField}
+            size={isInSmScreen ? 'medium' : 'small'}
+            defaultValue={defaultData ? defaultData.maximumGuests : 1}
             inputProps={{ min: 0 }}
-            {...register('maximunGuests', {
+            {...register('maximumGuests', {
               required: 'The guest limit is required',
               min: {
                 value: 0,
@@ -83,24 +86,25 @@ export default function CapacitySection({
             })}
             variant="outlined"
             label={
-              errors['maximunGuests']
-                ? errors['maximunGuests'].message
-                : 'Maximun guest'
+              errors['maximumGuests']
+                ? errors['maximumGuests'].message
+                : 'maximum guest'
             }
             type="number"
-            error={errors['maximunGuests'] ? true : false}
+            error={errors['maximumGuests'] ? true : false}
           />
         </Grid>
       </Grid>
       <Grid container spacing={2} alignItems="center">
-        <Grid item  xs={6}>
-          <TextField fullWidth 
-               sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
-            id="minimunNights"
-            defaultValue={defaultData ? defaultData.minimunStay : 1}
-            {...register('minimunNights', {
-              required: 'The minimun staying  is required',
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            sx={styles.textField}
+            size={isInSmScreen ? 'medium' : 'small'}
+            id="minimumNights"
+            defaultValue={defaultData ? defaultData.minimumStay : 1}
+            {...register('minimumNights', {
+              required: 'The minimum staying  is required',
               min: {
                 value: 0,
                 message: 'the value must be a positive number',
@@ -109,34 +113,35 @@ export default function CapacitySection({
             inputProps={{ min: 0 }}
             variant="outlined"
             label={
-              errors['minimunNights']
-                ? errors['minimunNights'].message
-                : 'Minimun Nights'
+              errors['minimumNights']
+                ? errors['minimumNights'].message
+                : 'minimum Nights'
             }
             type="number"
-            error={errors['minimunNights'] ? true : false}
+            error={errors['minimumNights'] ? true : false}
           />
         </Grid>
-        <Grid item  xs={6}>
-          <TextField fullWidth 
-                   sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
-            id="maximunNights"
-            {...register('maximunNights', {
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            sx={styles.textField}
+            size={isInSmScreen ? 'medium' : 'small'}
+            id="maximumNights"
+            {...register('maximumNights', {
               min: {
                 value: 0,
                 message: 'the value must be a positive number',
               },
             })}
-            defaultValue={defaultData ? defaultData.maximunStay : ''}
+            defaultValue={defaultData ? defaultData.maximumStay : ''}
             variant="outlined"
             label={
-              errors['maximunNights']
-                ? errors['maximunNights'].message
-                : 'Maximun Nights'
+              errors['maximumNights']
+                ? errors['maximumNights'].message
+                : 'maximum Nights'
             }
             type="number"
-            error={errors['maximunNights'] ? true : false}
+            error={errors['maximumNights'] ? true : false}
             inputProps={{ min: 0 }}
           />
         </Grid>
@@ -161,14 +166,16 @@ export function BedsInputs({
 }: {
   defaultBeds: { [key: string]: { quantity: number } } | null;
   beds: Feature[];
- register: (fieldName:string,config?:any)=>void;
+  register: (fieldName: string, config?: any) => void;
   errors: {
     [key: string]: {
       message: string;
     };
   };
 }) {
-    const isInSmScreen = useMediaQuery((theme:Theme) => theme.breakpoints.up('sm'));
+  const isInSmScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('sm')
+  );
   return (
     <>
       {beds.map((bed) => (
@@ -184,15 +191,21 @@ export function BedsInputs({
           }}
         >
           <Typography
-            sx={{ mr: 1, width: 'max-content', textTransform: 'capitalize' ,fontSize:{xs:'14px',sm:'16px'}}}
+            sx={{
+              mr: 1,
+              width: 'max-content',
+              textTransform: 'capitalize',
+              fontSize: { xs: '14px', sm: '16px' },
+            }}
           >
             {bed.name}
             {' :'}
           </Typography>
           <Box sx={{ width: '100px' }}>
-            <TextField fullWidth 
-                      sx={styles.textField}
-            size={isInSmScreen?'medium':"small"}
+            <TextField
+              fullWidth
+              sx={styles.textField}
+              size={isInSmScreen ? 'medium' : 'small'}
               id="bedQuantity"
               defaultValue={
                 defaultBeds ? defaultBeds[`${bed.name}`]?.quantity : 0

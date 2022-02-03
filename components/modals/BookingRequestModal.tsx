@@ -9,18 +9,18 @@ import CloseButton from '@/components/modals/CloseButton';
 import BookingClientInputs from '@/components/modals/BookingClientInputs';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { styles } from './styles';
-import currencyFixer from '@/utils/currencyFixer'
+import currencyFixer from '@/utils/currencyFixer';
 export default function BasicModal({
   children,
   onSubmit,
   roomData,
 }: {
   children: React.ReactNode;
-  onSubmit: (formData:any)=>void;
+  onSubmit: (formData: any) => void;
   roomData: {
     price: number;
     taxes: number;
-    maximunGuests: number;
+    maximumGuests: number;
     checkInHour: string;
     checkOutHour: string;
   };
@@ -43,7 +43,7 @@ export default function BasicModal({
     email: string;
     mobileNumber: string;
     landlineNumber: string;
-    guestsDistribution: Array<{ childrens: number; adults: number }>;
+    guestsDistribution: Array<{ children: number; adults: number }>;
     checkInDate: string;
     checkOutDate: string;
     specifications?: string;
@@ -89,26 +89,40 @@ export default function BasicModal({
           <Box component="ul" sx={{ mb: 2, px: 0 }}>
             {' '}
             <Box component="li" sx={styles.list}>
-              <Typography sx={{...styles.leyend,width: '60%'}}>Price:</Typography>
-              <Typography component="span">USD {currencyFixer(roomData?.price)}</Typography>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={{...styles.leyend,width: '60%'}}>Taxes: </Typography>
-              <Typography component="span">USD {currencyFixer(roomData?.taxes)}</Typography>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={{...styles.leyend,width: '60%'}}>Max. Guests:</Typography>
+              <Typography sx={{ ...styles.legend, width: '60%' }}>
+                Price:
+              </Typography>
               <Typography component="span">
-                {' '}
-                {roomData?.maximunGuests}
+                USD {currencyFixer(roomData?.price)}
               </Typography>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={{...styles.leyend,width: '60%'}}>Check In Hour:</Typography>
+              <Typography sx={{ ...styles.legend, width: '60%' }}>
+                Taxes:{' '}
+              </Typography>
+              <Typography component="span">
+                USD {currencyFixer(roomData?.taxes)}
+              </Typography>
+            </Box>
+            <Box component="li" sx={styles.list}>
+              <Typography sx={{ ...styles.legend, width: '60%' }}>
+                Max. Guests:
+              </Typography>
+              <Typography component="span">
+                {' '}
+                {roomData?.maximumGuests}
+              </Typography>
+            </Box>
+            <Box component="li" sx={styles.list}>
+              <Typography sx={{ ...styles.legend, width: '60%' }}>
+                Check In Hour:
+              </Typography>
               <time>{roomData?.checkInHour}</time>
             </Box>
             <Box component="li" sx={styles.list}>
-              <Typography sx={{...styles.leyend,width: '60%'}}>Check Out Hour:</Typography>
+              <Typography sx={{ ...styles.legend, width: '60%' }}>
+                Check Out Hour:
+              </Typography>
               <time>{roomData?.checkOutHour}</time>
             </Box>
           </Box>

@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "Booking" ALTER COLUMN "cancelationDetailsId" DROP NOT NULL;
+ALTER TABLE "Booking" ALTER COLUMN "cancellationDetailsId" DROP NOT NULL;

@@ -62,7 +62,7 @@ export const CREATE_HOTEL = gql`
     $services: [String]!
     $languages: [String]!
     $accessible: Boolean!
-    $freeCancelation: Boolean!
+    $freeCancellation: Boolean!
     $familyFriendly: Boolean!
     $petFriendly: Boolean!
     $smokerFriendly: Boolean!
@@ -95,7 +95,7 @@ export const CREATE_HOTEL = gql`
       services: $services
       languages: $languages
       accessible: $accessible
-      freeCancelation: $freeCancelation
+      freeCancellation: $freeCancellation
       familyFriendly: $familyFriendly
       petFriendly: $petFriendly
       smokerFriendly: $smokerFriendly
@@ -134,7 +134,7 @@ export const UPDATE_HOTEL = gql`
     $services: [String]
     $languages: [String]
     $accessible: Boolean
-    $freeCancelation: Boolean
+    $freeCancellation: Boolean
     $familyFriendly: Boolean
     $petFriendly: Boolean
     $smokerFriendly: Boolean
@@ -168,7 +168,7 @@ export const UPDATE_HOTEL = gql`
       services: $services
       languages: $languages
       accessible: $accessible
-      freeCancelation: $freeCancelation
+      freeCancellation: $freeCancellation
       familyFriendly: $familyFriendly
       petFriendly: $petFriendly
       smokerFriendly: $smokerFriendly
@@ -215,7 +215,7 @@ export const UPDATE_HOTEL = gql`
         name
       }
       features {
-        freeCancelation
+        freeCancellation
         accessible
         familyFriendly
         petFriendly
@@ -231,18 +231,18 @@ export const CREATE_ROOM_MODEL = gql`
     $token: String!
     $hotelId: ID!
     $lowestPrice: Float!
-    $cancelationFee: Float
+    $cancellationFee: Float
     $taxesAndCharges: Float!
     $name: String!
     $mts2: Int!
     $beds: [bedsSpecifications]!
-    $smooking: Boolean!
-    $freeCancelation: Boolean!
+    $smocking: Boolean!
+    $freeCancellation: Boolean!
     $category: String!
     $description: String!
-    $minimunStay: Int!
-    $maximunStay: Int
-    $maximunGuests: Int!
+    $minimumStay: Int!
+    $maximumStay: Int
+    $maximumGuests: Int!
     $mainImage: String!
     $services: [String]!
     $amenities: [String]!
@@ -252,18 +252,18 @@ export const CREATE_ROOM_MODEL = gql`
       hotelId: $hotelId
       lowestPrice: $lowestPrice
       taxesAndCharges: $taxesAndCharges
-      cancelationFee: $cancelationFee
-      smooking: $smooking
-      freeCancelation: $freeCancelation
+      cancellationFee: $cancellationFee
+      smocking: $smocking
+      freeCancellation: $freeCancellation
 
       name: $name
       mts2: $mts2
       beds: $beds
       category: $category
       description: $description
-      minimunStay: $minimunStay
-      maximunStay: $maximunStay
-      maximunGuests: $maximunGuests
+      minimumStay: $minimumStay
+      maximumStay: $maximumStay
+      maximumGuests: $maximumGuests
       mainImage: $mainImage
       services: $services
       amenities: $amenities
@@ -278,18 +278,18 @@ export const UPDATE_ROOM_MODEL = gql`
     $hotelId: ID!
     $roomModelId: ID!
     $lowestPrice: Float
-    $cancelationFee: Float
+    $cancellationFee: Float
     $taxesAndCharges: Float
     $name: String
     $mts2: Int
     $beds: [bedsSpecifications]
-    $smooking: Boolean
-    $freeCancelation: Boolean
+    $smocking: Boolean
+    $freeCancellation: Boolean
     $category: String
     $description: String
-    $minimunStay: Int
-    $maximunStay: Int
-    $maximunGuests: Int
+    $minimumStay: Int
+    $maximumStay: Int
+    $maximumGuests: Int
     $mainImage: String
     $services: [String]
     $amenities: [String]
@@ -299,18 +299,18 @@ export const UPDATE_ROOM_MODEL = gql`
       hotelId: $hotelId
       roomModelId: $roomModelId
       lowestPrice: $lowestPrice
-      cancelationFee: $cancelationFee
-      smooking: $smooking
-      freeCancelation: $freeCancelation
+      cancellationFee: $cancellationFee
+      smocking: $smocking
+      freeCancellation: $freeCancellation
       taxesAndCharges: $taxesAndCharges
       name: $name
       mts2: $mts2
       beds: $beds
       category: $category
       description: $description
-      minimunStay: $minimunStay
-      maximunStay: $maximunStay
-      maximunGuests: $maximunGuests
+      minimumStay: $minimumStay
+      maximumStay: $maximumStay
+      maximumGuests: $maximumGuests
       mainImage: $mainImage
       services: $services
       amenities: $amenities
@@ -323,13 +323,13 @@ export const UPDATE_ROOM_MODEL = gql`
       mainImage
       lowestPrice
       taxesAndCharges
-      cancelationFee
-      maximunGuests
-      maximunStay
-      minimunStay
+      cancellationFee
+      maximumGuests
+      maximumStay
+      minimumStay
       description
-      freeCancelation
-      smooking
+      freeCancellation
+      smocking
       rooms {
         id
         roomModelId
@@ -403,7 +403,7 @@ export const MAKE_BOOKING_REQUEST = gql`
     $checkOutDate: String!
     $specifications: String
   ) {
-    responce: makeBookingRequest(
+    Response: makeBookingRequest(
       roomModelId: $roomModelId
       firstName: $firstName
       lastName: $lastName
@@ -493,18 +493,18 @@ export const CANCEL_BOOKING = gql`
     $token: String!
     $bookingId: ID!
     $message: String!
-    $cancelationFee: Float!
+    $cancellationFee: Float!
   ) {
-    cancelationDetails: cancelBooking(
+    cancellationDetails: cancelBooking(
       token: $token
       bookingId: $bookingId
       message: $message
-      cancelationFee: $cancelationFee
+      cancellationFee: $cancellationFee
     ) {
       bookingId
       createdAt
       message
-      cancelationFee
+      cancellationFee
     }
   }
 `;

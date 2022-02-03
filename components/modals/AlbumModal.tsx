@@ -6,30 +6,25 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-
 import TextField from '@mui/material/TextField';
 
 import CloseButton from '@/components/modals/CloseButton';
 
 import { styles } from './styles';
-import {  Album} from '@/interfaces/index';
+import { Album } from '@/interfaces/index';
 export default function AlbumModal({
   isOpen,
   onSubmit,
   onClose,
-  defaultValue
+  defaultValue,
 }: {
   isOpen: boolean;
-  onSubmit: (formData:any)=>void;
-  onClose: ()=>void;
-defaultValue?:Partial<Album>|null
-
+  onSubmit: (formData: any) => void;
+  onClose: () => void;
+  defaultValue?: Partial<Album> | null;
 }) {
-
-
-  
   const handleClose = () => {
- onClose();
+    onClose();
   };
 
   const {
@@ -40,21 +35,13 @@ defaultValue?:Partial<Album>|null
     formState: { errors },
   } = useForm({ mode: 'onBlur' });
 
-  const submitMiddleware = (data: {
-    name: string;
-  }) => {
+  const submitMiddleware = (data: { name: string }) => {
     onSubmit(data);
   };
 
- 
-
-React.useEffect(() => {
-
- setValue('name',defaultValue ? defaultValue?.name:'')
-
-
- 
-}, [defaultValue])
+  React.useEffect(() => {
+    setValue('name', defaultValue ? defaultValue?.name : '');
+  }, [defaultValue]);
 
   return (
     <Modal
@@ -78,33 +65,27 @@ React.useEffect(() => {
           component="h2"
           sx={styles.title}
         >
-        {defaultValue ? 'Edit Album' :  'Add a new albun'}
+          {defaultValue ? 'Edit Album' : 'Add a new album'}
         </Typography>
-             <TextField
-             fullWidth
+        <TextField
+          fullWidth
           id="name"
-   
-       {...register('name',{
-         required:'The albun name is required.',
-           maxLength: {
+          {...register('name', {
+            required: 'The album name is required.',
+            maxLength: {
               value: 100,
-              message: 'The description should be of a 100 characters length maximun.',
+              message:
+                'The description should be of a 100 characters length maximum.',
             },
-       })}
+          })}
           variant="outlined"
-          label={
-            errors['name']
-              ? errors['name'].message
-              : 'Name'
-          }
+          label={errors['name'] ? errors['name'].message : 'Name'}
           type="text"
           error={errors['name'] ? true : false}
-         defaultValue={defaultValue ? defaultValue.name  :''}
-         autoFocus
+          defaultValue={defaultValue ? defaultValue.name : ''}
+          autoFocus
         />
-       
 
-        
         <Button
           type="submit"
           fullWidth

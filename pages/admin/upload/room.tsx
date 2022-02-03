@@ -7,12 +7,12 @@ import RoomForm from '@/components/dashboard/forms/Room/index';
 import Backdrop from '@/components/Backdrop';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import { useMutation } from '@apollo/client';
-import { RoomBuildierVariables } from '@/interfaces/index';
+import { RoomBuilderVariables } from '@/interfaces/index';
 import uploadToCloudinary from '@/utils/uploadToCloudinary';
 import { prisma } from '@/lib/prisma';
 import { CREATE_ROOM_MODEL } from '@/queries/index';
 import { Feature } from '@/interfaces/index';
-import useNotification from '@/hooks/useNotification'
+import useNotification from '@/hooks/useNotification';
 type PageProps = {
   amenitiesList: Feature[];
   servicesList: Feature[];
@@ -29,28 +29,28 @@ const RoomUploadPage: any = ({
 
   const router = useRouter();
 
-
   const { hotelId } = router.query;
-  const [isLoading, setIsLoading] = React.useState(false); 
-  const { notification,notify} = useNotification({autoClean:true})
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { notification, notify } = useNotification({ autoClean: true });
   const [createRoomUploadPageModel, { error }] = useMutation(
     CREATE_ROOM_MODEL,
     {
       onCompleted: () => {
         setIsLoading(false);
-          notify({type:'success',content:'Room created successfully'});
-
+        notify({ type: 'success', content: 'Room created successfully' });
       },
-      onError: ({message}) => {
+      onError: ({ message }) => {
         setIsLoading(false);
-console.log(message)
-      notify({type:'error',content:"Room couldn't be created, please try later"});
+        console.log(message);
+        notify({
+          type: 'error',
+          content: "Room couldn't be created, please try later",
+        });
       },
     }
   );
-  const [success, setSuccess] = React.useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = React.useState<string>('');
-  const onSubmit = async (variables: RoomBuildierVariables) => {
+
+  const onSubmit = async (variables: RoomBuilderVariables) => {
     if (!authContext.session.user) return router.push('/signin');
     setIsLoading(true);
     try {
@@ -60,21 +60,24 @@ console.log(message)
         variables: {
           ...variables,
           hotelId: hotelId,
-          token:authContext.session.token,
+          token: authContext.session.token,
           mainImage: mainImageData.secure_url,
         },
       });
     } catch (err: any) {
       console.log(err);
       setIsLoading(false);
-      notify({type:'error',content:"Room couldn't be created, please try later"});
+      notify({
+        type: 'error',
+        content: "Room couldn't be created, please try later",
+      });
     }
   };
 
-
-React.useEffect(() => {
-if (!authContext.session.loading && !authContext.session.user)  router.push('/signin');
-}, [authContext])
+  React.useEffect(() => {
+    if (!authContext.session.loading && !authContext.session.user)
+      router.push('/signin');
+  }, [authContext]);
   if (authContext.session.loading) return <Backdrop loading={true} />;
   return (
     <div>
@@ -85,7 +88,7 @@ if (!authContext.session.loading && !authContext.session.user)  router.push('/si
       </Head>
 
       <main>
-          {notification.content && (
+        {notification.content && (
           <SnackBar
             severity={notification.type}
             message={notification.content}
@@ -121,16 +124,16 @@ export const getStaticProps = async () => {
     ]);
 
   const props = {
-    amenitiesList: JSON.parse (JSON.stringify(amenitiesList)),
-    servicesList: JSON.parse (JSON.stringify(servicesList)),
-    roomCategoriesList: JSON.parse (JSON.stringify(roomCategoriesList)),
-    bedTypesList: JSON.parse (JSON.stringify(bedTypesList)),
+    amenitiesList: JSON.parse(JSON.stringify(amenitiesList)),
+    servicesList: JSON.parse(JSON.stringify(servicesList)),
+    roomCategoriesList: JSON.parse(JSON.stringify(roomCategoriesList)),
+    bedTypesList: JSON.parse(JSON.stringify(bedTypesList)),
   };
 
   return {
     props: {
       ...props,
-       revalidate: 60,
+      revalidate: 60,
     },
   };
 };

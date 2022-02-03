@@ -15,7 +15,7 @@ export default function TransitionsModal({
   onSubmit,
 }: {
   children: React.ReactNode;
-  onSubmit: (formData:any)=>void;
+  onSubmit: (formData: any) => void;
 }) {
   const {
     register,
@@ -54,7 +54,7 @@ export default function TransitionsModal({
 
             <form onSubmit={handleSubmit(submitHandler)}>
               <Typography variant="h5" component="h2" sx={styles.title}>
-                check Room abailability
+                check Room availability
               </Typography>
               <BookingRoomInputs
                 register={register}
