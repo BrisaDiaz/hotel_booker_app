@@ -78,6 +78,6 @@ export default function ImageDropZone({
         Drag here your files.
       </Typography>
       <ProgressBar loading={dropZoneState.loading} />
-    </Box>
+    </Box> 
   );
 }
