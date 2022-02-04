@@ -64,7 +64,7 @@ const styles = {
     gap: 1,
     textTransform: 'capitalize',
     alignItems: 'center',
-    width: { xs: '250px', sm: '300px' },
+    width: { xs: '250px' },
   },
 } as const;
 type PageProps = {
@@ -250,7 +250,10 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box component="main" sx={{ maxWidth: '900px', m: '80px auto 30px',overflowX:'hidden' }}>
+      <Box
+        component="main"
+        sx={{ maxWidth: '900px', m: '80px auto 30px', overflowX: 'hidden' }}
+      >
         <Box component={Link} href={`/hotel/${room.hotelId}`} passHref>
           <Typography
             variant="h3"

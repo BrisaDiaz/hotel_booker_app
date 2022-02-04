@@ -16,7 +16,7 @@ const styles = {
     maxWidth: '320px',
     transform: 'translate(-50%, -50%)',
     width: 400,
-
+    background: '#f5f5f5',
     border: '1px solid rgba(244,244,244,1)',
     boxShadow: 24,
     p: 4,
