@@ -24,16 +24,16 @@ export const Query = extendType({
     t.field('hotelSearchSuggestions', {
       type: list(HotelSuggestion),
       args: {
-        take: intArg({ default: 5 }),
+        take: intArg({ default: 4 }),
         search: nonNull(stringArg()),
       },
       resolve(root, args, ctx): any {
         const getHotelSuggestions = async (args: {
-          take: number;
+          take: number | null;
           search: string;
         }) => {
           const hotels = await prisma.hotel.findMany({
-            take: args.take,
+            take: args.take || 4,
             where: {
               OR: [
                 { name: { contains: args.search, mode: 'insensitive' } },
