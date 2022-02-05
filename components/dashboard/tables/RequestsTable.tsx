@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { toDateAndHourFormat } from '@/utils/index';
+import toDateAndHourFormat from '@/utils/toDateAndHourFormat';
 import { alpha } from '@mui/material/styles';
 import { BookingRequest } from '@/interfaces/index';
 import Box from '@mui/material/Box';

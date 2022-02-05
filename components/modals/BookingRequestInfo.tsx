@@ -4,7 +4,7 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import Typography from '@mui/material/Typography';
-import { toDateAndHourFormat } from '@/utils/index';
+import { toDateAndHourFormat } from '@/utils/toDateAndHourFormat';
 import { BookingRequest } from '@/interfaces/index';
 import { styles } from './styles';
 import currencyFixer from '@/utils/currencyFixer';

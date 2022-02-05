@@ -59,7 +59,9 @@ async function verifyToken(token: string): Promise<Token | ApolloError> {
   return verifiedToken;
 }
 
-export async function getUser(token: string): Promise<User | ApolloError> {
+export async function getUserIdentity(
+  token: string
+): Promise<User | ApolloError> {
   const tokenPayload = await verifyToken(token);
 
   return tokenPayload.user;

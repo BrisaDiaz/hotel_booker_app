@@ -1,4 +1,4 @@
-import { prisma } from '../../lib/prisma';
+import { prisma } from '@/lib/prisma';
 
 async function checkRoomsAvailable({
   roomModelId,
@@ -151,6 +151,7 @@ function InBetweenDates(range: string[] | Date[]) {
 
   return dates;
 }
+
 export interface HotelQueryArgs {
   facilities?: string[];
   activities?: string[];

@@ -177,7 +177,7 @@ export default function useHotelDashboard({
   >(null);
   const [availableRooms, setAvailableRooms] = React.useState<
     | {
-        id: string;
+        id: number;
         number: number;
       }[]
     | []

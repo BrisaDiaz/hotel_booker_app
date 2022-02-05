@@ -176,6 +176,7 @@ const Bookings: WithLayoutPage<PageProps> = ({
           }),
           getCancellationDetails({
             variables: {
+              token,
               bookingId,
             },
           }),
@@ -310,31 +311,27 @@ Bookings.getLayout = function getLayout(pbookingsStatus: React.ReactNode) {
 };
 
 export default Bookings;
-type PbookingsStatusContext = {
+type Context = {
   req: NextApiRequest;
   res: NextApiResponse;
   query: {
-    hotelId: number;
+    hotelId: string;
   };
 };
-export const getServerSideProps = async ({
-  req,
-  res,
-  query,
-}: PbookingsStatusContext) => {
+export const getServerSideProps = async ({ req, res, query }: Context) => {
   try {
     const token = getCookie(req, res);
-
+    const hotelId = parseInt(query.hotelId);
     const RoomModelsResponse = await client.query({
       query: GET_HOTEL_ROOM_MODELS_LIST,
       variables: {
-        hotelId: query.hotelId,
+        hotelId,
       },
     });
 
     return {
       props: {
-        hotelId: query.hotelId,
+        hotelId,
         token: token,
 
         roomModels: RoomModelsResponse.data.hotel.roomModels,
@@ -345,7 +342,7 @@ export const getServerSideProps = async ({
     return {
       redirect: {
         permanent: false,
-        destination: '/signin',
+        destination: '/admin',
       },
       props: {},
     };

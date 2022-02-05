@@ -15,7 +15,7 @@ import { useMediaQuery } from '@mui/material';
 export type Room = {
   children: number;
   adults: number;
-  id: string;
+  id: number;
 };
 
 const flexBox = {

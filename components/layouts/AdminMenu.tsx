@@ -1,7 +1,7 @@
 import * as React from 'react';
 import NextLink from 'next/link';
 import Link from 'next/link';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -49,15 +49,13 @@ interface Props {
   activeLink: string;
 }
 function UserMenu() {
-  const [signOut] = useMutation(SIGN_OUT);
+  const [signOut] = useLazyQuery(SIGN_OUT);
   const { resetSession } = useAuth();
   const router = useRouter();
   const handleSignOut = async () => {
     try {
       handleClose();
-      await signOut({
-        variables: { date: new Date(Date.now()).toISOString() },
-      });
+      await signOut();
       resetSession();
       router.push('/signin');
     } catch (e) {

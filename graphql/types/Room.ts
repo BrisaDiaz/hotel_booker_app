@@ -1,7 +1,6 @@
 import {
   objectType,
   extendType,
-  idArg,
   list,
   intArg,
   stringArg,
@@ -10,20 +9,37 @@ import {
   floatArg,
   inputObjectType,
 } from 'nexus';
-import { verifyIsHotelAdmin, deleteImage, getUser } from '../utils/index';
-import { prisma } from '../../lib/prisma';
 
+import {
+  createHotelRoomModel,
+  updateRoomModel,
+  deleteRooms,
+  addRooms,
+  getRoomModel,
+  makeRoomAvailabilityConsult,
+  getRoomModelBeds,
+  getRoomModelRooms,
+  getRoomModelOfRoom,
+} from '../services/Room';
+import { checkRoomsAvailable } from '../utils/index';
+import { roomSpecifications } from './Booking';
+import { getHotel } from '../services/Hotel';
+import {
+  getRoomModelAlbum,
+  getRoomModelImagesCount,
+  getRoomModelImages,
+} from '../services/Album';
 export const Amenity = objectType({
   name: 'Amenity',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.string('name');
   },
 });
 export const BedType = objectType({
   name: 'BedType',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.string('name');
   },
 });
@@ -31,7 +47,7 @@ export const BedType = objectType({
 export const RoomBed = objectType({
   name: 'RoomBed',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.int('roomModelId');
     t.string('type');
     t.int('quantity');
@@ -40,24 +56,26 @@ export const RoomBed = objectType({
 export const RoomCategory = objectType({
   name: 'RoomCategory',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.string('name');
   },
 });
-
+export const RoomConsultResponse = objectType({
+  name: 'RoomConsultResponse',
+  definition(t) {
+    t.string('message');
+    t.boolean('isAvailable');
+  },
+});
 export const RoomModel = objectType({
   name: 'RoomModel',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.int('hotelId');
     t.field('hotel', {
       type: 'Hotel',
       resolve: (root: any): any => {
-        return prisma.hotel.findUnique({
-          where: {
-            id: root.hotelId,
-          },
-        });
+        return getHotel(root.hotelId);
       },
     });
     t.string('name');
@@ -77,48 +95,24 @@ export const RoomModel = objectType({
     t.list.field('beds', {
       type: 'RoomBed',
       resolve: (root: any): any => {
-        return prisma.roomBed.findMany({
-          where: {
-            roomModelId: root.id,
-          },
-        });
+        return getRoomModelBeds(root.id);
       },
     });
     t.list.field('album', {
       type: 'Album',
       resolve: (root: any): any => {
-        return prisma.album.findUnique({
-          where: {
-            roomModelId: root.id,
-          },
-        });
+        return getRoomModelAlbum(root.id);
       },
     });
     t.int('imagesCount', {
       resolve(root: any): any {
-        return prisma.image.count({
-          where: {
-            album: {
-              roomModelId: root.id,
-            },
-          },
-        });
+        return getRoomModelImagesCount(root.id);
       },
     }),
       t.list.field('miniatures', {
         type: 'Image',
         resolve(root: any): any {
-          return prisma.image.findMany({
-            take: 6,
-            orderBy: {
-              createdAt: 'desc',
-            },
-            where: {
-              album: {
-                roomModelId: root.id,
-              },
-            },
-          });
+          return getRoomModelImages(root.id, { take: 6 });
         },
       });
     t.list.field('services', { type: 'Service' });
@@ -126,11 +120,7 @@ export const RoomModel = objectType({
     t.list.field('rooms', {
       type: 'Room',
       resolve: (root: any): any => {
-        return prisma.room.findMany({
-          where: {
-            roomModelId: root.id,
-          },
-        });
+        return getRoomModelRooms(root.id);
       },
     });
   },
@@ -138,17 +128,13 @@ export const RoomModel = objectType({
 export const Room = objectType({
   name: 'Room',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.int('roomModelId');
     t.int('number');
     t.field('roomModel', {
       type: 'RoomModel',
       resolve: (root: any): any => {
-        return prisma.roomModel.findUnique({
-          where: {
-            id: root.roomModelId,
-          },
-        });
+        return getRoomModelOfRoom(root.roomModelId);
       },
     });
     t.list.field('bookings', {
@@ -162,18 +148,44 @@ export const Query = extendType({
     t.field('roomModelById', {
       type: 'RoomModel',
       args: {
-        roomModelId: nonNull(idArg()),
+        roomModelId: nonNull(intArg()),
       },
       resolve(root, args, ctx): any {
-        return prisma.roomModel.findUnique({
-          where: {
-            id: parseInt(args.roomModelId),
-          },
-          include: {
-            amenities: true,
-            services: true,
-          },
+        return getRoomModel(args.roomModelId);
+      },
+    });
+    t.field('getRoomModelAvailableRooms', {
+      type: list('Room'),
+      args: {
+        roomModelId: nonNull(intArg()),
+        checkOutDate: nonNull(stringArg()),
+        checkInDate: nonNull(stringArg()),
+        rooms: nonNull(list(nonNull(roomSpecifications))),
+      },
+      resolve: (root, args: any, ctx): any => {
+        return checkRoomsAvailable({
+          roomModelId: parseInt(args.roomModelId),
+          roomsRequired: args.rooms.length,
+          checkOutDate: args.checkOutDate,
+          checkInDate: args.checkInDate,
         });
+      },
+    });
+    t.field('checkRoomAvailability', {
+      type: RoomConsultResponse,
+      args: {
+        roomModelId: nonNull(intArg()),
+        checkOutDate: nonNull(stringArg()),
+        checkInDate: nonNull(stringArg()),
+        rooms: nonNull(list(roomSpecifications)),
+      },
+      resolve: (root, args: any, ctx) => {
+        type RoomSpecifications = {
+          adults: number;
+          children: number;
+        };
+
+        return makeRoomAvailabilityConsult(args.roomModelId, args);
       },
     });
   },
@@ -192,7 +204,7 @@ export const Mutation = extendType({
       type: 'RoomModel',
       args: {
         token: nonNull(stringArg()),
-        hotelId: nonNull(idArg()),
+        hotelId: nonNull(intArg()),
         lowestPrice: nonNull(floatArg()),
         taxesAndCharges: nonNull(floatArg()),
         cancellationFee: floatArg(),
@@ -211,64 +223,7 @@ export const Mutation = extendType({
         beds: nonNull(list(bedsSpecifications)),
       },
       resolve(root, args, ctx): any {
-        const hotelId = parseInt(args.hotelId);
-
-        const createHotelRoomModel = async (
-          token: string,
-          hotelId: number,
-          args: any
-        ) => {
-          const user = await getUser(token);
-          await verifyIsHotelAdmin(user.id, hotelId);
-          const roomModel = await prisma.roomModel.create({
-            data: {
-              hotel: { connect: { id: hotelId } },
-              name: args.name,
-              mts2: args.mts2,
-              roomCategory: { connect: { name: args.category } },
-              lowestPrice: args.lowestPrice,
-              taxesAndCharges: args.taxesAndCharges,
-              cancellationFee: args.cancellationFee,
-              description: args.description,
-              maximumStay: args.maximumStay,
-              minimumStay: args.maximumStay,
-              maximumGuests: args.maximumGuests,
-              mainImage: args.mainImage,
-              freeCancellation: args.freeCancellation,
-              smocking: args.smocking,
-              services: {
-                connect: args?.services?.map((service: string) => ({
-                  name: service,
-                })),
-              },
-              amenities: {
-                connect: args?.amenities?.map((item: string) => ({
-                  name: item,
-                })),
-              },
-            },
-          });
-          const roomBeds = args.beds.map(
-            (bed: { type: string; quantity: number }) =>
-              prisma.roomBed.create({
-                data: {
-                  roomModelId: roomModel.id,
-                  type: bed.type,
-                  quantity: bed.quantity,
-                },
-              })
-          );
-          await prisma.album.create({
-            data: {
-              hotelId: hotelId,
-              roomModelId: roomModel.id,
-              name: `Room Type ${roomModel.id}`,
-            },
-          });
-          await Promise.all(roomBeds);
-          return roomModel;
-        };
-        return createHotelRoomModel(args.token, hotelId, args);
+        return createHotelRoomModel(args.token, args.hotelId, args);
       },
     });
 
@@ -276,8 +231,8 @@ export const Mutation = extendType({
       type: 'RoomModel',
       args: {
         token: nonNull(stringArg()),
-        hotelId: nonNull(idArg()),
-        roomModelId: nonNull(idArg()),
+        hotelId: nonNull(intArg()),
+        roomModelId: nonNull(intArg()),
         lowestPrice: floatArg(),
         taxesAndCharges: floatArg(),
         cancellationFee: floatArg(),
@@ -296,93 +251,10 @@ export const Mutation = extendType({
         beds: list(bedsSpecifications),
       },
       resolve(root, args, ctx): any {
-        const updateRoomModel = async (
-          token: string,
-          hotelId: number,
-          roomModelId: number,
-          args: any
-        ) => {
-          const user = await getUser(token);
-          await verifyIsHotelAdmin(user.id, hotelId);
-          let mainImage;
-          if (args.mainImage) {
-            const roomModel = await prisma.roomModel.findUnique({
-              where: {
-                id: roomModelId,
-              },
-            });
-            if (!roomModel) return;
-            //// delete change images from the cloud
-
-            await deleteImage(roomModel.mainImage);
-
-            mainImage = args.mainImage;
-          }
-          if (args.beds?.length) {
-            await prisma.roomBed.deleteMany({
-              where: {
-                roomModelId: roomModelId,
-              },
-            });
-            const promises = args.beds.map(
-              (bed: { type: string; quantity: number }) =>
-                prisma.roomBed.create({
-                  data: {
-                    roomModelId: roomModelId,
-                    type: bed.type,
-                    quantity: bed.quantity,
-                  },
-                })
-            );
-            await Promise.all(promises);
-          }
-          return prisma.roomModel.update({
-            where: {
-              id: roomModelId,
-            },
-            data: {
-              name: args.name,
-              mts2: args.mts2,
-              roomCategory: args.category
-                ? {
-                    connect: { name: args.category },
-                  }
-                : undefined,
-              lowestPrice: args.lowestPrice,
-              taxesAndCharges: args.taxesAndCharges,
-              cancellationFee: args.cancellationFee,
-              description: args.description,
-              maximumStay: args.maximumStay,
-              minimumStay: args.maximumStay,
-              maximumGuests: args.maximumGuests,
-              mainImage,
-              freeCancellation: args.freeCancellation,
-              smocking: args.smocking,
-              services: args.services?.length
-                ? {
-                    connect: args?.services?.map((service: string) => ({
-                      name: service,
-                    })),
-                  }
-                : undefined,
-              amenities: args.amenities?.length
-                ? {
-                    connect: args?.amenities?.map((item: string) => ({
-                      name: item,
-                    })),
-                  }
-                : undefined,
-            },
-            include: {
-              services: true,
-              amenities: true,
-            },
-          });
-        };
         return updateRoomModel(
           args.token,
-          parseInt(args.hotelId),
-          parseInt(args.roomModelId),
+          args.hotelId,
+          args.roomModelId,
           args
         );
       },
@@ -392,91 +264,34 @@ export const Mutation = extendType({
       type: list('Room'),
       args: {
         token: nonNull(stringArg()),
-        hotelId: nonNull(idArg()),
-        roomModelId: nonNull(idArg()),
+        hotelId: nonNull(intArg()),
+        roomModelId: nonNull(intArg()),
         roomNumbers: nonNull(list(nonNull(intArg()))),
       },
       resolve: (root, args, ctx): any => {
-        const userId = args.token;
-        const hotelId = parseInt(args.hotelId);
-        const roomModelId = parseInt(args.roomModelId);
-
-        const deleteRooms = async (
-          token: string,
-          hotelId: number,
-          roomModelId: number,
-          roomNumbers: number[]
-        ) => {
-          const user = await getUser(token);
-          await verifyIsHotelAdmin(user.id, hotelId);
-          const roomsInHotel = await prisma.room.findMany({
-            where: {
-              hotelId: hotelId,
-            },
-          });
-
-          const roomsNumbersInHotel = roomsInHotel.map(
-            (room: { number: number }) => room.number
-          );
-
-          const roomsAllowed = roomNumbers.filter(
-            (number) => !roomsNumbersInHotel.includes(number)
-          );
-
-          if (roomsAllowed.length) {
-            await prisma.room.createMany({
-              data: roomNumbers.map((number) => ({
-                hotelId,
-                number,
-                roomModelId,
-              })),
-            });
-
-            return prisma.room.findMany({
-              where: {
-                roomModelId,
-              },
-            });
-          }
-          return [];
-        };
-        return deleteRooms(userId, hotelId, roomModelId, args.roomNumbers);
+        return addRooms(
+          args.token,
+          args.hotelId,
+          args.roomModelId,
+          args.roomNumbers
+        );
       },
     });
-    t.field('deleteRoomOfModel', {
+    t.field('deleteRoomsOfModel', {
       type: list('Room'),
       args: {
         token: nonNull(stringArg()),
-        hotelId: nonNull(idArg()),
-        roomModelId: nonNull(idArg()),
+        hotelId: nonNull(intArg()),
+        roomModelId: nonNull(intArg()),
         roomsIds: nonNull(list(nonNull(intArg()))),
       },
       resolve: (root, args, ctx): any => {
-        const hotelId = parseInt(args.hotelId);
-        const roomModelId = parseInt(args.roomModelId);
-
-        const deleteRooms = async (
-          token: string,
-          hotelId: number,
-          roomModelId: number,
-          roomsIds: number[]
-        ) => {
-          const user = await getUser(token);
-          await verifyIsHotelAdmin(user.id, hotelId);
-
-          await prisma.room.deleteMany({
-            where: {
-              OR: roomsIds.map((id) => ({ id: id })),
-            },
-          });
-
-          return prisma.room.findMany({
-            where: {
-              roomModelId,
-            },
-          });
-        };
-        return deleteRooms(args.token, hotelId, roomModelId, args.roomsIds);
+        return deleteRooms(
+          args.token,
+          args.hotelId,
+          args.roomModelId,
+          args.roomsIds
+        );
       },
     });
   },

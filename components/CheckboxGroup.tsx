@@ -2,7 +2,7 @@ import * as React from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Feature } from '@/interfaces/index';
+
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 export default function CheckboxLabels({
@@ -10,8 +10,13 @@ export default function CheckboxLabels({
   handleChanges,
   value,
 }: {
-  items: Feature[];
-  handleChanges: (checked: boolean, itemName: string) => void;
+  items: {
+    id: number;
+    name: string;
+    value: string;
+    hotelsCount?: number | undefined;
+  }[];
+  handleChanges: (itemValue: string) => void;
   value: string[];
 }) {
   return (
@@ -50,15 +55,44 @@ export default function CheckboxLabels({
             </Box>
           }
           control={
-            <Checkbox
-              checked={value.includes(item.name) ? true : false}
-              size="small"
-              color="secondary"
-              onChange={(e) => handleChanges(e.target.checked, item.name)}
+            <ItemCheckbox
+              checked={value.includes(item.value) ? true : false}
+              value={item.value}
+              onClick={() => handleChanges(item.value)}
             />
           }
         />
       ))}
     </FormGroup>
+  );
+}
+
+function ItemCheckbox({
+  checked,
+  onClick,
+  value,
+}: {
+  checked: boolean;
+  onClick: () => void;
+  value: string;
+}) {
+  const [isChecked, setIsChecked] = React.useState<boolean>(false);
+
+  const handleClick = () => {
+    setIsChecked(!isChecked);
+    onClick();
+  };
+  React.useEffect(() => {
+    setIsChecked(checked);
+  }, [checked]);
+
+  return (
+    <Checkbox
+      value={value}
+      checked={isChecked}
+      size="small"
+      color="secondary"
+      onClick={() => handleClick()}
+    />
   );
 }

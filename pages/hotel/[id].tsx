@@ -5,7 +5,7 @@ import { client } from '@/lib/apollo';
 import AppBar from '@/components/layouts/AppBar';
 import { GET_HOTEL_BY_ID, GET_HOTEL_IMAGES } from '@/queries/index';
 import { useLazyQuery } from '@apollo/client';
-import { getFeaturesTags } from '@/utils/index';
+import { getFeaturesTags } from '@/utils/getHotelFeatureTags';
 import Head from 'next/head';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -112,7 +112,8 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
     setCarrouselIndex(0);
   };
   const openCarousel = () => {
-    setIsCarouselOpen(true);
+    if (carouselImages.length<3) return
+     setIsCarouselOpen(true);
   };
   const handleImageClick = (
     img: { image: string; title: string },
@@ -234,7 +235,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
           defaultIndex={CarrouselIndex}
           requireMore={handleShowMore}
         />
-        <Box component="section" sx={{ px: { xs: 1, lg: 0 } }}>
+        <Box component="section" sx={{ px: { xs: 1, md: 0 } }}>
           <Typography
             component="h4"
             variant="h5"
@@ -286,7 +287,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                 {
                   title: 'About Us',
                   Content: (
-                    <Box sx={{ margin: { xs: '24px 6px', md: '30px 6px' } }}>
+                    <Box sx={{ margin: { xs: '24px 6px', md: '30px 0' } }}>
                       <Box
                         sx={{ fontSize: { xs: '14px', md: '16px' } }}
                         dangerouslySetInnerHTML={{ __html: hotel.description }}
@@ -297,56 +298,85 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                 {
                   title: 'Policies and Rules',
                   Content: (
-                    <Box sx={{ margin: { xs: '24px 6px', md: '30px 6px' } }}>
+                    <Box sx={{ margin: { xs: '24px 6px', md: '30px 0' } }}>
                       <Box
                         sx={{ fontSize: { xs: '14px', md: '16px' } }}
                         dangerouslySetInnerHTML={{
                           __html: hotel.policiesAndRules,
                         }}
                       />
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          columnGap: '20px',
+
+                          flexWrap: 'wrap',
+                        }}
+                      >
+                        <Box sx={styles.listItem}>
+                          <AlarmIcon fontSize="small" color="primary" />
+                          <Typography>
+                            <Typography
+                              variant="body2"
+                              component="span"
+                              color="primary"
+                            >
+                              Check In Hour:
+                            </Typography>
+                            <time> {`  ${hotel.checkInHour}`}</time>
+                          </Typography>
+                        </Box>
+                        <Box sx={styles.listItem}>
+                          <AlarmIcon fontSize="small" color="primary" />
+                          <Typography>
+                            <Typography
+                              variant="body2"
+                              component="span"
+                              color="primary"
+                            >
+                              Check Out Hour:
+                            </Typography>
+                            <time> {`  ${hotel.checkOutHour}`}</time>
+                          </Typography>
+                        </Box>
+                      </Box>
                     </Box>
                   ),
                 },
               ]}
             />
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              columnGap: '20px',
 
-              flexWrap: 'wrap',
-              ml: 1,
-            }}
-          >
-            <Box sx={styles.listItem}>
-              <AlarmIcon fontSize="small" color="primary" />
-              <Typography>
-                <Typography variant="body2" component="span" color="primary">
-                  Check In Hour:
-                </Typography>
-                <time> {`  ${hotel.checkInHour}`}</time>
-              </Typography>
-            </Box>
-            <Box sx={styles.listItem}>
-              <AlarmIcon fontSize="small" color="primary" />
-              <Typography>
-                <Typography variant="body2" component="span" color="primary">
-                  Check Out Hour:
-                </Typography>
-                <time> {`  ${hotel.checkOutHour}`}</time>
-              </Typography>
-            </Box>
-          </Box>
           {/* HOTEL CHARACTERISTICS */}
 
-          <Box sx={{ mt: '20px', maxWidth: 900 }} component="section">
-            <Grid
-              container
-              alignItems="flex-start"
-              sx={{ margin: '0 ', columnGap: '80px' }}
+          <Box sx={{ mt: { xs: 3, sm: 5 }, maxWidth: 900 }} component="section">
+            <Box
+              component="ul"
+              sx={{
+                mx: 0,
+                mb: { sm: 3 },
+                px: { xs: 1, md: 0 },
+                display: 'flex',
+                columnGap: 4,
+                flexWrap: 'wrap',
+              }}
             >
+              {includedFeatures.map((featureName) => (
+                <Box
+                  component="li"
+                  sx={{ ...styles.list, p: 0 }}
+                  key={featureName}
+                >
+                  <Box sx={styles.listItem}>
+                    {DynamicFiledIcon(featureName)}
+
+                    <p>{featureName}</p>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+            <Grid container alignItems="flex-start" sx={{ columnGap: '80px' }}>
               {characteristics.length &&
                 characteristics.map((characteristic) =>
                   characteristic.items && characteristic.items.length ? (
@@ -354,9 +384,9 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                       <Grid
                         item
                         xs={12}
-                        sm={6}
+                        md={6}
                         sx={{
-                          padding: 1,
+                          padding: { xs: 1, sm: 0 },
                           minWidth: { xs: '100%', sm: 'max-content' },
                         }}
                       >
@@ -408,22 +438,6 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                     </div>
                   ) : null
                 )}
-              <Box
-                component="ul"
-                sx={{
-                  pl: 1,
-                }}
-              >
-                {includedFeatures.map((featureName) => (
-                  <Box component="li" sx={styles.list} key={featureName}>
-                    <Box sx={styles.listItem}>
-                      {DynamicFiledIcon(featureName)}
-
-                      <p>{featureName}</p>
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
             </Grid>
           </Box>
         </Box>
@@ -467,11 +481,11 @@ export default HotelPage;
 export const getServerSideProps = async ({
   query,
 }: {
-  query: { id: number };
+  query: { id: string };
 }) => {
   const { data, error } = await client.query({
     query: GET_HOTEL_BY_ID,
-    variables: { hotelId: query.id },
+    variables: { hotelId: parseInt(query.id) },
   });
   if (error) {
     return {

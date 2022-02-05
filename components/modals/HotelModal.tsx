@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getFeaturesTags } from '@/utils/index';
+import { getFeaturesTags } from '@/utils/getHotelFeatureTags';
 import { v4 as uuidv4 } from 'uuid';
 import { Hotel } from '@/interfaces/index';
 import Backdrop from '@mui/material/Backdrop';
@@ -11,7 +11,7 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import currencyFixer from '@/utils/currencyFixer'
+import currencyFixer from '@/utils/currencyFixer';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Paper from '@mui/material/Paper';
 import ImageSlider from '@/components/ImageSlider';
@@ -19,12 +19,12 @@ import CloseButton from '@/components/modals/CloseButton';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modal: {
-      position: 'absolute' ,
+      position: 'absolute',
       borderRadius: theme.spacing(1),
       top: '50%',
       left: '50%',
       fontWeight: 200,
-         background: '#efefef',
+      background: '#efefef',
       maxHeight: '100%',
       transform: 'translate(-50%, -50%)',
       minWidth: 360,
@@ -35,10 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: theme.spacing(1),
       backgroundColor: 'background.paper',
 
-      
-
       overflowY: 'auto',
-     
     },
     modalContent: {
       '& > section': {
@@ -95,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(1),
       paddingTop: theme.spacing(0.5),
       paddingBottom: theme.spacing(0.5),
-   
+
       '& > *': {
         fontWeight: 600,
       },
@@ -128,8 +125,8 @@ type SectionToEdit =
   | '';
 type ComponentProps = {
   isOpen: boolean;
-  onClose: ()=>void;
-  onEdit: (sectionName:SectionToEdit)=>void;
+  onClose: () => void;
+  onEdit: (sectionName: SectionToEdit) => void;
   hotel: Hotel | null;
 };
 
@@ -138,11 +135,9 @@ function TransitionsModal(props: ComponentProps) {
 
   const classes = useStyles();
 
-
   const handleClose = () => {
-onClose();
+    onClose();
   };
-
 
   if (!isOpen || !hotel) return <div />;
   const TagsWithKeys = hotel.features
@@ -240,10 +235,11 @@ onClose();
                     >
                       Description
                     </Typography>
-                   
-                    
-                      <Box sx={{fontSize:'14px'}}  dangerouslySetInnerHTML={{__html: hotel.description}}/>
-                    
+
+                    <Box
+                      sx={{ fontSize: '14px' }}
+                      dangerouslySetInnerHTML={{ __html: hotel.description }}
+                    />
                   </Box>
                 </Box>
 
@@ -283,9 +279,12 @@ onClose();
                     >
                       Policies
                     </Typography>
-                    <Box sx={{fontSize:'14px'}} dangerouslySetInnerHTML={{__html: hotel.policiesAndRules}}/>
-                    
-                   
+                    <Box
+                      sx={{ fontSize: '14px' }}
+                      dangerouslySetInnerHTML={{
+                        __html: hotel.policiesAndRules,
+                      }}
+                    />
                   </Box>
                 </Box>
                 <Box className={classes.titleBox}>
@@ -303,7 +302,9 @@ onClose();
                     >
                       Lowest price
                     </Typography>
-                    <Typography>USD {currencyFixer(hotel.lowestPrice)}</Typography>
+                    <Typography>
+                      USD {currencyFixer(hotel.lowestPrice)}
+                    </Typography>
                   </Box>
                   <Box component="section">
                     <Box className={classes.rowField}>
@@ -314,7 +315,9 @@ onClose();
                       >
                         Taxes and Charges
                       </Typography>
-                      <Typography>USD {currencyFixer(hotel.taxesAndCharges)}</Typography>
+                      <Typography>
+                        USD {currencyFixer(hotel.taxesAndCharges)}
+                      </Typography>
                     </Box>
                   </Box>
                 </Box>

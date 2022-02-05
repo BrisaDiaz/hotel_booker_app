@@ -26,7 +26,7 @@ export default function AuthProvider({
     token,
   }: {
     user: {
-      id: string;
+      id: number;
       firstName: string;
       lastName: string;
       email: string;
@@ -34,7 +34,7 @@ export default function AuthProvider({
     };
     token: string;
   }) => {
-    const userData = { ...user, id: parseInt(user.id) };
+    const userData = { ...user };
 
     dispatch({
       type: SET_SESSION,

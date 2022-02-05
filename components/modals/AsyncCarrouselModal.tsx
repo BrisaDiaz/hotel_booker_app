@@ -90,7 +90,7 @@ export default function SimpleBackdrop({
             maxWidth: '900px',
             mt: 2,
             overflow: 'hidden',
-
+            background: '#f3f3f3',
             mx: 'auto',
             '.css-78trlr-MuiButtonBase-root-MuiIconButton-root': {
               p: { xs: 0, sm: 0.5 },
@@ -159,6 +159,7 @@ export default function SimpleBackdrop({
               width: '100%',
               maxWidth: '900px',
               overflow: 'hidden',
+              background: '#f3f3f3',
             }}
           >
             <ImageList

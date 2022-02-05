@@ -97,6 +97,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
     setCarrouselIndex(0);
   };
   const openCarousel = () => {
+    if (carouselImages.length < 2) return;
     setIsCarouselOpen(true);
   };
   const handleImageClick = (
@@ -307,7 +308,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
           defaultIndex={carrouselIndex}
           requireMore={handleShowMore}
         />
-        <Box component="section" sx={{ px: { xs: 1, lg: 0 }, mt: 2 }}>
+        <Box component="section" sx={{ px: { xs: 1, md: 0 }, mt: 2 }}>
           <Typography
             component="h4"
             variant="h5"
@@ -356,7 +357,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
               gap: 3,
               flexWrap: 'wrap',
               alignItems: 'center',
-              mx: 1,
+
               mt: { sm: '-20px' },
               p: 0,
             }}
@@ -376,7 +377,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
           </Box>
           <Box
             sx={{
-              margin: ' 10px 10px 20px ',
+              margin: { xs: '24px 6px', md: '30px 0' },
               fontSize: { xs: '14px', md: '16px' },
             }}
             dangerouslySetInnerHTML={{ __html: room.description }}
@@ -416,7 +417,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
           </Box>
           <Box
             sx={{
-              m: '20px 10px 30px',
+              m: '20px 0 30px',
               width: '100%',
             }}
           >
@@ -603,7 +604,7 @@ export const getServerSideProps = async ({
   query,
   res,
 }: {
-  query: { id: number };
+  query: { id: string };
   res: NextApiResponse;
 }) => {
   res.setHeader(
@@ -612,7 +613,7 @@ export const getServerSideProps = async ({
   );
   const { data, error } = await client.query({
     query: GET_ROOM_MODEL_BY_ID,
-    variables: { roomModelId: query.id },
+    variables: { roomModelId: parseInt(query.id) },
   });
 
   if (error) {

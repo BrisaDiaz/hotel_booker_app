@@ -52,6 +52,8 @@ const RoomUploadPage: any = ({
 
   const onSubmit = async (variables: RoomBuilderVariables) => {
     if (!authContext.session.user) return router.push('/signin');
+    if (!hotelId) router.push('/admin');
+    if (!hotelId) setIsLoading(true);
     setIsLoading(true);
     try {
       const [mainImageData] = await uploadToCloudinary([variables.mainImage]);
@@ -59,7 +61,7 @@ const RoomUploadPage: any = ({
       await createRoomUploadPageModel({
         variables: {
           ...variables,
-          hotelId: hotelId,
+          hotelId: parseInt(hotelId as string),
           token: authContext.session.token,
           mainImage: mainImageData.secure_url,
         },

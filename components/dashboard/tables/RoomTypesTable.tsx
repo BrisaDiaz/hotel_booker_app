@@ -184,8 +184,8 @@ function RoomsTable({
             roomType.cancellationFee,
             roomType.maximumGuests,
             roomType.beds,
-            roomType.rooms.map((room: { id: string; number: number }) => ({
-              id: parseInt(room.id),
+            roomType.rooms.map((room: { id: number; number: number }) => ({
+              id: room.id,
               number: room.number,
             }))
           )

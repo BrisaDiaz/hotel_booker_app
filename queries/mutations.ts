@@ -1,12 +1,5 @@
 import { gql } from '@apollo/client';
 
-export const SIGN_OUT = gql`
-  mutation signout($date: String) {
-    signout(date: $date) {
-      message
-    }
-  }
-`;
 export const SIGN_IN = gql`
   mutation signin($email: String!, $password: String!) {
     signin(email: $email, password: $password) {
@@ -114,7 +107,7 @@ export const CREATE_HOTEL = gql`
 export const UPDATE_HOTEL = gql`
   mutation updateHotel(
     $token: String!
-    $hotelId: ID!
+    $hotelId: Int!
     $name: String
     $brand: String
     $category: String
@@ -229,7 +222,7 @@ export const UPDATE_HOTEL = gql`
 export const CREATE_ROOM_MODEL = gql`
   mutation creatHotelRoomModel(
     $token: String!
-    $hotelId: ID!
+    $hotelId: Int!
     $lowestPrice: Float!
     $cancellationFee: Float
     $taxesAndCharges: Float!
@@ -275,8 +268,8 @@ export const CREATE_ROOM_MODEL = gql`
 export const UPDATE_ROOM_MODEL = gql`
   mutation updateRoomModel(
     $token: String!
-    $hotelId: ID!
-    $roomModelId: ID!
+    $hotelId: Int!
+    $roomModelId: Int!
     $lowestPrice: Float
     $cancellationFee: Float
     $taxesAndCharges: Float
@@ -354,8 +347,8 @@ export const UPDATE_ROOM_MODEL = gql`
 export const ADD_ROOMS_TO_MODEL = gql`
   mutation addRoomToModel(
     $token: String!
-    $hotelId: ID!
-    $roomModelId: ID!
+    $hotelId: Int!
+    $roomModelId: Int!
     $roomNumbers: [Int!]!
   ) {
     addRoomToModel(
@@ -373,8 +366,8 @@ export const ADD_ROOMS_TO_MODEL = gql`
 export const DELETE_ROOMS_OF_MODEL = gql`
   mutation deleteRoomOfModel(
     $token: String!
-    $hotelId: ID!
-    $roomModelId: ID!
+    $hotelId: Int!
+    $roomModelId: Int!
     $roomsIds: [Int!]!
   ) {
     deleteRoomOfModel(
@@ -392,7 +385,7 @@ export const DELETE_ROOMS_OF_MODEL = gql`
 `;
 export const MAKE_BOOKING_REQUEST = gql`
   mutation makeBookingRequest(
-    $roomModelId: ID!
+    $roomModelId: Int!
     $firstName: String!
     $lastName: String!
     $email: String!
@@ -424,7 +417,7 @@ export const MAKE_BOOKING_REQUEST = gql`
 export const CONFIRM_BOOKING_REQUEST = gql`
   mutation confirmBookingRequest(
     $token: String!
-    $bookingRequestId: ID!
+    $bookingRequestId: Int!
     $totalCost: Float!
     $paymentMethod: String!
     $roomsIds: [Int!]!
@@ -442,7 +435,7 @@ export const CONFIRM_BOOKING_REQUEST = gql`
 `;
 
 export const DECLINE_BOOKING_REQUEST = gql`
-  mutation declineBookingRequest($token: String!, $bookingRequestId: ID!) {
+  mutation declineBookingRequest($token: String!, $bookingRequestId: Int!) {
     bookingRequest: declineBookingRequest(
       token: $token
       bookingRequestId: $bookingRequestId
@@ -454,7 +447,7 @@ export const DECLINE_BOOKING_REQUEST = gql`
 export const MAKE_BOOKING = gql`
   mutation makeBooking(
     $token: String!
-    $roomModelId: ID!
+    $roomModelId: Int!
     $firstName: String!
     $lastName: String!
     $email: String!
@@ -491,7 +484,7 @@ export const MAKE_BOOKING = gql`
 export const CANCEL_BOOKING = gql`
   mutation cancelBooking(
     $token: String!
-    $bookingId: ID!
+    $bookingId: Int!
     $message: String!
     $cancellationFee: Float!
   ) {
@@ -511,8 +504,8 @@ export const CANCEL_BOOKING = gql`
 export const CREATE_ALBUM = gql`
   mutation createAlbum(
     $token: String!
-    $hotelId: ID!
-    $roomModelId: ID
+    $hotelId: Int!
+    $roomModelId: Int
     $name: String!
     $images: [String]
   ) {
@@ -530,7 +523,7 @@ export const CREATE_ALBUM = gql`
   }
 `;
 export const EDIT_ALBUM = gql`
-  mutation updateAlbum($token: String!, $albumId: ID!, $images: [String]) {
+  mutation updateAlbum($token: String!, $albumId: Int!, $images: [String]) {
     album: updateAlbum(token: $token, albumId: $albumId, images: $images) {
       id
       name
@@ -542,7 +535,7 @@ export const EDIT_ALBUM = gql`
   }
 `;
 export const RENAME_ALBUM = gql`
-  mutation updateAlbum($token: String!, $albumId: ID!, $name: String) {
+  mutation updateAlbum($token: String!, $albumId: Int!, $name: String) {
     album: updateAlbum(token: $token, albumId: $albumId, name: $name) {
       id
       name
@@ -550,7 +543,7 @@ export const RENAME_ALBUM = gql`
   }
 `;
 export const DELETE_ALBUM = gql`
-  mutation deleteAlbum($token: String!, $albumId: ID!) {
+  mutation deleteAlbum($token: String!, $albumId: Int!) {
     album: deleteAlbum(token: $token, albumId: $albumId) {
       id
       name

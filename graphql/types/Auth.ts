@@ -1,17 +1,29 @@
-import { objectType, stringArg, extendType, nonNull } from 'nexus';
-import { AuthenticationError, UserInputError } from 'apollo-server-micro';
-import { prisma } from '../../lib/prisma';
+import { objectType, stringArg, extendType, nonNull, enumType } from 'nexus';
+
 import {
-  hashPassword,
-  comparePassword,
-  signToken,
-  setCookie,
-  deleteCookie,
-  getUser,
-  getUserProfile,
-  getCookie,
-} from '../utils/index';
-import { NextApiRequest, NextApiResponse } from 'next';
+  getUserSession,
+  signup,
+  signIn,
+  signOut,
+  updateAccount,
+} from '../services/Auth';
+
+export const User = objectType({
+  name: 'User',
+  definition(t) {
+    t.int('id');
+    t.string('firstName');
+    t.string('lastName');
+    t.string('email');
+    t.string('password');
+    t.field('role', { type: 'Role' });
+  },
+});
+
+export const Role = enumType({
+  name: 'Role',
+  members: ['USER', 'ADMIN'],
+});
 
 export const AuthPayload = objectType({
   name: 'AuthPayload',
@@ -23,6 +35,7 @@ export const AuthPayload = objectType({
 export const PlainResponse = objectType({
   name: 'PlainResponse',
   definition(t) {
+    t.boolean('success');
     t.string('message');
   },
 });
@@ -36,37 +49,6 @@ export const Mutation = extendType({
         password: nonNull(stringArg()),
       },
       resolve(root, args, ctx): any {
-        async function signIn(
-          args: any,
-          req: NextApiRequest,
-          res: NextApiResponse
-        ) {
-          const user = await prisma.user.findUnique({
-            where: {
-              email: args.email,
-            },
-          });
-
-          if (!user) {
-            throw new AuthenticationError(
-              `No user was found with email: ${args.email}`
-            );
-          }
-          const isValidPassword = await comparePassword({
-            plain: args.password,
-            hash: user.password,
-          });
-
-          if (!isValidPassword) {
-            throw new UserInputError('Invalid password');
-          }
-          const token = await signToken(user.id, user.role);
-          setCookie(req, res, token);
-          return {
-            user,
-            token,
-          };
-        }
         return signIn(args, ctx.req, ctx.res);
       },
     });
@@ -79,45 +61,20 @@ export const Mutation = extendType({
         password: nonNull(stringArg()),
       },
       resolve(_, args: any): any {
-        async function signup(args: {
-          firstName: string;
-          lastName: string;
-          email: string;
-          password: string;
-        }) {
-          const userFound = await prisma.user.findUnique({
-            where: {
-              email: args.email,
-            },
-          });
-
-          if (userFound)
-            throw new UserInputError(
-              'Already exist an account with that email'
-            );
-          const encryptedPassword = await hashPassword(args.password);
-
-          return prisma.user.create({
-            data: {
-              firstName: args.firstName,
-              lastName: args.lastName,
-              email: args.email,
-              password: encryptedPassword,
-            },
-          });
-        }
         return signup(args);
       },
     });
-
-    t.field('signout', {
-      type: 'PlainResponse',
+    t.field('updateUserAccount', {
+      type: 'User',
       args: {
-        date: stringArg(),
+        toke: nonNull(stringArg()),
+        firstName: stringArg(),
+        lastName: stringArg(),
+        email: stringArg(),
+        password: stringArg(),
       },
-      resolve(_, args, ctx) {
-        deleteCookie(ctx.req, ctx.res);
-        return { message: `User logout successfully at ${args.date}` };
+      resolve(_, args, ctx): any {
+        return updateAccount(args.token, args);
       },
     });
   },
@@ -129,36 +86,13 @@ export const Query = extendType({
     t.field('authentication', {
       type: 'AuthPayload',
       resolve(root, args, ctx): any {
-        const getUserSession = async () => {
-          const cookie = await getCookie(ctx.req, ctx.res);
-          if (!cookie)
-            return {
-              user: null,
-              token: '',
-            };
-          const cookiePayload = await getUser(cookie);
-          if (!cookiePayload)
-            return {
-              user: null,
-              token: '',
-            };
-          const user = await getUserProfile(cookiePayload.id);
-          if (!user)
-            return {
-              user: null,
-              token: '',
-            };
-
-          const token = await signToken(cookiePayload.id, user.role);
-
-          setCookie(ctx.req, ctx.res, token);
-          return {
-            user,
-            token,
-          };
-        };
-
-        return getUserSession();
+        return getUserSession(ctx.req, ctx.res);
+      },
+    });
+    t.field('signout', {
+      type: 'PlainResponse',
+      resolve(_, args, ctx) {
+        return signOut(ctx.req, ctx.res);
       },
     });
   },

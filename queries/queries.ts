@@ -1,4 +1,13 @@
 import { gql } from '@apollo/client';
+
+export const SIGN_OUT = gql`
+  query signout {
+    signout {
+      success
+      message
+    }
+  }
+`;
 export const GET_ALL_SERVICES = gql`
   query servicesList {
     servicesList {
@@ -19,6 +28,15 @@ export const GET_ALL_AMENITIES = gql`
 export const GET_ALL_FACILITIES = gql`
   query facilitiesList {
     facilitiesList {
+      id
+      name
+      hotelsCount
+    }
+  }
+`;
+export const GET_ALL_FEATURES = gql`
+  query featuresList {
+    featuresList {
       id
       name
       hotelsCount
@@ -122,7 +140,7 @@ export const GET_HOTEL_SEARCH_SUGGESTIONS = gql`
   }
 `;
 export const GET_HOTEL_BY_ID = gql`
-  query hotelById($hotelId: ID!) {
+  query hotelById($hotelId: Int!) {
     hotelById(hotelId: $hotelId) {
       id
       name
@@ -194,7 +212,7 @@ export const GET_HOTEL_BY_ID = gql`
   }
 `;
 export const GET_ROOM_MODEL_BY_ID = gql`
-  query roomModelById($roomModelId: ID!) {
+  query roomModelById($roomModelId: Int!) {
     roomModel: roomModelById(roomModelId: $roomModelId) {
       id
       hotelId
@@ -255,7 +273,7 @@ export const GET_ADMIN_HOTELS = gql`
   }
 `;
 export const GET_DASHBOARD_HOTEL_DATA = gql`
-  query hotelData($token: String!, $hotelId: ID!) {
+  query hotelData($token: String!, $hotelId: Int!) {
     hotelData(token: $token, hotelId: $hotelId) {
       roomModels {
         id
@@ -286,7 +304,7 @@ export const GET_DASHBOARD_HOTEL_DATA = gql`
 export const GET_HOTEL_BOOKING_REQUESTS = gql`
   query hotelRequests(
     $token: String!
-    $hotelId: ID!
+    $hotelId: Int!
     $take: Int
     $skip: Int
     $search: searchFilter
@@ -337,7 +355,7 @@ export const GET_HOTEL_BOOKING_REQUESTS = gql`
 
 export const GET_HOTEL_GUESTS = gql`
   query hotelGuests(
-    $hotelId: ID!
+    $hotelId: Int!
     $token: String!
     $skip: Int
     $take: Int
@@ -386,7 +404,7 @@ export const GET_USER_SESSION = gql`
 `;
 export const MAKE_ROOM_CONSULT = gql`
   query checkRoomAvailability(
-    $roomModelId: ID!
+    $roomModelId: Int!
     $checkInDate: String!
     $checkOutDate: String!
     $rooms: [roomSpecifications!]!
@@ -405,7 +423,7 @@ export const MAKE_ROOM_CONSULT = gql`
 
 export const GET_HOTEL_BOOKINGS = gql`
   query hotelBookings(
-    $hotelId: ID!
+    $hotelId: Int!
     $token: String!
     $status: String
     $from: String
@@ -432,7 +450,7 @@ export const GET_HOTEL_BOOKINGS = gql`
   }
 `;
 export const GET_HOTEL_ROOM_MODELS_LIST = gql`
-  query hotelById($hotelId: ID!) {
+  query hotelById($hotelId: Int!) {
     hotel: hotelById(hotelId: $hotelId) {
       id
       roomModels {
@@ -444,7 +462,7 @@ export const GET_HOTEL_ROOM_MODELS_LIST = gql`
 `;
 
 export const GET_BOOKING_BY_ID = gql`
-  query bookingById($bookingId: ID!, $token: String!) {
+  query bookingById($bookingId: Int!, $token: String!) {
     booking: bookingById(bookingId: $bookingId, token: $token) {
       id
       clientId
@@ -471,7 +489,7 @@ export const GET_BOOKING_BY_ID = gql`
 `;
 export const GET_ROOM_MODEL_AVAILABLE_ROOMS = gql`
   query getRoomModelAvailableRooms(
-    $roomModelId: ID!
+    $roomModelId: Int!
     $checkInDate: String!
     $checkOutDate: String!
     $rooms: [roomSpecifications!]!
@@ -488,8 +506,11 @@ export const GET_ROOM_MODEL_AVAILABLE_ROOMS = gql`
   }
 `;
 export const GET_BOOKING_CANCELLATION_DETAILS = gql`
-  query getBookingCancellationDetails($bookingId: ID!) {
-    cancellationDetails: getBookingCancellationDetails(bookingId: $bookingId) {
+  query getBookingCancellationDetails($bookingId: Int!, $token: String!) {
+    cancellationDetails: getBookingCancellationDetails(
+      bookingId: $bookingId
+      token: $token
+    ) {
       bookingId
       createdAt
       message
@@ -498,7 +519,7 @@ export const GET_BOOKING_CANCELLATION_DETAILS = gql`
   }
 `;
 export const GET_HOTEL_ALBUMS = gql`
-  query hotelAlbums($hotelId: ID!) {
+  query hotelAlbums($hotelId: Int!) {
     albums: hotelAlbums(hotelId: $hotelId) {
       id
       name
@@ -507,7 +528,7 @@ export const GET_HOTEL_ALBUMS = gql`
   }
 `;
 export const GET_ALBUM_IMAGES = gql`
-  query albumImages($albumId: ID!) {
+  query albumImages($albumId: Int!) {
     images: albumImages(albumId: $albumId) {
       id
       src
@@ -515,7 +536,7 @@ export const GET_ALBUM_IMAGES = gql`
   }
 `;
 export const GET_HOTEL_IMAGES = gql`
-  query hotelImages($hotelId: ID!) {
+  query hotelImages($hotelId: Int!) {
     images: hotelImages(hotelId: $hotelId) {
       id
       src
@@ -523,7 +544,7 @@ export const GET_HOTEL_IMAGES = gql`
   }
 `;
 export const GET_ROOM_MODEL_IMAGES = gql`
-  query roomModelImages($roomModelId: ID!) {
+  query roomModelImages($roomModelId: Int!) {
     images: roomModelImages(roomModelId: $roomModelId) {
       id
       src

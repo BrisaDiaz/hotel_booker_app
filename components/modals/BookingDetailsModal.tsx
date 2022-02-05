@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import CloseButton from '@/components/modals/CloseButton';
-import { toDateAndHourFormat } from '@/utils/index';
+import { toDateAndHourFormat } from '@/utils/toDateAndHourFormat';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';

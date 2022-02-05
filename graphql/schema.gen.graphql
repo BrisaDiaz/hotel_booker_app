@@ -4,7 +4,7 @@
 
 type Activity {
   hotelsCount: Int
-  id: ID
+  id: Int
   name: String
 }
 
@@ -13,8 +13,8 @@ type Address {
   city: String
   country: String
   holeAddress: String
-  hotelId: ID!
-  id: ID!
+  hotelId: Int!
+  id: Int!
   postalCode: String
   street: String
 }
@@ -26,7 +26,7 @@ type AdminHotels {
 
 type Administrator {
   hotels: [Hotel]
-  id: ID
+  id: Int
   user: User
   userId: Int
 }
@@ -34,14 +34,14 @@ type Administrator {
 type Album {
   createdAt: String
   hotelId: Int
-  id: ID
+  id: Int
   images: [Image]
   name: String
   roomModelId: Int
 }
 
 type Amenity {
-  id: ID
+  id: Int
   name: String
 }
 
@@ -51,7 +51,7 @@ type AuthPayload {
 }
 
 type BedType {
-  id: ID
+  id: Int
   name: String
 }
 
@@ -66,7 +66,7 @@ type Booking {
   guestsDistribution: [GuestsDistribution]
   hotel: Hotel
   hotelId: Int
-  id: ID
+  id: Int
   nights: Int
   paymentMethod: PaymentMethod
   reservedRooms: [Room]
@@ -89,7 +89,7 @@ type BookingRequest {
   email: String
   guestsDistribution: [GuestsDistribution]
   hotelId: Int
-  id: ID
+  id: Int
   nights: Int
   roomModel: RoomModel
   roomModelId: Int
@@ -114,7 +114,7 @@ type CancellationDetails {
   bookingId: Int
   cancellationFee: Float
   createdAt: String
-  id: ID
+  id: Int
   message: String
 }
 
@@ -122,7 +122,7 @@ type Client {
   bookings: [Booking]
   email: String
   firstName: String
-  id: ID
+  id: Int
   landlineNumber: String
   lastName: String
   mobileNumber: String
@@ -130,8 +130,14 @@ type Client {
 
 type Facility {
   hotelsCount: Int
-  id: ID!
+  id: Int!
   name: String!
+}
+
+type Feature {
+  hotelsCount: Int
+  id: Int
+  name: String
 }
 
 type Features {
@@ -151,7 +157,7 @@ type GuestSearch {
 type GuestsDistribution {
   adults: Int
   children: Int
-  id: ID
+  id: Int
 }
 
 type GuestsSearchResult {
@@ -173,7 +179,7 @@ type Hotel {
   facilities: [Facility]
   features: Features
   frameImage: String
-  id: ID!
+  id: Int!
   imagesCount: Int
   interiorImage: String
   languages: [Language]
@@ -191,19 +197,15 @@ type Hotel {
 
 type HotelCategory {
   hotelsCount: Int
-  id: ID
+  id: Int
   name: String
 }
 
 type HotelData {
-  bookings: [Booking]
   bookingsCount: Int
-  guests: [[Client]]
   guestsCount: Int
-  id: ID
-  requests: [BookingRequest]
+  id: Int
   requestsCount: Int
-  roomModels: [RoomModel]
   roomModelsCount: Int
 }
 
@@ -222,35 +224,34 @@ type HotelSuggestion {
 
 type Image {
   albumId: Int
-  id: ID
+  id: Int
   src: String
 }
 
 type Language {
   hotelsCount: Int
-  id: ID
+  id: Int
   name: String
 }
 
 type Mutation {
-  addRoomToModel(hotelId: ID!, roomModelId: ID!, roomNumbers: [Int!]!, token: String!): [Room]
-  cancelBooking(bookingId: ID!, cancellationFee: Float!, message: String!, token: String!): CancellationDetails
-  confirmBookingRequest(bookingRequestId: ID!, paymentMethod: String, roomsIds: [Int!]!, token: String!, totalCost: Float!): Booking
-  creatHotelRoomModel(amenities: [String]!, beds: [bedsSpecifications]!, cancellationFee: Float, category: String!, description: String!, freeCancellation: Boolean!, hotelId: ID!, lowestPrice: Float!, mainImage: String!, maximumGuests: Int!, maximumStay: Int, minimumStay: Int!, mts2: Int!, name: String!, services: [String]!, smocking: Boolean!, taxesAndCharges: Float!, token: String!): RoomModel
-  createAlbum(hotelId: ID!, images: [String], name: String!, roomModelId: ID, token: String!): Album
-  createHotel(accessible: Boolean!, activities: [String]!, administrativeArea: String!, brand: String, category: String, checkInHour: String!, checkOutHour: String!, city: String, country: String, description: String!, ecoFriendly: Boolean!, email: String, facilities: [String]!, familyFriendly: Boolean!, frameImage: String!, freeCancellation: Boolean!, holeAddress: String!, interiorImage: String!, languages: [String]!, lowestPrice: Float!, name: String!, petFriendly: Boolean!, policiesAndRules: String!, postalCode: String!, services: [String]!, smokerFriendly: Boolean!, street: String, taxesAndCharges: Float!, telephone: String!, token: String!, website: String): Hotel
-  declineBookingRequest(bookingRequestId: ID!, token: String!): BookingRequest
-  deleteAlbum(albumId: ID!, token: String!): Album
-  deleteRoomOfModel(hotelId: ID!, roomModelId: ID!, roomsIds: [Int!]!, token: String!): [Room]
-  makeBooking(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications], landlineNumber: String!, lastName: String!, mobileNumber: String!, paymentMethod: String, roomModelId: ID!, roomsIds: [Int!]!, specifications: String, token: String!, totalCost: Float!): Booking
-  makeBookingRequest(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications]!, landlineNumber: String!, lastName: String!, mobileNumber: String!, roomModelId: ID!, specifications: String): RoomConsultResponse
+  addRoomToModel(hotelId: Int!, roomModelId: Int!, roomNumbers: [Int!]!, token: String!): [Room]
+  cancelBooking(bookingId: Int!, cancellationFee: Float!, message: String!, token: String!): CancellationDetails
+  confirmBookingRequest(bookingRequestId: Int!, paymentMethod: String, roomsIds: [Int!]!, token: String!, totalCost: Float!): Booking
+  creatHotelRoomModel(amenities: [String]!, beds: [bedsSpecifications]!, cancellationFee: Float, category: String!, description: String!, freeCancellation: Boolean!, hotelId: Int!, lowestPrice: Float!, mainImage: String!, maximumGuests: Int!, maximumStay: Int, minimumStay: Int!, mts2: Int!, name: String!, services: [String]!, smocking: Boolean!, taxesAndCharges: Float!, token: String!): RoomModel
+  createAlbum(hotelId: Int!, images: [String], name: String!, roomModelId: Int, token: String!): Album
+  createHotel(accessible: Boolean!, activities: [String!]!, administrativeArea: String!, brand: String, category: String!, checkInHour: String!, checkOutHour: String!, city: String, country: String!, description: String!, ecoFriendly: Boolean!, email: String, facilities: [String!]!, familyFriendly: Boolean!, frameImage: String!, freeCancellation: Boolean!, holeAddress: String!, interiorImage: String!, languages: [String!]!, lowestPrice: Float!, name: String!, petFriendly: Boolean!, policiesAndRules: String!, postalCode: String!, services: [String!]!, smokerFriendly: Boolean!, street: String, taxesAndCharges: Float!, telephone: String!, token: String!, website: String): Hotel
+  declineBookingRequest(bookingRequestId: Int!, token: String!): BookingRequest
+  deleteAlbum(albumId: Int!, token: String!): Album
+  deleteRoomsOfModel(hotelId: Int!, roomModelId: Int!, roomsIds: [Int!]!, token: String!): [Room]
+  makeBooking(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications], landlineNumber: String!, lastName: String!, mobileNumber: String!, paymentMethod: String, roomModelId: Int!, roomsIds: [Int!]!, specifications: String, token: String!, totalCost: Float!): Booking
+  makeBookingRequest(checkInDate: String!, checkOutDate: String!, email: String!, firstName: String!, guestsDistribution: [roomSpecifications]!, landlineNumber: String!, lastName: String!, mobileNumber: String!, roomModelId: Int!, specifications: String): RoomConsultResponse
   signin(email: String!, password: String!): AuthPayload
-  signout(date: String): PlainResponse
   signup(email: String!, firstName: String!, lastName: String!, password: String!): User
-  updateAlbum(albumId: ID!, images: [String], name: String, token: String!): Album
-  updateHotel(accessible: Boolean, activities: [String], administrativeArea: String, brand: String, category: String, checkInHour: String, checkOutHour: String, city: String, country: String, description: String, ecoFriendly: Boolean, email: String, facilities: [String], familyFriendly: Boolean, frameImage: String, freeCancellation: Boolean, holeAddress: String, hotelId: ID!, interiorImage: String, languages: [String], lowestPrice: Float, name: String, petFriendly: Boolean, policiesAndRules: String, postalCode: String, services: [String], smokerFriendly: Boolean, street: String, taxesAndCharges: Float, telephone: String, token: String!, website: String): Hotel
-  updateMyAccount(email: String, firstName: String, lastName: String, password: String): User
-  updateRoomModel(amenities: [String], beds: [bedsSpecifications], cancellationFee: Float, category: String, description: String, freeCancellation: Boolean, hotelId: ID!, lowestPrice: Float, mainImage: String, maximumGuests: Int, maximumStay: Int, minimumStay: Int, mts2: Int, name: String, roomModelId: ID!, services: [String], smocking: Boolean, taxesAndCharges: Float, token: String!): RoomModel
+  updateAlbum(albumId: Int!, images: [String], name: String, token: String!): Album
+  updateHotel(accessible: Boolean, activities: [String], administrativeArea: String, brand: String, category: String, checkInHour: String, checkOutHour: String, city: String, country: String, description: String, ecoFriendly: Boolean, email: String, facilities: [String], familyFriendly: Boolean, frameImage: String, freeCancellation: Boolean, holeAddress: String, hotelId: Int!, interiorImage: String, languages: [String], lowestPrice: Float, name: String, petFriendly: Boolean, policiesAndRules: String, postalCode: String, services: [String], smokerFriendly: Boolean, street: String, taxesAndCharges: Float, telephone: String, token: String!, website: String): Hotel
+  updateRoomModel(amenities: [String], beds: [bedsSpecifications], cancellationFee: Float, category: String, description: String, freeCancellation: Boolean, hotelId: Int!, lowestPrice: Float, mainImage: String, maximumGuests: Int, maximumStay: Int, minimumStay: Int, mts2: Int, name: String, roomModelId: Int!, services: [String], smocking: Boolean, taxesAndCharges: Float, token: String!): RoomModel
+  updateUserAccount(email: String, firstName: String, lastName: String, password: String, toke: String!): User
 }
 
 enum PaymentMethod {
@@ -263,38 +264,40 @@ enum PaymentMethod {
 
 type PlainResponse {
   message: String
+  success: Boolean
 }
 
 type Query {
   activitiesList: [Activity]
   adminHotels(token: String!): AdminHotels
-  albumImages(albumId: ID!): [Image]
+  albumImages(albumId: Int!): [Image]
   amenitiesList: [Amenity]
   authentication: AuthPayload
   bedTypesList: [BedType]
-  bookingById(bookingId: ID!, token: String!): Booking
-  checkRoomAvailability(checkInDate: String!, checkOutDate: String!, roomModelId: ID!, rooms: [roomSpecifications]!): RoomConsultResponse
+  bookingById(bookingId: Int!, token: String!): Booking
+  checkRoomAvailability(checkInDate: String!, checkOutDate: String!, roomModelId: Int!, rooms: [roomSpecifications]!): RoomConsultResponse
   facilitiesList: [Facility]
-  getBookingCancellationDetails(bookingId: ID!): CancellationDetails
-  getRoomModelAvailableRooms(checkInDate: String!, checkOutDate: String!, roomModelId: ID!, rooms: [roomSpecifications!]!): [Room]
-  hotelAlbums(hotelId: ID!): [Album]
-  hotelBookings(from: String, hotelId: ID!, status: String, token: String!, until: String): [Booking]
-  hotelById(hotelId: ID!): Hotel
+  featuresList: [Feature]
+  getBookingCancellationDetails(bookingId: Int!, token: String!): CancellationDetails
+  getRoomModelAvailableRooms(checkInDate: String!, checkOutDate: String!, roomModelId: Int!, rooms: [roomSpecifications!]!): [Room]
+  hotelAlbums(hotelId: Int!): [Album]
+  hotelBookings(from: String, hotelId: Int!, status: String, token: String!, until: String): [Booking]
+  hotelById(hotelId: Int!): Hotel
   hotelCategoriesList: [HotelCategory]
-  hotelData(hotelId: ID!, token: String!): HotelData
-  hotelGuests(hotelId: ID!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 6, token: String!): GuestSearch
-  hotelImages(hotelId: ID!, skip: Int, take: Int): [Image]
-  hotelRequests(hotelId: ID!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 8, token: String!): RequestSearch
-  hotelRoomModels(hotelId: ID!, token: String!): [RoomModel]
+  hotelData(hotelId: Int!, token: String!): HotelData
+  hotelGuests(hotelId: Int!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 6, token: String!): GuestSearch
+  hotelImages(hotelId: Int!, skip: Int, take: Int): [Image]
+  hotelRequests(hotelId: Int!, search: searchFilter, skip: Int = 0, sort: String, take: Int = 8, token: String!): RequestSearch
+  hotelRoomModels(hotelId: Int!): [RoomModel]
   hotelSearch(activities: [String], categories: [String], facilities: [String], features: [String], languages: [String], search: String, services: [String], skip: Int, sort: String, take: Int): HotelSearch
-  hotelSearchSuggestions(search: String!, take: Int = 5): [HotelSuggestion]
+  hotelSearchSuggestions(search: String!, take: Int = 4): [HotelSuggestion]
   languagesList: [Language]
   roomCategoriesList: [RoomCategory]
-  roomModelAlbum(roomModelId: ID!): Album
-  roomModelById(roomModelId: ID!): RoomModel
-  roomModelData(roomModelId: ID!, token: String!): RoomModelData
-  roomModelImages(roomModelId: ID!, skip: Int, take: Int): [Image]
+  roomModelAlbum(roomModelId: Int!): Album
+  roomModelById(roomModelId: Int!): RoomModel
+  roomModelImages(roomModelId: Int!, skip: Int, take: Int): [Image]
   servicesList: [Service]
+  signout: PlainResponse
 }
 
 type RequestSearch {
@@ -310,21 +313,21 @@ enum Role {
 
 type Room {
   bookings: [Booking]
-  id: ID
+  id: Int
   number: Int
   roomModel: RoomModel
   roomModelId: Int
 }
 
 type RoomBed {
-  id: ID
+  id: Int
   quantity: Int
   roomModelId: Int
   type: String
 }
 
 type RoomCategory {
-  id: ID
+  id: Int
   name: String
 }
 
@@ -344,7 +347,7 @@ type RoomModel {
   freeCancellation: Boolean
   hotel: Hotel
   hotelId: Int
-  id: ID
+  id: Int
   imagesCount: Int
   lowestPrice: Float
   mainImage: String
@@ -360,25 +363,16 @@ type RoomModel {
   taxesAndCharges: Float
 }
 
-type RoomModelData {
-  bookings: [Booking]
-  bookingsCount: Int
-  guests: [Client]
-  guestsCount: Int
-  rooms: Room
-  roomsCount: Int
-}
-
 type Service {
   hotelsCount: Int
-  id: ID
+  id: Int
   name: String
 }
 
 type User {
   email: String
   firstName: String
-  id: ID
+  id: Int
   lastName: String
   password: String
   role: Role

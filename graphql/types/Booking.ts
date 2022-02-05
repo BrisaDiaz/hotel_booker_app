@@ -2,21 +2,33 @@ import {
   objectType,
   extendType,
   stringArg,
-  idArg,
+  intArg,
+  floatArg,
   nonNull,
   enumType,
   list,
   inputObjectType,
 } from 'nexus';
-import { prisma } from '../../lib/prisma';
-import { checkIsValidRoomRequest, checkRoomsAvailable } from '../utils/index';
 
-import { UserInputError, ValidationError } from 'apollo-server-micro';
-
+import { checkRoomsAvailable } from '../utils/index';
+import { getHotel } from '../services/Hotel';
+import { getRoomModel } from '../services/Room';
+import {
+  makeBookingRequest,
+  makeBooking,
+  cancelBooking,
+  confirmBooking,
+  declineBookingRequest,
+  getCancellationDetails,
+  getBookingReserveRooms,
+  getBooking,
+  getBookingClient,
+  getBookingGuestsDistribution,
+} from '../services/Booking';
 export const Client = objectType({
   name: 'Client',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.string('firstName');
     t.string('lastName');
     t.string('email');
@@ -25,13 +37,7 @@ export const Client = objectType({
     t.list.field('bookings', { type: 'Booking' });
   },
 });
-export const RoomConsultResponse = objectType({
-  name: 'RoomConsultResponse',
-  definition(t) {
-    t.string('message');
-    t.boolean('isAvailable');
-  },
-});
+
 export const roomSpecifications = inputObjectType({
   name: 'roomSpecifications',
   definition(t) {
@@ -42,7 +48,7 @@ export const roomSpecifications = inputObjectType({
 export const GuestsDistribution = objectType({
   name: 'GuestsDistribution',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.int('adults');
     t.int('children');
   },
@@ -50,7 +56,7 @@ export const GuestsDistribution = objectType({
 export const CancellationDetails = objectType({
   name: 'CancellationDetails',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.int('bookingId');
     t.string('message');
     t.float('cancellationFee');
@@ -80,16 +86,12 @@ export const PaymentMethod = enumType({
 export const Booking = objectType({
   name: 'Booking',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.int('hotelId');
     t.field('hotel', {
       type: 'Hotel',
       resolve(root: any): any {
-        return prisma.hotel.findUnique({
-          where: {
-            id: root.hotelId,
-          },
-        });
+        return getHotel(root.hotelId);
       },
     });
 
@@ -97,37 +99,20 @@ export const Booking = objectType({
     t.field('roomModel', {
       type: 'RoomModel',
       resolve(root: any): any {
-        return prisma.roomModel.findUnique({
-          where: {
-            id: root.roomModelId,
-          },
-        });
+        return getRoomModel(root.roomModelId);
       },
     });
     t.field('reservedRooms', {
       type: list('Room'),
       resolve(root: any): any {
-        async function getRooms(bookingId: number) {
-          const booking = await prisma.booking.findUnique({
-            where: {
-              id: bookingId,
-            },
-            include: { rooms: true },
-          });
-          return booking ? booking.rooms : booking;
-        }
-        return getRooms(root.id);
+        return getBookingReserveRooms(root.id);
       },
     });
     t.int('clientId');
     t.field('client', {
       type: 'Client',
       resolve(root: any): any {
-        return prisma.client.findUnique({
-          where: {
-            id: root.clientId,
-          },
-        });
+        return getBookingClient(root.clientId);
       },
     });
     t.int('children');
@@ -139,11 +124,7 @@ export const Booking = objectType({
     t.list.field('guestsDistribution', {
       type: GuestsDistribution,
       resolve(root: any): any {
-        return prisma.guestsDistribution.findMany({
-          where: {
-            bookingId: root.id,
-          },
-        });
+        return getBookingGuestsDistribution(root.id);
       },
     });
     t.field('status', { type: 'BookingStatus' });
@@ -155,28 +136,20 @@ export const Booking = objectType({
 export const BookingRequest = objectType({
   name: 'BookingRequest',
   definition(t) {
-    t.id('id');
+    t.int('id');
     t.int('hotelId');
     t.int('clientId');
     t.int('roomModelId');
     t.field('roomModel', {
       type: 'RoomModel',
       resolve(root: any): any {
-        return prisma.roomModel.findUnique({
-          where: {
-            id: root.roomModelId,
-          },
-        });
+        return getRoomModel(root.roomModelId);
       },
     });
     t.field('client', {
       type: 'Client',
       resolve(root: any): any {
-        return prisma.client.findUnique({
-          where: {
-            id: root.clientId,
-          },
-        });
+        return getBookingClient(root.clientId);
       },
     });
     t.list.field('guestsDistribution', {
@@ -208,57 +181,25 @@ export const BookingRequest = objectType({
 export const ConsultQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.field('checkRoomAvailability', {
-      type: RoomConsultResponse,
-      args: {
-        roomModelId: nonNull(idArg()),
-        checkOutDate: nonNull(stringArg()),
-        checkInDate: nonNull(stringArg()),
-        rooms: nonNull(list(roomSpecifications)),
-      },
-      resolve: (root, args: any, ctx) => {
-        type RoomSpecifications = {
-          adults: number;
-          children: number;
-        };
-        const makeConsult = async (
-          roomModelId: number,
-          args: {
-            rooms: RoomSpecifications[];
-            checkOutDate: string;
-            checkInDate: string;
-          }
-        ) => {
-          const roomModel = await prisma.roomModel.findUnique({
-            where: {
-              id: roomModelId,
-            },
-          });
-          if (!roomModel)
-            throw new ValidationError('Invalid room type identifier');
-          const result = await checkIsValidRoomRequest({
-            roomDetails: roomModel,
-            rooms: args.rooms,
-            checkOutDate: args.checkOutDate,
-            checkInDate: args.checkInDate,
-          });
-
-          return { isAvailable: result.isAvailable, message: result.message };
-        };
-        return makeConsult(parseInt(args.roomModelId), args);
-      },
-    });
     t.field('getBookingCancellationDetails', {
       type: CancellationDetails,
       args: {
-        bookingId: nonNull(idArg()),
+        token: nonNull(stringArg()),
+        bookingId: nonNull(intArg()),
       },
       resolve(root, args, ctx): any {
-        return prisma.cancellationDetails.findUnique({
-          where: {
-            bookingId: parseInt(args.bookingId),
-          },
-        });
+        return getCancellationDetails(args.token, args.bookingId);
+      },
+    });
+
+    t.field('bookingById', {
+      type: 'Booking',
+      args: {
+        token: nonNull(stringArg()),
+        bookingId: nonNull(intArg()),
+      },
+      resolve(root, args, ctx): any {
+        return getBooking(args.token, args.bookingId);
       },
     });
   },
@@ -266,10 +207,44 @@ export const ConsultQuery = extendType({
 export const Mutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.field('makeBookingRequest', {
-      type: RoomConsultResponse,
+    t.field('makeBooking', {
+      type: 'Booking',
       args: {
-        roomModelId: nonNull(idArg()),
+        token: nonNull(stringArg()),
+        roomModelId: nonNull(intArg()),
+        firstName: nonNull(stringArg()),
+        lastName: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+        mobileNumber: nonNull(stringArg()),
+        landlineNumber: nonNull(stringArg()),
+        specifications: stringArg(),
+        guestsDistribution: list(roomSpecifications),
+        roomsIds: nonNull(list(nonNull(intArg()))),
+        checkInDate: nonNull(stringArg()),
+        checkOutDate: nonNull(stringArg()),
+        totalCost: nonNull(floatArg()),
+        paymentMethod: stringArg(),
+      },
+      resolve(root, args, ctx): any {
+        return makeBooking(args.token, args.roomModelId, args);
+      },
+    });
+    t.field('cancelBooking', {
+      type: 'CancellationDetails',
+      args: {
+        token: nonNull(stringArg()),
+        bookingId: nonNull(intArg()),
+        message: nonNull(stringArg()),
+        cancellationFee: nonNull(floatArg()),
+      },
+      resolve(root, args, ctx): any {
+        return cancelBooking(args.token, args.bookingId, args);
+      },
+    });
+    t.field('makeBookingRequest', {
+      type: 'RoomConsultResponse',
+      args: {
+        roomModelId: nonNull(intArg()),
         firstName: nonNull(stringArg()),
         lastName: nonNull(stringArg()),
         email: nonNull(stringArg()),
@@ -281,62 +256,30 @@ export const Mutation = extendType({
         specifications: stringArg(),
       },
       resolve(root, args, ctx) {
-        async function makeRequest(roomModelId: number, args: any) {
-          const roomModel = await prisma.roomModel.findUnique({
-            where: {
-              id: roomModelId,
-            },
-          });
-          if (!roomModel) throw new UserInputError('Room type dose not exist.');
-          const result = await checkIsValidRoomRequest({
-            roomDetails: roomModel,
-            rooms: args.guestsDistribution,
-            checkOutDate: args.checkOutDate,
-            checkInDate: args.checkInDate,
-          });
-          if (!result.isAvailable)
-            return { isAvailable: false, message: result.message };
-
-          const client = await await prisma.client.create({
-            data: {
-              firstName: args.firstName,
-              lastName: args.lastName,
-              email: args.email,
-              mobileNumber: args.mobileNumber,
-              landlineNumber: args.landlineNumber,
-            },
-          });
-          const { children, adults, nights, guestsDistribution } =
-            result.requestData;
-
-          const booking = await prisma.bookingRequest.create({
-            data: {
-              clientId: client.id,
-              roomModelId: roomModel.id,
-              hotelId: roomModel.hotelId,
-              checkInDate: new Date(args.checkInDate).toISOString(),
-              checkOutDate: new Date(args.checkOutDate).toISOString(),
-              specifications: args.specifications,
-              nights,
-              children,
-              adults,
-            },
-          });
-          await prisma.guestsDistribution.createMany({
-            data: guestsDistribution.map(
-              (room: { children: number; adults: number }) => ({
-                children: room.children,
-                adults: room.adults,
-                bookingRequestId: booking.id,
-              })
-            ),
-          });
-          return {
-            isAvailable: true,
-            message: 'Your reservation request was sent successfully.',
-          };
-        }
-        return makeRequest(parseInt(args.roomModelId), args);
+        return makeBookingRequest(args.roomModelId, args);
+      },
+    });
+    t.field('confirmBookingRequest', {
+      type: 'Booking',
+      args: {
+        token: nonNull(stringArg()),
+        bookingRequestId: nonNull(intArg()),
+        roomsIds: nonNull(list(nonNull(intArg()))),
+        totalCost: nonNull(floatArg()),
+        paymentMethod: stringArg(),
+      },
+      resolve(root, args, ctx): any {
+        return confirmBooking(args.token, args.bookingRequestId, args);
+      },
+    });
+    t.field('declineBookingRequest', {
+      type: 'BookingRequest',
+      args: {
+        token: nonNull(stringArg()),
+        bookingRequestId: nonNull(intArg()),
+      },
+      resolve(root, args, ctx): any {
+        return declineBookingRequest(args.token, args.bookingRequestId);
       },
     });
   },

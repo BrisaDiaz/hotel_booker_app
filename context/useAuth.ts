@@ -4,7 +4,7 @@ import { SessionPayload } from '../interfaces';
 export function useAuth(): {
   setSession: (authPayload: {
     user: {
-      id: string;
+      id: number;
       firstName: string;
       lastName: string;
       email: string;

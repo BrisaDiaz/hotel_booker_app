@@ -20,11 +20,16 @@ import SuggestionsSearchBar from '@/components/SuggestionsSearchBar';
 import CheckboxGroup from '@/components/CheckboxGroup';
 import Accordion from '@/components/Accordion';
 import SortIcon from '@mui/icons-material/Sort';
-import { toCamelCase } from '@/utils/index';
+import { toCamelCase } from '@/utils/toCamelCase';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Logo from '@/components/layouts/Logo';
-import { Feature } from '@/interfaces/index';
 
+type FilterOption = {
+  id: number;
+  name: string;
+  value: string;
+  hotelsCount?: number | undefined;
+};
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -126,6 +131,7 @@ export default function PersistentDrawerLeft({
   facilities,
   activities,
   languages,
+  features,
   services,
   hotelCategories,
   handleSubmit,
@@ -135,11 +141,12 @@ export default function PersistentDrawerLeft({
   searchOptions: { primary: string; secondary: string }[];
   onSearchFilter: (search: string) => void;
   children: React.ReactNode;
-  facilities: Feature[];
-  activities: Feature[];
-  languages: Feature[];
-  services: Feature[];
-  hotelCategories: Feature[];
+  facilities: FilterOption[];
+  activities: FilterOption[];
+  languages: FilterOption[];
+  services: FilterOption[];
+  features: FilterOption[];
+  hotelCategories: FilterOption[];
   handleSubmit: (query: Query) => void;
 }) {
   const matchesSize = useMediaQuery('(min-width:900px)');
@@ -158,14 +165,14 @@ export default function PersistentDrawerLeft({
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const features = [
-    { id: 1, name: 'free cancellation' },
-    { id: 2, name: 'accessible' },
-    { id: 3, name: 'family friendly' },
-    { id: 4, name: 'pet friendly' },
-    { id: 5, name: 'eco friendly ' },
-    { id: 6, name: 'smoker friendly' },
-  ];
+  // const features = [
+  //   { id: 1, name: 'free cancellation' },
+  //   { id: 2, name: 'accessible' },
+  //   { id: 3, name: 'family friendly' },
+  //   { id: 4, name: 'pet friendly' },
+  //   { id: 5, name: 'eco friendly ' },
+  //   { id: 6, name: 'smoker friendly' },
+  // ];
 
   const defaultQuery = {
     features: [],
@@ -182,8 +189,10 @@ export default function PersistentDrawerLeft({
   const handleSort = (newValue: string) => {
     setQuery({ ...query, sort: newValue });
   };
-  const handleCategories = (checked: boolean, value: string) => {
-    if (checked) {
+  const handleCategories = (value: string) => {
+    const checked = query.categories.includes(value);
+
+    if (!checked) {
       return setQuery({
         ...query,
         categories: [...query.categories, value],
@@ -191,11 +200,12 @@ export default function PersistentDrawerLeft({
     }
     setQuery({
       ...query,
-      categories: query.categories.filter((name: string) => name === value),
+      categories: query.categories.filter((name: string) => name !== value),
     });
   };
-  const handleLanguages = (checked: boolean, value: string) => {
-    if (checked) {
+  const handleLanguages = (value: string) => {
+    const checked = query.languages.includes(value);
+    if (!checked) {
       return setQuery({
         ...query,
         languages: [...query.languages, value],
@@ -203,11 +213,12 @@ export default function PersistentDrawerLeft({
     }
     setQuery({
       ...query,
-      languages: query.languages.filter((name: string) => name === value),
+      languages: query.languages.filter((name: string) => name !== value),
     });
   };
-  const handleActivities = (checked: boolean, value: string) => {
-    if (checked) {
+  const handleActivities = (value: string) => {
+    const checked = query.activities.includes(value);
+    if (!checked) {
       return setQuery({
         ...query,
         activities: [...query.activities, value],
@@ -215,11 +226,12 @@ export default function PersistentDrawerLeft({
     }
     setQuery({
       ...query,
-      activities: query.activities.filter((name: string) => name === value),
+      activities: query.activities.filter((name: string) => name !== value),
     });
   };
-  const handleFacilities = (checked: boolean, value: string) => {
-    if (checked) {
+  const handleFacilities = (value: string) => {
+    const checked = query.facilities.includes(value);
+    if (!checked) {
       return setQuery({
         ...query,
         facilities: [...query.facilities, value],
@@ -230,8 +242,9 @@ export default function PersistentDrawerLeft({
       facilities: query.facilities.filter((name: string) => name !== value),
     });
   };
-  const handleServices = (checked: boolean, value: string) => {
-    if (checked) {
+  const handleServices = (value: string) => {
+    const checked = query.services.includes(value);
+    if (!checked) {
       return setQuery({
         ...query,
         services: [...query.services, value],
@@ -239,13 +252,14 @@ export default function PersistentDrawerLeft({
     }
     setQuery({
       ...query,
-      services: query.services.filter((name: string) => name === value),
+      services: query.services.filter((name: string) => name !== value),
     });
   };
-  const handleFeatures = (checked: boolean, value: string) => {
+  const handleFeatures = (value: string) => {
+    const checked = query.features.includes(value);
     const valueToCamelCase = toCamelCase(value);
 
-    if (checked) {
+    if (!checked) {
       return setQuery({
         ...query,
         features: [...query.features, valueToCamelCase],
@@ -254,7 +268,7 @@ export default function PersistentDrawerLeft({
     setQuery({
       ...query,
       features: query.features.filter(
-        (name: string) => name === valueToCamelCase
+        (name: string) => name !== valueToCamelCase
       ),
     });
   };

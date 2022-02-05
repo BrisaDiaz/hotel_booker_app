@@ -816,7 +816,7 @@ export const hotels = [
       freeCancellation: true,
       accessible: true,
       familyFriendly: true,
-      petFriendly: true,
+      petFriendly: false,
       smokerFriendly: false,
       ecoFriendly: false,
     },

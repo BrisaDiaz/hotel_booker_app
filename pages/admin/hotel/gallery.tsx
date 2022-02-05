@@ -410,21 +410,21 @@ type PageContext = {
   req: NextApiRequest;
   res: NextApiResponse;
   query: {
-    hotelId: number;
+    hotelId: string;
   };
 };
 export const getServerSideProps = async ({ req, res, query }: PageContext) => {
   try {
     const token = await getCookie(req, res);
-
+    const hotelId = parseInt(query.hotelId);
     const { data } = await client.query({
       query: GET_HOTEL_ALBUMS,
-      variables: { hotelId: query.hotelId },
+      variables: { hotelId },
     });
 
     return {
       props: {
-        hotelId: query.hotelId,
+        hotelId,
         token: token,
         albums: data?.albums,
       },
@@ -435,7 +435,7 @@ export const getServerSideProps = async ({ req, res, query }: PageContext) => {
     return {
       redirect: {
         permanent: false,
-        destination: '/signin',
+        destination: '/admin',
       },
       props: {},
     };

@@ -38,7 +38,7 @@ export default function BookingClientInputs({
   errors: any;
   disable?: boolean;
   requiredRooms?: number;
-  availableRooms: Array<{ id: string; number: number }> | [];
+  availableRooms: Array<{ id: number; number: number }> | [];
 }) {
   const [paymentMethodSelected, setPaymentMethodSelected] =
     React.useState<string>(PAYMENT_METHODS[0].value);

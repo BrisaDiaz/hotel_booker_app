@@ -9,7 +9,7 @@ const AuthContext = createContext({
   },
   setSession(authPayload: {
     user: {
-      id: string;
+      id: number;
       firstName: string;
       lastName: string;
       email: string;

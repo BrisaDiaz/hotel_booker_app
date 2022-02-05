@@ -27,7 +27,7 @@ export default function BasicModal({
   onSubmit: (formData: any) => void;
   onClose: () => void;
   getAvailableRooms: (searchVariables: any) => void;
-  availableRooms: { id: string; number: number }[] | [];
+  availableRooms: { id: number; number: number }[] | [];
   roomTypeId: number | null;
 }) {
   const handleClose = () => {

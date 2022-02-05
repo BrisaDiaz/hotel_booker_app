@@ -29,7 +29,7 @@ export default function StandardImageList({
   const rowHeight = 200;
 
   return (
-    <Box sx={{ my: 1 }}>
+    <Box sx={{ my: 1, background: '#dcdcdc' }}>
       <ImageList
         sx={{
           width: '100%',
@@ -74,7 +74,7 @@ export default function StandardImageList({
         <ImageList
           sx={{
             width: '100%',
-            height: 110,
+            height: 100,
             overflowX: { xs: 'auto', md: 'hidden' },
             overflowY: 'hidden',
             '&::-webkit-scrollbar ': {

@@ -189,20 +189,20 @@ export const getServerSideProps = async ({
   req: NextApiRequest;
   res: NextApiResponse;
   query: {
-    hotelId: number;
+    hotelId: string;
   };
 }) => {
   try {
     const token = getCookie(req, res);
-
+    const hotelId = parseInt(query.hotelId);
     const { data } = await client.query({
       query: GET_DASHBOARD_HOTEL_DATA,
-      variables: { token: token, hotelId: query.hotelId },
+      variables: { token: token, hotelId },
     });
 
     return {
       props: {
-        hotelId: query.hotelId,
+        hotelId,
         token: token,
         roomModels: data.hotelData.roomModels,
         roomTypesCount: data.hotelData.roomModelsCount,
@@ -217,7 +217,7 @@ export const getServerSideProps = async ({
     return {
       redirect: {
         permanent: false,
-        destination: '/signin',
+        destination: '/admin',
       },
       props: {},
     };

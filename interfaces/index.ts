@@ -44,7 +44,7 @@ export interface RoomModel {
   amenities: Feature[];
   services: Feature[];
   beds: WithQuantityFeature[];
-  rooms: { id: string; number: number }[];
+  rooms: { id: number; number: number }[];
   miniatures: Image[];
   imagesCount: number;
 }
@@ -134,7 +134,7 @@ export interface BookingRequest {
     taxesAndCharges: number;
   };
   availableRooms: Array<{
-    id: string;
+    id: number;
     number: number;
   }>;
 }

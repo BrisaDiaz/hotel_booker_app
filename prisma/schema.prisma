@@ -43,7 +43,7 @@ model Hotel {
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   name             String
-  brand            String
+  brand            String?
   administratorId  Int
   administrator    Administrator  @relation(fields: [administratorId], references: [id])
   hotelCategory    HotelCategory? @relation(fields: [category], references: [name])
@@ -51,9 +51,9 @@ model Hotel {
   telephone        String
   email            String?
   website          String?
-  description      String?
-  lowestPrice      Float
-  taxesAndCharges  Float
+  description      String
+  lowestPrice      Float? @default(0)
+  taxesAndCharges  Float? @default(0)
   checkInHour      String
   checkOutHour     String
   policiesAndRules String
@@ -87,8 +87,8 @@ model Address {
   country            String
   administrativeArea String
   postalCode         String
-  city               String
-  street             String
+  city               String?
+  street             String?
 
 
 }
@@ -123,9 +123,9 @@ model RoomModel {
   quantityInHotel Int              @default(0)
   roomCategory    RoomCategory     @relation(fields: [category], references: [name])
   category        String
-  lowestPrice     Float            @default(0)
-  taxesAndCharges Float            @default(0)
-  cancellationFee  Float            @default(0)
+  lowestPrice     Float?            @default(0)
+  taxesAndCharges Float?           @default(0)
+  cancellationFee  Float?            @default(0)
   freeCancellation Boolean
   smocking        Boolean
   mainImage       String
@@ -136,7 +136,7 @@ model RoomModel {
   amenities       Amenity[]
   services        Service[]
   rooms           Room[]
-  public          Boolean          @default(true)
+  public          Boolean?          @default(true)
   bookingRequests BookingRequest[]
 }
 
@@ -163,6 +163,7 @@ model Image {
   src         String  @unique
    album           Album            @relation(fields: [albumId], references: [id])
   albumId         Int
+  public Boolean? @default(true)
 }
 
 model Amenity {
@@ -191,7 +192,7 @@ model Client {
   lastName       String
   email          String
   mobileNumber   String
-  landlineNumber String
+  landlineNumber String?
   bookings       Booking[]
   bookingRequest BookingRequest[]
 }
@@ -216,7 +217,6 @@ model Booking {
   status BookingStatus @default(ACTIVE)
   client Client        @relation(fields: [clientId], references: [id])
   rooms  Room[]
-
 }
 
 model CancellationDetails {
@@ -224,7 +224,7 @@ model CancellationDetails {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   message        String
-  cancellationFee Float
+  cancellationFee Float?  @default(0)
   bookingId      Int      @unique
 }
 model Album {
@@ -250,8 +250,8 @@ model GuestsDistribution {
   id               Int             @id @default(autoincrement())
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  children         Int
-  adults           Int
+  children         Int?  @default(0)
+  adults           Int?  @default(1)
   bookingRequest   BookingRequest? @relation(fields: [bookingRequestId], references: [id])
   bookingRequestId Int?
   booking          Booking?        @relation(fields: [bookingId], references: [id])
@@ -268,8 +268,8 @@ model BookingRequest {
   roomModelId        Int
   roomModel          RoomModel            @relation(fields: [roomModelId], references: [id])
   guestsDistribution GuestsDistribution[]
-  children           Int
-  adults             Int
+  children           Int? @default(0)
+  adults             Int? @default(1)
   nights             Int
   checkInDate        DateTime
   checkOutDate       DateTime
@@ -296,7 +296,7 @@ model RoomBed {
   updatedAt   DateTime @updatedAt
   bed         BedType? @relation(fields: [type], references: [name])
   type        String
-  quantity    Int      @default(1)
+  quantity    Int?      @default(1)
   roomModelId Int
 }
 

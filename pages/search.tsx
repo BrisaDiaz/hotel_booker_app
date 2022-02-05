@@ -4,6 +4,7 @@ import { client } from '@/lib/apollo';
 import { useLazyQuery } from '@apollo/client';
 import Head from 'next/head';
 import Typography from '@mui/material/Typography';
+import { formatTagsToReadableString } from '@/utils/getHotelFeatureTags';
 
 import HotelsGrid from '@/components/HotelsGrid';
 import FilterMenu from '@/components/layouts/FilterMenu';
@@ -19,6 +20,7 @@ import {
   GET_ALL_HOTEL_CATEGORIES,
   GET_HOTEL_SEARCH_SUGGESTIONS,
   GET_HOTELS,
+  GET_ALL_FEATURES,
 } from '@/queries/index';
 
 type Props = {
@@ -27,7 +29,7 @@ type Props = {
   languagesList: Feature[];
   servicesList: Feature[];
   hotelCategoriesList: Feature[];
-
+  featuresList: Feature[];
   hotelSearch: {
     hotels: Hotel[];
     pageCount: number;
@@ -37,6 +39,7 @@ type Props = {
 
 const Search = ({
   facilitiesList,
+  featuresList,
   activitiesList,
   languagesList,
   servicesList,
@@ -128,11 +131,31 @@ const Search = ({
         <FilterMenu
           onSearchFilter={onSearchFilter}
           searchOptions={hotelSuggestions}
-          facilities={facilitiesList}
-          activities={activitiesList}
-          languages={languagesList}
-          services={servicesList}
-          hotelCategories={hotelCategoriesList}
+          facilities={facilitiesList.map((item) => ({
+            ...item,
+            value: item.name,
+          }))}
+          activities={activitiesList.map((item) => ({
+            ...item,
+            value: item.name,
+          }))}
+          features={featuresList.map((item) => ({
+            ...item,
+            name: formatTagsToReadableString(item.name),
+            value: item.name,
+          }))}
+          languages={languagesList.map((item) => ({
+            ...item,
+            value: item.name,
+          }))}
+          services={servicesList.map((item) => ({
+            ...item,
+            value: item.name,
+          }))}
+          hotelCategories={hotelCategoriesList.map((item) => ({
+            ...item,
+            value: item.name,
+          }))}
           handleSubmit={handleSearch}
         >
           <Box
@@ -181,6 +204,9 @@ export const getServerSideProps = async ({ res }: { res: NextApiResponse }) => {
   const languagesRequest = await client.query({
     query: GET_ALL_LANGUAGES,
   });
+  const featuresRequest = await client.query({
+    query: GET_ALL_FEATURES,
+  });
   const categoriesRequest = await client.query({
     query: GET_ALL_HOTEL_CATEGORIES,
   });
@@ -195,6 +221,7 @@ export const getServerSideProps = async ({ res }: { res: NextApiResponse }) => {
     facilitiesList: facilitiesRequest.data.facilitiesList,
     languagesList: languagesRequest.data.languagesList,
     hotelCategoriesList: categoriesRequest.data.hotelCategoriesList,
+    featuresList: featuresRequest.data.featuresList,
     hotelSearch: hotelsRequest.data.hotelSearch,
   };
 
