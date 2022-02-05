@@ -165,14 +165,6 @@ export default function PersistentDrawerLeft({
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  // const features = [
-  //   { id: 1, name: 'free cancellation' },
-  //   { id: 2, name: 'accessible' },
-  //   { id: 3, name: 'family friendly' },
-  //   { id: 4, name: 'pet friendly' },
-  //   { id: 5, name: 'eco friendly ' },
-  //   { id: 6, name: 'smoker friendly' },
-  // ];
 
   const defaultQuery = {
     features: [],
