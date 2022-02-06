@@ -206,6 +206,7 @@ type HotelData {
   guestsCount: Int
   id: Int
   requestsCount: Int
+  roomModels: [RoomModel]
   roomModelsCount: Int
 }
 

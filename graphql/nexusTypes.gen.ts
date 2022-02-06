@@ -459,6 +459,7 @@ export interface NexusGenFieldTypes {
     guestsCount: number | null; // Int
     id: number | null; // Int
     requestsCount: number | null; // Int
+    roomModels: Array<NexusGenRootTypes['RoomModel'] | null> | null; // [RoomModel]
     roomModelsCount: number | null; // Int
   }
   HotelSearch: { // field return type
@@ -776,6 +777,7 @@ export interface NexusGenFieldTypeNames {
     guestsCount: 'Int'
     id: 'Int'
     requestsCount: 'Int'
+    roomModels: 'RoomModel'
     roomModelsCount: 'Int'
   }
   HotelSearch: { // field return type name

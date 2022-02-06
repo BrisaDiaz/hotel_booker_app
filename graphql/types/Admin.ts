@@ -25,6 +25,7 @@ import {
   getBookingsCount,
   getRequestsCount,
   getRoomModelsCount,
+  getHotelRoomModels,
 } from '../services/Hotel';
 export const Administrator = objectType({
   name: 'Administrator',
@@ -95,6 +96,12 @@ export const HotelData = objectType({
     t.int('guestsCount', {
       resolve(root: any, args, ctx): any {
         return getGuestsCount(root.id);
+      },
+    });
+    t.field('roomModels', {
+      type: list('RoomModel'),
+      resolve(root: any, args, ctx): any {
+        return getHotelRoomModels(root.id);
       },
     });
   },
