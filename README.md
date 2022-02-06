@@ -7,12 +7,12 @@
 ## 📸 Screenshots
 
 ![image](https://drive.google.com/uc?export=view&id=1BeuzcHiiQB3jrnf3U9NU873S9Hv8dPwO)
-![image](https://drive.google.com/uc?export=view&id=15o9ZMGA8dkih23vmddhdu9AH6Ys3H9IX)
+![image](https://drive.google.com/uc?export=view&id=16cPv56ggrVwkn_SsJF0h8Vmd1FVVd4md)
 ![image](https://drive.google.com/uc?export=view&id=1SxItKVerWXuiiu4s97-6PnfAJd9w0dkC)
 ![image](https://drive.google.com/uc?export=view&id=10JtbkZQjLCkmUcJax65Kl_iwLeOvUXxY)
 ![image](https://drive.google.com/uc?export=view&id=1lB-2MrAYusnInF_1n-1S81ZVuKm1ZfLa)
 
-## 💾 Technologies and tools:
+## 🛠 Technologies and tools:
 
 - Next.js
 - Typescript

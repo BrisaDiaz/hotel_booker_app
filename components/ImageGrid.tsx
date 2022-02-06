@@ -74,7 +74,7 @@ export default function StandardImageList({
         <ImageList
           sx={{
             width: '100%',
-            height: 100,
+            height: 80,
             overflowX: { xs: 'auto', md: 'hidden' },
             overflowY: 'hidden',
             '&::-webkit-scrollbar ': {
@@ -83,7 +83,7 @@ export default function StandardImageList({
             my: 0,
           }}
           cols={6}
-          rowHeight={100}
+          rowHeight={80}
         >
           {miniatures.map((item, index) => (
             <ImageListItem
@@ -105,12 +105,12 @@ export default function StandardImageList({
                 <Image
                   objectFit="cover"
                   width={146}
-                  height={100}
+                  height={80}
                   placeholder="blur"
                   src={item.image}
                   blurDataURL={generateImageUrl(item.image, {
                     width: 146,
-                    height: 100,
+                    height: 80,
                     quality: 10,
                   })}
                   alt={item.title}
@@ -138,7 +138,7 @@ function ShowMoreBox({
         position: 'absolute',
         right: 0,
         top: 0,
-        zIndex: 100,
+        zIndex: 80,
         width: '100%',
         height: '100%',
         display: 'flex',

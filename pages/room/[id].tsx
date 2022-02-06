@@ -310,8 +310,8 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
         />
         <Box component="section" sx={{ px: { xs: 1, md: 0 }, mt: 2 }}>
           <Typography
-            component="h4"
-            variant="h5"
+            component="h3"
+            variant="h6"
             sx={{
               fontWeight: 200,
               maxWidth: 'fit-content',
@@ -321,20 +321,20 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
           >
             Prices from{' '}
             <Typography
-              variant="h5"
+              color="primary"
+              variant="h6"
               component="span"
-              sx={{ color: 'primary.main', fontWeight: 700, mb: 1 }}
+              sx={{ fontWeight: 700 }}
             >
               USD {currencyFixer(room.lowestPrice)}
             </Typography>
           </Typography>
 
           <Typography
-            variant="subtitle1"
-            color="primary"
+            variant="body2"
             sx={{
               fontWeight: 200,
-              width: 160,
+              width: 120,
               lineHeight: 1.3,
               textAlign: 'end',
               m: { xs: '0 8px 30px auto', md: '0 8px  20px auto ' },
@@ -344,6 +344,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             {room.taxesAndCharges ? (
               <Typography
                 component="span"
+                variant="body2"
                 sx={{ fontWeight: 200, ml: 0.5, fontSize: 'inherit' }}
               >
                 USD {currencyFixer(room.taxesAndCharges)}
@@ -377,13 +378,13 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
           </Box>
           <Box
             sx={{
-              margin: { xs: '24px 6px', md: '30px 0' },
-              fontSize: { xs: '14px', md: '16px' },
+              margin: { xs: '16px 0', md: '18px 0' },
+              fontSize: { xs: '14px' },
             }}
             dangerouslySetInnerHTML={{ __html: room.description }}
           />
 
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex', ml: '-8px' }}>
             <ConsultModal onSubmit={handleConsultSubmit}>
               <Button
                 size="small"

@@ -112,8 +112,8 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
     setCarrouselIndex(0);
   };
   const openCarousel = () => {
-    if (carouselImages.length<3) return
-     setIsCarouselOpen(true);
+    if (carouselImages.length < 3) return;
+    setIsCarouselOpen(true);
   };
   const handleImageClick = (
     img: { image: string; title: string },
@@ -173,7 +173,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
         <Box component="address" sx={styles.contactInfo}>
           <Box sx={styles.listItem}>
             <LocationOnIcon color="primary" fontSize="small" />
-            <Typography color="primary" sx={{ fontSize: '14px' }}>
+            <Typography color="primary" sx={{ fontSize: '12px' }}>
               {hotel.address.holeAddress}
             </Typography>
           </Box>
@@ -182,7 +182,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
             <Box sx={styles.listItem}>
               <EmailIcon color="primary" fontSize="small" />
               <Typography
-                sx={{ fontSize: '14px' }}
+                sx={{ fontSize: '12px' }}
                 color="primary"
                 component="a"
                 href={`mailto: ${hotel.email}`}
@@ -195,7 +195,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
             <Box sx={styles.listItem}>
               <LanguageIcon color="primary" fontSize="small" />
               <Typography
-                sx={{ fontSize: '14px', textTransform: 'lowercase' }}
+                sx={{ fontSize: '12px', textTransform: 'lowercase' }}
                 color="primary"
                 component="a"
                 href={'https://' + hotel.website}
@@ -208,7 +208,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
           <Box sx={styles.listItem}>
             <LocalPhoneIcon color="primary" fontSize="small" />
             <Typography
-              sx={{ fontSize: '14px' }}
+              sx={{ fontSize: '12px' }}
               color="primary"
               component="a"
               href={`tel:${hotel.telephone}`}
@@ -237,32 +237,31 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
         />
         <Box component="section" sx={{ px: { xs: 1, md: 0 } }}>
           <Typography
-            component="h4"
-            variant="h5"
+            component="h3"
+            variant="h6"
             sx={{
               fontWeight: 200,
               maxWidth: 'fit-content',
               ml: 'auto',
               mr: 1,
-              mb: 0.5,
             }}
           >
             Prices from{' '}
             <Typography
-              variant="h5"
+              color="primary"
+              variant="h6"
               component="span"
-              sx={{ color: 'primary.main', fontWeight: 700, mb: 1 }}
+              sx={{ fontWeight: 700 }}
             >
               USD {currencyFixer(hotel.lowestPrice)}
             </Typography>
           </Typography>
 
           <Typography
-            variant="subtitle1"
-            color="primary"
+            variant="body2"
             sx={{
               fontWeight: 200,
-              width: 170,
+              width: 120,
               lineHeight: 1.3,
               textAlign: 'end',
               m: { xs: '0 8px 30px auto', md: '0 8px  20px auto ' },
@@ -280,6 +279,32 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
             ) : null}
           </Typography>
 
+          {/* MAIN TAGS*/}
+          <Box
+            component="ul"
+            sx={{
+              mx: 0,
+              mb: { sm: 3 },
+              px: { xs: 1 },
+              display: 'flex',
+              columnGap: 4,
+              flexWrap: 'wrap',
+            }}
+          >
+            {includedFeatures.map((featureName) => (
+              <Box
+                component="li"
+                sx={{ ...styles.list, p: 0, m: 0 }}
+                key={featureName}
+              >
+                <Box sx={styles.listItem}>
+                  {DynamicFiledIcon(featureName)}
+
+                  <p>{featureName}</p>
+                </Box>
+              </Box>
+            ))}
+          </Box>
           {/* HOTEL POLICIES AND RULES */}
           <Box sx={{ margin: '20px 10px' }} component="section">
             <Tabs
@@ -287,9 +312,13 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                 {
                   title: 'About Us',
                   Content: (
-                    <Box sx={{ margin: { xs: '24px 6px', md: '30px 0' } }}>
+                    <Box sx={{ margin: { xs: '24px 0', md: '30px 0' } }}>
                       <Box
-                        sx={{ fontSize: { xs: '14px', md: '16px' } }}
+                        sx={{
+                          fontSize: {
+                            xs: '14px',
+                          },
+                        }}
                         dangerouslySetInnerHTML={{ __html: hotel.description }}
                       />
                     </Box>
@@ -298,15 +327,16 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                 {
                   title: 'Policies and Rules',
                   Content: (
-                    <Box sx={{ margin: { xs: '24px 6px', md: '30px 0' } }}>
+                    <Box sx={{ margin: { xs: '24px 0', md: '30px 0' } }}>
                       <Box
-                        sx={{ fontSize: { xs: '14px', md: '16px' } }}
+                        sx={{ fontSize: { xs: '14px' } }}
                         dangerouslySetInnerHTML={{
                           __html: hotel.policiesAndRules,
                         }}
                       />
                       <Box
                         sx={{
+                          mt: 2,
                           display: 'flex',
                           alignItems: 'center',
                           columnGap: '20px',
@@ -314,27 +344,19 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                           flexWrap: 'wrap',
                         }}
                       >
-                        <Box sx={styles.listItem}>
-                          <AlarmIcon fontSize="small" color="primary" />
+                        <Box sx={{ ...styles.listItem, m: 0 }}>
+                          <AlarmIcon fontSize="small" />
                           <Typography>
-                            <Typography
-                              variant="body2"
-                              component="span"
-                              color="primary"
-                            >
+                            <Typography variant="subtitle2" component="strong">
                               Check In Hour:
                             </Typography>
                             <time> {`  ${hotel.checkInHour}`}</time>
                           </Typography>
                         </Box>
                         <Box sx={styles.listItem}>
-                          <AlarmIcon fontSize="small" color="primary" />
+                          <AlarmIcon fontSize="small" />
                           <Typography>
-                            <Typography
-                              variant="body2"
-                              component="span"
-                              color="primary"
-                            >
+                            <Typography variant="subtitle2" component="strong">
                               Check Out Hour:
                             </Typography>
                             <time> {`  ${hotel.checkOutHour}`}</time>
@@ -350,32 +372,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
 
           {/* HOTEL CHARACTERISTICS */}
 
-          <Box sx={{ mt: { xs: 3, sm: 5 }, maxWidth: 900 }} component="section">
-            <Box
-              component="ul"
-              sx={{
-                mx: 0,
-                mb: { sm: 3 },
-                px: { xs: 1, md: 0 },
-                display: 'flex',
-                columnGap: 4,
-                flexWrap: 'wrap',
-              }}
-            >
-              {includedFeatures.map((featureName) => (
-                <Box
-                  component="li"
-                  sx={{ ...styles.list, p: 0 }}
-                  key={featureName}
-                >
-                  <Box sx={styles.listItem}>
-                    {DynamicFiledIcon(featureName)}
-
-                    <p>{featureName}</p>
-                  </Box>
-                </Box>
-              ))}
-            </Box>
+          <Box sx={{ my: { xs: 3, sm: 5 }, maxWidth: 900 }} component="section">
             <Grid container alignItems="flex-start" sx={{ columnGap: '80px' }}>
               {characteristics.length &&
                 characteristics.map((characteristic) =>
@@ -387,13 +384,14 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                         md={6}
                         sx={{
                           padding: { xs: 1, sm: 0 },
-                          minWidth: { xs: '100%', sm: 'max-content' },
+                          minWidth: { xs: '300px', sm: 'max-content' },
                         }}
                       >
                         <Box
                           sx={{
                             display: 'flex',
                             gap: 1,
+
                             alignItems: 'center',
                             marginBottom: '15px',
                           }}
