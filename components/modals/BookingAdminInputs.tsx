@@ -204,12 +204,12 @@ export default function BookingClientInputs({
                 label={room.number}
                 key={room.id}
                 color={
-                  Boolean(numbersSelected.includes(parseInt(room.id)))
+                  Boolean(numbersSelected.includes(room.id))
                     ? 'primary'
                     : 'default'
                 }
                 onClick={() => {
-                  handleAddMoreRooms(parseInt(room.id));
+                  handleAddMoreRooms(room.id);
                 }}
               />
             ))}

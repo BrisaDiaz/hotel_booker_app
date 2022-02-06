@@ -3,52 +3,56 @@
  * Do not make changes to this file directly
  */
 
-
-
-
-
-
-
 declare global {
   interface NexusGen extends NexusGenTypes {}
 }
 
 export interface NexusGenInputs {
-  bedsSpecifications: { // input type
+  bedsSpecifications: {
+    // input type
     quantity?: number | null; // Int
     type?: string | null; // String
-  }
-  roomSpecifications: { // input type
+  };
+  roomSpecifications: {
+    // input type
     adults?: number | null; // Int
     children?: number | null; // Int
-  }
-  searchFilter: { // input type
+  };
+  searchFilter: {
+    // input type
     field?: string | null; // String
     value?: string | null; // String
-  }
+  };
 }
 
 export interface NexusGenEnums {
-  BookingRequestStatus: "ACCEPTED" | "DECLINED" | "PENDING"
-  BookingStatus: "ACTIVE" | "CANCELED" | "FINISHED"
-  PaymentMethod: "BILL_TO_ACCOUNT" | "CASH" | "CREDIT_CARD" | "DEBIT_CARD" | "TRAVELER_CHECK"
-  Role: "ADMIN" | "USER"
+  BookingRequestStatus: 'ACCEPTED' | 'DECLINED' | 'PENDING';
+  BookingStatus: 'ACTIVE' | 'CANCELED' | 'FINISHED';
+  PaymentMethod:
+    | 'BILL_TO_ACCOUNT'
+    | 'CASH'
+    | 'CREDIT_CARD'
+    | 'DEBIT_CARD'
+    | 'TRAVELER_CHECK';
+  Role: 'ADMIN' | 'USER';
 }
 
 export interface NexusGenScalars {
-  String: string
-  Int: number
-  Float: number
-  Boolean: boolean
-  ID: string
+  String: string;
+  Int: number;
+  Float: number;
+  Boolean: boolean;
+  ID: string;
 }
 
 export interface NexusGenObjects {
-  Activity: { // root type
+  Activity: {
+    // root type
     id?: number | null; // Int
     name?: string | null; // String
-  }
-  Address: { // root type
+  };
+  Address: {
+    // root type
     administrativeArea?: string | null; // String
     city?: string | null; // String
     country?: string | null; // String
@@ -57,35 +61,42 @@ export interface NexusGenObjects {
     id: number; // Int!
     postalCode?: string | null; // String
     street?: string | null; // String
-  }
-  AdminHotels: { // root type
+  };
+  AdminHotels: {
+    // root type
     hotels?: Array<NexusGenRootTypes['Hotel'] | null> | null; // [Hotel]
     hotelsCount?: number | null; // Int
-  }
-  Administrator: { // root type
+  };
+  Administrator: {
+    // root type
     id?: number | null; // Int
     userId?: number | null; // Int
-  }
-  Album: { // root type
+  };
+  Album: {
+    // root type
     createdAt?: string | null; // String
     hotelId?: number | null; // Int
     id?: number | null; // Int
     name?: string | null; // String
     roomModelId?: number | null; // Int
-  }
-  Amenity: { // root type
+  };
+  Amenity: {
+    // root type
     id?: number | null; // Int
     name?: string | null; // String
-  }
-  AuthPayload: { // root type
+  };
+  AuthPayload: {
+    // root type
     token?: string | null; // String
     user?: NexusGenRootTypes['User'] | null; // User
-  }
-  BedType: { // root type
+  };
+  BedType: {
+    // root type
     id?: number | null; // Int
     name?: string | null; // String
-  }
-  Booking: { // root type
+  };
+  Booking: {
+    // root type
     adults?: number | null; // Int
     checkInDate?: string | null; // String
     checkOutDate?: string | null; // String
@@ -100,8 +111,9 @@ export interface NexusGenObjects {
     specifications?: string | null; // String
     status?: NexusGenEnums['BookingStatus'] | null; // BookingStatus
     totalCost?: number | null; // Float
-  }
-  BookingRequest: { // root type
+  };
+  BookingRequest: {
+    // root type
     adults?: number | null; // Int
     checkInDate?: string | null; // String
     checkOutDate?: string | null; // String
@@ -109,7 +121,9 @@ export interface NexusGenObjects {
     clientId?: number | null; // Int
     createdAt?: string | null; // String
     email?: string | null; // String
-    guestsDistribution?: Array<NexusGenRootTypes['GuestsDistribution'] | null> | null; // [GuestsDistribution]
+    guestsDistribution?: Array<
+      NexusGenRootTypes['GuestsDistribution'] | null
+    > | null; // [GuestsDistribution]
     hotelId?: number | null; // Int
     id?: number | null; // Int
     nights?: number | null; // Int
@@ -117,15 +131,17 @@ export interface NexusGenObjects {
     specifications?: string | null; // String
     status?: NexusGenEnums['BookingRequestStatus'] | null; // BookingRequestStatus
     telephone?: string | null; // String
-  }
-  CancellationDetails: { // root type
+  };
+  CancellationDetails: {
+    // root type
     bookingId?: number | null; // Int
     cancellationFee?: number | null; // Float
     createdAt?: string | null; // String
     id?: number | null; // Int
     message?: string | null; // String
-  }
-  Client: { // root type
+  };
+  Client: {
+    // root type
     bookings?: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     email?: string | null; // String
     firstName?: string | null; // String
@@ -133,36 +149,43 @@ export interface NexusGenObjects {
     landlineNumber?: string | null; // String
     lastName?: string | null; // String
     mobileNumber?: string | null; // String
-  }
-  Facility: { // root type
+  };
+  Facility: {
+    // root type
     id: number; // Int!
     name: string; // String!
-  }
-  Feature: { // root type
+  };
+  Feature: {
+    // root type
     id?: number | null; // Int
     name?: string | null; // String
-  }
-  Features: { // root type
+  };
+  Features: {
+    // root type
     accessible?: boolean | null; // Boolean
     ecoFriendly?: boolean | null; // Boolean
     familyFriendly?: boolean | null; // Boolean
     freeCancellation?: boolean | null; // Boolean
     petFriendly?: boolean | null; // Boolean
     smokerFriendly?: boolean | null; // Boolean
-  }
-  GuestSearch: { // root type
+  };
+  GuestSearch: {
+    // root type
     guests?: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
     totalResults?: number | null; // Int
-  }
-  GuestsDistribution: { // root type
+  };
+  GuestsDistribution: {
+    // root type
     adults?: number | null; // Int
     children?: number | null; // Int
     id?: number | null; // Int
-  }
-  GuestsSearchResult: { // root type
+  };
+  GuestsSearchResult: {
+    // root type
     guests?: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
-  }
-  Hotel: { // root type
+  };
+  Hotel: {
+    // root type
     activities?: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
     administratorId: number; // Int!
     brand?: string | null; // String
@@ -184,65 +207,78 @@ export interface NexusGenObjects {
     taxesAndCharges?: number | null; // Float
     telephone?: string | null; // String
     website?: string | null; // String
-  }
-  HotelCategory: { // root type
+  };
+  HotelCategory: {
+    // root type
     id?: number | null; // Int
     name?: string | null; // String
-  }
-  HotelData: { // root type
+  };
+  HotelData: {
+    // root type
     id?: number | null; // Int
-  }
-  HotelSearch: { // root type
+  };
+  HotelSearch: {
+    // root type
     hotels?: Array<NexusGenRootTypes['Hotel'] | null> | null; // [Hotel]
     pageCount?: number | null; // Int
     totalResults?: number | null; // Int
-  }
-  HotelSuggestion: { // root type
+  };
+  HotelSuggestion: {
+    // root type
     address?: string | null; // String
     id?: number | null; // Int
     name?: string | null; // String
-  }
-  Image: { // root type
+  };
+  Image: {
+    // root type
     albumId?: number | null; // Int
     id?: number | null; // Int
     src?: string | null; // String
-  }
-  Language: { // root type
+  };
+  Language: {
+    // root type
     id?: number | null; // Int
     name?: string | null; // String
-  }
+  };
   Mutation: {};
-  PlainResponse: { // root type
+  PlainResponse: {
+    // root type
     message?: string | null; // String
     success?: boolean | null; // Boolean
-  }
+  };
   Query: {};
-  RequestSearch: { // root type
+  RequestSearch: {
+    // root type
     pageCount?: number | null; // Int
     requests?: Array<NexusGenRootTypes['BookingRequest'] | null> | null; // [BookingRequest]
     totalResults?: number | null; // Int
-  }
-  Room: { // root type
+  };
+  Room: {
+    // root type
     bookings?: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     id?: number | null; // Int
     number?: number | null; // Int
     roomModelId?: number | null; // Int
-  }
-  RoomBed: { // root type
+  };
+  RoomBed: {
+    // root type
     id?: number | null; // Int
     quantity?: number | null; // Int
     roomModelId?: number | null; // Int
     type?: string | null; // String
-  }
-  RoomCategory: { // root type
+  };
+  RoomCategory: {
+    // root type
     id?: number | null; // Int
     name?: string | null; // String
-  }
-  RoomConsultResponse: { // root type
+  };
+  RoomConsultResponse: {
+    // root type
     isAvailable?: boolean | null; // Boolean
     message?: string | null; // String
-  }
-  RoomModel: { // root type
+  };
+  RoomModel: {
+    // root type
     FreeCancellation?: boolean | null; // Boolean
     amenities?: Array<NexusGenRootTypes['Amenity'] | null> | null; // [Amenity]
     cancellationFee?: number | null; // Float
@@ -261,38 +297,42 @@ export interface NexusGenObjects {
     services?: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
     smocking?: boolean | null; // Boolean
     taxesAndCharges?: number | null; // Float
-  }
-  Service: { // root type
+  };
+  Service: {
+    // root type
     id?: number | null; // Int
     name?: string | null; // String
-  }
-  User: { // root type
+  };
+  User: {
+    // root type
     email?: string | null; // String
     firstName?: string | null; // String
     id?: number | null; // Int
     lastName?: string | null; // String
     password?: string | null; // String
     role?: NexusGenEnums['Role'] | null; // Role
-  }
+  };
 }
 
-export interface NexusGenInterfaces {
-}
+export interface NexusGenInterfaces {}
 
-export interface NexusGenUnions {
-}
+export interface NexusGenUnions {}
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenObjects;
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
+export type NexusGenAllTypes = NexusGenRootTypes &
+  NexusGenScalars &
+  NexusGenEnums;
 
 export interface NexusGenFieldTypes {
-  Activity: { // field return type
+  Activity: {
+    // field return type
     hotelsCount: number | null; // Int
     id: number | null; // Int
     name: string | null; // String
-  }
-  Address: { // field return type
+  };
+  Address: {
+    // field return type
     administrativeArea: string | null; // String
     city: string | null; // String
     country: string | null; // String
@@ -301,38 +341,45 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     postalCode: string | null; // String
     street: string | null; // String
-  }
-  AdminHotels: { // field return type
+  };
+  AdminHotels: {
+    // field return type
     hotels: Array<NexusGenRootTypes['Hotel'] | null> | null; // [Hotel]
     hotelsCount: number | null; // Int
-  }
-  Administrator: { // field return type
+  };
+  Administrator: {
+    // field return type
     hotels: Array<NexusGenRootTypes['Hotel'] | null> | null; // [Hotel]
     id: number | null; // Int
     user: NexusGenRootTypes['User'] | null; // User
     userId: number | null; // Int
-  }
-  Album: { // field return type
+  };
+  Album: {
+    // field return type
     createdAt: string | null; // String
     hotelId: number | null; // Int
     id: number | null; // Int
     images: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     name: string | null; // String
     roomModelId: number | null; // Int
-  }
-  Amenity: { // field return type
+  };
+  Amenity: {
+    // field return type
     id: number | null; // Int
     name: string | null; // String
-  }
-  AuthPayload: { // field return type
+  };
+  AuthPayload: {
+    // field return type
     token: string | null; // String
     user: NexusGenRootTypes['User'] | null; // User
-  }
-  BedType: { // field return type
+  };
+  BedType: {
+    // field return type
     id: number | null; // Int
     name: string | null; // String
-  }
-  Booking: { // field return type
+  };
+  Booking: {
+    // field return type
     adults: number | null; // Int
     checkInDate: string | null; // String
     checkOutDate: string | null; // String
@@ -340,7 +387,9 @@ export interface NexusGenFieldTypes {
     client: NexusGenRootTypes['Client'] | null; // Client
     clientId: number | null; // Int
     createdAt: string | null; // String
-    guestsDistribution: Array<NexusGenRootTypes['GuestsDistribution'] | null> | null; // [GuestsDistribution]
+    guestsDistribution: Array<
+      NexusGenRootTypes['GuestsDistribution'] | null
+    > | null; // [GuestsDistribution]
     hotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     hotelId: number | null; // Int
     id: number | null; // Int
@@ -352,8 +401,9 @@ export interface NexusGenFieldTypes {
     specifications: string | null; // String
     status: NexusGenEnums['BookingStatus'] | null; // BookingStatus
     totalCost: number | null; // Float
-  }
-  BookingRequest: { // field return type
+  };
+  BookingRequest: {
+    // field return type
     adults: number | null; // Int
     availableRooms: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
     checkInDate: string | null; // String
@@ -363,7 +413,9 @@ export interface NexusGenFieldTypes {
     clientId: number | null; // Int
     createdAt: string | null; // String
     email: string | null; // String
-    guestsDistribution: Array<NexusGenRootTypes['GuestsDistribution'] | null> | null; // [GuestsDistribution]
+    guestsDistribution: Array<
+      NexusGenRootTypes['GuestsDistribution'] | null
+    > | null; // [GuestsDistribution]
     hotelId: number | null; // Int
     id: number | null; // Int
     nights: number | null; // Int
@@ -372,15 +424,17 @@ export interface NexusGenFieldTypes {
     specifications: string | null; // String
     status: NexusGenEnums['BookingRequestStatus'] | null; // BookingRequestStatus
     telephone: string | null; // String
-  }
-  CancellationDetails: { // field return type
+  };
+  CancellationDetails: {
+    // field return type
     bookingId: number | null; // Int
     cancellationFee: number | null; // Float
     createdAt: string | null; // String
     id: number | null; // Int
     message: string | null; // String
-  }
-  Client: { // field return type
+  };
+  Client: {
+    // field return type
     bookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     email: string | null; // String
     firstName: string | null; // String
@@ -388,38 +442,45 @@ export interface NexusGenFieldTypes {
     landlineNumber: string | null; // String
     lastName: string | null; // String
     mobileNumber: string | null; // String
-  }
-  Facility: { // field return type
+  };
+  Facility: {
+    // field return type
     hotelsCount: number | null; // Int
     id: number; // Int!
     name: string; // String!
-  }
-  Feature: { // field return type
+  };
+  Feature: {
+    // field return type
     hotelsCount: number | null; // Int
     id: number | null; // Int
     name: string | null; // String
-  }
-  Features: { // field return type
+  };
+  Features: {
+    // field return type
     accessible: boolean | null; // Boolean
     ecoFriendly: boolean | null; // Boolean
     familyFriendly: boolean | null; // Boolean
     freeCancellation: boolean | null; // Boolean
     petFriendly: boolean | null; // Boolean
     smokerFriendly: boolean | null; // Boolean
-  }
-  GuestSearch: { // field return type
+  };
+  GuestSearch: {
+    // field return type
     guests: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
     totalResults: number | null; // Int
-  }
-  GuestsDistribution: { // field return type
+  };
+  GuestsDistribution: {
+    // field return type
     adults: number | null; // Int
     children: number | null; // Int
     id: number | null; // Int
-  }
-  GuestsSearchResult: { // field return type
+  };
+  GuestsSearchResult: {
+    // field return type
     guests: Array<NexusGenRootTypes['Client'] | null> | null; // [Client]
-  }
-  Hotel: { // field return type
+  };
+  Hotel: {
+    // field return type
     activities: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
     address: NexusGenRootTypes['Address'] | null; // Address
     administrator: NexusGenRootTypes['Administrator'] | null; // Administrator
@@ -448,40 +509,47 @@ export interface NexusGenFieldTypes {
     taxesAndCharges: number | null; // Float
     telephone: string | null; // String
     website: string | null; // String
-  }
-  HotelCategory: { // field return type
+  };
+  HotelCategory: {
+    // field return type
     hotelsCount: number | null; // Int
     id: number | null; // Int
     name: string | null; // String
-  }
-  HotelData: { // field return type
+  };
+  HotelData: {
+    // field return type
     bookingsCount: number | null; // Int
     guestsCount: number | null; // Int
     id: number | null; // Int
     requestsCount: number | null; // Int
     roomModelsCount: number | null; // Int
-  }
-  HotelSearch: { // field return type
+  };
+  HotelSearch: {
+    // field return type
     hotels: Array<NexusGenRootTypes['Hotel'] | null> | null; // [Hotel]
     pageCount: number | null; // Int
     totalResults: number | null; // Int
-  }
-  HotelSuggestion: { // field return type
+  };
+  HotelSuggestion: {
+    // field return type
     address: string | null; // String
     id: number | null; // Int
     name: string | null; // String
-  }
-  Image: { // field return type
+  };
+  Image: {
+    // field return type
     albumId: number | null; // Int
     id: number | null; // Int
     src: string | null; // String
-  }
-  Language: { // field return type
+  };
+  Language: {
+    // field return type
     hotelsCount: number | null; // Int
     id: number | null; // Int
     name: string | null; // String
-  }
-  Mutation: { // field return type
+  };
+  Mutation: {
+    // field return type
     addRoomToModel: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
     cancelBooking: NexusGenRootTypes['CancellationDetails'] | null; // CancellationDetails
     confirmBookingRequest: NexusGenRootTypes['Booking'] | null; // Booking
@@ -499,12 +567,14 @@ export interface NexusGenFieldTypes {
     updateHotel: NexusGenRootTypes['Hotel'] | null; // Hotel
     updateRoomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     updateUserAccount: NexusGenRootTypes['User'] | null; // User
-  }
-  PlainResponse: { // field return type
+  };
+  PlainResponse: {
+    // field return type
     message: string | null; // String
     success: boolean | null; // Boolean
-  }
-  Query: { // field return type
+  };
+  Query: {
+    // field return type
     activitiesList: Array<NexusGenRootTypes['Activity'] | null> | null; // [Activity]
     adminHotels: NexusGenRootTypes['AdminHotels'] | null; // AdminHotels
     albumImages: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
@@ -515,19 +585,25 @@ export interface NexusGenFieldTypes {
     checkRoomAvailability: NexusGenRootTypes['RoomConsultResponse'] | null; // RoomConsultResponse
     facilitiesList: Array<NexusGenRootTypes['Facility'] | null> | null; // [Facility]
     featuresList: Array<NexusGenRootTypes['Feature'] | null> | null; // [Feature]
-    getBookingCancellationDetails: NexusGenRootTypes['CancellationDetails'] | null; // CancellationDetails
+    getBookingCancellationDetails:
+      | NexusGenRootTypes['CancellationDetails']
+      | null; // CancellationDetails
     getRoomModelAvailableRooms: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
     hotelAlbums: Array<NexusGenRootTypes['Album'] | null> | null; // [Album]
     hotelBookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     hotelById: NexusGenRootTypes['Hotel'] | null; // Hotel
-    hotelCategoriesList: Array<NexusGenRootTypes['HotelCategory'] | null> | null; // [HotelCategory]
+    hotelCategoriesList: Array<
+      NexusGenRootTypes['HotelCategory'] | null
+    > | null; // [HotelCategory]
     hotelData: NexusGenRootTypes['HotelData'] | null; // HotelData
     hotelGuests: NexusGenRootTypes['GuestSearch'] | null; // GuestSearch
     hotelImages: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     hotelRequests: NexusGenRootTypes['RequestSearch'] | null; // RequestSearch
     hotelRoomModels: Array<NexusGenRootTypes['RoomModel'] | null> | null; // [RoomModel]
     hotelSearch: NexusGenRootTypes['HotelSearch'] | null; // HotelSearch
-    hotelSearchSuggestions: Array<NexusGenRootTypes['HotelSuggestion'] | null> | null; // [HotelSuggestion]
+    hotelSearchSuggestions: Array<
+      NexusGenRootTypes['HotelSuggestion'] | null
+    > | null; // [HotelSuggestion]
     languagesList: Array<NexusGenRootTypes['Language'] | null> | null; // [Language]
     roomCategoriesList: Array<NexusGenRootTypes['RoomCategory'] | null> | null; // [RoomCategory]
     roomModelAlbum: NexusGenRootTypes['Album'] | null; // Album
@@ -535,34 +611,40 @@ export interface NexusGenFieldTypes {
     roomModelImages: Array<NexusGenRootTypes['Image'] | null> | null; // [Image]
     servicesList: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
     signout: NexusGenRootTypes['PlainResponse'] | null; // PlainResponse
-  }
-  RequestSearch: { // field return type
+  };
+  RequestSearch: {
+    // field return type
     pageCount: number | null; // Int
     requests: Array<NexusGenRootTypes['BookingRequest'] | null> | null; // [BookingRequest]
     totalResults: number | null; // Int
-  }
-  Room: { // field return type
+  };
+  Room: {
+    // field return type
     bookings: Array<NexusGenRootTypes['Booking'] | null> | null; // [Booking]
     id: number | null; // Int
     number: number | null; // Int
     roomModel: NexusGenRootTypes['RoomModel'] | null; // RoomModel
     roomModelId: number | null; // Int
-  }
-  RoomBed: { // field return type
+  };
+  RoomBed: {
+    // field return type
     id: number | null; // Int
     quantity: number | null; // Int
     roomModelId: number | null; // Int
     type: string | null; // String
-  }
-  RoomCategory: { // field return type
+  };
+  RoomCategory: {
+    // field return type
     id: number | null; // Int
     name: string | null; // String
-  }
-  RoomConsultResponse: { // field return type
+  };
+  RoomConsultResponse: {
+    // field return type
     isAvailable: boolean | null; // Boolean
     message: string | null; // String
-  }
-  RoomModel: { // field return type
+  };
+  RoomModel: {
+    // field return type
     FreeCancellation: boolean | null; // Boolean
     album: Array<NexusGenRootTypes['Album'] | null> | null; // [Album]
     amenities: Array<NexusGenRootTypes['Amenity'] | null> | null; // [Amenity]
@@ -587,361 +669,403 @@ export interface NexusGenFieldTypes {
     services: Array<NexusGenRootTypes['Service'] | null> | null; // [Service]
     smocking: boolean | null; // Boolean
     taxesAndCharges: number | null; // Float
-  }
-  Service: { // field return type
+  };
+  Service: {
+    // field return type
     hotelsCount: number | null; // Int
     id: number | null; // Int
     name: string | null; // String
-  }
-  User: { // field return type
+  };
+  User: {
+    // field return type
     email: string | null; // String
     firstName: string | null; // String
     id: number | null; // Int
     lastName: string | null; // String
     password: string | null; // String
     role: NexusGenEnums['Role'] | null; // Role
-  }
+  };
 }
 
 export interface NexusGenFieldTypeNames {
-  Activity: { // field return type name
-    hotelsCount: 'Int'
-    id: 'Int'
-    name: 'String'
-  }
-  Address: { // field return type name
-    administrativeArea: 'String'
-    city: 'String'
-    country: 'String'
-    holeAddress: 'String'
-    hotelId: 'Int'
-    id: 'Int'
-    postalCode: 'String'
-    street: 'String'
-  }
-  AdminHotels: { // field return type name
-    hotels: 'Hotel'
-    hotelsCount: 'Int'
-  }
-  Administrator: { // field return type name
-    hotels: 'Hotel'
-    id: 'Int'
-    user: 'User'
-    userId: 'Int'
-  }
-  Album: { // field return type name
-    createdAt: 'String'
-    hotelId: 'Int'
-    id: 'Int'
-    images: 'Image'
-    name: 'String'
-    roomModelId: 'Int'
-  }
-  Amenity: { // field return type name
-    id: 'Int'
-    name: 'String'
-  }
-  AuthPayload: { // field return type name
-    token: 'String'
-    user: 'User'
-  }
-  BedType: { // field return type name
-    id: 'Int'
-    name: 'String'
-  }
-  Booking: { // field return type name
-    adults: 'Int'
-    checkInDate: 'String'
-    checkOutDate: 'String'
-    children: 'Int'
-    client: 'Client'
-    clientId: 'Int'
-    createdAt: 'String'
-    guestsDistribution: 'GuestsDistribution'
-    hotel: 'Hotel'
-    hotelId: 'Int'
-    id: 'Int'
-    nights: 'Int'
-    paymentMethod: 'PaymentMethod'
-    reservedRooms: 'Room'
-    roomModel: 'RoomModel'
-    roomModelId: 'Int'
-    specifications: 'String'
-    status: 'BookingStatus'
-    totalCost: 'Float'
-  }
-  BookingRequest: { // field return type name
-    adults: 'Int'
-    availableRooms: 'Room'
-    checkInDate: 'String'
-    checkOutDate: 'String'
-    children: 'Int'
-    client: 'Client'
-    clientId: 'Int'
-    createdAt: 'String'
-    email: 'String'
-    guestsDistribution: 'GuestsDistribution'
-    hotelId: 'Int'
-    id: 'Int'
-    nights: 'Int'
-    roomModel: 'RoomModel'
-    roomModelId: 'Int'
-    specifications: 'String'
-    status: 'BookingRequestStatus'
-    telephone: 'String'
-  }
-  CancellationDetails: { // field return type name
-    bookingId: 'Int'
-    cancellationFee: 'Float'
-    createdAt: 'String'
-    id: 'Int'
-    message: 'String'
-  }
-  Client: { // field return type name
-    bookings: 'Booking'
-    email: 'String'
-    firstName: 'String'
-    id: 'Int'
-    landlineNumber: 'String'
-    lastName: 'String'
-    mobileNumber: 'String'
-  }
-  Facility: { // field return type name
-    hotelsCount: 'Int'
-    id: 'Int'
-    name: 'String'
-  }
-  Feature: { // field return type name
-    hotelsCount: 'Int'
-    id: 'Int'
-    name: 'String'
-  }
-  Features: { // field return type name
-    accessible: 'Boolean'
-    ecoFriendly: 'Boolean'
-    familyFriendly: 'Boolean'
-    freeCancellation: 'Boolean'
-    petFriendly: 'Boolean'
-    smokerFriendly: 'Boolean'
-  }
-  GuestSearch: { // field return type name
-    guests: 'Client'
-    totalResults: 'Int'
-  }
-  GuestsDistribution: { // field return type name
-    adults: 'Int'
-    children: 'Int'
-    id: 'Int'
-  }
-  GuestsSearchResult: { // field return type name
-    guests: 'Client'
-  }
-  Hotel: { // field return type name
-    activities: 'Activity'
-    address: 'Address'
-    administrator: 'Administrator'
-    administratorId: 'Int'
-    albums: 'Album'
-    brand: 'String'
-    category: 'String'
-    checkInHour: 'String'
-    checkOutHour: 'String'
-    description: 'String'
-    email: 'String'
-    facilities: 'Facility'
-    features: 'Features'
-    frameImage: 'String'
-    id: 'Int'
-    imagesCount: 'Int'
-    interiorImage: 'String'
-    languages: 'Language'
-    lowestPrice: 'Float'
-    miniatures: 'Image'
-    name: 'String'
-    policiesAndRules: 'String'
-    public: 'Boolean'
-    roomModels: 'RoomModel'
-    services: 'Service'
-    taxesAndCharges: 'Float'
-    telephone: 'String'
-    website: 'String'
-  }
-  HotelCategory: { // field return type name
-    hotelsCount: 'Int'
-    id: 'Int'
-    name: 'String'
-  }
-  HotelData: { // field return type name
-    bookingsCount: 'Int'
-    guestsCount: 'Int'
-    id: 'Int'
-    requestsCount: 'Int'
-    roomModelsCount: 'Int'
-  }
-  HotelSearch: { // field return type name
-    hotels: 'Hotel'
-    pageCount: 'Int'
-    totalResults: 'Int'
-  }
-  HotelSuggestion: { // field return type name
-    address: 'String'
-    id: 'Int'
-    name: 'String'
-  }
-  Image: { // field return type name
-    albumId: 'Int'
-    id: 'Int'
-    src: 'String'
-  }
-  Language: { // field return type name
-    hotelsCount: 'Int'
-    id: 'Int'
-    name: 'String'
-  }
-  Mutation: { // field return type name
-    addRoomToModel: 'Room'
-    cancelBooking: 'CancellationDetails'
-    confirmBookingRequest: 'Booking'
-    creatHotelRoomModel: 'RoomModel'
-    createAlbum: 'Album'
-    createHotel: 'Hotel'
-    declineBookingRequest: 'BookingRequest'
-    deleteAlbum: 'Album'
-    deleteRoomsOfModel: 'Room'
-    makeBooking: 'Booking'
-    makeBookingRequest: 'RoomConsultResponse'
-    signin: 'AuthPayload'
-    signup: 'User'
-    updateAlbum: 'Album'
-    updateHotel: 'Hotel'
-    updateRoomModel: 'RoomModel'
-    updateUserAccount: 'User'
-  }
-  PlainResponse: { // field return type name
-    message: 'String'
-    success: 'Boolean'
-  }
-  Query: { // field return type name
-    activitiesList: 'Activity'
-    adminHotels: 'AdminHotels'
-    albumImages: 'Image'
-    amenitiesList: 'Amenity'
-    authentication: 'AuthPayload'
-    bedTypesList: 'BedType'
-    bookingById: 'Booking'
-    checkRoomAvailability: 'RoomConsultResponse'
-    facilitiesList: 'Facility'
-    featuresList: 'Feature'
-    getBookingCancellationDetails: 'CancellationDetails'
-    getRoomModelAvailableRooms: 'Room'
-    hotelAlbums: 'Album'
-    hotelBookings: 'Booking'
-    hotelById: 'Hotel'
-    hotelCategoriesList: 'HotelCategory'
-    hotelData: 'HotelData'
-    hotelGuests: 'GuestSearch'
-    hotelImages: 'Image'
-    hotelRequests: 'RequestSearch'
-    hotelRoomModels: 'RoomModel'
-    hotelSearch: 'HotelSearch'
-    hotelSearchSuggestions: 'HotelSuggestion'
-    languagesList: 'Language'
-    roomCategoriesList: 'RoomCategory'
-    roomModelAlbum: 'Album'
-    roomModelById: 'RoomModel'
-    roomModelImages: 'Image'
-    servicesList: 'Service'
-    signout: 'PlainResponse'
-  }
-  RequestSearch: { // field return type name
-    pageCount: 'Int'
-    requests: 'BookingRequest'
-    totalResults: 'Int'
-  }
-  Room: { // field return type name
-    bookings: 'Booking'
-    id: 'Int'
-    number: 'Int'
-    roomModel: 'RoomModel'
-    roomModelId: 'Int'
-  }
-  RoomBed: { // field return type name
-    id: 'Int'
-    quantity: 'Int'
-    roomModelId: 'Int'
-    type: 'String'
-  }
-  RoomCategory: { // field return type name
-    id: 'Int'
-    name: 'String'
-  }
-  RoomConsultResponse: { // field return type name
-    isAvailable: 'Boolean'
-    message: 'String'
-  }
-  RoomModel: { // field return type name
-    FreeCancellation: 'Boolean'
-    album: 'Album'
-    amenities: 'Amenity'
-    beds: 'RoomBed'
-    cancellationFee: 'Float'
-    category: 'String'
-    description: 'String'
-    freeCancellation: 'Boolean'
-    hotel: 'Hotel'
-    hotelId: 'Int'
-    id: 'Int'
-    imagesCount: 'Int'
-    lowestPrice: 'Float'
-    mainImage: 'String'
-    maximumGuests: 'Int'
-    maximumStay: 'Int'
-    miniatures: 'Image'
-    minimumStay: 'Int'
-    mts2: 'Int'
-    name: 'String'
-    rooms: 'Room'
-    services: 'Service'
-    smocking: 'Boolean'
-    taxesAndCharges: 'Float'
-  }
-  Service: { // field return type name
-    hotelsCount: 'Int'
-    id: 'Int'
-    name: 'String'
-  }
-  User: { // field return type name
-    email: 'String'
-    firstName: 'String'
-    id: 'Int'
-    lastName: 'String'
-    password: 'String'
-    role: 'Role'
-  }
+  Activity: {
+    // field return type name
+    hotelsCount: 'Int';
+    id: 'Int';
+    name: 'String';
+  };
+  Address: {
+    // field return type name
+    administrativeArea: 'String';
+    city: 'String';
+    country: 'String';
+    holeAddress: 'String';
+    hotelId: 'Int';
+    id: 'Int';
+    postalCode: 'String';
+    street: 'String';
+  };
+  AdminHotels: {
+    // field return type name
+    hotels: 'Hotel';
+    hotelsCount: 'Int';
+  };
+  Administrator: {
+    // field return type name
+    hotels: 'Hotel';
+    id: 'Int';
+    user: 'User';
+    userId: 'Int';
+  };
+  Album: {
+    // field return type name
+    createdAt: 'String';
+    hotelId: 'Int';
+    id: 'Int';
+    images: 'Image';
+    name: 'String';
+    roomModelId: 'Int';
+  };
+  Amenity: {
+    // field return type name
+    id: 'Int';
+    name: 'String';
+  };
+  AuthPayload: {
+    // field return type name
+    token: 'String';
+    user: 'User';
+  };
+  BedType: {
+    // field return type name
+    id: 'Int';
+    name: 'String';
+  };
+  Booking: {
+    // field return type name
+    adults: 'Int';
+    checkInDate: 'String';
+    checkOutDate: 'String';
+    children: 'Int';
+    client: 'Client';
+    clientId: 'Int';
+    createdAt: 'String';
+    guestsDistribution: 'GuestsDistribution';
+    hotel: 'Hotel';
+    hotelId: 'Int';
+    id: 'Int';
+    nights: 'Int';
+    paymentMethod: 'PaymentMethod';
+    reservedRooms: 'Room';
+    roomModel: 'RoomModel';
+    roomModelId: 'Int';
+    specifications: 'String';
+    status: 'BookingStatus';
+    totalCost: 'Float';
+  };
+  BookingRequest: {
+    // field return type name
+    adults: 'Int';
+    availableRooms: 'Room';
+    checkInDate: 'String';
+    checkOutDate: 'String';
+    children: 'Int';
+    client: 'Client';
+    clientId: 'Int';
+    createdAt: 'String';
+    email: 'String';
+    guestsDistribution: 'GuestsDistribution';
+    hotelId: 'Int';
+    id: 'Int';
+    nights: 'Int';
+    roomModel: 'RoomModel';
+    roomModelId: 'Int';
+    specifications: 'String';
+    status: 'BookingRequestStatus';
+    telephone: 'String';
+  };
+  CancellationDetails: {
+    // field return type name
+    bookingId: 'Int';
+    cancellationFee: 'Float';
+    createdAt: 'String';
+    id: 'Int';
+    message: 'String';
+  };
+  Client: {
+    // field return type name
+    bookings: 'Booking';
+    email: 'String';
+    firstName: 'String';
+    id: 'Int';
+    landlineNumber: 'String';
+    lastName: 'String';
+    mobileNumber: 'String';
+  };
+  Facility: {
+    // field return type name
+    hotelsCount: 'Int';
+    id: 'Int';
+    name: 'String';
+  };
+  Feature: {
+    // field return type name
+    hotelsCount: 'Int';
+    id: 'Int';
+    name: 'String';
+  };
+  Features: {
+    // field return type name
+    accessible: 'Boolean';
+    ecoFriendly: 'Boolean';
+    familyFriendly: 'Boolean';
+    freeCancellation: 'Boolean';
+    petFriendly: 'Boolean';
+    smokerFriendly: 'Boolean';
+  };
+  GuestSearch: {
+    // field return type name
+    guests: 'Client';
+    totalResults: 'Int';
+  };
+  GuestsDistribution: {
+    // field return type name
+    adults: 'Int';
+    children: 'Int';
+    id: 'Int';
+  };
+  GuestsSearchResult: {
+    // field return type name
+    guests: 'Client';
+  };
+  Hotel: {
+    // field return type name
+    activities: 'Activity';
+    address: 'Address';
+    administrator: 'Administrator';
+    administratorId: 'Int';
+    albums: 'Album';
+    brand: 'String';
+    category: 'String';
+    checkInHour: 'String';
+    checkOutHour: 'String';
+    description: 'String';
+    email: 'String';
+    facilities: 'Facility';
+    features: 'Features';
+    frameImage: 'String';
+    id: 'Int';
+    imagesCount: 'Int';
+    interiorImage: 'String';
+    languages: 'Language';
+    lowestPrice: 'Float';
+    miniatures: 'Image';
+    name: 'String';
+    policiesAndRules: 'String';
+    public: 'Boolean';
+    roomModels: 'RoomModel';
+    services: 'Service';
+    taxesAndCharges: 'Float';
+    telephone: 'String';
+    website: 'String';
+  };
+  HotelCategory: {
+    // field return type name
+    hotelsCount: 'Int';
+    id: 'Int';
+    name: 'String';
+  };
+  HotelData: {
+    // field return type name
+    bookingsCount: 'Int';
+    guestsCount: 'Int';
+    id: 'Int';
+    requestsCount: 'Int';
+    roomModelsCount: 'Int';
+  };
+  HotelSearch: {
+    // field return type name
+    hotels: 'Hotel';
+    pageCount: 'Int';
+    totalResults: 'Int';
+  };
+  HotelSuggestion: {
+    // field return type name
+    address: 'String';
+    id: 'Int';
+    name: 'String';
+  };
+  Image: {
+    // field return type name
+    albumId: 'Int';
+    id: 'Int';
+    src: 'String';
+  };
+  Language: {
+    // field return type name
+    hotelsCount: 'Int';
+    id: 'Int';
+    name: 'String';
+  };
+  Mutation: {
+    // field return type name
+    addRoomToModel: 'Room';
+    cancelBooking: 'CancellationDetails';
+    confirmBookingRequest: 'Booking';
+    creatHotelRoomModel: 'RoomModel';
+    createAlbum: 'Album';
+    createHotel: 'Hotel';
+    declineBookingRequest: 'BookingRequest';
+    deleteAlbum: 'Album';
+    deleteRoomsOfModel: 'Room';
+    makeBooking: 'Booking';
+    makeBookingRequest: 'RoomConsultResponse';
+    signin: 'AuthPayload';
+    signup: 'User';
+    updateAlbum: 'Album';
+    updateHotel: 'Hotel';
+    updateRoomModel: 'RoomModel';
+    updateUserAccount: 'User';
+  };
+  PlainResponse: {
+    // field return type name
+    message: 'String';
+    success: 'Boolean';
+  };
+  Query: {
+    // field return type name
+    activitiesList: 'Activity';
+    adminHotels: 'AdminHotels';
+    albumImages: 'Image';
+    amenitiesList: 'Amenity';
+    authentication: 'AuthPayload';
+    bedTypesList: 'BedType';
+    bookingById: 'Booking';
+    checkRoomAvailability: 'RoomConsultResponse';
+    facilitiesList: 'Facility';
+    featuresList: 'Feature';
+    getBookingCancellationDetails: 'CancellationDetails';
+    getRoomModelAvailableRooms: 'Room';
+    hotelAlbums: 'Album';
+    hotelBookings: 'Booking';
+    hotelById: 'Hotel';
+    hotelCategoriesList: 'HotelCategory';
+    hotelData: 'HotelData';
+    hotelGuests: 'GuestSearch';
+    hotelImages: 'Image';
+    hotelRequests: 'RequestSearch';
+    hotelRoomModels: 'RoomModel';
+    hotelSearch: 'HotelSearch';
+    hotelSearchSuggestions: 'HotelSuggestion';
+    languagesList: 'Language';
+    roomCategoriesList: 'RoomCategory';
+    roomModelAlbum: 'Album';
+    roomModelById: 'RoomModel';
+    roomModelImages: 'Image';
+    servicesList: 'Service';
+    signout: 'PlainResponse';
+  };
+  RequestSearch: {
+    // field return type name
+    pageCount: 'Int';
+    requests: 'BookingRequest';
+    totalResults: 'Int';
+  };
+  Room: {
+    // field return type name
+    bookings: 'Booking';
+    id: 'Int';
+    number: 'Int';
+    roomModel: 'RoomModel';
+    roomModelId: 'Int';
+  };
+  RoomBed: {
+    // field return type name
+    id: 'Int';
+    quantity: 'Int';
+    roomModelId: 'Int';
+    type: 'String';
+  };
+  RoomCategory: {
+    // field return type name
+    id: 'Int';
+    name: 'String';
+  };
+  RoomConsultResponse: {
+    // field return type name
+    isAvailable: 'Boolean';
+    message: 'String';
+  };
+  RoomModel: {
+    // field return type name
+    FreeCancellation: 'Boolean';
+    album: 'Album';
+    amenities: 'Amenity';
+    beds: 'RoomBed';
+    cancellationFee: 'Float';
+    category: 'String';
+    description: 'String';
+    freeCancellation: 'Boolean';
+    hotel: 'Hotel';
+    hotelId: 'Int';
+    id: 'Int';
+    imagesCount: 'Int';
+    lowestPrice: 'Float';
+    mainImage: 'String';
+    maximumGuests: 'Int';
+    maximumStay: 'Int';
+    miniatures: 'Image';
+    minimumStay: 'Int';
+    mts2: 'Int';
+    name: 'String';
+    rooms: 'Room';
+    services: 'Service';
+    smocking: 'Boolean';
+    taxesAndCharges: 'Float';
+  };
+  Service: {
+    // field return type name
+    hotelsCount: 'Int';
+    id: 'Int';
+    name: 'String';
+  };
+  User: {
+    // field return type name
+    email: 'String';
+    firstName: 'String';
+    id: 'Int';
+    lastName: 'String';
+    password: 'String';
+    role: 'Role';
+  };
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
-    addRoomToModel: { // args
+    addRoomToModel: {
+      // args
       hotelId: number; // Int!
       roomModelId: number; // Int!
       roomNumbers: number[]; // [Int!]!
       token: string; // String!
-    }
-    cancelBooking: { // args
+    };
+    cancelBooking: {
+      // args
       bookingId: number; // Int!
       cancellationFee: number; // Float!
       message: string; // String!
       token: string; // String!
-    }
-    confirmBookingRequest: { // args
+    };
+    confirmBookingRequest: {
+      // args
       bookingRequestId: number; // Int!
       paymentMethod?: string | null; // String
       roomsIds: number[]; // [Int!]!
       token: string; // String!
       totalCost: number; // Float!
-    }
-    creatHotelRoomModel: { // args
+    };
+    creatHotelRoomModel: {
+      // args
       amenities: Array<string | null>; // [String]!
       beds: Array<NexusGenInputs['bedsSpecifications'] | null>; // [bedsSpecifications]!
       cancellationFee?: number | null; // Float
@@ -960,15 +1084,17 @@ export interface NexusGenArgTypes {
       smocking: boolean; // Boolean!
       taxesAndCharges: number; // Float!
       token: string; // String!
-    }
-    createAlbum: { // args
+    };
+    createAlbum: {
+      // args
       hotelId: number; // Int!
       images?: Array<string | null> | null; // [String]
       name: string; // String!
       roomModelId?: number | null; // Int
       token: string; // String!
-    }
-    createHotel: { // args
+    };
+    createHotel: {
+      // args
       accessible: boolean; // Boolean!
       activities: string[]; // [String!]!
       administrativeArea: string; // String!
@@ -1000,27 +1126,33 @@ export interface NexusGenArgTypes {
       telephone: string; // String!
       token: string; // String!
       website?: string | null; // String
-    }
-    declineBookingRequest: { // args
+    };
+    declineBookingRequest: {
+      // args
       bookingRequestId: number; // Int!
       token: string; // String!
-    }
-    deleteAlbum: { // args
+    };
+    deleteAlbum: {
+      // args
       albumId: number; // Int!
       token: string; // String!
-    }
-    deleteRoomsOfModel: { // args
+    };
+    deleteRoomsOfModel: {
+      // args
       hotelId: number; // Int!
       roomModelId: number; // Int!
       roomsIds: number[]; // [Int!]!
       token: string; // String!
-    }
-    makeBooking: { // args
+    };
+    makeBooking: {
+      // args
       checkInDate: string; // String!
       checkOutDate: string; // String!
       email: string; // String!
       firstName: string; // String!
-      guestsDistribution?: Array<NexusGenInputs['roomSpecifications'] | null> | null; // [roomSpecifications]
+      guestsDistribution?: Array<
+        NexusGenInputs['roomSpecifications'] | null
+      > | null; // [roomSpecifications]
       landlineNumber: string; // String!
       lastName: string; // String!
       mobileNumber: string; // String!
@@ -1030,8 +1162,9 @@ export interface NexusGenArgTypes {
       specifications?: string | null; // String
       token: string; // String!
       totalCost: number; // Float!
-    }
-    makeBookingRequest: { // args
+    };
+    makeBookingRequest: {
+      // args
       checkInDate: string; // String!
       checkOutDate: string; // String!
       email: string; // String!
@@ -1042,24 +1175,28 @@ export interface NexusGenArgTypes {
       mobileNumber: string; // String!
       roomModelId: number; // Int!
       specifications?: string | null; // String
-    }
-    signin: { // args
+    };
+    signin: {
+      // args
       email: string; // String!
       password: string; // String!
-    }
-    signup: { // args
+    };
+    signup: {
+      // args
       email: string; // String!
       firstName: string; // String!
       lastName: string; // String!
       password: string; // String!
-    }
-    updateAlbum: { // args
+    };
+    updateAlbum: {
+      // args
       albumId: number; // Int!
       images?: Array<string | null> | null; // [String]
       name?: string | null; // String
       token: string; // String!
-    }
-    updateHotel: { // args
+    };
+    updateHotel: {
+      // args
       accessible?: boolean | null; // Boolean
       activities?: Array<string | null> | null; // [String]
       administrativeArea?: string | null; // String
@@ -1092,8 +1229,9 @@ export interface NexusGenArgTypes {
       telephone?: string | null; // String
       token: string; // String!
       website?: string | null; // String
-    }
-    updateRoomModel: { // args
+    };
+    updateRoomModel: {
+      // args
       amenities?: Array<string | null> | null; // [String]
       beds?: Array<NexusGenInputs['bedsSpecifications'] | null> | null; // [bedsSpecifications]
       cancellationFee?: number | null; // Float
@@ -1113,84 +1251,100 @@ export interface NexusGenArgTypes {
       smocking?: boolean | null; // Boolean
       taxesAndCharges?: number | null; // Float
       token: string; // String!
-    }
-    updateUserAccount: { // args
+    };
+    updateUserAccount: {
+      // args
       email?: string | null; // String
       firstName?: string | null; // String
       lastName?: string | null; // String
       password?: string | null; // String
-      toke: string; // String!
-    }
-  }
-  Query: {
-    adminHotels: { // args
       token: string; // String!
-    }
-    albumImages: { // args
+    };
+  };
+  Query: {
+    adminHotels: {
+      // args
+      token: string; // String!
+    };
+    albumImages: {
+      // args
       albumId: number; // Int!
-    }
-    bookingById: { // args
+    };
+    bookingById: {
+      // args
       bookingId: number; // Int!
       token: string; // String!
-    }
-    checkRoomAvailability: { // args
+    };
+    checkRoomAvailability: {
+      // args
       checkInDate: string; // String!
       checkOutDate: string; // String!
       roomModelId: number; // Int!
       rooms: Array<NexusGenInputs['roomSpecifications'] | null>; // [roomSpecifications]!
-    }
-    getBookingCancellationDetails: { // args
+    };
+    getBookingCancellationDetails: {
+      // args
       bookingId: number; // Int!
       token: string; // String!
-    }
-    getRoomModelAvailableRooms: { // args
+    };
+    getRoomModelAvailableRooms: {
+      // args
       checkInDate: string; // String!
       checkOutDate: string; // String!
       roomModelId: number; // Int!
       rooms: NexusGenInputs['roomSpecifications'][]; // [roomSpecifications!]!
-    }
-    hotelAlbums: { // args
+    };
+    hotelAlbums: {
+      // args
       hotelId: number; // Int!
-    }
-    hotelBookings: { // args
+    };
+    hotelBookings: {
+      // args
       from?: string | null; // String
       hotelId: number; // Int!
       status?: string | null; // String
       token: string; // String!
       until?: string | null; // String
-    }
-    hotelById: { // args
+    };
+    hotelById: {
+      // args
       hotelId: number; // Int!
-    }
-    hotelData: { // args
+    };
+    hotelData: {
+      // args
       hotelId: number; // Int!
       token: string; // String!
-    }
-    hotelGuests: { // args
+    };
+    hotelGuests: {
+      // args
       hotelId: number; // Int!
       search?: NexusGenInputs['searchFilter'] | null; // searchFilter
       skip?: number | null; // Int
       sort?: string | null; // String
       take: number | null; // Int
       token: string; // String!
-    }
-    hotelImages: { // args
+    };
+    hotelImages: {
+      // args
       hotelId: number; // Int!
       skip?: number | null; // Int
       take?: number | null; // Int
-    }
-    hotelRequests: { // args
+    };
+    hotelRequests: {
+      // args
       hotelId: number; // Int!
       search?: NexusGenInputs['searchFilter'] | null; // searchFilter
       skip?: number | null; // Int
       sort?: string | null; // String
       take: number | null; // Int
       token: string; // String!
-    }
-    hotelRoomModels: { // args
+    };
+    hotelRoomModels: {
+      // args
       hotelId: number; // Int!
-    }
-    hotelSearch: { // args
+    };
+    hotelSearch: {
+      // args
       activities?: Array<string | null> | null; // [String]
       categories?: Array<string | null> | null; // [String]
       facilities?: Array<string | null> | null; // [String]
@@ -1201,30 +1355,32 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       sort?: string | null; // String
       take?: number | null; // Int
-    }
-    hotelSearchSuggestions: { // args
+    };
+    hotelSearchSuggestions: {
+      // args
       search: string; // String!
       take: number | null; // Int
-    }
-    roomModelAlbum: { // args
+    };
+    roomModelAlbum: {
+      // args
       roomModelId: number; // Int!
-    }
-    roomModelById: { // args
+    };
+    roomModelById: {
+      // args
       roomModelId: number; // Int!
-    }
-    roomModelImages: { // args
+    };
+    roomModelImages: {
+      // args
       roomModelId: number; // Int!
       skip?: number | null; // Int
       take?: number | null; // Int
-    }
-  }
+    };
+  };
 }
 
-export interface NexusGenAbstractTypeMembers {
-}
+export interface NexusGenAbstractTypeMembers {}
 
-export interface NexusGenTypeInterfaces {
-}
+export interface NexusGenTypeInterfaces {}
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
@@ -1244,11 +1400,11 @@ export type NexusGenAbstractsUsingStrategyResolveType = never;
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
-    isTypeOf: false
-    resolveType: true
-    __typename: false
-  }
-}
+    isTypeOf: false;
+    resolveType: true;
+    __typename: false;
+  };
+};
 
 export interface NexusGenTypes {
   context: any;
@@ -1266,9 +1422,19 @@ export interface NexusGenTypes {
   interfaceNames: NexusGenInterfaceNames;
   scalarNames: NexusGenScalarNames;
   unionNames: NexusGenUnionNames;
-  allInputTypes: NexusGenTypes['inputNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['scalarNames'];
-  allOutputTypes: NexusGenTypes['objectNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['unionNames'] | NexusGenTypes['interfaceNames'] | NexusGenTypes['scalarNames'];
-  allNamedTypes: NexusGenTypes['allInputTypes'] | NexusGenTypes['allOutputTypes']
+  allInputTypes:
+    | NexusGenTypes['inputNames']
+    | NexusGenTypes['enumNames']
+    | NexusGenTypes['scalarNames'];
+  allOutputTypes:
+    | NexusGenTypes['objectNames']
+    | NexusGenTypes['enumNames']
+    | NexusGenTypes['unionNames']
+    | NexusGenTypes['interfaceNames']
+    | NexusGenTypes['scalarNames'];
+  allNamedTypes:
+    | NexusGenTypes['allInputTypes']
+    | NexusGenTypes['allOutputTypes'];
   abstractTypes: NexusGenTypes['interfaceNames'] | NexusGenTypes['unionNames'];
   abstractTypeMembers: NexusGenAbstractTypeMembers;
   objectsUsingAbstractStrategyIsTypeOf: NexusGenObjectsUsingAbstractStrategyIsTypeOf;
@@ -1276,18 +1442,17 @@ export interface NexusGenTypes {
   features: NexusGenFeaturesConfig;
 }
 
-
 declare global {
-  interface NexusGenPluginTypeConfig<TypeName extends string> {
-  }
-  interface NexusGenPluginInputTypeConfig<TypeName extends string> {
-  }
-  interface NexusGenPluginFieldConfig<TypeName extends string, FieldName extends string> {
-  }
-  interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
-  }
-  interface NexusGenPluginSchemaConfig {
-  }
-  interface NexusGenPluginArgConfig {
-  }
+  interface NexusGenPluginTypeConfig<TypeName extends string> {}
+  interface NexusGenPluginInputTypeConfig<TypeName extends string> {}
+  interface NexusGenPluginFieldConfig<
+    TypeName extends string,
+    FieldName extends string
+  > {}
+  interface NexusGenPluginInputFieldConfig<
+    TypeName extends string,
+    FieldName extends string
+  > {}
+  interface NexusGenPluginSchemaConfig {}
+  interface NexusGenPluginArgConfig {}
 }

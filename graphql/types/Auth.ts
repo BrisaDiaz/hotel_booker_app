@@ -67,7 +67,7 @@ export const Mutation = extendType({
     t.field('updateUserAccount', {
       type: 'User',
       args: {
-        toke: nonNull(stringArg()),
+        token: nonNull(stringArg()),
         firstName: stringArg(),
         lastName: stringArg(),
         email: stringArg(),
