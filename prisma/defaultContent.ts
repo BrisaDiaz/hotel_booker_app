@@ -923,7 +923,7 @@ export const hotels = [
         maximumStay: 0,
         minimumStay: 0,
         description:
-          '<p>This single room features air conditioning and flat-screen TV.</p>\n<p><br></p>',
+          '<p>This single room features air conditioning and flat-screen TV.</p>',
         freeCancellation: true,
         smocking: false,
         amenities: [
@@ -1404,7 +1404,7 @@ export const hotels = [
         maximumStay: 0,
         minimumStay: 0,
         description:
-          '<p>This air-conditioned room features 2 queen beds, a mini refrigerator, and patio or balcony.Located on the 4th ‘Rooftop’ floor, this room features 2 private bedrooms, living room, kitchen nook, and balcony with spacious views.</p>\n<h2><br></h2>',
+          '<p>This air-conditioned room features 2 queen beds, a mini refrigerator, and patio or balcony.Located on the 4th ‘Rooftop’ floor, this room features 2 private bedrooms, living room, kitchen nook, and balcony with spacious views.</p>',
         freeCancellation: true,
         smocking: false,
         amenities: [
