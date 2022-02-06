@@ -23,12 +23,14 @@ export default function MultiActionAreaCard({
   const [cardImage, setCardImage] = React.useState(
     index % 2 === 0 ? hotel.frameImage : hotel.interiorImage
   );
-
   setTimeout(() => {
-    setCardImage(
-      cardImage === hotel.frameImage ? hotel.interiorImage : hotel.frameImage
-    );
+    if (typeof window !== undefined) {
+      setCardImage(
+        cardImage === hotel.frameImage ? hotel.interiorImage : hotel.frameImage
+      );
+    }
   }, 3000);
+
   const isInSmScreen = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up('sm')
   );

@@ -55,7 +55,8 @@ const Search = ({
   );
 
   const [getSuggestions, suggestionsRequest] = useLazyQuery(
-    GET_HOTEL_SEARCH_SUGGESTIONS
+    GET_HOTEL_SEARCH_SUGGESTIONS,
+    { fetchPolicy: 'no-cache' }
   );
 
   const formatHotelSuggestions = (
@@ -115,6 +116,7 @@ const Search = ({
   React.useEffect(() => {
     if (data?.hotelSearch) {
       setDisplayHotels(data?.hotelSearch.hotels);
+
       setPageCount(data?.hotelSearch.pageCount);
     }
   }, [loading]);
