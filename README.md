@@ -51,32 +51,51 @@
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
 
-## 🕹Set up project
+## 💻 Run Locally
 
-#### 1. Install my-project with npm
+Clone the project
 
 ```bash
-  npm install my-project
-
-  cd my-project
+  git clone https://github.com/BrisaDiaz/hotel_booker_app.git
 ```
 
-#### 2. Create and seed the database
+Go to the project directory
+
+```bash
+  cd hotel_booker_app
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+  
+ Create and seed the database
 
 ```bash
 npx prisma migrate dev --name init
 
 npx prisma db seed
 
-```
-
-#### 3. Start the app
+```  
+  
+Start the server
 
 ```bash
   npm run dev
 
+  #or
+
+  npm run build
+
+  npm start
+
 ```
 
-## 🗃 Database ERD:
 
-![image](https://drive.google.com/uc?export=view&id=1Fnpi7pzcDLktRp9rdkQafaUBlgGlGYkQ)
+
+
+
+
+
