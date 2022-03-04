@@ -41,7 +41,7 @@ export default function FullScreenDialog({
         buttonStyles={{
           transform: { md: 'scale(1.2)' },
           mx: { xs: 1, md: 2 },
-
+          position: 'absolute',
           my: 1,
         }}
       />

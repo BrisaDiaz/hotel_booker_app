@@ -343,7 +343,7 @@ type ClientWhere = {
   bookings: {
     some: {
       hotelId: number;
-      status: 'ACTIVE';
+      status?: 'ACTIVE' | 'CANCELED' | 'FINISHED';
     };
   };
   AND?:
@@ -372,6 +372,7 @@ type ClientField =
   | 'email'
   | 'mobileNumber'
   | 'landlineNumber'
+  | 'status'
   | 'id';
 export interface MultipleClientQuery {
   orderBy: { [key: string]: string };
@@ -382,7 +383,7 @@ export interface MultipleClientQuery {
     bookings: {
       where: {
         hotelId: number;
-        status: 'ACTIVE';
+        status?: 'ACTIVE' | 'CANCELED' | 'FINISHED';
       };
     };
   };
@@ -393,7 +394,7 @@ export interface SingleClientQuery {
     bookings: {
       some: {
         hotelId: number;
-        status: 'ACTIVE';
+
         clientId: number;
       };
     };
@@ -402,7 +403,6 @@ export interface SingleClientQuery {
     bookings: {
       where: {
         hotelId: number;
-        status: 'ACTIVE';
       };
     };
   };
@@ -424,7 +424,6 @@ function clientQueryConstructor(
     bookings: {
       some: {
         hotelId: hotelId,
-        status: 'ACTIVE' as const,
       },
     },
   };
@@ -435,7 +434,7 @@ function clientQueryConstructor(
           bookings: {
             some: {
               hotelId: hotelId,
-              status: 'ACTIVE' as const,
+
               clientId: parseInt(args.search.value),
             },
           },
@@ -444,7 +443,6 @@ function clientQueryConstructor(
           bookings: {
             where: {
               hotelId: hotelId,
-              status: 'ACTIVE' as const,
             },
           },
         },
@@ -482,7 +480,6 @@ function clientQueryConstructor(
       bookings: {
         where: {
           hotelId: hotelId,
-          status: 'ACTIVE' as const,
         },
       },
     },

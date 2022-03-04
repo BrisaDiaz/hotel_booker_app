@@ -435,8 +435,8 @@ function RoomsTable({
                     ))}
                   </Box>
                 </TableCell>
-                <TableCell align="right">
-                  <Box sx={{ width: 200 }}>
+                <TableCell align="right" sx={{ width: '100%' }}>
+                  <Box sx={{ maxWidth: 150, minWidth: 150 }}>
                     <Stack
                       direction="row"
                       sx={{

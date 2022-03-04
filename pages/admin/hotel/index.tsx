@@ -32,7 +32,7 @@ function ActionCardGrid({ cards }: { cards: ActionCard[] }) {
       container
       sx={{
         width: '100%',
-
+        columnGap: 2,
         justifyContent: { xs: 'center', md: 'start' },
         p: 2,
         gap: { lg: 0 },
@@ -122,11 +122,11 @@ const HotelAdmin: WithLayoutPage<Props> = ({
         restrictedNumbers={roomNumbersUploaded}
       />
       <Dialog
-        acceptLabel={'Procced'}
-        rejectLabel={'Avort'}
+        acceptLabel={'Proceed'}
+        rejectLabel={'abort'}
         title={'Are you sure?'}
         text={
-          'If procced all bookings releted to the rooms are going to be lost.'
+          'If proceed all bookings related to the rooms are going to be lost.'
         }
         isDialogOpen={modalsState.deleteRooms}
         onAccept={onDeleteRooms}
@@ -169,7 +169,7 @@ const HotelAdmin: WithLayoutPage<Props> = ({
       {notification.content && (
         <SnackBar
           severity={notification.type}
-          message={notification.content || 'Oparation succesfully completed'}
+          message={notification.content || 'Operation successfully completed'}
         />
       )}
     </div>

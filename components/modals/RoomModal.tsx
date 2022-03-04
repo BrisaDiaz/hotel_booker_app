@@ -42,6 +42,10 @@ const useStyles = makeStyles((theme: Theme) =>
       overflowY: 'auto',
     },
     modalContent: {
+      maxHeight: '80vh',
+      overflow: 'scroll',
+      borderTop: '1px solid #e6e6e6',
+      borderBottom: '1px solid #e6e6e6',
       '& > section': {
         marginLeft: theme.spacing(1),
       },

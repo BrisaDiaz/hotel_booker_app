@@ -17,6 +17,11 @@ export const styles = {
     maxHeight: '100%',
     overflowY: 'auto',
   },
+  contentContainer: {
+    maxHeight: '60vh',
+    borderTop: '1px solid #e6e6e6',
+    borderBottom: '1px solid #e6e6e6',
+  },
   legend: {
     width: '30%',
     minWidth: 120,

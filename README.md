@@ -1,8 +1,18 @@
 # Booker App
 
-## 🔗 Demo
+Application for the administration and request of hotel rooms with updated information on the availability of rooms.
 
-- https://hotel-booker-app.vercel.app
+<a href="https://hotel-booker-app.vercel.app" target="_blank">Demo</a>
+
+<a href="https://www.linkedin.com/in/brisa-d%C3%ADaz" target="_blank">Author</a>
+
+## Table of Contents
+
+- [Screenshots](#📸-screenshots)
+- [Technologies Used](#🛠-main-technologies-used)
+- [Features](#✨-features)
+- [Environment Variables](#🤐-environment-variables)
+- [Set up](#💻-set-up)
 
 ## 📸 Screenshots
 
@@ -12,33 +22,38 @@
 ![image](https://drive.google.com/uc?export=view&id=10JtbkZQjLCkmUcJax65Kl_iwLeOvUXxY)
 ![image](https://drive.google.com/uc?export=view&id=1lB-2MrAYusnInF_1n-1S81ZVuKm1ZfLa)
 
-## 🛠 Technologies and tools:
+## 🛠 Main Technologies Used
 
 - Next.js
 - Typescript
 - Apollo Client
 - Apollo Server
 - Material-UI
-- React-hook-form
+- React Big Calendar
+- Draft.js
+- React Hook Form
 - Nexus
 - Postgresql
 - Prisma
 - Cloudinary
 
-## 📋 Features:
+## ✨ Features
 
-- File handling from server enabled.
-- Images upload to cloudinary.
-- Advance Image optimization.
-- Database seed.
-- Client end server side authentication.
-- Session persistence.
-- Complex searches.
-- SSR and ISR.
-- SSR cache-control headers.
-- Dynamics layouts.
-- Full guest, hotels, rooms and bookings management system.
-- Multi hotels support.
+- Search by hotel name or location with real-time suggestions.
+- Hotel filtering by category, facilities, services, activities, spoken languages and restrictions.
+- Pagination.
+- Push notifications.
+- Ability to check availability and reserve hotel rooms.
+- Authentication.
+- Multi hotels and admins support.
+- Ability to customize hotel and room thumbnails.
+- Ability to edit hotel and rooms genetic information and booking logistics.
+- Ability to categorize, assign available quota and unique identifier to each hotel room.
+- Ability to visualize, search, filter, accept or reject booking requests.
+- Possibility of uploading and managing reservations made by external methods.
+- Ability to visualize information, search, filter guests.
+- Ability to view the calendar of active, canceled or completed reservations, to be able to view details and cancel reservations.
+- Ability to manage through a folder system and upload media files to cloudinary.
 
 ## 🤐 Environment variables
 
@@ -51,7 +66,7 @@
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
 
-## 🕹Set up project
+## 💻 Set up
 
 #### 1. Install my-project with npm
 
@@ -76,7 +91,3 @@ npx prisma db seed
   npm run dev
 
 ```
-
-## 🗃 Database ERD:
-
-![image](https://drive.google.com/uc?export=view&id=1Fnpi7pzcDLktRp9rdkQafaUBlgGlGYkQ)

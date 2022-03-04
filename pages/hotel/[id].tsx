@@ -95,6 +95,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
       title: 'Hotel Exterior',
     },
   ];
+
   const miniatures = hotel.miniatures.map((img) => ({
     title: `${hotel.name} photo`,
     image: img.src,
@@ -285,7 +286,8 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
             sx={{
               mx: 0,
               mb: { sm: 3 },
-              px: { xs: 1 },
+              p: '4px 8px',
+              background: '#e6e6e6',
               display: 'flex',
               columnGap: 4,
               flexWrap: 'wrap',
@@ -294,7 +296,11 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
             {includedFeatures.map((featureName) => (
               <Box
                 component="li"
-                sx={{ ...styles.list, p: 0, m: 0 }}
+                sx={{
+                  ...styles.list,
+                  m: 0,
+                  p: 0,
+                }}
                 key={featureName}
               >
                 <Box sx={styles.listItem}>
@@ -373,7 +379,7 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
           {/* HOTEL CHARACTERISTICS */}
 
           <Box sx={{ my: { xs: 3, sm: 5 }, maxWidth: 900 }} component="section">
-            <Grid container alignItems="flex-start" sx={{ columnGap: '80px' }}>
+            <Grid container alignItems="flex-start">
               {characteristics.length &&
                 characteristics.map((characteristic) =>
                   characteristic.items && characteristic.items.length ? (
@@ -384,14 +390,16 @@ const HotelPage: WithLayoutPage<{ hotel: Hotel }> = ({ hotel }) => {
                         md={6}
                         sx={{
                           padding: { xs: 1, sm: 0 },
-                          minWidth: { xs: '300px', sm: 'max-content' },
+
+                          minWidth: { xs: '300px' },
                         }}
                       >
                         <Box
                           sx={{
                             display: 'flex',
                             gap: 1,
-
+                            p: '4px 8px',
+                            background: '#e6e6e6',
                             alignItems: 'center',
                             marginBottom: '15px',
                           }}

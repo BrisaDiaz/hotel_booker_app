@@ -57,7 +57,9 @@ export default function BookingModal({
             >
               Booking Request
             </Typography>
-            <BookingRequestInfo requestInfo={requestInfo} />
+            <Box sx={styles.contentContainer}>
+              <BookingRequestInfo requestInfo={requestInfo} />
+            </Box>
           </Box>
         </Fade>
       </Modal>

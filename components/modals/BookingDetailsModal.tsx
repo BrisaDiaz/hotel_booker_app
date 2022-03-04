@@ -56,134 +56,143 @@ export default function BasicModal({
           >
             Booking Details
           </Typography>
-          <Box sx={styles.withIconLabel}>
-            <MeetingRoomIcon />
-            <Typography component="h3">Rooms/Staying</Typography>
-          </Box>
-          <Box component="ul" sx={{ mb: 2, px: 0 }}>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.legend}>Booking ID:</Typography>
-              <Typography component="span">{bookingData?.id}</Typography>
+          <Box sx={styles.contentContainer}>
+            <Box sx={styles.withIconLabel}>
+              <MeetingRoomIcon />
+              <Typography component="h3">Rooms/Staying</Typography>
             </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.legend}>Guest ID:</Typography>
-              <Typography component="span">{bookingData?.clientId}</Typography>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.legend}>Room Type:</Typography>
-              <Typography component="span">
-                {bookingData?.roomModel?.name}
-              </Typography>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.legend}>Check In Date:</Typography>
-              <time>
-                {toDateAndHourFormat(parseInt(bookingData?.checkInDate))}
-              </time>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.legend}>Check Out Date:</Typography>
-              <time>
-                {toDateAndHourFormat(parseInt(bookingData?.checkOutDate))}
-              </time>
-            </Box>
+            <Box component="ul" sx={{ mb: 2, px: 0 }}>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={styles.legend}>Booking ID:</Typography>
+                <Typography component="span">{bookingData?.id}</Typography>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={styles.legend}>Guest ID:</Typography>
+                <Typography component="span">
+                  {bookingData?.clientId}
+                </Typography>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={styles.legend}>Room Type:</Typography>
+                <Typography component="span">
+                  {bookingData?.roomModel?.name}
+                </Typography>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={styles.legend}>Check In Date:</Typography>
+                <time>
+                  {toDateAndHourFormat(parseInt(bookingData?.checkInDate))}
+                </time>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={styles.legend}>Check Out Date:</Typography>
+                <time>
+                  {toDateAndHourFormat(parseInt(bookingData?.checkOutDate))}
+                </time>
+              </Box>
 
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.legend}>Guest/Room: </Typography>
-              <Box sx={{ p: 0, gap: 1, display: 'grid' }}>
-                {bookingData?.guestsDistribution?.map((room, index) => (
-                  <Box key={index} sx={styles.roomGuests}>
-                    <Typography
-                      variant="body2"
-                      sx={{ minWidth: 'max-content' }}
-                    >
-                      Adults: {room?.adults}
+              <Box component="li" sx={styles.list}>
+                <Typography sx={styles.legend}>Guest/Room: </Typography>
+                <Box sx={{ p: 0, gap: 1, display: 'grid' }}>
+                  {bookingData?.guestsDistribution?.map((room, index) => (
+                    <Box key={index} sx={styles.roomGuests}>
+                      <Typography
+                        variant="body2"
+                        sx={{ minWidth: 'max-content' }}
+                      >
+                        Adults: {room?.adults}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ minWidth: 'max-content' }}
+                      >
+                        Children: {room.children}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={styles.legend}>Staying Rooms:</Typography>
+                <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '6px' }}>
+                  {bookingData?.reservedRooms?.map((room) => (
+                    <Typography sx={{ fontSize: '14px' }} key={room?.number}>
+                      {room?.number}{' '}
                     </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ minWidth: 'max-content' }}
-                    >
-                      Children: {room.children}
+                  ))}
+                </Stack>
+              </Box>
+              <Box sx={styles.withIconLabel}>
+                <ListAltIcon />
+                <Typography component="h3">Special requests</Typography>
+              </Box>
+              <Typography sx={{ m: 1, mt: 0, fontSize: '14px' }}>
+                {bookingData?.specifications || 'No special requests.'}
+              </Typography>
+              <Box sx={styles.withIconLabel}>
+                <AccountBalanceWalletIcon />
+                <Typography component="h3">Payment</Typography>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={styles.legend}>
+                  {bookingData?.status === 'CANCELED' ? 'Cost:' : 'Total Cost:'}
+                </Typography>
+                <Typography component="span">
+                  USD {currencyFixer(bookingData?.totalCost)}
+                </Typography>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={styles.legend}>Payment Method: </Typography>
+                <Typography component="span">
+                  {bookingData?.paymentMethod
+                    .split('_')
+                    .join(' ')
+                    .toLowerCase()}
+                </Typography>
+              </Box>
+              {bookingData?.status === 'CANCELED' && cancellationDetails && (
+                <>
+                  <Box sx={styles.withIconLabel}>
+                    <DoNotDisturbIcon />
+                    <Typography component="h3">Cancellation Details</Typography>
+                  </Box>
+                  <Box sx={{ my: 1.5, ml: 1 }}>
+                    <Typography sx={styles.legend}>Message:</Typography>
+                    <Typography variant="body2" sx={{ mt: 1.5 }}>
+                      {cancellationDetails?.message}
                     </Typography>
                   </Box>
-                ))}
-              </Box>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.legend}>Staying Rooms:</Typography>
-              <Stack direction="row" sx={{ flexWrap: 'wrap', gap: '6px' }}>
-                {bookingData?.reservedRooms?.map((room) => (
-                  <Typography sx={{ fontSize: '14px' }} key={room?.number}>
-                    {room?.number}{' '}
-                  </Typography>
-                ))}
-              </Stack>
-            </Box>
-            <Box sx={styles.withIconLabel}>
-              <ListAltIcon />
-              <Typography component="h3">Special requests</Typography>
-            </Box>
-            <Typography sx={{ m: 1, mt: 0, fontSize: '14px' }}>
-              {bookingData?.specifications || 'No special requests.'}
-            </Typography>
-            <Box sx={styles.withIconLabel}>
-              <AccountBalanceWalletIcon />
-              <Typography component="h3">Payment</Typography>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.legend}>
-                {bookingData?.status === 'CANCELED' ? 'Cost:' : 'Total Cost:'}
-              </Typography>
-              <Typography component="span">
-                USD {currencyFixer(bookingData?.totalCost)}
-              </Typography>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={styles.legend}>Payment Method: </Typography>
-              <Typography component="span">
-                {bookingData?.paymentMethod.split('_').join(' ').toLowerCase()}
-              </Typography>
-            </Box>
-            {bookingData?.status === 'CANCELED' && cancellationDetails && (
-              <>
-                <Box sx={styles.withIconLabel}>
-                  <DoNotDisturbIcon />
-                  <Typography component="h3">Cancellation Details</Typography>
-                </Box>
-                <Box sx={{ my: 1.5, ml: 1 }}>
-                  <Typography sx={styles.legend}>Message:</Typography>
-                  <Typography variant="body2" sx={{ mt: 1.5 }}>
-                    {cancellationDetails?.message}
-                  </Typography>
-                </Box>
 
-                <Box component="li" sx={styles.list}>
-                  <Typography sx={styles.legend}>Cancellation Date:</Typography>
-                  <time>
-                    {toDateAndHourFormat(
-                      parseInt(cancellationDetails?.createdAt)
-                    )}
-                  </time>
-                </Box>
+                  <Box component="li" sx={styles.list}>
+                    <Typography sx={styles.legend}>
+                      Cancellation Date:
+                    </Typography>
+                    <time>
+                      {toDateAndHourFormat(
+                        parseInt(cancellationDetails?.createdAt)
+                      )}
+                    </time>
+                  </Box>
 
-                <Box component="li" sx={styles.list}>
-                  <Typography sx={styles.legend}>cancellation Fee</Typography>
-                  <Typography component="span">
-                    USD {currencyFixer(cancellationDetails.cancellationFee)}
-                  </Typography>
-                </Box>
-                <Box component="li" sx={styles.list}>
-                  <Typography sx={styles.legend}>Total Const</Typography>
-                  <Typography component="span">
-                    USD
-                    {currencyFixer(
-                      bookingData?.totalCost +
-                        cancellationDetails?.cancellationFee
-                    )}
-                  </Typography>
-                </Box>
-              </>
-            )}
+                  <Box component="li" sx={styles.list}>
+                    <Typography sx={styles.legend}>cancellation Fee</Typography>
+                    <Typography component="span">
+                      USD {currencyFixer(cancellationDetails.cancellationFee)}
+                    </Typography>
+                  </Box>
+                  <Box component="li" sx={styles.list}>
+                    <Typography sx={styles.legend}>Total Const</Typography>
+                    <Typography component="span">
+                      USD
+                      {currencyFixer(
+                        bookingData?.totalCost +
+                          cancellationDetails?.cancellationFee
+                      )}
+                    </Typography>
+                  </Box>
+                </>
+              )}
+            </Box>
             {bookingData?.status === 'ACTIVE' && (
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                 <Button

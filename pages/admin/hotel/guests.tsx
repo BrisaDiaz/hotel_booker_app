@@ -11,14 +11,14 @@ import AdminMenu from '@/components/layouts/AdminMenu';
 import Box from '@mui/material/Box';
 import GuestsTable from '@/components/dashboard/tables/GuestsTable';
 
-type PagePromps = {
+type PageProps = {
   guests: HotelGuest[];
   totalResults: number;
   token: number;
   hotelId: number;
 };
 const resultsPerPage = 6;
-const Guest: WithLayoutPage<PagePromps> = (props) => {
+const Guest: WithLayoutPage<PageProps> = (props) => {
   const [guests, setGuest] = React.useState(props.guests);
   const [totalResults, setTotalResults] = React.useState<number>(
     props.totalResults

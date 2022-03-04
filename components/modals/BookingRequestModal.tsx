@@ -80,60 +80,62 @@ export default function BasicModal({
           >
             Ask for a reservation
           </Typography>
-          <Box sx={styles.withIconLabel}>
-            <MeetingRoomIcon />
-            <Typography variant="subtitle1" component="h3">
-              Room Details
-            </Typography>
+          <Box sx={styles.contentContainer}>
+            <Box sx={styles.withIconLabel}>
+              <MeetingRoomIcon />
+              <Typography variant="subtitle1" component="h3">
+                Room Details
+              </Typography>
+            </Box>
+            <Box component="ul" sx={{ mb: 2, px: 0 }}>
+              {' '}
+              <Box component="li" sx={styles.list}>
+                <Typography sx={{ ...styles.legend, width: '60%' }}>
+                  Price:
+                </Typography>
+                <Typography component="span">
+                  USD {currencyFixer(roomData?.price)}
+                </Typography>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={{ ...styles.legend, width: '60%' }}>
+                  Taxes:{' '}
+                </Typography>
+                <Typography component="span">
+                  USD {currencyFixer(roomData?.taxes)}
+                </Typography>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={{ ...styles.legend, width: '60%' }}>
+                  Max. Guests:
+                </Typography>
+                <Typography component="span">
+                  {' '}
+                  {roomData?.maximumGuests}
+                </Typography>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={{ ...styles.legend, width: '60%' }}>
+                  Check In Hour:
+                </Typography>
+                <time>{roomData?.checkInHour}</time>
+              </Box>
+              <Box component="li" sx={styles.list}>
+                <Typography sx={{ ...styles.legend, width: '60%' }}>
+                  Check Out Hour:
+                </Typography>
+                <time>{roomData?.checkOutHour}</time>
+              </Box>
+            </Box>
+            <BookingClientInputs errors={errors} register={register} />
+            <Box sx={{ my: 2 }} />
+            <BookingRoomInputs
+              register={register}
+              setError={setError}
+              errors={errors}
+              setValue={setValue}
+            />{' '}
           </Box>
-          <Box component="ul" sx={{ mb: 2, px: 0 }}>
-            {' '}
-            <Box component="li" sx={styles.list}>
-              <Typography sx={{ ...styles.legend, width: '60%' }}>
-                Price:
-              </Typography>
-              <Typography component="span">
-                USD {currencyFixer(roomData?.price)}
-              </Typography>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={{ ...styles.legend, width: '60%' }}>
-                Taxes:{' '}
-              </Typography>
-              <Typography component="span">
-                USD {currencyFixer(roomData?.taxes)}
-              </Typography>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={{ ...styles.legend, width: '60%' }}>
-                Max. Guests:
-              </Typography>
-              <Typography component="span">
-                {' '}
-                {roomData?.maximumGuests}
-              </Typography>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={{ ...styles.legend, width: '60%' }}>
-                Check In Hour:
-              </Typography>
-              <time>{roomData?.checkInHour}</time>
-            </Box>
-            <Box component="li" sx={styles.list}>
-              <Typography sx={{ ...styles.legend, width: '60%' }}>
-                Check Out Hour:
-              </Typography>
-              <time>{roomData?.checkOutHour}</time>
-            </Box>
-          </Box>
-          <BookingClientInputs errors={errors} register={register} />
-          <Box sx={{ my: 2 }} />
-          <BookingRoomInputs
-            register={register}
-            setError={setError}
-            errors={errors}
-            setValue={setValue}
-          />
           <Button
             type="submit"
             fullWidth

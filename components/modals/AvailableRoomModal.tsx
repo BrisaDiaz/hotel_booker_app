@@ -56,12 +56,14 @@ export default function TransitionsModal({
               <Typography variant="h5" component="h2" sx={styles.title}>
                 check Room availability
               </Typography>
-              <BookingRoomInputs
-                register={register}
-                setError={setError}
-                errors={errors}
-                setValue={setValue}
-              />
+              <Box sx={styles.contentContainer}>
+                <BookingRoomInputs
+                  register={register}
+                  setError={setError}
+                  errors={errors}
+                  setValue={setValue}
+                />
+              </Box>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                   type="submit"

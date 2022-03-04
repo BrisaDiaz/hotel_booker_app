@@ -17,17 +17,13 @@ export default function BasicModal({
   requestInfo,
 }: {
   isOpen: boolean;
-  onClose: ()=>void;
+  onClose: () => void;
   requestInfo?: BookingRequest;
-  onSubmit: (formData:any)=>void;
+  onSubmit: (formData: any) => void;
 }) {
-
-
-
   const handleClose = () => {
- onClose();
+    onClose();
   };
-
 
   const {
     register,
@@ -43,7 +39,9 @@ export default function BasicModal({
     totalCost: string;
     paymentMethod: string;
   }) => {
-    const roomsRequired: number =requestInfo? requestInfo.guestsDistribution.length:1;
+    const roomsRequired: number = requestInfo
+      ? requestInfo.guestsDistribution.length
+      : 1;
 
     if (data.roomsIds.length < roomsRequired)
       return setError('roomsIds', {
@@ -54,7 +52,7 @@ export default function BasicModal({
     clearErrors('roomsIds');
     onSubmit({ ...data, totalCost: parseInt(data.totalCost) });
   };
-    if (!requestInfo) return <div/>;
+  if (!requestInfo) return <div />;
   return (
     <div>
       <Modal
@@ -79,16 +77,17 @@ export default function BasicModal({
           >
             Confirm Reservation
           </Typography>
-          <BookingRequestInfo requestInfo={requestInfo} />
-          <Box sx={{ my: 2 }} />
-          <BookingAdminInputs
-            errors={errors}
-            register={register}
-            setValue={setValue}
-            requiredRooms={requestInfo?.guestsDistribution?.length}
-            availableRooms={requestInfo?.availableRooms}
-          />
-
+          <Box sx={styles.contentContainer}>
+            <BookingRequestInfo requestInfo={requestInfo} />
+            <Box sx={{ my: 2 }} />
+            <BookingAdminInputs
+              errors={errors}
+              register={register}
+              setValue={setValue}
+              requiredRooms={requestInfo?.guestsDistribution?.length}
+              availableRooms={requestInfo?.availableRooms}
+            />
+          </Box>
           <Button
             type="submit"
             fullWidth

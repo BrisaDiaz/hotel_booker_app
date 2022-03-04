@@ -153,9 +153,9 @@ export const getAlbumImages = async (albumId: number) => {
 export const getHotelImages = async (hotelId: number, args: any) => {
   return prisma.image.findMany({
     take: args.take || undefined,
-    skip: args.skip || undefined,
+    skip: args.skip || 0,
     orderBy: {
-      createdAt: 'desc',
+      id: 'desc',
     },
     where: {
       album: {
@@ -178,7 +178,7 @@ export const getRoomModelAlbum = async (roomModelId: number) => {
     },
   });
 };
-export const getRoomModelImagesCount = async (roomModelId:number) => {
+export const getRoomModelImagesCount = async (roomModelId: number) => {
   return prisma.image.count({
     where: {
       album: {
@@ -187,7 +187,7 @@ export const getRoomModelImagesCount = async (roomModelId:number) => {
     },
   });
 };
-export const getHotelImagesCount = async (hotelId:number) => {
+export const getHotelImagesCount = async (hotelId: number) => {
   return prisma.image.count({
     where: {
       album: {

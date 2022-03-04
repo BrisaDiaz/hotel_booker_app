@@ -38,10 +38,19 @@ import { NextApiResponse } from 'next';
 const styles = {
   list: {
     display: 'flex',
-    p: '0 10px',
+    p: '0  8px',
     flexWrap: 'wrap',
     gap: '20px',
     fontWeight: 400,
+  },
+  sectionTitle: {
+    p: '4px 8px',
+    background: '#e6e6e6',
+    display: 'flex',
+    gap: 1,
+
+    alignItems: 'center',
+    my: 3,
   },
   listItem: {
     display: 'flex',
@@ -55,13 +64,14 @@ const styles = {
       fontSize: '14px',
     },
   },
+
   featuresItems: {
     display: 'flex',
     fontSize: '14px',
     '& > p,a,time': {
       fontSize: '14px',
     },
-    gap: 1,
+    gap: { xs: 0.5, md: 1 },
     textTransform: 'capitalize',
     alignItems: 'center',
     width: { xs: '250px' },
@@ -262,7 +272,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
             sx={{
               fontWeight: 700,
               display: 'block',
-              mx: { xs: 2, lg: 0 },
+              mx: { xs: 1, sm: 2, md: 0 },
               width: 'fit-content',
               textTransform: 'capitalize',
 
@@ -279,11 +289,11 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
         </Box>
         <Typography
           variant="h4"
-          component="h2"
+          component="h1"
           color="primary"
           sx={{
             fontWeight: 700,
-            mx: { xs: 2, lg: 0 },
+            mx: { xs: 1, sm: 2, md: 0 },
             width: 'fit-content',
             textTransform: 'capitalize',
             padding: '10px 0 5px',
@@ -308,7 +318,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
           defaultIndex={carrouselIndex}
           requireMore={handleShowMore}
         />
-        <Box component="section" sx={{ px: { xs: 1, md: 0 }, mt: 2 }}>
+        <Box component="section" sx={{ px: { xs: 2, md: 0 }, mt: 2 }}>
           <Typography
             component="h3"
             variant="h6"
@@ -358,9 +368,8 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
               gap: 3,
               flexWrap: 'wrap',
               alignItems: 'center',
-
-              mt: { sm: '-20px' },
-              p: 0,
+              p: '4px 8px',
+              background: '#e6e6e6',
             }}
           >
             {room.freeCancellation && (
@@ -422,15 +431,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
               width: '100%',
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 1,
-
-                alignItems: 'center',
-                my: 3,
-              }}
-            >
+            <Box sx={styles.sectionTitle}>
               <BedIcon color="primary" />
 
               <Typography
@@ -514,14 +515,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
                 margin: '30px 0',
               }}
             >
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: 1,
-                  alignItems: 'center',
-                  my: 3,
-                }}
-              >
+              <Box sx={styles.sectionTitle}>
                 <RoomPreferencesIcon color="primary" />
 
                 <Typography
@@ -547,14 +541,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
                   ))}
                 </Box>
               )}
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: 1,
-                  alignItems: 'center',
-                  my: 3,
-                }}
-              >
+              <Box sx={styles.sectionTitle}>
                 <RoomServiceIcon color="primary" />
 
                 <Typography

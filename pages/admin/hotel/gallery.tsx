@@ -34,7 +34,7 @@ import FullScreenModal from '@/components/modals/FullScreenModal';
 import ImageManager from '@/components/ImagesAlbumManager';
 import useNotification from '@/hooks/useNotification';
 
-type PagePromps = {
+type PageProps = {
   token: number;
   hotelId: number;
   albums: Partial<Album>[];
@@ -44,7 +44,7 @@ type Folder = {
   name: string;
   subFolders: { id: number; name: string }[];
 };
-const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
+const RoomRequests: WithLayoutPage<PageProps> = (props) => {
   const generateFolders = (albums: Partial<Album>[]) => {
     return albums.reduce(
       (folders: Folder[], album: Partial<Album>) => {
@@ -265,7 +265,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
       console.log(error);
     }
   };
-  const onRenameAbum = async (data: { name: string }) => {
+  const onRenameAlbum = async (data: { name: string }) => {
     if (!selectedAlbum) return;
     try {
       await renameAlbum({
@@ -378,15 +378,15 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
           isOpen={modalsState.renameAlbum}
           defaultValue={selectedAlbum}
           onClose={() => handleCloseModal('renameAlbum')}
-          onSubmit={onRenameAbum}
+          onSubmit={onRenameAlbum}
         />
         <Backdrop loading={loading} />
 
         <Dialog
-          acceptLabel={'Procced'}
-          rejectLabel={'Avort'}
+          acceptLabel={'Proceed'}
+          rejectLabel={'abort'}
           title={'Are you sure?'}
-          text={'If procced all images inside the album are going to be lost.'}
+          text={'If proceed all images inside the album are going to be lost.'}
           isDialogOpen={modalsState.deleteAlbum}
           onAccept={onDeleteAlbum}
           onCancel={() => handleCloseModal('deleteAlbum')}
@@ -394,7 +394,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
         {notification.content && (
           <SnackBar
             severity={notification.type}
-            message={notification.content || 'Oparation succesfully completed'}
+            message={notification.content || 'Operation successfully completed'}
           />
         )}
       </Box>

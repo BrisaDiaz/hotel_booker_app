@@ -64,7 +64,7 @@ export default function StandardImageList({
                   quality: 10,
                 })}
                 alt={item.title}
-                onClick={() => onClick(item, index)}
+                onClick={() => onClick(item, mainImages.length + index)}
               />
             </div>
           </ImageListItem>

@@ -24,7 +24,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { getFormattedBookings } from '@/utils/getFormattedBookings';
 import BookingsCalendar from '@/components/dashboard/calendars/Bookings';
 import BookingDetailsModal from '@/components/modals/BookingDetailsModal';
-import CancelBookigModal from '@/components/modals/CancelBookigModal';
+import CancelBookingModal from '@/components/modals/CancelBookingModal';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -225,12 +225,12 @@ const Bookings: WithLayoutPage<PageProps> = ({
       </Head>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <FormControl sx={{ m: 1, mt: 3, width: 150 }}>
-          <InputLabel id="demo-simple-select-autowidth-label">
+          <InputLabel id="demo-simple-select-auto-width-label">
             Booking Status
           </InputLabel>
           <Select
-            labelId="demo-simple-select-autowidth-label"
-            id="demo-simple-select-autowidth"
+            labelId="demo-simple-select-auto-width-label"
+            id="demo-simple-select-auto-width"
             value={bookingsStatus}
             onChange={handleStatusChange}
             label="Booking Status"
@@ -293,7 +293,7 @@ const Bookings: WithLayoutPage<PageProps> = ({
           cancellationDetails={cancellationDetails}
         />
       </Box>
-      <CancelBookigModal
+      <CancelBookingModal
         isOpen={isOpen.cancel}
         onSubmit={onCancelBooking}
         bookingData={selectedBooking}
@@ -306,8 +306,8 @@ const Bookings: WithLayoutPage<PageProps> = ({
     </div>
   );
 };
-Bookings.getLayout = function getLayout(pbookingsStatus: React.ReactNode) {
-  return <AdminMenu activeLink="bookings">{pbookingsStatus}</AdminMenu>;
+Bookings.getLayout = function getLayout(bookingsStatus: React.ReactNode) {
+  return <AdminMenu activeLink="bookings">{bookingsStatus}</AdminMenu>;
 };
 
 export default Bookings;

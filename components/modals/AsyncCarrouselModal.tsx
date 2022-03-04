@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import Carousel from 'react-material-ui-carousel';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Box from '@mui/material/Box';
@@ -90,7 +89,7 @@ export default function SimpleBackdrop({
             maxWidth: '900px',
             mt: 2,
             overflow: 'hidden',
-            background: '#f3f3f3',
+            background: '#e6e6e6',
             mx: 'auto',
             '.css-78trlr-MuiButtonBase-root-MuiIconButton-root': {
               p: { xs: 0, sm: 0.5 },
@@ -159,7 +158,7 @@ export default function SimpleBackdrop({
               width: '100%',
               maxWidth: '900px',
               overflow: 'hidden',
-              background: '#f3f3f3',
+              background: '#e6e6e6',
             }}
           >
             <ImageList

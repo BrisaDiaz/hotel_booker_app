@@ -10,7 +10,7 @@ import { getCookie } from '@/graphql/utils';
 import { BookingRequest } from '@/interfaces/index';
 import { useMutation, useLazyQuery } from '@apollo/client';
 import { client } from '@/lib/apollo';
-import ConfimBookingModal from '@/components/modals/ConfimBookingModal';
+import ConfirmBookingModal from '@/components/modals/ConfirmBookingModal';
 import AdminMenu from '@/components/layouts/AdminMenu';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
@@ -19,13 +19,13 @@ import Dialog from '@/components/Dialog';
 import SnackBar from '@/components/SnackBar';
 import Backdrop from '@/components/Backdrop';
 import useNotification from '@/hooks/useNotification';
-type PagePromps = {
+type PageProps = {
   requests: BookingRequest[];
   totalResults: number;
   token: number;
   hotelId: number;
 };
-const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
+const RoomRequests: WithLayoutPage<PageProps> = (props) => {
   const resultsPerPage = 8;
   const [requests, setRequests] = React.useState<BookingRequest[] | []>(
     props.requests
@@ -96,10 +96,10 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
     DECLINE_BOOKING_REQUEST,
     {
       onCompleted: ({ bookingRequest }) => {
-        const acutalizePendingRequests = requests.filter(
+        const actualizedPendingRequests = requests.filter(
           (request) => request.id !== bookingRequest.id
         );
-        setRequests(acutalizePendingRequests);
+        setRequests(actualizedPendingRequests);
         notify({
           type: 'success',
           content: 'The request was declined successfully.',
@@ -117,11 +117,11 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
     CONFIRM_BOOKING_REQUEST,
     {
       onCompleted: ({ booking }) => {
-        const acutalizePendingRequests = requests.filter(
+        const actualizedPendingRequests = requests.filter(
           (request) => request.id !== booking.id
         );
         setModalsState({ ...modalsState, 'show/confirm': false });
-        setRequests(acutalizePendingRequests);
+        setRequests(actualizedPendingRequests);
         notify({
           type: 'success',
           content: 'The request has been booked successfully.',
@@ -247,7 +247,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
         />
 
         {modalsState['show/confirm'] && requestSelected && (
-          <ConfimBookingModal
+          <ConfirmBookingModal
             onClose={() => handleCloseModal('show/confirm')}
             requestInfo={requestSelected}
             isOpen={modalsState['show/confirm']}
@@ -255,11 +255,11 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
           />
         )}
         <Dialog
-          acceptLabel={'Procced'}
-          rejectLabel={'Avort'}
+          acceptLabel={'Proceed'}
+          rejectLabel={'abort'}
           title={'Are you sure?'}
           text={
-            'If procced the request will be no longer visible in the request queue.'
+            'If proceed the request will be no longer visible in the request queue.'
           }
           isDialogOpen={modalsState['decline']}
           onAccept={onDeclineRequest}
@@ -269,7 +269,7 @@ const RoomRequests: WithLayoutPage<PagePromps> = (props) => {
         {notification.content && (
           <SnackBar
             severity={notification.type}
-            message={notification.content || 'Oparation succesfully completed'}
+            message={notification.content || 'Operation successfully completed'}
           />
         )}
       </Box>
