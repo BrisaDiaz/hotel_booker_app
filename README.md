@@ -6,14 +6,6 @@ Application for the administration and request of hotel rooms with updated infor
 
 <a href="https://www.linkedin.com/in/brisa-d%C3%ADaz" target="_blank">Author</a>
 
-## Table of Contents
-
-- [Screenshots](#📸-screenshots)
-- [Technologies Used](#🛠-main-technologies-used)
-- [Features](#✨-features)
-- [Environment Variables](#🤐-environment-variables)
-- [Set up](#💻-set-up)
-
 ## 📸 Screenshots
 
 ![image](https://drive.google.com/uc?export=view&id=1BeuzcHiiQB3jrnf3U9NU873S9Hv8dPwO)
