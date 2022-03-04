@@ -68,15 +68,25 @@ Application for the administration and request of hotel rooms with updated infor
 
 ## 💻 Set up
 
-#### 1. Install my-project with npm
+Clone the project
 
 ```bash
-  npm install my-project
-
-  cd my-project
+  git clone https://github.com/BrisaDiaz/hotel_booker_app.git
 ```
 
-#### 2. Create and seed the database
+Go to the project directory
+
+```bash
+  cd hotel_booker_app
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Create and seed the database
 
 ```bash
 npx prisma migrate dev --name init
@@ -85,9 +95,19 @@ npx prisma db seed
 
 ```
 
-#### 3. Start the app
+Start the server
 
 ```bash
   npm run dev
 
+  #or
+
+  npm run build
+
+  npm start
+
 ```
+
+# <<<<<<< HEAD
+
+> > > > > > > 82dcae157006b3ae2cb1a4b7f68d183ea4bb57e7
