@@ -99,7 +99,3 @@ Start the server
   npm start
 
 ```
-
-# <<<<<<< HEAD
-
-> > > > > > > 82dcae157006b3ae2cb1a4b7f68d183ea4bb57e7
