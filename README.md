@@ -1,6 +1,6 @@
 # Booker App
 
-Application for the administration and request of hotel rooms with updated information on the availability of rooms.
+> Application for the administration and request of hotel rooms with updated information on the availability of rooms.
 
 <a href="https://hotel-booker-app.vercel.app" target="_blank">Demo</a>
 
