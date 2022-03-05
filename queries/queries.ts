@@ -478,7 +478,7 @@ export const GET_BOOKING_BY_ID = gql`
         children
       }
       roomModel {
-        name
+        id
         cancellationFee
       }
       reservedRooms {
