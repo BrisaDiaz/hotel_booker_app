@@ -24,7 +24,7 @@ export const styles = {
     overflowY: 'scroll',
   },
   legend: {
-    width: '30%',
+    width: '50%',
     minWidth: 120,
     color: 'text.secondary',
     fontSize: '14px',

@@ -300,23 +300,17 @@ export const getCancellationDetails = async (
 ) => {
   const user = await getUserIdentity(token);
   const admin = await getAdminInfo(user.id);
-  const booking = await prisma.booking.findUnique({
+  const cancellationDetails = await prisma.cancellationDetails.findUnique({
     where: {
-      id: bookingId,
-    },
-    include: {
-      guestsDistribution: true,
-      client: true,
+      bookingId: bookingId,
     },
   });
-  if (!booking) throw new UserInputError('Booking dose not exist');
+  if (!cancellationDetails) throw new UserInputError('Booking dose not exist');
 
-  if (
-    !admin.hotels.some((hotel: { id: number }) => hotel.id === booking.hotelId)
-  )
+  if (!admin.hotels.some((hotel: { id: number }) => hotel.id === bookingId))
     throw new ForbiddenError('Forbidden');
 
-  return booking;
+  return cancellationDetails;
 };
 export const getBooking = async (token: string, bookingId: number) => {
   const user = await getUserIdentity(token);

@@ -26,9 +26,7 @@ export default function RequestInfo({
           <Typography sx={styles.legend} title={requestInfo?.roomModel?.name}>
             Room Type:
           </Typography>
-          <Typography component="span">
-            {requestInfo?.roomModel?.name}
-          </Typography>
+          <Typography component="span">{requestInfo?.roomModel?.id}</Typography>
         </Box>
         <Box component="li" sx={styles.list}>
           <Typography sx={styles.legend}>Price:</Typography>

@@ -91,7 +91,7 @@ export default function BasicModal({
           Cancel Reservation
         </Typography>
         <Box sx={styles.contentContainer}>
-          <Typography variant="body2" sx={{ mb: 1 }}>
+          <Typography variant="body2" sx={{ my: 1 }}>
             Write a message explaining the reason of the cancellation.
           </Typography>
           <TextField
@@ -110,7 +110,7 @@ export default function BasicModal({
                   'Message should be of a 300 characters length maximum.',
               },
             })}
-            rows={5}
+            rows={3}
             variant="outlined"
             sx={{ mb: 2 }}
             error={errors['message'] ? true : false}

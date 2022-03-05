@@ -396,7 +396,7 @@ export const MAKE_BOOKING_REQUEST = gql`
     $checkOutDate: String!
     $specifications: String
   ) {
-    Response: makeBookingRequest(
+    response: makeBookingRequest(
       roomModelId: $roomModelId
       firstName: $firstName
       lastName: $lastName

@@ -200,7 +200,7 @@ const RoomPage: WithLayoutPage<PageProps> = ({ room, roomModelId }) => {
         content: message,
       });
     }
-  }, [consultResponse]);
+  }, [consultResponse, bookingResponse]);
 
   const handleConsultSubmit = async (data: {
     checkInDate: string;

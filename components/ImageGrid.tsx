@@ -29,7 +29,7 @@ export default function StandardImageList({
   const rowHeight = 200;
 
   return (
-    <Box sx={{ my: 1, background: '#dcdcdc' }}>
+    <Box sx={{ my: 1, background: '#e6e6e6' }}>
       <ImageList
         sx={{
           width: '100%',

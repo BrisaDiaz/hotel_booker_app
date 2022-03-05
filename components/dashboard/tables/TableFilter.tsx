@@ -7,13 +7,22 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import Paper from '@mui/material/Paper';
+
+// type SearchFields =
+//   | { label: string; value: string; type: string }
+//   | {
+//       label: string;
+//       value: string;
+//       options: [{ name: string; value: string }];
+//       type: 'select';
+//     };
 export default function TableFilter({
   searchFields,
   onSearch,
   closeModal,
   isModalOpen,
 }: {
-  searchFields: { label: string; value: string; type: string }[];
+  searchFields: Array<any>;
   onSearch: (fieldToSearchAt: string, value: string) => void;
   closeModal: () => void;
   isModalOpen: boolean;
@@ -30,25 +39,31 @@ export default function TableFilter({
     return handleClose();
   }, [isModalOpen]);
   const [searchValue, setSearchValue] = React.useState<string>('');
-  const [selectedField, setSelectedField] = React.useState<string>(
-    searchFields[0]?.value
+
+  const [selectedField, setFieldSelected] = React.useState<any>(
+    searchFields[0]
   );
   const [format, setFormat] = React.useState<string>(searchFields[0].type);
   const handleChange = (newValue: string) => {
     setSearchValue(newValue);
   };
-  const handleFieldChange = (field: string, format: string) => {
-    setSelectedField(field);
+
+  const handleFieldChange = (field: any, format: string) => {
+    if (field?.options) {
+      setSearchValue(field.options[0].value);
+    }
+    setFieldSelected(field);
     setFormat(format);
   };
 
   const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    onSearch(selectedField, searchValue.trim());
+
+    onSearch(selectedField.value, searchValue.trim());
   };
   const onReset = () => {
     setSearchValue('');
-    onSearch(selectedField, '');
+    onSearch(selectedField.value, '');
   };
   const [isInteracting, setIsInteracting] = React.useState(true);
 
@@ -94,7 +109,7 @@ export default function TableFilter({
           labelId="table-filter"
           id="table-filter"
           variant="standard"
-          value={selectedField}
+          value={selectedField.value}
           label="Field"
           size="small"
           sx={{
@@ -108,29 +123,61 @@ export default function TableFilter({
                 fontSize: '14px',
               }}
               value={field.value}
-              onClick={() => handleFieldChange(field.value, field.type)}
+              onClick={() => handleFieldChange(field, field.type)}
             >
               {field.label}
             </MenuItem>
           ))}
         </Select>
-        <TextField
-          variant="standard"
-          id="outlined-search"
-          label={format === 'date' ? '  ' : 'Value'}
-          inputProps={{
-            min: 0,
-          }}
-          type={format}
-          size="small"
-          sx={{
-            minWidth: 50,
-            mb: 2,
-            '& > label': { fontSize: '14px' },
-            '& > *': { fontSize: '14px' },
-          }}
-          onChange={(e) => handleChange(e.target.value)}
-        />
+        {format === 'select' && selectedField.options ? (
+          <Select
+            labelId="table-filter"
+            id="table-filter"
+            variant="standard"
+            value={searchValue}
+            label="Field"
+            size="small"
+            sx={{
+              fontSize: '14px',
+              width: '100%',
+              minWidth: 50,
+
+              my: 2,
+            }}
+          >
+            {selectedField.options.map((option) => (
+              <MenuItem
+                key={option.value}
+                sx={{
+                  fontSize: '14px',
+                }}
+                value={option.value}
+                onClick={() => handleChange(option.value)}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        ) : (
+          <TextField
+            variant="standard"
+            id="outlined-search"
+            label={format === 'date' ? '  ' : 'Value'}
+            inputProps={{
+              min: 0,
+            }}
+            type={format}
+            size="small"
+            sx={{
+              minWidth: 50,
+              mb: 2,
+              '& > label': { fontSize: '14px' },
+              '& > *': { fontSize: '14px' },
+            }}
+            onChange={(e) => handleChange(e.target.value)}
+          />
+        )}
+
         <IconButton
           aria-label="submit"
           size="small"

@@ -343,7 +343,6 @@ type ClientWhere = {
   bookings: {
     some: {
       hotelId: number;
-      status?: 'ACTIVE' | 'CANCELED' | 'FINISHED';
     };
   };
   AND?:

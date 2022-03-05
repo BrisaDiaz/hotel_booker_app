@@ -75,7 +75,7 @@ export default function BasicModal({
               <Box component="li" sx={styles.list}>
                 <Typography sx={styles.legend}>Room Type:</Typography>
                 <Typography component="span">
-                  {bookingData?.roomModel?.name}
+                  {bookingData?.roomModel?.id}
                 </Typography>
               </Box>
               <Box component="li" sx={styles.list}>
@@ -193,20 +193,20 @@ export default function BasicModal({
                 </>
               )}
             </Box>
-            {bookingData?.status === 'ACTIVE' && (
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  color="secondary"
-                  sx={{ textTransform: 'capitalize' }}
-                  onClick={() => onCancel()}
-                >
-                  Cancel Booking
-                </Button>
-              </Box>
-            )}
           </Box>
+          {bookingData?.status === 'ACTIVE' && (
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+              <Button
+                variant="outlined"
+                size="small"
+                color="secondary"
+                sx={{ textTransform: 'capitalize' }}
+                onClick={() => onCancel()}
+              >
+                Cancel Booking
+              </Button>
+            </Box>
+          )}
         </Box>
       </Modal>
     </div>
