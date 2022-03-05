@@ -364,13 +364,13 @@ export const ADD_ROOMS_TO_MODEL = gql`
   }
 `;
 export const DELETE_ROOMS_OF_MODEL = gql`
-  mutation deleteRoomOfModel(
+  mutation deleteRoomsOfModel(
     $token: String!
     $hotelId: Int!
     $roomModelId: Int!
     $roomsIds: [Int!]!
   ) {
-    deleteRoomOfModel(
+    deleteRoomsOfModel(
       token: $token
       hotelId: $hotelId
 

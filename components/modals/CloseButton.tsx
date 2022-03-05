@@ -1,24 +1,32 @@
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
-import CancelIcon from '@mui/icons-material/Cancel';
 
+import CloseIcon from '@mui/icons-material/Close';
 export default function CloseButton({
   handleClose,
   buttonStyles,
 }: {
-  handleClose: ()=>void;
+  handleClose: () => void;
   buttonStyles?: any;
 }) {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end' ,zIndex:500}}>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        zIndex: 500,
+      }}
+    >
       <IconButton
-        sx={{ mr: '-12px', ...buttonStyles }}
+        sx={{
+          mr: { xs: '-12px', md: '-16px' },
+          ...buttonStyles,
+        }}
         aria-label="delete"
-        color="secondary"
         onClick={() => handleClose()}
       >
-        <CancelIcon fontSize="inherit" />
+        <CloseIcon fontSize="inherit" />
       </IconButton>
     </Box>
   );

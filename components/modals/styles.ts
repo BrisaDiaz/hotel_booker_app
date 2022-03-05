@@ -21,6 +21,7 @@ export const styles = {
     maxHeight: '60vh',
     borderTop: '1px solid #e6e6e6',
     borderBottom: '1px solid #e6e6e6',
+    overflowY: 'scroll',
   },
   legend: {
     width: '30%',

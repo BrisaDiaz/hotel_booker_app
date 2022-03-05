@@ -322,7 +322,7 @@ const Dashboard: WithLayoutPage<PageProps> = ({
           abortHandler={handleEditAbort}
           facilities={facilitiesRequest?.data?.facilitiesList || []}
           activities={activitiesRequest.data?.activitiesList || []}
-          languages={languagesRequest.data?.laguagesList || []}
+          languages={languagesRequest.data?.languagesList || []}
           services={servicesRequest.data?.servicesList || []}
           hotelCategories={categoriesRequest?.data?.hotelCategoriesList || []}
         />

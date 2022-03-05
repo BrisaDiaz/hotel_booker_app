@@ -126,7 +126,7 @@ export default function MultilineTextFields(props: {
       ) {
         return setError('interiorImage', {
           type: 'manual',
-          message: 'The facade e interior images must be differents.',
+          message: 'The facade e interior images must be different.',
         });
       } else {
         clearErrors('interiorImage');

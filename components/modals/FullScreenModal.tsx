@@ -39,10 +39,8 @@ export default function FullScreenDialog({
       <CloseButton
         handleClose={onClose}
         buttonStyles={{
-          transform: { md: 'scale(1.2)' },
-          mx: { xs: 1, md: 2 },
+          mx: { xs: 0, md: '4px' },
           position: 'absolute',
-          my: 1,
         }}
       />
 
@@ -51,7 +49,7 @@ export default function FullScreenDialog({
           component="h1"
           variant="h4"
           align="center"
-          sx={{ fontWeight: 600, opacity: 0.8 }}
+          sx={{ fontWeight: 600, opacity: 0.8, mt: 5, mx: 2 }}
         >
           {title}
         </Typography>

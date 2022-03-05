@@ -42,7 +42,7 @@ export const styles = {
     py: 2,
     borderRadius: 5,
     border: '1px solid  rgb(0 0 0 / 10%)',
-    padding: { xs: '15px', sm: '20px', md: '25px ' },
+    padding: { sm: '20px', md: '25px ' },
     background: '#fff',
 
     boxShadow:

@@ -8,6 +8,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { useMediaQuery } from '@mui/material';
 import { Theme } from '@mui/system';
+import { nullabilityGuardPluginCore } from 'nexus';
 const styles = {
   modal: {
     position: 'fixed',
@@ -58,8 +59,6 @@ export default function KeepMountedModal({
     }
 
     onClose();
-    setRoomNumbers([]);
-    setCurrentNumber(null);
   };
 
   const [roomNumbers, setRoomNumbers] = React.useState<number[] | []>([]);
@@ -94,11 +93,19 @@ export default function KeepMountedModal({
     e.stopPropagation();
     const numbers = handleAddMore();
 
-    if (numbers.length) return onSubmit(numbers);
+    if (numbers.length) {
+      onSubmit(numbers);
+    }
   };
   const isInSmScreen = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up('sm')
   );
+  React.useEffect(() => {
+    if (isOpen) {
+      setRoomNumbers([]);
+    }
+  }, [isOpen]);
+
   return (
     <Box sx={{ maxWidth: '100vw', margin: '0 auto' }}>
       <Modal

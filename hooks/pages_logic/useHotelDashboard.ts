@@ -223,8 +223,8 @@ export default function useHotelDashboard({
   const [deleteRoomsOfRoomModel, deleteRoomsResults] = useMutation(
     DELETE_ROOMS_OF_MODEL,
     {
-      onCompleted: ({ deleteRoomOfModel }) => {
-        const actualizedRooms = deleteRoomOfModel;
+      onCompleted: ({ deleteRoomsOfModel }) => {
+        const actualizedRooms = deleteRoomsOfModel;
 
         const actualizedRoomTypes = roomTypes.map((roomType: RoomModel) =>
           roomType.id === selectedRoomTypeId
