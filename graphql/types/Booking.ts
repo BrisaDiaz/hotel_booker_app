@@ -10,7 +10,7 @@ import {
   inputObjectType,
 } from 'nexus';
 
-import { checkRoomsAvailable } from '../utils/index';
+import { checkRoomsAvailable } from '../services/Booking';
 import { getHotel } from '../services/Hotel';
 import { getRoomModel } from '../services/Room';
 import {

@@ -21,7 +21,7 @@ import {
   getRoomModelRooms,
   getRoomModelOfRoom,
 } from '../services/Room';
-import { checkRoomsAvailable } from '../utils/index';
+import { checkRoomsAvailable } from '../services/Booking';
 import { roomSpecifications } from './Booking';
 import { getHotel } from '../services/Hotel';
 import {

@@ -2,8 +2,8 @@ import {
   verifyIsHotelAdmin,
   deleteImage,
   getUserIdentity,
-  checkIsValidRoomRequest,
 } from '../utils/index';
+import { checkIsValidRoomRequest } from './Booking';
 import { prisma } from '@/lib/prisma';
 import { ValidationError } from 'apollo-server-micro';
 
