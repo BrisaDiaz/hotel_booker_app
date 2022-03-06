@@ -221,7 +221,7 @@ export const makeBooking = async (
   });
 
   if (!availabilityResponse.isAvailable)
-    throw new UserInputError('There is not enoughs rooms available.');
+    throw new UserInputError(availabilityResponse.message);
 
   const { children, adults, nights, guestsDistribution } =
     availabilityResponse.requestData;
