@@ -16,7 +16,8 @@ export const getUserSession = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const cookie = await getCookie(req, res);
+  const cookie = await getCookie(req);
+
   if (!cookie)
     return {
       user: null,

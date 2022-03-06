@@ -320,7 +320,7 @@ type Context = {
 };
 export const getServerSideProps = async ({ req, res, query }: Context) => {
   try {
-    const token = getCookie(req, res);
+    const token = getCookie(req);
     const hotelId = parseInt(query.hotelId);
     const RoomModelsResponse = await client.query({
       query: GET_HOTEL_ROOM_MODELS_LIST,

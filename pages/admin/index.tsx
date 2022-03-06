@@ -351,7 +351,7 @@ export const getServerSideProps = async ({
   res: NextApiResponse;
 }) => {
   try {
-    const token = getCookie(req, res);
+    const token = getCookie(req);
     const { data } = await client.query({
       query: GET_ADMIN_HOTELS,
       variables: { token },

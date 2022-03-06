@@ -415,7 +415,7 @@ type PageContext = {
 };
 export const getServerSideProps = async ({ req, res, query }: PageContext) => {
   try {
-    const token = await getCookie(req, res);
+    const token = await getCookie(req);
     const hotelId = parseInt(query.hotelId);
     const { data } = await client.query({
       query: GET_HOTEL_ALBUMS,
