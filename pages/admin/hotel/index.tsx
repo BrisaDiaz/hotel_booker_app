@@ -193,7 +193,7 @@ export const getServerSideProps = async ({
   };
 }) => {
   try {
-    const token = getCookie(req, res);
+    const token = getCookie(req);
     const hotelId = parseInt(query.hotelId);
     const { data } = await client.query({
       query: GET_DASHBOARD_HOTEL_DATA,

@@ -9,7 +9,7 @@ import {
   ApolloError,
 } from 'apollo-server-micro';
 import { prisma } from '@/lib/prisma';
-
+const APP_AUTH_COOKIE_NAME = 'bookingApp-token';
 export interface User {
   id: number;
   role: 'ADMIN' | 'USER';
@@ -38,18 +38,20 @@ export function setCookie(
   token: string
 ) {
   const cookies = new Cookies(req, res);
-  cookies.set('bookingApp-token', token, {
+  const expireDate = new Date(Date.now() + 60 * 60 * 24 * 31);
+  cookies.set(APP_AUTH_COOKIE_NAME, token, {
     httpOnly: true,
-    maxAge: 60 * 60 * 24 * 31,
+    expires: expireDate,
   });
 }
-export function getCookie(req: NextApiRequest, res: NextApiResponse) {
-  const cookies = new Cookies(req, res);
-  return cookies.get('bookingApp-token');
+export function getCookie(req: NextApiRequest) {
+  if (APP_AUTH_COOKIE_NAME in req.cookies && req.cookies[APP_AUTH_COOKIE_NAME])
+    return req.cookies[APP_AUTH_COOKIE_NAME];
+  return null;
 }
 export function deleteCookie(req: NextApiRequest, res: NextApiResponse) {
   const cookies = new Cookies(req, res);
-  cookies.set('bookingApp-token');
+  cookies.set(APP_AUTH_COOKIE_NAME, null, { expires: new Date(Date.now()) });
 }
 async function verifyToken(token: string): Promise<Token | ApolloError> {
   const verifiedToken: any = await verify(token, env.APP_SECRET);
